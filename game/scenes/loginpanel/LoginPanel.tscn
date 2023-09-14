@@ -1,0 +1,147 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdgegw7cy4d1r"]
+
+[ext_resource type="Script" path="res://game/scenes/loginpanel/LoginPanel.gd" id="1_uhohb"]
+
+[node name="LoginPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uhohb")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(256, 346)
+layout_mode = 0
+offset_right = 256.0
+offset_bottom = 378.0
+
+[node name="ConnectContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ServerAddressLabel" type="Label" parent="Panel/ConnectContainer"]
+layout_mode = 2
+text = "Server Address:"
+horizontal_alignment = 1
+
+[node name="ServerAddressText" type="LineEdit" parent="Panel/ConnectContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ServerPortLabel" type="Label" parent="Panel/ConnectContainer"]
+layout_mode = 2
+text = "ServerPort:"
+horizontal_alignment = 1
+
+[node name="ServerPortText" type="LineEdit" parent="Panel/ConnectContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ConnectButton" type="Button" parent="Panel/ConnectContainer"]
+layout_mode = 2
+text = "Connect"
+
+[node name="ErrorLabel" type="Label" parent="Panel/ConnectContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="LoginContainer" type="VBoxContainer" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UsernameLabel" type="Label" parent="Panel/LoginContainer"]
+layout_mode = 2
+text = "Username:"
+horizontal_alignment = 1
+
+[node name="UsernameText" type="LineEdit" parent="Panel/LoginContainer"]
+layout_mode = 2
+text = "Testplayer"
+alignment = 1
+
+[node name="PasswordLabel" type="Label" parent="Panel/LoginContainer"]
+layout_mode = 2
+text = "Password:"
+horizontal_alignment = 1
+
+[node name="PasswordText" type="LineEdit" parent="Panel/LoginContainer"]
+layout_mode = 2
+text = "Testpassword"
+alignment = 1
+secret = true
+
+[node name="LoginButton" type="Button" parent="Panel/LoginContainer"]
+layout_mode = 2
+text = "Login"
+
+[node name="CreateAccountButton" type="Button" parent="Panel/LoginContainer"]
+layout_mode = 2
+text = "Create Account"
+
+[node name="ErrorLabel" type="Label" parent="Panel/LoginContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="CreateAccountContainer" type="VBoxContainer" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UsernameLabel" type="Label" parent="Panel/CreateAccountContainer"]
+layout_mode = 2
+text = "Username:"
+horizontal_alignment = 1
+
+[node name="UsernameText" type="LineEdit" parent="Panel/CreateAccountContainer"]
+layout_mode = 2
+text = "Testplayer"
+alignment = 1
+
+[node name="PasswordLabel" type="Label" parent="Panel/CreateAccountContainer"]
+layout_mode = 2
+text = "Password:"
+horizontal_alignment = 1
+
+[node name="PasswordText" type="LineEdit" parent="Panel/CreateAccountContainer"]
+layout_mode = 2
+text = "Testpassword"
+alignment = 1
+secret = true
+
+[node name="RepeatPasswordLabel" type="Label" parent="Panel/CreateAccountContainer"]
+layout_mode = 2
+text = "Repeat Password:"
+horizontal_alignment = 1
+
+[node name="RepeatPasswordText" type="LineEdit" parent="Panel/CreateAccountContainer"]
+layout_mode = 2
+text = "Testpassword"
+alignment = 1
+secret = true
+
+[node name="CreateAccountButton" type="Button" parent="Panel/CreateAccountContainer"]
+layout_mode = 2
+text = "Create account"
+
+[node name="BackButton" type="Button" parent="Panel/CreateAccountContainer"]
+layout_mode = 2
+text = "Back"
+
+[node name="ErrorLabel" type="Label" parent="Panel/CreateAccountContainer"]
+layout_mode = 2
+horizontal_alignment = 1

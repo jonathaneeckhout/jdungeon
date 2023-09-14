@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cycpseafpexil"]
+
+[ext_resource type="Script" path="res://game/scenes/player/Player.gd" id="1_yw2vn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jan6g"]
+radius = 16.0
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_yw2vn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_jan6g")
+
+[node name="Sprites" type="Node2D" parent="."]
