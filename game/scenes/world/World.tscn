@@ -1,11 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=3 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://game/scenes/world/World.gd" id="1_3w1ia"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://game/scenes/loginpanel/LoginPanel.tscn" id="2_fjr74"]
 
-[node name="World" type="Node2D" node_paths=PackedStringArray("enemies_to_sync")]
+[node name="World" type="Node2D"]
 script = ExtResource("1_3w1ia")
-enemies_to_sync = []
 
 [node name="LoginPanel" parent="." instance=ExtResource("2_fjr74")]
 visible = false
@@ -20,4 +19,3 @@ offset_bottom = 60.0
 visible = false
 
 [node name="Enemies" type="Node2D" parent="Entities"]
-
