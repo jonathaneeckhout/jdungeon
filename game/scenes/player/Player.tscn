@@ -1,6 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=11 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://game/scenes/player/Player.gd" id="1_yw2vn"]
+[ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/player/base/Basecharacter.png" id="2_dug5c"]
+[ext_resource type="Texture2D" uid="uid://b38ld53gomnkq" path="res://assets/player/base/base_fronthand.png" id="3_dw8ng"]
+[ext_resource type="Texture2D" uid="uid://dyv7uagfvwjw0" path="res://assets/player/base/base_handback.png" id="4_gw0jc"]
+[ext_resource type="Texture2D" uid="uid://dhpyicp5pnbh7" path="res://assets/player/base/base_head.png" id="5_dr4ej"]
+[ext_resource type="Texture2D" uid="uid://d2uess8ln1r1k" path="res://assets/player/base/base_leg.png" id="6_ph7fa"]
+[ext_resource type="Texture2D" uid="uid://brvhtyjeyjceq" path="res://assets/player/base/base_legback.png" id="7_jpcwx"]
+[ext_resource type="Texture2D" uid="uid://bd0hjv8heg0ms" path="res://assets/equipment/weapons/sword.png" id="8_4ai0o"]
+[ext_resource type="Texture2D" uid="uid://b50k8a1sfjtn5" path="res://assets/player/base/base_trunk.png" id="8_n1x5o"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jan6g"]
 radius = 16.0
@@ -12,3 +20,99 @@ script = ExtResource("1_yw2vn")
 shape = SubResource("CircleShape2D_jan6g")
 
 [node name="Sprites" type="Node2D" parent="."]
+position = Vector2(-28, -100)
+scale = Vector2(0.1, 0.1)
+
+[node name="Basecharacter" type="Sprite2D" parent="Sprites"]
+visible = false
+position = Vector2(280, 230)
+scale = Vector2(1, 1)
+texture = ExtResource("2_dug5c")
+
+[node name="RightArm" type="Sprite2D" parent="Sprites"]
+position = Vector2(150, 0)
+scale = Vector2(1, 1)
+texture = ExtResource("4_gw0jc")
+offset = Vector2(131, 228)
+
+[node name="RightWeapon" type="Sprite2D" parent="Sprites"]
+position = Vector2(80, 470)
+rotation = 1.57079
+scale = Vector2(1, 1)
+texture = ExtResource("8_4ai0o")
+offset = Vector2(0.00012207, 800)
+
+[node name="RightLeg" type="Sprite2D" parent="Sprites"]
+position = Vector2(190, 440)
+scale = Vector2(1, 1)
+texture = ExtResource("7_jpcwx")
+offset = Vector2(91, -212)
+
+[node name="LeftLeg" type="Sprite2D" parent="Sprites"]
+position = Vector2(390, 460)
+scale = Vector2(1, 1)
+texture = ExtResource("6_ph7fa")
+offset = Vector2(-109, -232)
+
+[node name="Body" type="Sprite2D" parent="Sprites"]
+position = Vector2(270, 390)
+scale = Vector2(1, 1)
+texture = ExtResource("8_n1x5o")
+offset = Vector2(11, -162)
+
+[node name="Head" type="Sprite2D" parent="Sprites"]
+position = Vector2(300, -170)
+scale = Vector2(1, 1)
+texture = ExtResource("5_dr4ej")
+offset = Vector2(-19, 398)
+
+[node name="LeftWeapon" type="Sprite2D" parent="Sprites"]
+position = Vector2(420, 480)
+rotation = 1.57079
+scale = Vector2(1, 1)
+texture = ExtResource("8_4ai0o")
+offset = Vector2(0.00012207, 800)
+
+[node name="LeftArm" type="Sprite2D" parent="Sprites"]
+position = Vector2(470, -30)
+scale = Vector2(1, 1)
+texture = ExtResource("3_dw8ng")
+offset = Vector2(-189, 248)
+
+[node name="Remote" type="Node2D" parent="."]
+position = Vector2(-1, -61)
+scale = Vector2(0.1, 0.1)
+
+[node name="RemoteBody" type="RemoteTransform2D" parent="Remote"]
+remote_path = NodePath("../../Sprites/Body")
+
+[node name="RemoteHead" type="RemoteTransform2D" parent="Remote/RemoteBody"]
+position = Vector2(30, -560)
+scale = Vector2(1, 1)
+remote_path = NodePath("../../../Sprites/Head")
+
+[node name="RemoteRightArm" type="RemoteTransform2D" parent="Remote/RemoteBody"]
+position = Vector2(-120, -390)
+remote_path = NodePath("../../../Sprites/RightArm")
+
+[node name="RemoteRightWeapon" type="RemoteTransform2D" parent="Remote/RemoteBody/RemoteRightArm"]
+position = Vector2(-70, 470)
+rotation = 1.57079
+remote_path = NodePath("../../../../Sprites/RightWeapon")
+
+[node name="RemoteLeftArm" type="RemoteTransform2D" parent="Remote/RemoteBody"]
+position = Vector2(200, -420)
+remote_path = NodePath("../../../Sprites/LeftArm")
+
+[node name="RemoteLeftWeapon" type="RemoteTransform2D" parent="Remote/RemoteBody/RemoteLeftArm"]
+position = Vector2(-50, 510)
+rotation = 1.57079
+remote_path = NodePath("../../../../Sprites/LeftWeapon")
+
+[node name="RemoteRightLeg" type="RemoteTransform2D" parent="Remote/RemoteBody"]
+position = Vector2(-80, 49.9999)
+remote_path = NodePath("../../../Sprites/RightLeg")
+
+[node name="RemoteLeftLeg" type="RemoteTransform2D" parent="Remote/RemoteBody"]
+position = Vector2(120, 69.9999)
+remote_path = NodePath("../../../Sprites/LeftLeg")
