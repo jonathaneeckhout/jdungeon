@@ -27,6 +27,14 @@ var server_synchronizer: Node2D
 
 
 func _ready():
+	collision_layer = Gmf.PHYSICS_LAYER_WORLD + Gmf.PHYSICS_LAYER_ENEMIES
+
+	if Gmf.is_server():
+		collision_mask = Gmf.PHYSICS_LAYER_WORLD
+	else:
+		# Don't handle physics on client side
+		collision_mask = 0
+
 	server_synchronizer = load("res://gmf/common/scripts/serverSynchronizer.gd").new()
 	server_synchronizer.name = "ServerSynchronizer"
 	add_child(server_synchronizer)

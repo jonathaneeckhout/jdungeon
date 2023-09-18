@@ -7,6 +7,7 @@ class_name GMFWorld
 var players: Node2D
 var enemies: Node2D
 var npcs: Node2D
+var items: Node2D
 
 var players_by_id = {}
 
@@ -15,20 +16,28 @@ var players_by_id = {}
 func _ready():
 	var entities = Node2D.new()
 	entities.name = "GMFEntities"
+	entities.y_sort_enabled = true
+	add_child(entities)
 
 	players = Node2D.new()
 	players.name = "GMFPlayers"
+	players.y_sort_enabled = true
 	entities.add_child(players)
 
 	enemies = Node2D.new()
 	enemies.name = "GMFEnemies"
+	enemies.y_sort_enabled = true
 	entities.add_child(enemies)
 
 	npcs = Node2D.new()
 	npcs.name = "GMFNPCs"
+	npcs.y_sort_enabled = true
 	entities.add_child(npcs)
 
-	add_child(entities)
+	items = Node2D.new()
+	items.name = "GMFItems"
+	items.y_sort_enabled = true
+	entities.add_child(items)
 
 	if Gmf.is_server():
 		Gmf.signals.server.player_logged_in.connect(_on_player_logged_in)
@@ -37,11 +46,15 @@ func _ready():
 		Gmf.signals.client.player_added.connect(_on_client_player_added)
 		Gmf.signals.client.other_player_added.connect(_on_client_other_player_added)
 		Gmf.signals.client.enemy_added.connect(_on_client_enemy_added)
+
+	Gmf.world = self
+
 	load_enemies()
 
 
 func load_enemies():
 	for enemy in enemies_to_sync:
+		enemy.name = str(enemy.get_instance_id())
 		enemy.get_parent().remove_child(enemy)
 
 		if Gmf.is_server():
@@ -84,7 +97,6 @@ func _on_client_player_added(id: int, username: String, pos: Vector2):
 	player.username = username
 	player.peer_id = id
 
-	player.enable_input = true
 	player.position = pos
 
 	players.add_child(player)

@@ -3,6 +3,12 @@ extends Node
 enum MODE { SERVER, CLIENT }
 enum ENTITY_TYPE { PLAYER, ENEMY, ITEM, NPC }
 
+const PHYSICS_LAYER_WORLD = 1
+const PHYSICS_LAYER_PLAYERS = 2
+const PHYSICS_LAYER_ENEMIES = 4
+const PHYSICS_LAYER_NPCS = 8
+const PHYSICS_LAYER_ITEMS = 16
+
 var mode: MODE = MODE.CLIENT
 
 var logger: Log

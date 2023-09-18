@@ -124,7 +124,7 @@ func extrapolate(extrapolation_factor: float, parameter: String) -> Vector2:
 	)
 
 
-func send_new_state(new_state: String):
+func send_new_state(new_state: int):
 	var timestamp = Time.get_unix_time_from_system()
 	state_changed.rpc_id(parent.peer_id, timestamp, new_state)
 
@@ -161,7 +161,17 @@ func sync(timestamp: float, pos: Vector2, vec: Vector2):
 		Gmf.signals.server.player_moved.emit(id, pos)
 
 
-@rpc("call_remote", "authority", "reliable") func state_changed(timestamp: float, new_state: String):
+@rpc("call_remote", "any_peer", "reliable") func interact(target: String):
+	if not Gmf.is_server():
+		return
+
+	var id = multiplayer.get_remote_sender_id()
+
+	if id == parent.peer_id:
+		Gmf.signals.server.player_interacted.emit(id, target)
+
+
+@rpc("call_remote", "authority", "reliable") func state_changed(timestamp: float, new_state: int):
 	state_buffer.append({"timestamp": timestamp, "new_state": new_state})
 
 
@@ -173,7 +183,9 @@ func _on_network_view_area_body_entered(body):
 					parent.peer_id, body.username, body.position
 				)
 			Gmf.ENTITY_TYPE.ENEMY:
-				Gmf.rpcs.enemy.add_enemy.rpc_id(parent.peer_id, body.name, body.enemy_class, body.position)
+				Gmf.rpcs.enemy.add_enemy.rpc_id(
+					parent.peer_id, body.name, body.enemy_class, body.position
+				)
 
 		bodies_in_view.append(body)
 

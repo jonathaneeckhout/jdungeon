@@ -1,20 +1,11 @@
 extends GMFPlayerBody2D
 
-var current_state: String = "Idle"
+var current_animation: String = "Idle"
 
 @onready var animaiton_player = $AnimationPlayer
 
 @onready var skeleton = $Skeleton
 @onready var original_scale = $Skeleton.scale
-
-
-func _input(event):
-	# Don't handle input on server side
-	if Gmf.is_server():
-		return
-
-	if event.is_action_pressed("gmf_right_click"):
-		move(get_global_mouse_position())
 
 
 func _ready():
@@ -25,7 +16,7 @@ func _ready():
 
 	state_changed.connect(_on_state_changed)
 
-	animaiton_player.play(current_state)
+	animaiton_player.play(current_animation)
 
 
 func _physics_process(delta):
@@ -34,18 +25,24 @@ func _physics_process(delta):
 	if Gmf.is_server():
 		return
 
-	if current_state == "Move":
+	if state == STATE.MOVE:
 		update_face_direction()
 
 
 func update_face_direction():
 	if velocity.x < 0:
 		skeleton.scale = original_scale
-	else:
+		return
+	if velocity.x > 0:
 		skeleton.scale = Vector2(original_scale.x * -1, original_scale.y)
+		return
 
 
-func _on_state_changed(new_state: String):
-	Gmf.logger.info("Player's new state=[%s]" % new_state)
-	current_state = new_state
-	animaiton_player.play(new_state)
+func _on_state_changed(new_state: STATE):
+	match new_state:
+		STATE.IDLE:
+			animaiton_player.play("Idle")
+		STATE.MOVE:
+			animaiton_player.play("Move")
+		STATE.ATTACK:
+			animaiton_player.play("Attack")
