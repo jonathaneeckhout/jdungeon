@@ -38,7 +38,9 @@ func update_face_direction():
 		return
 
 
-func _on_state_changed(new_state: STATE):
+func _on_state_changed(new_state: STATE, _direction: Vector2, _duration: float):
+	state = new_state
+
 	match new_state:
 		STATE.IDLE:
 			animaiton_player.play("Idle")

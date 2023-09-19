@@ -8,7 +8,7 @@ enum INTERACT_TYPE { ENEMY, NPC, ITEM }
 const ARRIVAL_DISTANCE = 8
 const SPEED = 300.0
 
-signal state_changed(new_state: String)
+signal state_changed(new_state: STATE, direction: Vector2, duration: float)
 
 @export var peer_id := 1:
 	set(id):
@@ -24,14 +24,16 @@ var server_synchronizer: Node2D
 
 var mouse_area: Area2D
 
-var moving := false
-var move_target := Vector2()
+var moving: bool = false
+var move_target: Vector2 = Vector2()
 
-var interacting := false
-var interact_target = ""
-var interact_type = INTERACT_TYPE.ENEMY
+var interacting: bool = false
+var interact_target: Variant = null
+var interact_type: INTERACT_TYPE = INTERACT_TYPE.ENEMY
 
-var enemies_in_attack_range = []
+var enemies_in_attack_range: Array = []
+
+var attack_timer: Timer
 
 
 func _input(event):
@@ -80,6 +82,13 @@ func _ready():
 
 		Gmf.signals.server.player_moved.connect(_on_player_moved)
 		Gmf.signals.server.player_interacted.connect(_on_player_interacted)
+
+		attack_timer = Timer.new()
+		attack_timer.name = "AttackTimer"
+
+		attack_timer.timeout.connect(_on_attack_timer_timeout)
+		add_child(attack_timer)
+
 	else:
 		mouse_area = Area2D.new()
 		mouse_area.name = "MouseArea"
@@ -102,43 +111,52 @@ func _ready():
 		add_child(mouse_area)
 
 
-func _physics_process(delta):
+func _physics_process(delta: float):
 	if Gmf.is_server():
-		fsm(delta)
-		reset_inputs()
+		logic(delta)
 
 		move_and_slide()
 
 
-func fsm(_delta):
-	match state:
-		STATE.IDLE:
-			if moving:
-				set_new_state(STATE.MOVE)
-			elif interacting:
-				set_new_state(STATE.INTERACT)
-			else:
-				velocity = Vector2.ZERO
-		STATE.MOVE:
-			_handle_move()
-		STATE.INTERACT:
-			_handle_interact()
-		STATE.ATTACK:
-			_handle_attack()
-		STATE.NPC:
-			_handle_npc()
-		STATE.LOOT:
-			_handle_loot()
+func logic(_delta: float):
+	if moving:
+		if position.distance_to(move_target) > ARRIVAL_DISTANCE:
+			velocity = position.direction_to(move_target) * SPEED
+			set_new_state(STATE.MOVE)
+		else:
+			moving = false
+			velocity = Vector2.ZERO
+	elif interacting:
+		if not is_instance_valid(interact_target):
+			interacting = false
+			interact_target = null
+			return
+
+		match interact_type:
+			INTERACT_TYPE.ENEMY:
+				if not enemies_in_attack_range.has(interact_target):
+					velocity = position.direction_to(interact_target.position) * SPEED
+					set_new_state(STATE.MOVE)
+				else:
+					velocity = Vector2.ZERO
+
+					if attack_timer.is_stopped():
+						_attack(interact_target)
+						attack_timer.start(0.8)
+
+					set_new_state(STATE.ATTACK)
+			INTERACT_TYPE.NPC:
+				set_new_state(STATE.NPC)
+			INTERACT_TYPE.ITEM:
+				set_new_state(STATE.LOOT)
+	else:
+		set_new_state(STATE.IDLE)
 
 
 func set_new_state(new_state: STATE):
-	state = new_state
-	server_synchronizer.send_new_state(state)
-
-
-func reset_inputs():
-	moving = false
-	interacting = false
+	if state != new_state:
+		state = new_state
+		server_synchronizer.send_new_state(state, Vector2.ZERO, 0.0)
 
 
 func move(pos: Vector2):
@@ -146,40 +164,31 @@ func move(pos: Vector2):
 
 
 func interact(target: String):
-	print(target)
 	server_synchronizer.interact.rpc_id(1, target)
 
 
-func _handle_move():
-	if position.distance_to(move_target) > ARRIVAL_DISTANCE:
-		velocity = position.direction_to(move_target) * SPEED
-	else:
-		velocity = Vector2.ZERO
-		set_new_state(STATE.IDLE)
+func _attack(target: CharacterBody2D):
+	# var damage = randi_range(stats.min_attack_power, stats.attack_power)
+	var damage = randi_range(5, 10)
+
+	target.hurt(damage)
+	# server_synchronizer.sync_attack(position.direction_to(target.position))
 
 
-func _handle_interact():
-	match interact_type:
-		INTERACT_TYPE.ENEMY:
-			set_new_state(STATE.ATTACK)
-		INTERACT_TYPE.NPC:
-			set_new_state(STATE.NPC)
-		INTERACT_TYPE.ITEM:
-			set_new_state(STATE.LOOT)
-
-
-func _handle_attack():
-	if not is_instance_valid(interact_target):
-		set_new_state(STATE.IDLE)
-		return
-
-
-func _handle_npc():
+func hurt(_damage):
 	pass
+	# # Reduce the damage according to the defense stat
+	# var reduced_damage = max(0, damage - stats.defense)
 
+	# # Deal damage if health pool is big enough
+	# if reduced_damage < stats.hp:
+	# 	stats.hp -= reduced_damage
+	# 	server_synchronizer.sync_hurt(stats.hp, reduced_damage)
+	# # Die if damage is bigger than remaining hp
+	# else:
+	# 	die()
 
-func _handle_loot():
-	pass
+	# update_hp_bar()
 
 
 func _handle_right_click():
@@ -217,6 +226,8 @@ func _on_player_moved(id: int, pos: Vector2):
 	if id != peer_id:
 		return
 
+	interacting = false
+
 	moving = true
 	move_target = pos
 
@@ -224,6 +235,8 @@ func _on_player_moved(id: int, pos: Vector2):
 func _on_player_interacted(id: int, target: String):
 	if id != peer_id:
 		return
+
+	moving = false
 
 	if Gmf.world.enemies.has_node(target):
 		interacting = true
@@ -242,3 +255,7 @@ func _on_player_interacted(id: int, target: String):
 		interact_target = Gmf.world.items.get_node(target)
 		interact_type = INTERACT_TYPE.ITEM
 		return
+
+
+func _on_attack_timer_timeout():
+	attack_timer.stop()

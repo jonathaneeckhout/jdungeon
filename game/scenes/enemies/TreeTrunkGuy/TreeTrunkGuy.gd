@@ -1,7 +1,5 @@
 extends GMFEnemyBody2D
 
-var current_state: String = "Idle"
-
 @onready var animaiton_player = $AnimationPlayer
 
 @onready var skeleton = $Skeleton
@@ -18,7 +16,7 @@ func _ready():
 
 	state_changed.connect(_on_state_changed)
 
-	animaiton_player.play(current_state)
+	animaiton_player.play("Idle")
 
 
 func update_face_direction():
@@ -28,5 +26,5 @@ func update_face_direction():
 		skeleton.scale = Vector2(original_scale.x * -1, original_scale.y)
 
 
-func _on_state_changed(new_state: String):
-	current_state = new_state
+func _on_state_changed(_new_state: STATE, _direction: Vector2, _duration: float):
+	pass

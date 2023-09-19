@@ -124,19 +124,23 @@ func extrapolate(extrapolation_factor: float, parameter: String) -> Vector2:
 	)
 
 
-func send_new_state(new_state: int):
+func send_new_state(new_state: int, direction: Vector2, duration: float):
 	var timestamp = Time.get_unix_time_from_system()
-	state_changed.rpc_id(parent.peer_id, timestamp, new_state)
+	state_changed.rpc_id(parent.peer_id, timestamp, new_state, direction, duration)
 
 	for watcher in watchers:
-		state_changed.rpc_id(watcher.peer_id, timestamp, new_state)
+		state_changed.rpc_id(watcher.peer_id, timestamp, new_state, direction, duration)
 
 
 func check_if_state_updated():
 	for i in range(state_buffer.size() - 1, -1, -1):
 		if state_buffer[i]["timestamp"] <= Gmf.client.clock:
-			parent.state = state_buffer[i]["new_state"]
-			parent.state_changed.emit(parent.state)
+			# parent.state = state_buffer[i]["new_state"]
+			parent.state_changed.emit(
+				state_buffer[i]["new_state"],
+				state_buffer[i]["direction"],
+				state_buffer[i]["duration"]
+			)
 			state_buffer.remove_at(i)
 			return true
 
@@ -171,8 +175,16 @@ func sync(timestamp: float, pos: Vector2, vec: Vector2):
 		Gmf.signals.server.player_interacted.emit(id, target)
 
 
-@rpc("call_remote", "authority", "reliable") func state_changed(timestamp: float, new_state: int):
-	state_buffer.append({"timestamp": timestamp, "new_state": new_state})
+@rpc("call_remote", "authority", "reliable")
+func state_changed(timestamp: float, new_state: int, direction: Vector2, duration: float):
+	state_buffer.append(
+		{
+			"timestamp": timestamp,
+			"new_state": new_state,
+			"direction": direction,
+			"duration": duration
+		}
+	)
 
 
 func _on_network_view_area_body_entered(body):

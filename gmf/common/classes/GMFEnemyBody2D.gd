@@ -2,10 +2,12 @@ extends CharacterBody2D
 
 class_name GMFEnemyBody2D
 
+enum STATE { IDLE, MOVE, INTERACT, ATTACK, LOOT, NPC }
+
 const ARRIVAL_DISTANCE = 8
 const SPEED = 300.0
 
-signal state_changed(new_state: String)
+signal state_changed(new_state: STATE, direction: Vector2, duration: float)
 
 @export var peer_id := 1:
 	set(id):
@@ -41,4 +43,7 @@ func _ready():
 
 
 func _physics_process(_delta):
+	pass
+
+func hurt(_damage):
 	pass
