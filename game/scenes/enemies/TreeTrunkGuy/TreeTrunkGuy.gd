@@ -15,6 +15,7 @@ func _ready():
 		return
 
 	state_changed.connect(_on_state_changed)
+	got_hurt.connect(_on_got_hurt)
 
 	animaiton_player.play("Idle")
 
@@ -28,3 +29,7 @@ func update_face_direction():
 
 func _on_state_changed(_new_state: STATE, _direction: Vector2, _duration: float):
 	pass
+
+
+func _on_got_hurt(_from: String, _hp: int, _damage: int):
+	animaiton_player.play("Hurt")

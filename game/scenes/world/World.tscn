@@ -18,9 +18,8 @@ offset_bottom = 60.0
 [node name="ToBeSynced" type="Node2D" parent="."]
 
 [node name="Entities" type="Node2D" parent="."]
-visible = false
 
 [node name="Enemies" type="Node2D" parent="Entities"]
 
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(1544, 248)
+position = Vector2(944, 464)

@@ -9,6 +9,7 @@ var last_sync_timestamp = 0.0
 var server_syncs_buffer = []
 
 var state_buffer = []
+var hurt_buffer = []
 
 var bodies_in_view = []
 var watchers = []
@@ -60,6 +61,7 @@ func _physics_process(_delta):
 	else:
 		calculate_position()
 		check_if_state_updated()
+		check_if_hurt()
 
 
 func calculate_position():
@@ -124,24 +126,45 @@ func extrapolate(extrapolation_factor: float, parameter: String) -> Vector2:
 	)
 
 
-func send_new_state(new_state: int, direction: Vector2, duration: float):
+func sync_state(new_state: int, direction: Vector2, duration: float):
 	var timestamp = Time.get_unix_time_from_system()
-	state_changed.rpc_id(parent.peer_id, timestamp, new_state, direction, duration)
+
+	if parent.entity_type == Gmf.ENTITY_TYPE.PLAYER:
+		state.rpc_id(parent.peer_id, timestamp, new_state, direction, duration)
 
 	for watcher in watchers:
-		state_changed.rpc_id(watcher.peer_id, timestamp, new_state, direction, duration)
+		state.rpc_id(watcher.peer_id, timestamp, new_state, direction, duration)
 
 
 func check_if_state_updated():
 	for i in range(state_buffer.size() - 1, -1, -1):
 		if state_buffer[i]["timestamp"] <= Gmf.client.clock:
-			# parent.state = state_buffer[i]["new_state"]
 			parent.state_changed.emit(
 				state_buffer[i]["new_state"],
 				state_buffer[i]["direction"],
 				state_buffer[i]["duration"]
 			)
 			state_buffer.remove_at(i)
+			return true
+
+
+func sync_hurt(from: String, hp: int, damage: int):
+	var timestamp = Time.get_unix_time_from_system()
+
+	if parent.entity_type == Gmf.ENTITY_TYPE.PLAYER:
+		hurt.rpc_id(parent.peer_id, timestamp, from, hp, damage)
+
+	for watcher in watchers:
+		hurt.rpc_id(watcher.peer_id, timestamp, from, hp, damage)
+
+
+func check_if_hurt():
+	for i in range(hurt_buffer.size() - 1, -1, -1):
+		if hurt_buffer[i]["timestamp"] <= Gmf.client.clock:
+			parent.got_hurt.emit(
+				hurt_buffer[i]["from"], hurt_buffer[i]["hp"], hurt_buffer[i]["damage"]
+			)
+			hurt_buffer.remove_at(i)
 			return true
 
 
@@ -176,7 +199,7 @@ func sync(timestamp: float, pos: Vector2, vec: Vector2):
 
 
 @rpc("call_remote", "authority", "reliable")
-func state_changed(timestamp: float, new_state: int, direction: Vector2, duration: float):
+func state(timestamp: float, new_state: int, direction: Vector2, duration: float):
 	state_buffer.append(
 		{
 			"timestamp": timestamp,
@@ -185,6 +208,11 @@ func state_changed(timestamp: float, new_state: int, direction: Vector2, duratio
 			"duration": duration
 		}
 	)
+
+
+@rpc("call_remote", "authority", "reliable")
+func hurt(timestamp: float, from: String, hp: int, damage: int):
+	hurt_buffer.append({"timestamp": timestamp, "from": from, "hp": hp, "damage": damage})
 
 
 func _on_network_view_area_body_entered(body):

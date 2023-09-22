@@ -9,6 +9,7 @@ const ARRIVAL_DISTANCE = 8
 const SPEED = 300.0
 
 signal state_changed(new_state: STATE, direction: Vector2, duration: float)
+signal got_hurt(from: String, hp: int, damage: int)
 
 @export var peer_id := 1:
 	set(id):
@@ -156,7 +157,7 @@ func logic(_delta: float):
 func set_new_state(new_state: STATE):
 	if state != new_state:
 		state = new_state
-		server_synchronizer.send_new_state(state, Vector2.ZERO, 0.0)
+		server_synchronizer.sync_state(state, Vector2.ZERO, 0.0)
 
 
 func move(pos: Vector2):
@@ -171,11 +172,11 @@ func _attack(target: CharacterBody2D):
 	# var damage = randi_range(stats.min_attack_power, stats.attack_power)
 	var damage = randi_range(5, 10)
 
-	target.hurt(damage)
+	target.hurt(self, damage)
 	# server_synchronizer.sync_attack(position.direction_to(target.position))
 
 
-func hurt(_damage):
+func hurt(_from: CharacterBody2D, _damage: int):
 	pass
 	# # Reduce the damage according to the defense stat
 	# var reduced_damage = max(0, damage - stats.defense)

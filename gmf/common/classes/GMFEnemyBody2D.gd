@@ -8,6 +8,7 @@ const ARRIVAL_DISTANCE = 8
 const SPEED = 300.0
 
 signal state_changed(new_state: STATE, direction: Vector2, duration: float)
+signal got_hurt(from: String, hp: int, damage: int)
 
 @export var peer_id := 1:
 	set(id):
@@ -27,6 +28,8 @@ var move_target := Vector2()
 
 var server_synchronizer: Node2D
 
+var hp: int = 100
+
 
 func _ready():
 	collision_layer = Gmf.PHYSICS_LAYER_WORLD + Gmf.PHYSICS_LAYER_ENEMIES
@@ -45,5 +48,6 @@ func _ready():
 func _physics_process(_delta):
 	pass
 
-func hurt(_damage):
-	pass
+
+func hurt(from: CharacterBody2D, damage: int):
+	server_synchronizer.sync_hurt(from.name, hp, damage)
