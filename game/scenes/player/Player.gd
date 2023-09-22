@@ -15,6 +15,7 @@ func _ready():
 		return
 
 	state_changed.connect(_on_state_changed)
+	attacked.connect(_on_attacked)
 
 	animaiton_player.play(current_animation)
 
@@ -47,4 +48,9 @@ func _on_state_changed(new_state: STATE, _direction: Vector2, _duration: float):
 		STATE.MOVE:
 			animaiton_player.play("Move")
 		STATE.ATTACK:
-			animaiton_player.play("Attack")
+			pass
+
+
+func _on_attacked(_target: String, _damage: int):
+	animaiton_player.stop()
+	animaiton_player.play("Attack")

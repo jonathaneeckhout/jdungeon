@@ -9,6 +9,7 @@ var last_sync_timestamp = 0.0
 var server_syncs_buffer = []
 
 var state_buffer = []
+var attack_buffer = []
 var hurt_buffer = []
 
 var bodies_in_view = []
@@ -61,6 +62,7 @@ func _physics_process(_delta):
 	else:
 		calculate_position()
 		check_if_state_updated()
+		check_if_attack()
 		check_if_hurt()
 
 
@@ -148,6 +150,24 @@ func check_if_state_updated():
 			return true
 
 
+func sync_attack(target: String, damage: int):
+	var timestamp = Time.get_unix_time_from_system()
+
+	if parent.entity_type == Gmf.ENTITY_TYPE.PLAYER:
+		attack.rpc_id(parent.peer_id, timestamp, target, damage)
+
+	for watcher in watchers:
+		attack.rpc_id(watcher.peer_id, timestamp, target, damage)
+
+
+func check_if_attack():
+	for i in range(attack_buffer.size() - 1, -1, -1):
+		if attack_buffer[i]["timestamp"] <= Gmf.client.clock:
+			parent.attacked.emit(attack_buffer[i]["target"], attack_buffer[i]["damage"])
+			attack_buffer.remove_at(i)
+			return true
+
+
 func sync_hurt(from: String, hp: int, damage: int):
 	var timestamp = Time.get_unix_time_from_system()
 
@@ -213,6 +233,11 @@ func state(timestamp: float, new_state: int, direction: Vector2, duration: float
 @rpc("call_remote", "authority", "reliable")
 func hurt(timestamp: float, from: String, hp: int, damage: int):
 	hurt_buffer.append({"timestamp": timestamp, "from": from, "hp": hp, "damage": damage})
+
+
+@rpc("call_remote", "authority", "reliable")
+func attack(timestamp: float, target: String, damage: int):
+	attack_buffer.append({"timestamp": timestamp, "target": target, "damage": damage})
 
 
 func _on_network_view_area_body_entered(body):

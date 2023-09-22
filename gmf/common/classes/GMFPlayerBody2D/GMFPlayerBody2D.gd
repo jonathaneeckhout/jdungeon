@@ -9,6 +9,7 @@ const ARRIVAL_DISTANCE = 8
 const SPEED = 300.0
 
 signal state_changed(new_state: STATE, direction: Vector2, duration: float)
+signal attacked(target: String, damage: int)
 signal got_hurt(from: String, hp: int, damage: int)
 
 @export var peer_id := 1:
@@ -22,6 +23,7 @@ var username: String = ""
 var state: STATE = STATE.IDLE
 
 var server_synchronizer: Node2D
+var stats: Node
 
 var mouse_area: Area2D
 
@@ -57,6 +59,10 @@ func _ready():
 	server_synchronizer = load("res://gmf/common/scripts/serverSynchronizer.gd").new()
 	server_synchronizer.name = "ServerSynchronizer"
 	add_child(server_synchronizer)
+
+	stats = load("res://gmf/common/classes/GMFPlayerBody2D/stats.gd").new()
+	stats.name = "Stats"
+	add_child(stats)
 
 	if Gmf.is_server():
 		# Don't handle input on server side
@@ -169,25 +175,24 @@ func interact(target: String):
 
 
 func _attack(target: CharacterBody2D):
-	# var damage = randi_range(stats.min_attack_power, stats.attack_power)
-	var damage = randi_range(5, 10)
+	var damage = randi_range(stats.attack_power_min, stats.attack_power_max)
 
 	target.hurt(self, damage)
-	# server_synchronizer.sync_attack(position.direction_to(target.position))
+	server_synchronizer.sync_attack(target.name, damage)
 
 
-func hurt(_from: CharacterBody2D, _damage: int):
-	pass
+func hurt(from: CharacterBody2D, damage: int):
 	# # Reduce the damage according to the defense stat
-	# var reduced_damage = max(0, damage - stats.defense)
+	var reduced_damage = max(0, damage - stats.defense)
 
 	# # Deal damage if health pool is big enough
-	# if reduced_damage < stats.hp:
-	# 	stats.hp -= reduced_damage
-	# 	server_synchronizer.sync_hurt(stats.hp, reduced_damage)
+	if reduced_damage < stats.hp:
+		stats.hp -= reduced_damage
+		server_synchronizer.sync_hurt(from.name, stats.hp, reduced_damage)
 	# # Die if damage is bigger than remaining hp
-	# else:
-	# 	die()
+	else:
+		print("I'm dead")
+		# die()
 
 	# update_hp_bar()
 

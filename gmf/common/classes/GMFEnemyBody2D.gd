@@ -8,6 +8,7 @@ const ARRIVAL_DISTANCE = 8
 const SPEED = 300.0
 
 signal state_changed(new_state: STATE, direction: Vector2, duration: float)
+signal attacked(target: String, damage: int)
 signal got_hurt(from: String, hp: int, damage: int)
 
 @export var peer_id := 1:
