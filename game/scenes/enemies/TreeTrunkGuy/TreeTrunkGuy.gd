@@ -32,4 +32,5 @@ func _on_state_changed(_new_state: STATE, _direction: Vector2, _duration: float)
 
 
 func _on_got_hurt(_from: String, _hp: int, _damage: int):
+	animaiton_player.stop()
 	animaiton_player.play("Hurt")
