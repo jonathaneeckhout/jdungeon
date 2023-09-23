@@ -37,17 +37,9 @@ func attack(target: CharacterBody2D):
 
 
 func hurt(from: CharacterBody2D, damage: int):
-	# # Reduce the damage according to the defense stat
-	var reduced_damage = max(0, damage - stats.defense)
+	var damage_done: int = stats.hurt(damage)
 
-	# # Deal damage if health pool is big enough
-	if reduced_damage < stats.hp:
-		stats.hp -= reduced_damage
-		synchronizer.sync_hurt(from.name, stats.hp, reduced_damage)
-	# # Die if damage is bigger than remaining hp
-	else:
-		print("I'm dead")
-		# die()
+	synchronizer.sync_hurt(from.name, stats.hp, stats.max_hp, damage_done)
 
 
 func send_new_loop_animation(animation: String):

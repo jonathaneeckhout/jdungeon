@@ -20,9 +20,11 @@ func _ready():
 	$GMFInterface.display_name = enemy_class
 
 
-func _on_got_hurt(_from: String, _hp: int, _damage: int):
+func _on_got_hurt(_from: String, hp: int, max_hp: int, _damage: int):
 	animation_player.stop()
 	animation_player.play("Hurt")
+
+	$GMFInterface.update_hp_bar(hp, max_hp)
 
 
 func _on_animation_finished(_anim_name: String):

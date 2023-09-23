@@ -2,6 +2,8 @@ extends Node
 
 class_name GMFStats
 
+signal died
+
 var max_hp: int = 10
 var hp: int = max_hp
 var attack_power_min: int = 0
@@ -15,5 +17,16 @@ var level: int = 1
 var experience: int = 0
 
 
-func hurt(_damage: int):
-	pass
+func hurt(damage: int) -> int:
+	# # Reduce the damage according to the defense stat
+	var reduced_damage = max(0, damage - defense)
+
+	# # Deal damage if health pool is big enough
+	if reduced_damage < hp:
+		hp -= reduced_damage
+	# # Die if damage is bigger than remaining hp
+	else:
+		hp = 0
+		died.emit()
+
+	return reduced_damage

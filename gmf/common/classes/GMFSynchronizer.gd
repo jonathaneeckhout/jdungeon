@@ -3,7 +3,7 @@ extends Node2D
 class_name GMFSynchronizer
 
 signal attacked(target: String, damage: int)
-signal got_hurt(from: String, hp: int, damage: int)
+signal got_hurt(from: String, hp: int, max_hp: int, damage: int)
 signal loop_animation_changed(animation: String, direction: Vector2)
 
 const INTERPOLATION_OFFSET = 0.1
@@ -112,19 +112,24 @@ func check_if_attack():
 			return true
 
 
-func sync_hurt(from: String, hp: int, damage: int):
+func sync_hurt(from: String, hp: int, max_hp: int, damage: int):
 	var timestamp = Time.get_unix_time_from_system()
 
 	for watcher in watchers:
-		hurt.rpc_id(watcher.peer_id, timestamp, from, hp, damage)
+		hurt.rpc_id(watcher.peer_id, timestamp, from, hp, max_hp, damage)
 
-	got_hurt.emit(from, hp, damage)
+	got_hurt.emit(from, hp, max_hp, damage)
 
 
 func check_if_hurt():
 	for i in range(hurt_buffer.size() - 1, -1, -1):
 		if hurt_buffer[i]["timestamp"] <= Gmf.client.clock:
-			got_hurt.emit(hurt_buffer[i]["from"], hurt_buffer[i]["hp"], hurt_buffer[i]["damage"])
+			got_hurt.emit(
+				hurt_buffer[i]["from"],
+				hurt_buffer[i]["hp"],
+				hurt_buffer[i]["max_hp"],
+				hurt_buffer[i]["damage"]
+			)
 			hurt_buffer.remove_at(i)
 			return true
 
@@ -159,8 +164,10 @@ func sync(timestamp: float, pos: Vector2, vec: Vector2):
 
 
 @rpc("call_remote", "authority", "reliable")
-func hurt(timestamp: float, from: String, hp: int, damage: int):
-	hurt_buffer.append({"timestamp": timestamp, "from": from, "hp": hp, "damage": damage})
+func hurt(timestamp: float, from: String, hp: int, max_hp: int, damage: int):
+	hurt_buffer.append(
+		{"timestamp": timestamp, "from": from, "hp": hp, "max_hp": max_hp, "damage": damage}
+	)
 
 
 @rpc("call_remote", "authority", "reliable")
