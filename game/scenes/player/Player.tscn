@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=18 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://game/scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/player/base/Basecharacter.png" id="2_dug5c"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bd0hjv8heg0ms" path="res://assets/equipment/weapons/sword.png" id="8_4ai0o"]
 [ext_resource type="Texture2D" uid="uid://b50k8a1sfjtn5" path="res://assets/player/base/base_trunk.png" id="8_n1x5o"]
 [ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://gmf/common/scenes/GMFInterface/GMFInterface.tscn" id="10_0qscs"]
+[ext_resource type="PackedScene" uid="uid://bu4fyswm3ejft" path="res://gmf/common/scenes/GMFCamera2D/GMFCamera2D.tscn" id="11_ffmr7"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lk3fd"]
 radius = 16.0
@@ -929,3 +930,5 @@ libraries = {
 [node name="GMFInterface" parent="." instance=ExtResource("10_0qscs")]
 offset_top = -176.0
 offset_bottom = -136.0
+
+[node name="GMFCamera2D" parent="." instance=ExtResource("11_ffmr7")]

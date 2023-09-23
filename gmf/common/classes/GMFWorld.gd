@@ -104,6 +104,8 @@ func _on_client_player_added(id: int, username: String, pos: Vector2):
 
 	players.add_child(player)
 
+	Gmf.client.player = player
+
 
 func _on_client_other_player_added(username: String, pos: Vector2):
 	var player = Gmf.player_scene.instantiate()

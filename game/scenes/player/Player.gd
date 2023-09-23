@@ -31,6 +31,10 @@ func update_face_direction(direction: float):
 		return
 
 
+func focus_camera():
+	$GMFCamera2D.make_current()
+
+
 func _on_loop_animation_changed(animation: String, direction: Vector2):
 	loop_animation = animation
 
