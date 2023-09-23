@@ -9,6 +9,8 @@ const SPEED = 300.0
 
 @export var player: GMFPlayerBody2D
 @export var player_synchronizer: GMFPlayerSynchronizer
+@export var player_stats: GMFStats
+
 var attack_timer: Timer
 
 var enemies_in_attack_range: Array[GMFEnemyBody2D] = []
@@ -61,7 +63,9 @@ func _physics_process(delta: float):
 func behavior(_delta: float):
 	if moving:
 		if player.position.distance_to(move_target) > ARRIVAL_DISTANCE:
-			player.velocity = player.position.direction_to(move_target) * SPEED
+			player.velocity = (
+				player.position.direction_to(move_target) * player_stats.movement_speed
+			)
 			player.send_new_loop_animation("Move")
 		else:
 			moving = false
@@ -75,14 +79,17 @@ func behavior(_delta: float):
 		match interact_type:
 			INTERACT_TYPE.ENEMY:
 				if not enemies_in_attack_range.has(interact_target):
-					player.velocity = player.position.direction_to(interact_target.position) * SPEED
+					player.velocity = (
+						player.position.direction_to(interact_target.position)
+						* player_stats.movement_speed
+					)
 					player.send_new_loop_animation("Move")
 				else:
 					player.velocity = Vector2.ZERO
 
 					if attack_timer.is_stopped():
 						player.attack(interact_target)
-						attack_timer.start(0.8)
+						attack_timer.start(player_stats.attack_speed)
 
 			INTERACT_TYPE.NPC:
 				pass

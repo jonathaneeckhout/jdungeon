@@ -30,6 +30,7 @@ func _ready():
 		player_behavior.name = "PlayerBehavior"
 		player_behavior.player = self
 		player_behavior.player_synchronizer = player_synchronizer
+		player_behavior.player_stats = stats
 		add_child(player_behavior)
 
 	else:

@@ -101,6 +101,8 @@ func sync_attack(target: String, damage: int):
 	for watcher in watchers:
 		attack.rpc_id(watcher.peer_id, timestamp, target, damage)
 
+	attacked.emit(target, damage)
+
 
 func check_if_attack():
 	for i in range(attack_buffer.size() - 1, -1, -1):
@@ -116,6 +118,8 @@ func sync_hurt(from: String, hp: int, damage: int):
 	for watcher in watchers:
 		hurt.rpc_id(watcher.peer_id, timestamp, from, hp, damage)
 
+	got_hurt.emit(from, hp, damage)
+
 
 func check_if_hurt():
 	for i in range(hurt_buffer.size() - 1, -1, -1):
@@ -130,6 +134,8 @@ func sync_loop_animation(animation: String, direction: Vector2):
 
 	for watcher in watchers:
 		loop_animation.rpc_id(watcher.peer_id, timestamp, animation, direction)
+
+	loop_animation_changed.emit(animation, direction)
 
 
 func check_if_loop_animation_changed():

@@ -9,9 +9,6 @@ extends GMFPlayerBody2D
 func _ready():
 	super()
 
-	if Gmf.is_server():
-		return
-
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.attacked.connect(_on_attacked)
 
