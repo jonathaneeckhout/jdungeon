@@ -15,5 +15,5 @@ var level: int = 1
 var experience: int = 0
 
 
-func hurt(damage: int):
+func hurt(_damage: int):
 	pass

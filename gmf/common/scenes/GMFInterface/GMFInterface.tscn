@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://8t6nwakq6im5"]
 
-[ext_resource type="Script" path="res://gmf/common/scenes/Interface/Interface.gd" id="1_1otx5"]
+[ext_resource type="Script" path="res://gmf/common/scenes/GMFInterface/GMFInterface.gd" id="1_1otx5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbusd"]
 bg_color = Color(0.356863, 0.690196, 0.364706, 1)
 
-[node name="Interface" type="Control"]
+[node name="GMFInterface" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0

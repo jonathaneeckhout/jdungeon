@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cxxrxuta8os57" path="res://assets/enemies/treetrunkguy/Treetrunkguy_foregroundhand.png" id="6_37oon"]
 [ext_resource type="Texture2D" uid="uid://dht8y8635wy5o" path="res://assets/enemies/treetrunkguy/Treetrunkguy_foregroundleg.png" id="7_7d51h"]
 [ext_resource type="Texture2D" uid="uid://b6k68irc0gh3s" path="res://assets/enemies/treetrunkguy/Treetrunkguy_torso.png" id="8_31yn2"]
-[ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://gmf/common/scenes/Interface/Interface.tscn" id="9_l1nhs"]
+[ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://gmf/common/scenes/GMFInterface/GMFInterface.tscn" id="9_l1nhs"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6b05c"]
 radius = 16.0
