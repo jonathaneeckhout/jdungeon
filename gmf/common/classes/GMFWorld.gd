@@ -2,7 +2,7 @@ extends Node2D
 
 class_name GMFWorld
 
-@export var enemies_to_sync: Array[GMFEnemyBody2D] = []
+@export var enemies_to_sync: Node2D
 
 var players: Node2D
 var enemies: Node2D
@@ -57,7 +57,7 @@ func _ready():
 
 
 func load_enemies():
-	for enemy in enemies_to_sync:
+	for enemy in enemies_to_sync.get_children():
 		enemy.name = str(enemy.get_instance_id())
 		enemy.get_parent().remove_child(enemy)
 

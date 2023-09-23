@@ -7,7 +7,7 @@ signal interacted(target_name: String)
 
 @export var player: GMFPlayerBody2D
 @export var synchronizer: GMFSynchronizer
-@export var network_sync_area_size: float = 512.0
+@export var network_sync_area_size: float = 1024.0
 
 var bodies_in_view: Array[GMFBody2D] = []
 
