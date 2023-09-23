@@ -17,7 +17,7 @@ func _ready():
 
 	animation_player.animation_finished.connect(_on_animation_finished)
 
-	$Interface.display_name = enemy_class
+	$GMFInterface.display_name = enemy_class
 
 
 func _on_got_hurt(_from: String, _hp: int, _damage: int):

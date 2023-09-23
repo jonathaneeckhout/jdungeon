@@ -556,6 +556,6 @@ libraries = {
 "": SubResource("AnimationLibrary_64j07")
 }
 
-[node name="Interface" parent="." instance=ExtResource("9_l1nhs")]
+[node name="GMFInterface" parent="." instance=ExtResource("9_l1nhs")]
 offset_top = -128.0
 offset_bottom = -88.0

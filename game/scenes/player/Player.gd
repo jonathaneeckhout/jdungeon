@@ -14,7 +14,7 @@ func _ready():
 
 	animation_player.play(loop_animation)
 
-	$Interface.display_name = username
+	$GMFInterface.display_name = username
 
 
 func _physics_process(_delta):
