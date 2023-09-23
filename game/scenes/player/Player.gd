@@ -1,7 +1,5 @@
 extends GMFPlayerBody2D
 
-var current_animation: String = "Idle"
-
 @onready var animation_player = $AnimationPlayer
 
 @onready var skeleton = $Skeleton
@@ -19,9 +17,10 @@ func _ready():
 
 	animation_player.play(loop_animation)
 
+	$Interface.display_name = username
+
 
 func _physics_process(_delta):
-
 	if loop_animation == "Move":
 		update_face_direction(velocity.x)
 

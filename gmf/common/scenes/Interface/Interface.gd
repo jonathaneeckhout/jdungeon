@@ -1,8 +1,9 @@
 extends Control
 
-
-func set_new_name(new_name: String):
-	$Name.text = new_name
+var display_name: String = "":
+	set(new_name):
+		display_name = new_name
+		$Name.text = new_name
 
 
 func update_hp_bar(hp: int, max_hp: int):

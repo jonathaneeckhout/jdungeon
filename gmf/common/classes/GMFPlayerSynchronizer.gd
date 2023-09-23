@@ -7,7 +7,7 @@ signal interacted(target_name: String)
 
 @export var player: GMFPlayerBody2D
 @export var synchronizer: GMFSynchronizer
-@export var network_sync_area_size: float = 1024.0
+@export var network_sync_area_size: float = 512.0
 
 var bodies_in_view: Array[GMFBody2D] = []
 
@@ -57,11 +57,13 @@ func _on_network_view_area_body_entered(body: GMFBody2D):
 
 func _on_network_view_area_body_exited(body: GMFBody2D):
 	if bodies_in_view.has(body):
-		match body.entity_type:
-			Gmf.ENTITY_TYPE.PLAYER:
-				Gmf.rpcs.player.remove_other_player.rpc_id(player.peer_id, body.username)
-			Gmf.ENTITY_TYPE.ENEMY:
-				Gmf.rpcs.enemy.remove_enemy.rpc_id(player.peer_id, body.name)
+		if player.peer_id in multiplayer.get_peers():
+			match body.entity_type:
+				Gmf.ENTITY_TYPE.PLAYER:
+					Gmf.rpcs.player.remove_other_player.rpc_id(player.peer_id, body.username)
+				Gmf.ENTITY_TYPE.ENEMY:
+					Gmf.rpcs.enemy.remove_enemy.rpc_id(player.peer_id, body.name)
+
 		bodies_in_view.erase(body)
 
 	if body.synchronizer.watchers.has(player):
