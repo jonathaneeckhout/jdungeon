@@ -7,5 +7,7 @@ signal authenticated(response: bool)
 
 signal player_added(id: int, username: String, pos: Vector2)
 signal other_player_added(username: String, pos: Vector2)
+signal other_player_removed(username: String)
 
 signal enemy_added(enemy_name: String, enemy_class: String, pos: Vector2)
+signal enemy_removed(enemy_name: String)

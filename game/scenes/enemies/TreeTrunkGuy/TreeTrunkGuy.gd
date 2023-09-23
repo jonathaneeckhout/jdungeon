@@ -1,6 +1,6 @@
 extends GMFEnemyBody2D
 
-@onready var animaiton_player = $AnimationPlayer
+@onready var animation_player = $AnimationPlayer
 
 @onready var skeleton = $Skeleton
 @onready var original_scale = $Skeleton.scale
@@ -11,27 +11,17 @@ func _ready():
 
 	enemy_class = "TreeTrunkGuy"
 
-	if Gmf.is_server():
-		return
+	synchronizer.got_hurt.connect(_on_got_hurt)
 
-	state_changed.connect(_on_state_changed)
+	animation_player.play(loop_animation)
 
-	animaiton_player.play("Idle")
-
-
-func update_face_direction():
-	if velocity.x < 0:
-		skeleton.scale = original_scale
-	else:
-		skeleton.scale = Vector2(original_scale.x * -1, original_scale.y)
+	animation_player.animation_finished.connect(_on_animation_finished)
 
 
-func _on_state_changed(_new_state: STATE, _direction: Vector2, _duration: float):
-	pass
+func _on_got_hurt(_from: String, _hp: int, _damage: int):
+	animation_player.stop()
+	animation_player.play("Hurt")
 
 
-func _on_got_hurt(from: String, hp: int, damage: int):
-	super(from, hp, damage)
-
-	animaiton_player.stop()
-	animaiton_player.play("Hurt")
+func _on_animation_finished(_anim_name: String):
+	animation_player.play(loop_animation)
