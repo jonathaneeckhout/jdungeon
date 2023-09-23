@@ -1,29 +1,13 @@
-extends CharacterBody2D
+extends GMFBody2D
 
 class_name GMFPlayerBody2D
 
-enum STATE { IDLE, MOVE, INTERACT, ATTACK, LOOT, NPC }
 enum INTERACT_TYPE { ENEMY, NPC, ITEM }
 
 const ARRIVAL_DISTANCE = 8
 const SPEED = 300.0
 
-signal state_changed(new_state: STATE, direction: Vector2, duration: float)
-signal attacked(target: String, damage: int)
-signal got_hurt(from: String, hp: int, damage: int)
-
-@export var peer_id := 1:
-	set(id):
-		peer_id = id
-
-var entity_type
-
 var username: String = ""
-
-var state: STATE = STATE.IDLE
-
-var server_synchronizer: Node2D
-var stats: Node
 
 var mouse_area: Area2D
 
@@ -45,29 +29,19 @@ func _input(event):
 		_handle_right_click()
 
 
-func _ready():
+func _init():
 	entity_type = Gmf.ENTITY_TYPE.PLAYER
 
-	collision_layer = Gmf.PHYSICS_LAYER_WORLD + Gmf.PHYSICS_LAYER_PLAYERS
+
+func _ready():
+	super()
+
+	collision_layer += Gmf.PHYSICS_LAYER_PLAYERS
+
+	if interface:
+		interface.set_new_name(username)
 
 	if Gmf.is_server():
-		collision_mask = Gmf.PHYSICS_LAYER_WORLD
-	else:
-		# Don't handle physics on client side
-		collision_mask = 0
-
-	server_synchronizer = load("res://gmf/common/scripts/serverSynchronizer.gd").new()
-	server_synchronizer.name = "ServerSynchronizer"
-	add_child(server_synchronizer)
-
-	stats = load("res://gmf/common/classes/GMFPlayerBody2D/stats.gd").new()
-	stats.name = "Stats"
-	add_child(stats)
-
-	if Gmf.is_server():
-		# Don't handle input on server side
-		set_process_input(false)
-
 		var attack_area = Area2D.new()
 		attack_area.name = "AttackArea"
 		attack_area.collision_layer = 0
@@ -118,14 +92,7 @@ func _ready():
 		add_child(mouse_area)
 
 
-func _physics_process(delta: float):
-	if Gmf.is_server():
-		logic(delta)
-
-		move_and_slide()
-
-
-func logic(_delta: float):
+func behavior(_delta: float):
 	if moving:
 		if position.distance_to(move_target) > ARRIVAL_DISTANCE:
 			velocity = position.direction_to(move_target) * SPEED
@@ -148,7 +115,7 @@ func logic(_delta: float):
 					velocity = Vector2.ZERO
 
 					if attack_timer.is_stopped():
-						_attack(interact_target)
+						attack(interact_target)
 						attack_timer.start(0.8)
 
 					set_new_state(STATE.ATTACK)
@@ -172,29 +139,6 @@ func move(pos: Vector2):
 
 func interact(target: String):
 	server_synchronizer.interact.rpc_id(1, target)
-
-
-func _attack(target: CharacterBody2D):
-	var damage = randi_range(stats.attack_power_min, stats.attack_power_max)
-
-	target.hurt(self, damage)
-	server_synchronizer.sync_attack(target.name, damage)
-
-
-func hurt(from: CharacterBody2D, damage: int):
-	# # Reduce the damage according to the defense stat
-	var reduced_damage = max(0, damage - stats.defense)
-
-	# # Deal damage if health pool is big enough
-	if reduced_damage < stats.hp:
-		stats.hp -= reduced_damage
-		server_synchronizer.sync_hurt(from.name, stats.hp, reduced_damage)
-	# # Die if damage is bigger than remaining hp
-	else:
-		print("I'm dead")
-		# die()
-
-	# update_hp_bar()
 
 
 func _handle_right_click():
