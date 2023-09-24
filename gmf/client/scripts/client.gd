@@ -85,6 +85,6 @@ func alertbox(message: String, parent: Node) -> void:
 	dialog.title = "Alert"
 	dialog.dialog_text = message
 	dialog.unresizable = true
-	dialog.connect("modal_closed", dialog.queue_free)
+	dialog.connect("close_requested", dialog.queue_free)
 	parent.add_child(dialog)
 	dialog.popup_centered()
