@@ -111,6 +111,7 @@ func _handle_login():
 	if response:
 		Gmf.logger.info("Login Successful")
 		login_panel.hide()
+		Gmf.client.player.focus_camera()
 		state = STATES.RUNNING
 		fsm()
 	else:

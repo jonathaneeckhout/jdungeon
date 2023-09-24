@@ -7,3 +7,7 @@ func add_player(id: int, username: String, pos: Vector2):
 
 @rpc("call_remote", "authority", "reliable") func add_other_player(username: String, pos: Vector2):
 	Gmf.signals.client.other_player_added.emit(username, pos)
+
+
+@rpc("call_remote", "authority", "reliable") func remove_other_player(username: String):
+	Gmf.signals.client.other_player_removed.emit(username)

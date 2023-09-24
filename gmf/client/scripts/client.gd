@@ -6,6 +6,8 @@ const CLOCK_SYNC_TIMER_TIME = 0.5
 var clock: float = 0.0
 var clock_sync_timer: Timer
 
+var player: GMFPlayerBody2D
+
 
 func _ready():
 	multiplayer.connected_to_server.connect(_on_connection_succeeded)

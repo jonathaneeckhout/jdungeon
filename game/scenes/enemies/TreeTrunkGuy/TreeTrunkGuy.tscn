@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cxxrxuta8os57" path="res://assets/enemies/treetrunkguy/Treetrunkguy_foregroundhand.png" id="6_37oon"]
 [ext_resource type="Texture2D" uid="uid://dht8y8635wy5o" path="res://assets/enemies/treetrunkguy/Treetrunkguy_foregroundleg.png" id="7_7d51h"]
 [ext_resource type="Texture2D" uid="uid://b6k68irc0gh3s" path="res://assets/enemies/treetrunkguy/Treetrunkguy_torso.png" id="8_31yn2"]
-[ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://gmf/common/scenes/Interface/Interface.tscn" id="9_l1nhs"]
+[ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://gmf/common/scenes/GMFInterface/GMFInterface.tscn" id="9_l1nhs"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6b05c"]
 radius = 16.0
@@ -484,36 +484,42 @@ metadata/_edit_lock_ = true
 
 [node name="RightArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(-100, -560)
+scale = Vector2(1, 1)
 texture = ExtResource("4_agvxr")
 offset = Vector2(-173, 6.50012)
 metadata/_edit_lock_ = true
 
 [node name="RightLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(-110, -260)
+scale = Vector2(1, 1)
 texture = ExtResource("5_fywxg")
 offset = Vector2(-163, -293.5)
 metadata/_edit_lock_ = true
 
 [node name="LeftLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(100, -270)
+scale = Vector2(1, 1)
 texture = ExtResource("7_7d51h")
 offset = Vector2(-373, -283.5)
 metadata/_edit_lock_ = true
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(0, -270)
+scale = Vector2(1, 1)
 texture = ExtResource("8_31yn2")
 offset = Vector2(-270, -280)
 metadata/_edit_lock_ = true
 
 [node name="Axe" type="Sprite2D" parent="Sprites"]
 position = Vector2(250, -1100)
+scale = Vector2(1, 1)
 texture = ExtResource("3_jrku4")
 offset = Vector2(-523, 546.5)
 metadata/_edit_lock_ = true
 
 [node name="LeftArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(160, -570)
+scale = Vector2(1, 1)
 texture = ExtResource("6_37oon")
 offset = Vector2(-433, 16.5001)
 metadata/_edit_lock_ = true
@@ -550,6 +556,6 @@ libraries = {
 "": SubResource("AnimationLibrary_64j07")
 }
 
-[node name="Interface" parent="." instance=ExtResource("9_l1nhs")]
+[node name="GMFInterface" parent="." instance=ExtResource("9_l1nhs")]
 offset_top = -128.0
 offset_bottom = -88.0

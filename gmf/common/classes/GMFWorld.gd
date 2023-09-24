@@ -2,7 +2,7 @@ extends Node2D
 
 class_name GMFWorld
 
-@export var enemies_to_sync: Array[GMFEnemyBody2D] = []
+@export var enemies_to_sync: Node2D
 
 var players: Node2D
 var enemies: Node2D
@@ -44,8 +44,12 @@ func _ready():
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	else:
 		Gmf.signals.client.player_added.connect(_on_client_player_added)
+
 		Gmf.signals.client.other_player_added.connect(_on_client_other_player_added)
+		Gmf.signals.client.other_player_removed.connect(_on_client_other_player_removed)
+
 		Gmf.signals.client.enemy_added.connect(_on_client_enemy_added)
+		Gmf.signals.client.enemy_removed.connect(_on_client_enemy_removed)
 
 	Gmf.world = self
 
@@ -53,7 +57,7 @@ func _ready():
 
 
 func load_enemies():
-	for enemy in enemies_to_sync:
+	for enemy in enemies_to_sync.get_children():
 		enemy.name = str(enemy.get_instance_id())
 		enemy.get_parent().remove_child(enemy)
 
@@ -70,7 +74,6 @@ func _on_player_logged_in(id: int, username: String):
 	player.peer_id = id
 
 	players.add_child(player)
-	player.server_synchronizer.start()
 
 	# Add to this list for internal tracking
 	players_by_id[id] = player
@@ -100,7 +103,8 @@ func _on_client_player_added(id: int, username: String, pos: Vector2):
 	player.position = pos
 
 	players.add_child(player)
-	player.server_synchronizer.start()
+
+	Gmf.client.player = player
 
 
 func _on_client_other_player_added(username: String, pos: Vector2):
@@ -110,7 +114,11 @@ func _on_client_other_player_added(username: String, pos: Vector2):
 	player.position = pos
 
 	players.add_child(player)
-	player.server_synchronizer.start()
+
+
+func _on_client_other_player_removed(username: String):
+	if players.has_node(username):
+		players.get_node(username).queue_free()
 
 
 func _on_client_enemy_added(enemy_name: String, enemy_class: String, pos: Vector2):
@@ -119,4 +127,8 @@ func _on_client_enemy_added(enemy_name: String, enemy_class: String, pos: Vector
 	enemy.position = pos
 
 	enemies.add_child(enemy)
-	enemy.server_synchronizer.start()
+
+
+func _on_client_enemy_removed(enemy_name: String):
+	if enemies.has_node(enemy_name):
+		enemies.get_node(enemy_name).queue_free()

@@ -1,8 +1,6 @@
 extends GMFPlayerBody2D
 
-var current_animation: String = "Idle"
-
-@onready var animaiton_player = $AnimationPlayer
+@onready var animation_player = $AnimationPlayer
 
 @onready var skeleton = $Skeleton
 @onready var original_scale = $Skeleton.scale
@@ -11,46 +9,46 @@ var current_animation: String = "Idle"
 func _ready():
 	super()
 
-	if Gmf.is_server():
-		return
+	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
+	synchronizer.attacked.connect(_on_attacked)
 
-	state_changed.connect(_on_state_changed)
-	attacked.connect(_on_attacked)
+	animation_player.play(loop_animation)
 
-	animaiton_player.play(current_animation)
-
-
-func _physics_process(delta):
-	super(delta)
-
-	if Gmf.is_server():
-		return
-
-	if state == STATE.MOVE:
-		update_face_direction()
+	$GMFInterface.display_name = username
 
 
-func update_face_direction():
-	if velocity.x < 0:
+func _physics_process(_delta):
+	if loop_animation == "Move":
+		update_face_direction(velocity.x)
+
+
+func update_face_direction(direction: float):
+	if direction < 0:
 		skeleton.scale = original_scale
 		return
-	if velocity.x > 0:
+	if direction > 0:
 		skeleton.scale = Vector2(original_scale.x * -1, original_scale.y)
 		return
 
 
-func _on_state_changed(new_state: STATE, _direction: Vector2, _duration: float):
-	state = new_state
-
-	match new_state:
-		STATE.IDLE:
-			animaiton_player.play("Idle")
-		STATE.MOVE:
-			animaiton_player.play("Move")
-		STATE.ATTACK:
-			pass
+func focus_camera():
+	$GMFCamera2D.make_current()
 
 
-func _on_attacked(_target: String, _damage: int):
-	animaiton_player.stop()
-	animaiton_player.play("Attack")
+func _on_loop_animation_changed(animation: String, direction: Vector2):
+	loop_animation = animation
+
+	animation_player.play(loop_animation)
+
+	update_face_direction(direction.x)
+
+
+func _on_attacked(target: String, _damage: int):
+	animation_player.stop()
+	animation_player.play("Attack")
+
+	var enemy: GMFEnemyBody2D = Gmf.world.enemies.get_node(target)
+	if enemy == null:
+		return
+
+	update_face_direction(position.direction_to(enemy.position).x)
