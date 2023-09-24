@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Gmf="*res://gmf/common/scripts/gmf.gd"
 GodotLogger="*res://addons/logger/logger.gd"
+JUI="*res://game/common/scripts/jui.gd"
 
 [debug]
 

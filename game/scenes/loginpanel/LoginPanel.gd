@@ -51,7 +51,7 @@ func _on_connect_button_pressed():
 	var server_address = server_address_input.text
 	var server_port = int(server_port_input.text)
 	if server_address == "" or server_port <= 0:
-		Gmf.client.alertbox("Invalid server address or port", self)
+		JUI.alertbox("Invalid server address or port", self)
 	connect_pressed.emit(server_address, server_port)
 
 
@@ -60,7 +60,7 @@ func _on_login_button_pressed():
 	var password = login_password_input.text
 
 	if username == "" or password == "":
-		Gmf.client.alertbox("Invalid username or password", self)
+		JUI.alertbox("Invalid username or password", self)
 		Gmf.logger.warn("Invalid username or password")
 		return
 
@@ -77,12 +77,12 @@ func _on_create_account_button_pressed():
 	var repeat_password = register_password_confirm_input.text
 
 	if username == "" or password == "" or repeat_password == "":
-		Gmf.client.alertbox("Fill in all fields", self)
+		JUI.alertbox("Fill in all fields", self)
 		Gmf.logger.warn("Invalid username or password")
 		return
 
 	if password != repeat_password:
-		Gmf.client.alertbox("Password mismatch", self)
+		JUI.alertbox("Password mismatch", self)
 		Gmf.logger.warn("Password mismatch")
 		return
 

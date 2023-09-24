@@ -79,12 +79,3 @@ func _on_connection_failed():
 
 func _on_clock_sync_timer_timeout():
 	Gmf.rpcs.clock.get_latency.rpc_id(1, Time.get_unix_time_from_system())
-
-func alertbox(message: String, parent: Node) -> void:
-	var dialog = AcceptDialog.new()
-	dialog.title = "Alert"
-	dialog.dialog_text = message
-	dialog.unresizable = true
-	dialog.connect("close_requested", dialog.queue_free)
-	parent.add_child(dialog)
-	dialog.popup_centered()

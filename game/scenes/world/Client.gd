@@ -71,7 +71,7 @@ func _handle_connect():
 		Gmf.logger.warn(
 			"Could not connect to server=[%s] on port=[%d]" % [server_address, server_port]
 		)
-		Gmf.client.alertbox("Error connecting to server", login_panel)
+		JUI.alertbox("Error connecting to server", login_panel)
 		state = STATES.INIT
 		fsm_timer.start()
 		return
@@ -80,7 +80,7 @@ func _handle_connect():
 		Gmf.logger.warn(
 			"Could not connect to server=[%s] on port=[%d]" % [server_address, server_port]
 		)
-		Gmf.client.alertbox("Error connecting to server", login_panel)
+		JUI.alertbox("Error connecting to server", login_panel)
 		state = STATES.INIT
 		fsm_timer.start()
 		return
@@ -115,7 +115,7 @@ func _handle_login():
 		state = STATES.RUNNING
 		fsm()
 	else:
-		Gmf.client.alertbox("Login failed", login_panel)
+		JUI.alertbox("Login failed", login_panel)
 
 	fsm_timer.start()
 
@@ -142,9 +142,9 @@ func _handle_create_account():
 
 	var response = await Gmf.signals.client.account_created
 	if response["error"]:
-		Gmf.client.alertbox(response["reason"], login_panel)
+		JUI.alertbox(response["reason"], login_panel)
 	else:
-		Gmf.client.alertbox("Account created", login_panel)
+		JUI.alertbox("Account created", login_panel)
 
 	fsm_timer.start()
 
