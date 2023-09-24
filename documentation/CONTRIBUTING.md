@@ -55,7 +55,7 @@ git fetch upstream
 git merge upstream/main  # or the appropriate branch
 ```
 
-## Step 9: Resolve Conflicts (If Any):
+## Step 9: Resolve Conflicts (If Any)
 
 If there are conflicts between your changes and the upstream changes, resolve them in your local repository.
 
@@ -71,7 +71,7 @@ On your forked repository's GitHub page, you'll see a prompt to create a pull re
 
 If your changes consists of UI or art stuff make sure to add some screenshots to showcase them.
 
-## Step 12: Engage in Discussion:
+## Step 12: Engage in Discussions/Comments
 
 Your PR might undergo review, feedback, and discussions. Be responsive and willing to make necessary changes based on feedback.
 
