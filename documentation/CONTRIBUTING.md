@@ -61,7 +61,7 @@ git merge upstream/main  # or the appropriate branch
 
 If there are conflicts between your changes and the upstream changes, resolve them in your local repository.
 
-## Step 10: Push Changes: Push your changes to your forked repository on GitHub
+### Push Changes: Push your changes to your forked repository on GitHub
 
 ```bash
 git push origin <branch-name>
