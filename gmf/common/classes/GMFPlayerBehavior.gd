@@ -71,7 +71,7 @@ func behavior(_delta: float):
 			moving = false
 			player.velocity = Vector2.ZERO
 	elif interacting:
-		if not is_instance_valid(interact_target):
+		if not is_instance_valid(interact_target) or interact_target.is_dead:
 			interacting = false
 			interact_target = null
 			return

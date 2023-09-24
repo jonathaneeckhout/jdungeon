@@ -28,6 +28,8 @@ func _ready():
 	stats.name = "Stats"
 	add_child(stats)
 
+	stats.died.connect(_on_stats_died)
+
 
 func attack(target: CharacterBody2D):
 	var damage = randi_range(stats.attack_power_min, stats.attack_power_max)
@@ -46,3 +48,7 @@ func send_new_loop_animation(animation: String):
 	if loop_animation != animation:
 		loop_animation = animation
 		synchronizer.sync_loop_animation(loop_animation, velocity)
+
+
+func _on_stats_died():
+	synchronizer.sync_die()

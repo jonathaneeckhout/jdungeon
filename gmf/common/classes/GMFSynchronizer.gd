@@ -5,6 +5,7 @@ class_name GMFSynchronizer
 signal attacked(target: String, damage: int)
 signal got_hurt(from: String, hp: int, max_hp: int, damage: int)
 signal loop_animation_changed(animation: String, direction: Vector2)
+signal died
 
 const INTERPOLATION_OFFSET = 0.1
 const INTERPOLATION_INDEX = 2
@@ -18,6 +19,7 @@ var server_syncs_buffer: Array[Dictionary] = []
 var attack_buffer: Array[Dictionary] = []
 var hurt_buffer: Array[Dictionary] = []
 var loop_animation_buffer: Array[Dictionary] = []
+var die_buffer: Array[Dictionary] = []
 
 
 func _physics_process(_delta):
@@ -31,6 +33,7 @@ func _physics_process(_delta):
 		check_if_attack()
 		check_if_hurt()
 		check_if_loop_animation_changed()
+		check_if_die()
 
 
 func calculate_position():
@@ -153,6 +156,23 @@ func check_if_loop_animation_changed():
 			return true
 
 
+func sync_die():
+	var timestamp = Time.get_unix_time_from_system()
+
+	for watcher in watchers:
+		die.rpc_id(watcher.peer_id, timestamp)
+
+	died.emit()
+
+
+func check_if_die():
+	for i in range(die_buffer.size() - 1, -1, -1):
+		if die_buffer[i]["timestamp"] <= Gmf.client.clock:
+			died.emit()
+			die_buffer.remove_at(i)
+			return true
+
+
 @rpc("call_remote", "authority", "unreliable")
 func sync(timestamp: float, pos: Vector2, vec: Vector2):
 	# Ignore older syncs
@@ -180,3 +200,7 @@ func loop_animation(timestamp: float, animation: String, direction: Vector2):
 	loop_animation_buffer.append(
 		{"timestamp": timestamp, "animation": animation, "direction": direction}
 	)
+
+
+@rpc("call_remote", "authority", "reliable") func die(timestamp: float):
+	die_buffer.append({"timestamp": timestamp})

@@ -22,12 +22,14 @@ visible = false
 
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(944, 464)
+respawn = true
 
 [node name="TreeTrunkGuy2" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(512, 800)
 
 [node name="TreeTrunkGuy3" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-256, 624)
+respawn = true
 
 [node name="TreeTrunkGuy4" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-872, 360)

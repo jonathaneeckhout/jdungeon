@@ -8,6 +8,7 @@ var players: Node2D
 var enemies: Node2D
 var npcs: Node2D
 var items: Node2D
+var enemy_respawns: Node2D
 
 var players_by_id = {}
 
@@ -42,6 +43,10 @@ func _ready():
 	if Gmf.is_server():
 		Gmf.signals.server.player_logged_in.connect(_on_player_logged_in)
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+
+		enemy_respawns = Node2D.new()
+		enemy_respawns.name = "GMFEnemyRespawns"
+		entities.add_child(enemy_respawns)
 	else:
 		Gmf.signals.client.player_added.connect(_on_client_player_added)
 
@@ -63,6 +68,15 @@ func load_enemies():
 
 		if Gmf.is_server():
 			enemies.add_child(enemy)
+
+
+func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn_time: float):
+	var respawn: GMFEnemyRespawn = load("res://gmf/common/classes/GMFEnemyRespawn.gd").new()
+	respawn.enemy_class = enemy_class
+	respawn.respawn_position = respawn_position
+	respawn.respawn_time = respawn_time
+
+	enemy_respawns.add_child(respawn)
 
 
 func _on_player_logged_in(id: int, username: String):
