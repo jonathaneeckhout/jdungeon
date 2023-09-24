@@ -29,7 +29,8 @@ func create_account_response(error: bool, reason: String = ""):
 
 	Gmf.server.users[id]["logged_in"] = res
 
-	Gmf.signals.server.player_logged_in.emit(id, username)
+	if res:
+		Gmf.signals.server.player_logged_in.emit(id, username)
 
 	authentication_response.rpc_id(id, res)
 
