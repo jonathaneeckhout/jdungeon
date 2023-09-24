@@ -85,7 +85,7 @@ func _on_create_account_button_pressed():
 		Gmf.client.alertbox("Password mismatch", self)
 		Gmf.logger.warn("Password mismatch")
 		return
-	
+
 	create_account_pressed.emit(username, password)
 
 func _on_back_create_account_button_pressed():
