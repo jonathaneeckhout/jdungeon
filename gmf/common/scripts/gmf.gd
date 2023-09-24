@@ -18,7 +18,7 @@ var signals: Node
 var rpcs: Node
 
 var server: Node
-var client: Node
+var client: GmfClient
 
 var world: Node
 

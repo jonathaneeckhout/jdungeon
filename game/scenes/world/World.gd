@@ -8,4 +8,4 @@ func _ready():
 		var client = load("res://game/scenes/world/Client.gd").new()
 		client.name = "Client"
 		add_child(client)
-		$LoginPanel.show()
+		$UI/LoginPanel.show()

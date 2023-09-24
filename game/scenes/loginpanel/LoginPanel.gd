@@ -6,74 +6,61 @@ signal create_account_pressed(username: String, password: String)
 signal show_create_account_pressed
 signal back_create_account_pressed
 
+# ConnectContainer
+@onready var server_address_input := $Panel/ConnectContainer/MarginContainer/VBoxContainer/ServerAddressText
+@onready var server_port_input := $Panel/ConnectContainer/MarginContainer2/VBoxContainer/ServerPortText
+@onready var connect_button := $Panel/ConnectContainer/MarginContainer3/ConnectButton
+
+#LoginContainer
+@onready var login_input := $Panel/LoginContainer/MarginContainer/VBoxContainer/LoginText
+@onready var login_password_input := $Panel/LoginContainer/MarginContainer2/VBoxContainer/LoginPasswordText
+@onready var login_button := $Panel/LoginContainer/MarginContainer3/VBoxContainer/LoginButton
+@onready var goto_create_account_button := $Panel/LoginContainer/MarginContainer3/VBoxContainer/GoToCreateAccountButton
+
+#CreateAccountContainer
+@onready var register_login_input := $Panel/CreateAccountContainer/MarginContainer/VBoxContainer/LoginText
+@onready var register_password_input := $Panel/CreateAccountContainer/MarginContainer2/VBoxContainer/PasswordText
+@onready var register_password_confirm_input := $Panel/CreateAccountContainer/MarginContainer2/VBoxContainer/PasswordConfirmText
+@onready var create_account_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxContainer/CreateAccountButton
+@onready var goto_login_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxContainer/BackToLoginButton
+
+@onready var _anim_player := $AnimationPlayer
 
 func _ready():
-	$Panel/ConnectContainer/ServerAddressText.text = Gmf.global.env_server_address
-	$Panel/ConnectContainer/ServerPortText.text = str(Gmf.global.env_server_port)
-
-	$Panel/ConnectContainer/ConnectButton.pressed.connect(_on_connect_button_pressed)
-
-	$Panel/LoginContainer/LoginButton.pressed.connect(_on_login_button_pressed)
-	$Panel/LoginContainer/CreateAccountButton.pressed.connect(_on_show_create_account_menu)
-
-	$Panel/CreateAccountContainer/CreateAccountButton.pressed.connect(
-		_on_create_account_button_pressed
-	)
-
-	$Panel/CreateAccountContainer/BackButton.pressed.connect(_on_back_create_account_button_pressed)
-
+	server_address_input.text = Gmf.global.env_server_address
+	server_port_input.text = str(Gmf.global.env_server_port)
+	connect_button.pressed.connect(_on_connect_button_pressed)
+	login_button.pressed.connect(_on_login_button_pressed)
+	goto_create_account_button.pressed.connect(_on_show_create_account_menu)
+	create_account_button.pressed.connect(_on_create_account_button_pressed)
+	goto_login_button.pressed.connect(_on_back_create_account_button_pressed)
 
 func show_connect_container():
 	self.show()
-	$Panel/ConnectContainer.show()
-	$Panel/LoginContainer.hide()
-	$Panel/CreateAccountContainer.hide()
-
+	_anim_player.play("goto_connect")
 
 func show_create_account_container():
 	self.show()
-	$Panel/ConnectContainer.hide()
-	$Panel/LoginContainer.hide()
-	$Panel/CreateAccountContainer.show()
-
+	_anim_player.play("goto_createaccount")
 
 func show_login_container():
 	self.show()
-	$Panel/ConnectContainer.hide()
-	$Panel/LoginContainer.show()
-	$Panel/CreateAccountContainer.hide()
-
-
-func show_connect_error(message: String):
-	$Panel/ConnectContainer/ErrorLabel.text = message
-
-
-func show_login_error(message: String):
-	$Panel/LoginContainer/ErrorLabel.text = message
-
-
-func show_create_account_error(message: String):
-	$Panel/CreateAccountContainer/ErrorLabel.text = message
-
+	_anim_player.play("goto_login")
 
 func _on_connect_button_pressed():
-	var server_address = $Panel/ConnectContainer/ServerAddressText.text
-	var server_port = int($Panel/ConnectContainer/ServerPortText.text)
-
+	var server_address = server_address_input.text
+	var server_port = int(server_port_input.text)
 	if server_address == "" or server_port <= 0:
-		$Panel/ConnectContainer/ErrorLabel.text = "Invalid server address or port"
-		Gmf.logger.warn("Invalid server address or port")
-		return
-
+		Gmf.client.alertbox("Invalid server address or port", self)
 	connect_pressed.emit(server_address, server_port)
 
 
 func _on_login_button_pressed():
-	var username = $Panel/LoginContainer/UsernameText.text
-	var password = $Panel/LoginContainer/PasswordText.text
+	var username = login_input.text
+	var password = login_password_input.text
 
 	if username == "" or password == "":
-		$Panel/LoginContainer/ErrorLabel.text = "Invalid username or password"
+		Gmf.client.alertbox("Invalid username or password", self)
 		Gmf.logger.warn("Invalid username or password")
 		return
 
@@ -85,22 +72,21 @@ func _on_show_create_account_menu():
 
 
 func _on_create_account_button_pressed():
-	var username = $Panel/CreateAccountContainer/UsernameText.text
-	var password = $Panel/CreateAccountContainer/PasswordText.text
-	var repeat_password = $Panel/CreateAccountContainer/RepeatPasswordText.text
+	var username = register_login_input.text
+	var password = register_password_input.text
+	var repeat_password = register_password_confirm_input.text
 
 	if username == "" or password == "" or repeat_password == "":
-		$Panel/CreateAccountContainer/ErrorLabel.text = "Fill in all fields"
+		Gmf.client.alertbox("Fill in all fields", self)
 		Gmf.logger.warn("Invalid username or password")
 		return
 
 	if password != repeat_password:
-		$Panel/CreateAccountContainer/ErrorLabel.text = "Password mismatch"
+		Gmf.client.alertbox("Password mismatch", self)
 		Gmf.logger.warn("Password mismatch")
 		return
-
+	
 	create_account_pressed.emit(username, password)
-
 
 func _on_back_create_account_button_pressed():
 	back_create_account_pressed.emit()

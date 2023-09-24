@@ -4,16 +4,17 @@
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://game/scenes/loginpanel/LoginPanel.tscn" id="2_fjr74"]
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://game/scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="3_fddk3"]
 
-[node name="World" type="Node2D" node_paths=PackedStringArray("enemies_to_sync")]
+[node name="World" type="Node2D"]
 script = ExtResource("1_3w1ia")
-enemies_to_sync = [NodePath("Entities/Enemies/TreeTrunkGuy")]
 
-[node name="LoginPanel" parent="." instance=ExtResource("2_fjr74")]
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="LoginPanel" parent="UI" instance=ExtResource("2_fjr74")]
 visible = false
-offset_left = 352.0
-offset_top = 60.0
-offset_right = 352.0
-offset_bottom = 60.0
+offset_left = -400.0
+offset_top = -400.0
+offset_right = 400.0
+offset_bottom = 400.0
 
 [node name="ToBeSynced" type="Node2D" parent="."]
 
