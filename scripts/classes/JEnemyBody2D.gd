@@ -2,8 +2,6 @@ extends JBody2D
 
 class_name JEnemyBody2D
 
-signal respawned
-
 const DESPAWN_TIME = 10.0
 
 @export var respawn: bool = false
@@ -37,7 +35,7 @@ func _ready():
 		add_child(despawn_timer)
 
 
-func _on_stats_died():
+func die():
 	super()
 
 	despawn_timer.start(DESPAWN_TIME)

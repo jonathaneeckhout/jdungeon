@@ -18,7 +18,7 @@ func _ready():
 
 
 func _on_respawn_timer_timeout():
-	var enemy: JEnemyBody2D = J.enemies_scene[enemy_class].instantiate()
+	var enemy: JEnemyBody2D = J.enemy_scenes[enemy_class].instantiate()
 	enemy.name = str(enemy.get_instance_id())
 	enemy.position = respawn_position
 	enemy.respawn = true

@@ -51,8 +51,6 @@ func _ready():
 
 	actor.synchronizer.died.connect(_on_died)
 
-	actor.respawned.connect(_on_respawned)
-
 
 func _physics_process(_delta: float):
 	if J.is_server():
@@ -170,6 +168,3 @@ func _on_colliding_timer_timeout():
 func _on_died():
 	is_dead = true
 
-
-func _on_respawned():
-	is_dead = false

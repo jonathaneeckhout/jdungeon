@@ -10,6 +10,7 @@ const PHYSICS_LAYER_NPCS = 8
 const PHYSICS_LAYER_ITEMS = 16
 
 const ARRIVAL_DISTANCE = 8
+const DROP_RANGE = 64
 
 var mode: MODE = MODE.CLIENT
 
@@ -25,7 +26,8 @@ var client: JClient
 var world: Node
 
 var player_scene: Resource
-var enemies_scene: Dictionary = {}
+var enemy_scenes: Dictionary = {}
+var item_scenes: Dictionary = {}
 
 
 func _ready():
@@ -91,4 +93,8 @@ func register_player_scene(player_scene_path: String):
 
 
 func register_enemy_scene(enemy_class: String, enemy_scene_path: String):
-	enemies_scene[enemy_class] = load(enemy_scene_path)
+	enemy_scenes[enemy_class] = load(enemy_scene_path)
+
+
+func register_item_scene(item_class: String, item_scene_path: String):
+	item_scenes[item_class] = load(item_scene_path)

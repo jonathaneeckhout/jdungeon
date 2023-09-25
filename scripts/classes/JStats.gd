@@ -2,7 +2,7 @@ extends Node
 
 class_name JStats
 
-signal died
+@export var parent: JBody2D
 
 var max_hp: int = 10
 var hp: int = max_hp
@@ -27,9 +27,10 @@ func hurt(damage: int) -> int:
 	# # Die if damage is bigger than remaining hp
 	else:
 		hp = 0
-		died.emit()
+		parent.die()
 
 	return reduced_damage
+
 
 func reset_hp():
 	hp = max_hp

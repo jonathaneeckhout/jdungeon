@@ -18,7 +18,7 @@ var moving: bool = false
 var move_target: Vector2 = Vector2()
 
 var interacting: bool = false
-var interact_target: JBody2D = null
+var interact_target: Variant = null
 var interact_type: INTERACT_TYPE = INTERACT_TYPE.ENEMY
 
 
@@ -70,14 +70,17 @@ func behavior(_delta: float):
 			moving = false
 			player.velocity = Vector2.ZERO
 	elif interacting:
-		if not is_instance_valid(interact_target) or interact_target.is_dead:
+		if not is_instance_valid(interact_target):
 			interacting = false
 			interact_target = null
 			return
 
 		match interact_type:
 			INTERACT_TYPE.ENEMY:
-				if not enemies_in_attack_range.has(interact_target):
+				if interact_target.is_dead:
+					interacting = false
+					interact_target = null
+				elif not enemies_in_attack_range.has(interact_target):
 					player.velocity = (
 						player.position.direction_to(interact_target.position)
 						* player_stats.movement_speed

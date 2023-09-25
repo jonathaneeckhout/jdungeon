@@ -7,6 +7,12 @@ func _ready():
 
 	J.register_player_scene("res://scenes/player/Player.tscn")
 
+	register_items()
+
+
+func register_items():
+	J.register_item_scene("Gold", "res://scenes/items/varia/gold/Gold.tscn")
+
 
 func _on_run_as_server_pressed():
 	J.logger.info("Running as server")

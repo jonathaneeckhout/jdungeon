@@ -10,40 +10,56 @@ signal interacted(target_name: String)
 @export var network_sync_area_size: float = 1024.0
 
 var bodies_in_view: Array[JBody2D] = []
+var items_in_view: Array[JItem] = []
 
 
 func _ready():
 	if J.is_server():
-		var network_view_area = Area2D.new()
-		network_view_area.name = "NetworkViewArea"
-		var cs_network_view_area = CollisionShape2D.new()
-		cs_network_view_area.name = "NetworkViewAreaCollisionShape2D"
-		network_view_area.add_child(cs_network_view_area)
-
 		var cs_network_view_circle = CircleShape2D.new()
-
 		cs_network_view_circle.radius = network_sync_area_size
-		cs_network_view_area.shape = cs_network_view_circle
 
-		add_child(network_view_area)
+		var cs_body_network_view_area = CollisionShape2D.new()
+		cs_body_network_view_area.name = "BodyNetworkViewAreaCollisionShape2D"
+		cs_body_network_view_area.shape = cs_network_view_circle
 
-		network_view_area.body_entered.connect(_on_network_view_area_body_entered)
-		network_view_area.body_exited.connect(_on_network_view_area_body_exited)
+		var body_network_view_area = Area2D.new()
+		body_network_view_area.name = "BodyNetworkViewArea"
+		body_network_view_area.collision_layer = 0
+		body_network_view_area.collision_mask = J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES
+		body_network_view_area.add_child(cs_body_network_view_area)
+
+		add_child(body_network_view_area)
+
+		body_network_view_area.body_entered.connect(_on_body_network_view_area_body_entered)
+		body_network_view_area.body_exited.connect(_on_body_network_view_area_body_exited)
+
+		var cs_item_network_view_area = CollisionShape2D.new()
+		cs_item_network_view_area.name = "ItemNetworkViewAreaCollisionShape2D"
+		cs_item_network_view_area.shape = cs_network_view_circle
+
+		var item_network_view_area = Area2D.new()
+		item_network_view_area.name = "ItemNetworkViewArea"
+		item_network_view_area.collision_layer = 0
+		item_network_view_area.collision_mask = J.PHYSICS_LAYER_ITEMS
+		item_network_view_area.add_child(cs_item_network_view_area)
+
+		add_child(item_network_view_area)
+
+		item_network_view_area.body_entered.connect(_on_item_network_view_area_body_entered)
+		item_network_view_area.body_exited.connect(_on_item_network_view_area_body_exited)
 
 		# Add the player to it's own watchers
 		synchronizer.watchers.append(player)
 
 
-func _on_network_view_area_body_entered(body: JBody2D):
+func _on_body_network_view_area_body_entered(body: JBody2D):
 	if body == player:
 		return
 
 	if not bodies_in_view.has(body):
 		match body.entity_type:
 			J.ENTITY_TYPE.PLAYER:
-				J.rpcs.player.add_other_player.rpc_id(
-					player.peer_id, body.username, body.position
-				)
+				J.rpcs.player.add_other_player.rpc_id(player.peer_id, body.username, body.position)
 			J.ENTITY_TYPE.ENEMY:
 				J.rpcs.enemy.add_enemy.rpc_id(
 					player.peer_id, body.name, body.enemy_class, body.position
@@ -51,11 +67,11 @@ func _on_network_view_area_body_entered(body: JBody2D):
 
 		bodies_in_view.append(body)
 
-	if player not in body.synchronizer.watchers:
-		body.synchronizer.watchers.append(player)
+		if player not in body.synchronizer.watchers:
+			body.synchronizer.watchers.append(player)
 
 
-func _on_network_view_area_body_exited(body: JBody2D):
+func _on_body_network_view_area_body_exited(body: JBody2D):
 	if bodies_in_view.has(body):
 		if player.peer_id in multiplayer.get_peers():
 			match body.entity_type:
@@ -66,8 +82,26 @@ func _on_network_view_area_body_exited(body: JBody2D):
 
 		bodies_in_view.erase(body)
 
-	if body.synchronizer.watchers.has(player):
-		body.synchronizer.watchers.erase(player)
+		if body.synchronizer.watchers.has(player):
+			body.synchronizer.watchers.erase(player)
+
+
+func _on_item_network_view_area_body_entered(body: JItem):
+	if body == player:
+		return
+
+	if not items_in_view.has(body):
+		J.rpcs.item.add_item.rpc_id(player.peer_id, body.name, body.item_class, body.position)
+
+		items_in_view.append(body)
+
+
+func _on_item_network_view_area_body_exited(body: JItem):
+	if items_in_view.has(body):
+		if player.peer_id in multiplayer.get_peers():
+			J.rpcs.item.remove_item.rpc_id(player.peer_id, body.name)
+
+		items_in_view.erase(body)
 
 
 @rpc("call_remote", "any_peer", "reliable") func move(pos: Vector2):
