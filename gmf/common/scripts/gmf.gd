@@ -20,7 +20,7 @@ var signals: Node
 var rpcs: Node
 
 var server: Node
-var client: GmfClient
+var client: GMFClient
 
 var world: Node
 
@@ -55,8 +55,8 @@ func init_server() -> bool:
 
 	Engine.set_physics_ticks_per_second(20)
 
-	if not Gmf.global.load_server_env_variables():
-		Gmf.logger.error("Could not load server's env variables")
+	if not GMF.global.load_server_env_variables():
+		GMF.logger.error("Could not load server's env variables")
 		return false
 
 	signals.init_server()
@@ -66,7 +66,7 @@ func init_server() -> bool:
 	add_child(server)
 
 	if not server.init():
-		Gmf.logger.error("Could not load init server")
+		GMF.logger.error("Could not load init server")
 		return false
 
 	return true
@@ -77,8 +77,8 @@ func init_client() -> bool:
 
 	Engine.set_physics_ticks_per_second(60)
 
-	if not Gmf.global.load_client_env_variables():
-		Gmf.logger.error("Could not load client's env variables")
+	if not GMF.global.load_client_env_variables():
+		GMF.logger.error("Could not load client's env variables")
 		return false
 
 	signals.init_client()
@@ -91,7 +91,7 @@ func init_client() -> bool:
 
 
 func is_server() -> bool:
-	return Gmf.mode == Gmf.MODE.SERVER
+	return GMF.mode == GMF.MODE.SERVER
 
 
 func register_player_scene(player_scene_path: String):

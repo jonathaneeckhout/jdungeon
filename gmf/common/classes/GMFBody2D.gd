@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 class_name GMFBody2D
 
-var entity_type: Gmf.ENTITY_TYPE = Gmf.ENTITY_TYPE.ENEMY
+var entity_type: GMF.ENTITY_TYPE = GMF.ENTITY_TYPE.ENEMY
 
 var synchronizer: GMFSynchronizer
 var stats: GMFStats
@@ -11,10 +11,10 @@ var loop_animation: String = "Idle"
 
 
 func _ready():
-	collision_layer = Gmf.PHYSICS_LAYER_WORLD
+	collision_layer = GMF.PHYSICS_LAYER_WORLD
 
-	if Gmf.is_server():
-		collision_mask = Gmf.PHYSICS_LAYER_WORLD
+	if GMF.is_server():
+		collision_mask = GMF.PHYSICS_LAYER_WORLD
 	else:
 		# Don't handle collision on client side
 		collision_mask = 0

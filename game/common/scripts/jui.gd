@@ -1,5 +1,5 @@
-class_name jui
 extends Node
+
 
 func alertbox(message: String, parent: Node) -> void:
 	var dialog = AcceptDialog.new()

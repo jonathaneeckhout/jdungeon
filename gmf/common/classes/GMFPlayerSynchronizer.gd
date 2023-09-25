@@ -13,7 +13,7 @@ var bodies_in_view: Array[GMFBody2D] = []
 
 
 func _ready():
-	if Gmf.is_server():
+	if GMF.is_server():
 		var network_view_area = Area2D.new()
 		network_view_area.name = "NetworkViewArea"
 		var cs_network_view_area = CollisionShape2D.new()
@@ -40,12 +40,12 @@ func _on_network_view_area_body_entered(body: GMFBody2D):
 
 	if not bodies_in_view.has(body):
 		match body.entity_type:
-			Gmf.ENTITY_TYPE.PLAYER:
-				Gmf.rpcs.player.add_other_player.rpc_id(
+			GMF.ENTITY_TYPE.PLAYER:
+				GMF.rpcs.player.add_other_player.rpc_id(
 					player.peer_id, body.username, body.position
 				)
-			Gmf.ENTITY_TYPE.ENEMY:
-				Gmf.rpcs.enemy.add_enemy.rpc_id(
+			GMF.ENTITY_TYPE.ENEMY:
+				GMF.rpcs.enemy.add_enemy.rpc_id(
 					player.peer_id, body.name, body.enemy_class, body.position
 				)
 
@@ -59,10 +59,10 @@ func _on_network_view_area_body_exited(body: GMFBody2D):
 	if bodies_in_view.has(body):
 		if player.peer_id in multiplayer.get_peers():
 			match body.entity_type:
-				Gmf.ENTITY_TYPE.PLAYER:
-					Gmf.rpcs.player.remove_other_player.rpc_id(player.peer_id, body.username)
-				Gmf.ENTITY_TYPE.ENEMY:
-					Gmf.rpcs.enemy.remove_enemy.rpc_id(player.peer_id, body.name)
+				GMF.ENTITY_TYPE.PLAYER:
+					GMF.rpcs.player.remove_other_player.rpc_id(player.peer_id, body.username)
+				GMF.ENTITY_TYPE.ENEMY:
+					GMF.rpcs.enemy.remove_enemy.rpc_id(player.peer_id, body.name)
 
 		bodies_in_view.erase(body)
 
@@ -71,7 +71,7 @@ func _on_network_view_area_body_exited(body: GMFBody2D):
 
 
 @rpc("call_remote", "any_peer", "reliable") func move(pos: Vector2):
-	if not Gmf.is_server():
+	if not GMF.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
@@ -81,7 +81,7 @@ func _on_network_view_area_body_exited(body: GMFBody2D):
 
 
 @rpc("call_remote", "any_peer", "reliable") func interact(target: String):
-	if not Gmf.is_server():
+	if not GMF.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()

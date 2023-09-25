@@ -49,8 +49,8 @@ func _ready():
 
 
 func _physics_process(_delta: float):
-	if Gmf.is_server():
-		if actor.position.distance_to(wander_target) > Gmf.ARRIVAL_DISTANCE:
+	if GMF.is_server():
+		if actor.position.distance_to(wander_target) > GMF.ARRIVAL_DISTANCE:
 			actor.velocity = (
 				actor.position.direction_to(wander_target) * actor.stats.movement_speed
 			)

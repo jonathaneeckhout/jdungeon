@@ -27,8 +27,8 @@ signal back_create_account_pressed
 @onready var _anim_player := $AnimationPlayer
 
 func _ready():
-	server_address_input.text = Gmf.global.env_server_address
-	server_port_input.text = str(Gmf.global.env_server_port)
+	server_address_input.text = GMF.global.env_server_address
+	server_port_input.text = str(GMF.global.env_server_port)
 	connect_button.pressed.connect(_on_connect_button_pressed)
 	login_button.pressed.connect(_on_login_button_pressed)
 	goto_create_account_button.pressed.connect(_on_show_create_account_menu)
@@ -61,7 +61,7 @@ func _on_login_button_pressed():
 
 	if username == "" or password == "":
 		JUI.alertbox("Invalid username or password", self)
-		Gmf.logger.warn("Invalid username or password")
+		GMF.logger.warn("Invalid username or password")
 		return
 
 	login_pressed.emit(username, password)
@@ -78,12 +78,12 @@ func _on_create_account_button_pressed():
 
 	if username == "" or password == "" or repeat_password == "":
 		JUI.alertbox("Fill in all fields", self)
-		Gmf.logger.warn("Invalid username or password")
+		GMF.logger.warn("Invalid username or password")
 		return
 
 	if password != repeat_password:
 		JUI.alertbox("Password mismatch", self)
-		Gmf.logger.warn("Password mismatch")
+		GMF.logger.warn("Password mismatch")
 		return
 
 	create_account_pressed.emit(username, password)

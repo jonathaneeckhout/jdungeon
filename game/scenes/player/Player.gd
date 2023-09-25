@@ -47,7 +47,7 @@ func _on_attacked(target: String, _damage: int):
 	animation_player.stop()
 	animation_player.play("Attack")
 
-	var enemy: GMFEnemyBody2D = Gmf.world.enemies.get_node(target)
+	var enemy: GMFEnemyBody2D = GMF.world.enemies.get_node(target)
 	if enemy == null:
 		return
 

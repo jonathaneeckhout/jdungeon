@@ -11,13 +11,13 @@ var player_behavior: GMFPlayerBehavior
 
 
 func _init():
-	entity_type = Gmf.ENTITY_TYPE.PLAYER
+	entity_type = GMF.ENTITY_TYPE.PLAYER
 
 
 func _ready():
 	super()
 
-	collision_layer += Gmf.PHYSICS_LAYER_PLAYERS
+	collision_layer += GMF.PHYSICS_LAYER_PLAYERS
 
 	player_synchronizer = load("res://gmf/common/classes/GMFPlayerSynchronizer.gd").new()
 	player_synchronizer.name = "PlayerSynchronizer"
@@ -25,7 +25,7 @@ func _ready():
 	player_synchronizer.synchronizer = synchronizer
 	add_child(player_synchronizer)
 
-	if Gmf.is_server():
+	if GMF.is_server():
 		player_behavior = load("res://gmf/common/classes/behaviors/GMFPlayerBehavior.gd").new()
 		player_behavior.name = "PlayerBehavior"
 		player_behavior.player = self

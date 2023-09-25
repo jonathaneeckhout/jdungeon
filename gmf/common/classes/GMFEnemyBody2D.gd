@@ -15,21 +15,21 @@ var despawn_timer: Timer
 
 
 func _init():
-	entity_type = Gmf.ENTITY_TYPE.ENEMY
+	entity_type = GMF.ENTITY_TYPE.ENEMY
 
 
 var enemy_class: String = "":
 	set(new_class):
 		enemy_class = new_class
-		Gmf.register_enemy_scene(enemy_class, scene_file_path)
+		GMF.register_enemy_scene(enemy_class, scene_file_path)
 
 
 func _ready():
 	super()
 
-	collision_layer += Gmf.PHYSICS_LAYER_ENEMIES
+	collision_layer += GMF.PHYSICS_LAYER_ENEMIES
 
-	if Gmf.is_server():
+	if GMF.is_server():
 		despawn_timer = Timer.new()
 		despawn_timer.name = "DespawnTimer"
 		despawn_timer.one_shot = true
@@ -45,6 +45,6 @@ func _on_stats_died():
 
 func _on_despawn_timer_timeout():
 	if respawn:
-		Gmf.world.queue_enemy_respawn(enemy_class, spawn_position, respawn_time)
+		GMF.world.queue_enemy_respawn(enemy_class, spawn_position, respawn_time)
 
 	queue_free()

@@ -9,17 +9,17 @@ var mouse_area: Area2D
 
 
 func _ready():
-	if Gmf.is_server():
+	if GMF.is_server():
 		set_process_input(false)
 	else:
 		mouse_area = Area2D.new()
 		mouse_area.name = "MouseArea"
 		mouse_area.collision_layer = 0
 		mouse_area.collision_mask = (
-			Gmf.PHYSICS_LAYER_PLAYERS
-			+ Gmf.PHYSICS_LAYER_ENEMIES
-			+ Gmf.PHYSICS_LAYER_NPCS
-			+ Gmf.PHYSICS_LAYER_ITEMS
+			GMF.PHYSICS_LAYER_PLAYERS
+			+ GMF.PHYSICS_LAYER_ENEMIES
+			+ GMF.PHYSICS_LAYER_NPCS
+			+ GMF.PHYSICS_LAYER_ITEMS
 		)
 		var cs_mouse_area = CollisionShape2D.new()
 		cs_mouse_area.name = "MouseAreaCollisionShape2D"

@@ -67,8 +67,8 @@ func _handle_connect():
 
 	connect_pressed = false
 
-	if !Gmf.client.connect_to_server(server_address, server_port):
-		Gmf.logger.warn(
+	if !GMF.client.connect_to_server(server_address, server_port):
+		GMF.logger.warn(
 			"Could not connect to server=[%s] on port=[%d]" % [server_address, server_port]
 		)
 		JUI.alertbox("Error connecting to server", login_panel)
@@ -76,8 +76,8 @@ func _handle_connect():
 		fsm_timer.start()
 		return
 
-	if !await Gmf.signals.client.connected:
-		Gmf.logger.warn(
+	if !await GMF.signals.client.connected:
+		GMF.logger.warn(
 			"Could not connect to server=[%s] on port=[%d]" % [server_address, server_port]
 		)
 		JUI.alertbox("Error connecting to server", login_panel)
@@ -85,7 +85,7 @@ func _handle_connect():
 		fsm_timer.start()
 		return
 
-	Gmf.logger.info("Connected to server=[%s] on port=[%d]" % [server_address, server_port])
+	GMF.logger.info("Connected to server=[%s] on port=[%d]" % [server_address, server_port])
 
 	state = STATES.LOGIN
 	fsm_timer.start()
@@ -105,13 +105,13 @@ func _handle_login():
 
 	login_pressed = false
 
-	Gmf.rpcs.account.authenticate.rpc_id(1, user, passwd)
+	GMF.rpcs.account.authenticate.rpc_id(1, user, passwd)
 
-	var response = await Gmf.signals.client.authenticated
+	var response = await GMF.signals.client.authenticated
 	if response:
-		Gmf.logger.info("Login Successful")
+		GMF.logger.info("Login Successful")
 		login_panel.hide()
-		Gmf.client.player.focus_camera()
+		GMF.client.player.focus_camera()
 		state = STATES.RUNNING
 		fsm()
 	else:
@@ -138,9 +138,9 @@ func _handle_create_account():
 
 	create_account_pressed = false
 
-	Gmf.rpcs.account.create_account.rpc_id(1, new_username, new_password)
+	GMF.rpcs.account.create_account.rpc_id(1, new_username, new_password)
 
-	var response = await Gmf.signals.client.account_created
+	var response = await GMF.signals.client.account_created
 	if response["error"]:
 		JUI.alertbox(response["reason"], login_panel)
 	else:

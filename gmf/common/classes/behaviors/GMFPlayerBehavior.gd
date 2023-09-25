@@ -26,7 +26,7 @@ func _ready():
 	var attack_area = Area2D.new()
 	attack_area.name = "AttackArea"
 	attack_area.collision_layer = 0
-	attack_area.collision_mask = Gmf.PHYSICS_LAYER_ENEMIES
+	attack_area.collision_mask = GMF.PHYSICS_LAYER_ENEMIES
 
 	var cs_attack_area = CollisionShape2D.new()
 	cs_attack_area.name = "AttackAreaCollisionShape2D"
@@ -53,7 +53,7 @@ func _ready():
 
 
 func _physics_process(delta: float):
-	if Gmf.is_server():
+	if GMF.is_server():
 		behavior(delta)
 
 		player.move_and_slide()
@@ -61,7 +61,7 @@ func _physics_process(delta: float):
 
 func behavior(_delta: float):
 	if moving:
-		if player.position.distance_to(move_target) > Gmf.ARRIVAL_DISTANCE:
+		if player.position.distance_to(move_target) > GMF.ARRIVAL_DISTANCE:
 			player.velocity = (
 				player.position.direction_to(move_target) * player_stats.movement_speed
 			)
@@ -118,21 +118,21 @@ func _on_moved(target_position: Vector2):
 func _on_interacted(target_name: String):
 	moving = false
 
-	if Gmf.world.enemies.has_node(target_name):
+	if GMF.world.enemies.has_node(target_name):
 		interacting = true
-		interact_target = Gmf.world.enemies.get_node(target_name)
+		interact_target = GMF.world.enemies.get_node(target_name)
 		interact_type = INTERACT_TYPE.ENEMY
 		return
 
-	if Gmf.world.npcs.has_node(target_name):
+	if GMF.world.npcs.has_node(target_name):
 		interacting = true
-		interact_target = Gmf.world.npcs.get_node(target_name)
+		interact_target = GMF.world.npcs.get_node(target_name)
 		interact_type = INTERACT_TYPE.NPC
 		return
 
-	if Gmf.world.items.has_node(target_name):
+	if GMF.world.items.has_node(target_name):
 		interacting = true
-		interact_target = Gmf.world.items.get_node(target_name)
+		interact_target = GMF.world.items.get_node(target_name)
 		interact_type = INTERACT_TYPE.ITEM
 		return
 

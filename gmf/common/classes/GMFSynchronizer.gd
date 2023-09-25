@@ -25,7 +25,7 @@ var die_buffer: Array[Dictionary] = []
 func _physics_process(_delta):
 	var timestamp = Time.get_unix_time_from_system()
 
-	if Gmf.is_server():
+	if GMF.is_server():
 		for watcher in watchers:
 			sync.rpc_id(watcher.peer_id, timestamp, to_be_synced.position, to_be_synced.velocity)
 	else:
@@ -37,7 +37,7 @@ func _physics_process(_delta):
 
 
 func calculate_position():
-	var render_time = Gmf.client.clock - INTERPOLATION_OFFSET
+	var render_time = GMF.client.clock - INTERPOLATION_OFFSET
 
 	while (
 		server_syncs_buffer.size() > 2
@@ -109,7 +109,7 @@ func sync_attack(target: String, damage: int):
 
 func check_if_attack():
 	for i in range(attack_buffer.size() - 1, -1, -1):
-		if attack_buffer[i]["timestamp"] <= Gmf.client.clock:
+		if attack_buffer[i]["timestamp"] <= GMF.client.clock:
 			attacked.emit(attack_buffer[i]["target"], attack_buffer[i]["damage"])
 			attack_buffer.remove_at(i)
 			return true
@@ -126,7 +126,7 @@ func sync_hurt(from: String, hp: int, max_hp: int, damage: int):
 
 func check_if_hurt():
 	for i in range(hurt_buffer.size() - 1, -1, -1):
-		if hurt_buffer[i]["timestamp"] <= Gmf.client.clock:
+		if hurt_buffer[i]["timestamp"] <= GMF.client.clock:
 			got_hurt.emit(
 				hurt_buffer[i]["from"],
 				hurt_buffer[i]["hp"],
@@ -148,7 +148,7 @@ func sync_loop_animation(animation: String, direction: Vector2):
 
 func check_if_loop_animation_changed():
 	for i in range(loop_animation_buffer.size() - 1, -1, -1):
-		if loop_animation_buffer[i]["timestamp"] <= Gmf.client.clock:
+		if loop_animation_buffer[i]["timestamp"] <= GMF.client.clock:
 			loop_animation_changed.emit(
 				loop_animation_buffer[i]["animation"], loop_animation_buffer[i]["direction"]
 			)
@@ -167,7 +167,7 @@ func sync_die():
 
 func check_if_die():
 	for i in range(die_buffer.size() - 1, -1, -1):
-		if die_buffer[i]["timestamp"] <= Gmf.client.clock:
+		if die_buffer[i]["timestamp"] <= GMF.client.clock:
 			died.emit()
 			die_buffer.remove_at(i)
 			return true
