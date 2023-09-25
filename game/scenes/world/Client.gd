@@ -21,8 +21,7 @@ var new_password: String
 
 var back_create_account_pressed: bool = false
 
-@onready var login_panel = $"../LoginPanel"
-
+@onready var login_panel := $"../UI/LoginPanel"
 
 func _ready():
 	# Add a short timer to deffer the fsm() calls
@@ -63,8 +62,6 @@ func _handle_init():
 
 
 func _handle_connect():
-	login_panel.show_connect_container()
-
 	if !connect_pressed:
 		return
 
@@ -74,7 +71,7 @@ func _handle_connect():
 		Gmf.logger.warn(
 			"Could not connect to server=[%s] on port=[%d]" % [server_address, server_port]
 		)
-		login_panel.show_connect_error("Error conneting server")
+		JUI.alertbox("Error connecting to server", login_panel)
 		state = STATES.INIT
 		fsm_timer.start()
 		return
@@ -83,7 +80,7 @@ func _handle_connect():
 		Gmf.logger.warn(
 			"Could not connect to server=[%s] on port=[%d]" % [server_address, server_port]
 		)
-		login_panel.show_connect_error("Error conneting server")
+		JUI.alertbox("Error connecting to server", login_panel)
 		state = STATES.INIT
 		fsm_timer.start()
 		return
@@ -112,13 +109,13 @@ func _handle_login():
 
 	var response = await Gmf.signals.client.authenticated
 	if response:
-		login_panel.show_login_error("Login succeeded")
+		Gmf.logger.info("Login Successful")
 		login_panel.hide()
 		Gmf.client.player.focus_camera()
 		state = STATES.RUNNING
 		fsm()
 	else:
-		login_panel.show_login_error("Login failed")
+		JUI.alertbox("Login failed", login_panel)
 
 	fsm_timer.start()
 
@@ -145,9 +142,9 @@ func _handle_create_account():
 
 	var response = await Gmf.signals.client.account_created
 	if response["error"]:
-		login_panel.show_create_account_error(response["reason"])
+		JUI.alertbox(response["reason"], login_panel)
 	else:
-		login_panel.show_create_account_error("Account created")
+		JUI.alertbox("Account created", login_panel)
 
 	fsm_timer.start()
 
@@ -160,7 +157,6 @@ func _on_connect_pressed(address: String, port: int):
 	connect_pressed = true
 	server_address = address
 	server_port = port
-
 	fsm()
 
 
@@ -168,13 +164,11 @@ func _on_login_pressed(username: String, password: String):
 	login_pressed = true
 	user = username
 	passwd = password
-
 	fsm()
 
 
 func _on_show_create_account_pressed():
 	show_create_account_pressed = true
-
 	fsm()
 
 
@@ -182,11 +176,9 @@ func _on_create_account_pressed(username: String, password: String):
 	create_account_pressed = true
 	new_username = username
 	new_password = password
-
 	fsm()
 
 
 func _on_back_create_account_pressed():
 	back_create_account_pressed = true
-
 	fsm()

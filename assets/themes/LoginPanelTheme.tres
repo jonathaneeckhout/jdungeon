@@ -1,0 +1,56 @@
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://dreboohjjcn2f"]
+
+[ext_resource type="FontFile" uid="uid://dcpo1o6yqrgqa" path="res://assets/fonts/fenwick-woodtype/FenwickWoodtype.ttf" id="1_4c327"]
+[ext_resource type="StyleBox" uid="uid://btwfv13kgis6n" path="res://assets/themes/ButtonHoverStylebox.tres" id="1_6fviv"]
+[ext_resource type="StyleBox" uid="uid://djqr5g46m3wkt" path="res://assets/themes/ButtonFocusedStylebox.tres" id="1_mtulu"]
+[ext_resource type="StyleBox" uid="uid://n2xp0bxewaay" path="res://assets/themes/ButtonNormalStylebox.tres" id="2_p0fs2"]
+[ext_resource type="StyleBox" uid="uid://k1lhrwscg7w5" path="res://assets/themes/ButtonPressedStylebox.tres" id="3_ndbex"]
+
+[sub_resource type="SystemFont" id="SystemFont_hy1ao"]
+font_names = PackedStringArray("Arial")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e0pa2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f88ki"]
+bg_color = Color(0.46875, 0.46875, 0.46875, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.705882, 0.705882, 0.705882, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nj7au"]
+bg_color = Color(0.0392157, 0.0392157, 0.0392157, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[resource]
+default_font = ExtResource("1_4c327")
+default_font_size = 0
+Button/colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
+Button/colors/font_focus_color = Color(0.901961, 0.901961, 0.901961, 1)
+Button/colors/font_hover_color = Color(0.901961, 0.901961, 0.901961, 1)
+Button/colors/font_hover_pressed_color = Color(0.901961, 0.901961, 0.901961, 1)
+Button/colors/font_pressed_color = Color(0.901961, 0.901961, 0.901961, 1)
+Button/font_sizes/font_size = 32
+Button/styles/focus = ExtResource("1_mtulu")
+Button/styles/hover = ExtResource("1_6fviv")
+Button/styles/normal = ExtResource("2_p0fs2")
+Button/styles/pressed = ExtResource("3_ndbex")
+Label/colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
+Label/colors/font_shadow_color = Color(0, 0, 0, 1)
+Label/font_sizes/font_size = 40
+LineEdit/colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
+LineEdit/colors/font_placeholder_color = Color(0.901961, 0.901961, 0.901961, 0.470588)
+LineEdit/font_sizes/font_size = 22
+LineEdit/fonts/font = SubResource("SystemFont_hy1ao")
+LineEdit/styles/focus = SubResource("StyleBoxEmpty_e0pa2")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_f88ki")
+MarginContainer/constants/margin_bottom = 40
+Panel/styles/panel = SubResource("StyleBoxFlat_nj7au")

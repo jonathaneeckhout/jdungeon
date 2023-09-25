@@ -8,12 +8,14 @@
 script = ExtResource("1_3w1ia")
 enemies_to_sync = NodePath("Entities/Enemies")
 
-[node name="LoginPanel" parent="." instance=ExtResource("2_fjr74")]
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="LoginPanel" parent="UI" instance=ExtResource("2_fjr74")]
 visible = false
-offset_left = 352.0
-offset_top = 60.0
-offset_right = 352.0
-offset_bottom = 60.0
+offset_left = -400.0
+offset_top = -400.0
+offset_right = 400.0
+offset_bottom = 400.0
 
 [node name="Entities" type="Node2D" parent="."]
 visible = false

@@ -1,3 +1,4 @@
+class_name GmfClient
 extends Node
 
 const CLOCK_SYNC_TIMER_TIME = 0.5
