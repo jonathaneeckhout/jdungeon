@@ -30,7 +30,7 @@ func _ready():
 	$JInterface.display_name = enemy_class
 
 	var behavior: JWanderBehavior = (
-		load("res://classes/behaviors/JWanderBehavior.gd").new()
+		load("res://scripts/classes/behaviors/JWanderBehavior.gd").new()
 	)
 	behavior.name = "WanderBehavior"
 	behavior.actor = self

@@ -19,14 +19,14 @@ func _ready():
 
 	collision_layer += J.PHYSICS_LAYER_PLAYERS
 
-	player_synchronizer = load("res://classes/JPlayerSynchronizer.gd").new()
+	player_synchronizer = load("res://scripts/classes/JPlayerSynchronizer.gd").new()
 	player_synchronizer.name = "PlayerSynchronizer"
 	player_synchronizer.player = self
 	player_synchronizer.synchronizer = synchronizer
 	add_child(player_synchronizer)
 
 	if J.is_server():
-		player_behavior = load("res://classes/behaviors/JPlayerBehavior.gd").new()
+		player_behavior = load("res://scripts/classes/behaviors/JPlayerBehavior.gd").new()
 		player_behavior.name = "PlayerBehavior"
 		player_behavior.player = self
 		player_behavior.player_synchronizer = player_synchronizer
@@ -34,7 +34,7 @@ func _ready():
 		add_child(player_behavior)
 
 	else:
-		player_input = load("res://classes/JPlayerInput.gd").new()
+		player_input = load("res://scripts/classes/JPlayerInput.gd").new()
 		player_input.name = "PlayerInput"
 		add_child(player_input)
 

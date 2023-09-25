@@ -19,12 +19,12 @@ func _ready():
 		# Don't handle collision on client side
 		collision_mask = 0
 
-	synchronizer = load("res://classes/JSynchronizer.gd").new()
+	synchronizer = load("res://scripts/classes/JSynchronizer.gd").new()
 	synchronizer.name = "Synchronizer"
 	synchronizer.to_be_synced = self
 	add_child(synchronizer)
 
-	stats = load("res://classes/JStats.gd").new()
+	stats = load("res://scripts/classes/JStats.gd").new()
 	stats.name = "Stats"
 	add_child(stats)
 

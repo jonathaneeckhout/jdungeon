@@ -71,7 +71,7 @@ func load_enemies():
 
 
 func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn_time: float):
-	var respawn: JEnemyRespawn = load("res://classes/JEnemyRespawn.gd").new()
+	var respawn: JEnemyRespawn = load("res://scripts/classes/JEnemyRespawn.gd").new()
 	respawn.enemy_class = enemy_class
 	respawn.respawn_position = respawn_position
 	respawn.respawn_time = respawn_time
