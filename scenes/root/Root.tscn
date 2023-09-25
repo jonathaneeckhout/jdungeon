@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3 uid="uid://6xcgrn54y7si"]
+
+[ext_resource type="Script" path="res://scenes/root/Root.gd" id="1_2xin5"]
+
+[node name="Root" type="Node"]
+script = ExtResource("1_2xin5")
+
+[node name="SelectRunMode" type="Control" parent="."]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SelectRunMode"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RunAsServerButton" type="Button" parent="SelectRunMode/VBoxContainer"]
+layout_mode = 2
+text = "Run as server"
+
+[node name="RunAsClientButton" type="Button" parent="SelectRunMode/VBoxContainer"]
+layout_mode = 2
+text = "Run as client"
