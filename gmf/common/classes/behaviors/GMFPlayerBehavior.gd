@@ -4,7 +4,6 @@ class_name GMFPlayerBehavior
 
 enum INTERACT_TYPE { ENEMY, NPC, ITEM }
 
-const ARRIVAL_DISTANCE = 8
 const SPEED = 300.0
 
 @export var player: GMFPlayerBody2D
@@ -62,7 +61,7 @@ func _physics_process(delta: float):
 
 func behavior(_delta: float):
 	if moving:
-		if player.position.distance_to(move_target) > ARRIVAL_DISTANCE:
+		if player.position.distance_to(move_target) > Gmf.ARRIVAL_DISTANCE:
 			player.velocity = (
 				player.position.direction_to(move_target) * player_stats.movement_speed
 			)

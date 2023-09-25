@@ -9,6 +9,8 @@ const PHYSICS_LAYER_ENEMIES = 4
 const PHYSICS_LAYER_NPCS = 8
 const PHYSICS_LAYER_ITEMS = 16
 
+const ARRIVAL_DISTANCE = 8
+
 var mode: MODE = MODE.CLIENT
 
 var logger: Log
