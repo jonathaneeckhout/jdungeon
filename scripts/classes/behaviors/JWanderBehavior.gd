@@ -20,6 +20,8 @@ var colliding_timer: Timer
 var rays: Node2D
 var ray_direction: RayCast2D
 
+var is_dead: bool = false
+
 
 func _ready():
 	starting_postion = actor.position
@@ -47,10 +49,16 @@ func _ready():
 	ray_direction.target_position = Vector2(RAY_SIZE, 0)
 	add_child(ray_direction)
 
+	actor.synchronizer.died.connect(_on_died)
+
+	actor.respawned.connect(_on_respawned)
+
 
 func _physics_process(_delta: float):
 	if J.is_server():
-		if actor.position.distance_to(wander_target) > J.ARRIVAL_DISTANCE:
+		if is_dead:
+			actor.velocity = Vector2.ZERO
+		elif actor.position.distance_to(wander_target) > J.ARRIVAL_DISTANCE:
 			actor.velocity = (
 				actor.position.direction_to(wander_target) * actor.stats.movement_speed
 			)
@@ -157,3 +165,11 @@ func _on_idle_timer_timeout():
 
 func _on_colliding_timer_timeout():
 	wander_target = find_random_spot(starting_postion, max_wander_distance)
+
+
+func _on_died():
+	is_dead = true
+
+
+func _on_respawned():
+	is_dead = false
