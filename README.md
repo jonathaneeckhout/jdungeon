@@ -5,31 +5,44 @@
 ## Overview
 
 To get started with JDungeon, follow these steps:
-1. [Features](#features)
-2. [Install Instructions](#install-instructions)
-3. [Contributor Guide](#contributing)
+1. [List of Features](#list-of-features)
+2. [Feature Roadmap](#feature-roadmap)
+3. [Install Instructions](#install-instructions)
+4. [Contributor Guide](#contributing)
 
-## Features
+## List of Features
 
-- **Open Source:** JDungeon's source code is open to the public, promoting collaboration and transparency in game development.
+- User Management
+  - Account Creation
+  - Login System
+- Networking
+  - Synchronization of Entities (Players, Enemies, NPCs, Items, etc.)
+  - Synchronization of Movement/Velocity 
+  - Synchronization of Damage
+  - Synchronization of Attacks on Targets
+  - Synchronization of Entities Deaths
+- AI
+  - Wander Behavior
 
-- **Free to Play:** Enjoy JDungeon without any cost. No paywalls, microtransactions, or hidden fees.
-
-- **Community Driven:** A passionate community of players and developers actively shapes the game world, creating content and enhancing gameplay.
-
-- **Everybody Can Contribute:** We welcome contributors of all backgrounds and skills. Whether you're a developer, artist, storyteller, or player with ideas, there's a place for you here.
-
-- **Clear Documentation:** Comprehensive and well-structured documentation makes it easy to understand the game's architecture and codebase.
-
-- **Code Tests:** JDungeon maintains a suite of code tests to ensure a stable and enjoyable gaming experience.
-
-- **Fantasy Setting:** Immerse yourself in a rich fantasy world with magic, mythical creatures, and epic quests.
-
-- **Medieval Atmosphere:** Explore medieval landscapes, engage in epic battles, and experience quests that transport you to a bygone era.
-
-- **2D World:** Enjoy a nostalgic top-down 2D perspective, reminiscent of classic RPGs.
-
-- **Accessible for Everyone:** JDungeon is designed with accessibility in mind, welcoming players of all backgrounds and abilities.
+## Feature Roadmap
+- Gameplay
+  - Introduce Equipment
+  - Introduce a Player's Bag
+  - Implement NPC Vendor
+  - Add Loot Drops upon Enemy Defeat
+  - Integrate Player Leveling System
+- Networking
+  - Synchronize Stats
+  - Synchronize Bag
+  - Synchronize Equipment
+- AI
+  - Add Behavior to Include Wandering and Fleeing When Attacked
+  - Add Wandering and Attacking Behavior
+- Chat
+  - Integrate Chat Panel
+  - Establish General Chat Functionality
+  - Implement Whisper Chat Capability
+    
 
 ## Install Instructions
 ### Step 1: Clone the repository
