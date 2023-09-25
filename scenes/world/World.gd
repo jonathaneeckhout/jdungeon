@@ -8,7 +8,7 @@ func _ready():
 	$Entities.queue_free()
 
 	if not J.is_server():
-		var client = load("res://scenes/world/Client.gd").new()
-		client.name = "Client"
+		var client = load("res://scenes/world/clientfsm.gd").new()
+		client.name = "ClientFSM"
 		add_child(client)
 		$UI/LoginPanel.show()
