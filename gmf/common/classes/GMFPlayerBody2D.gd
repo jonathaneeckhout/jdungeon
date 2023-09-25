@@ -26,7 +26,7 @@ func _ready():
 	add_child(player_synchronizer)
 
 	if Gmf.is_server():
-		player_behavior = load("res://gmf/common/classes/GMFPlayerBehavior.gd").new()
+		player_behavior = load("res://gmf/common/classes/behaviors/GMFPlayerBehavior.gd").new()
 		player_behavior.name = "PlayerBehavior"
 		player_behavior.player = self
 		player_behavior.player_synchronizer = player_synchronizer
