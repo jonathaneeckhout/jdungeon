@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-J="*res://scripts/singletons/jdungeon.gd"
 GodotLogger="*res://addons/logger/logger.gd"
+J="*res://scripts/singletons/jdungeon.gd"
 JUI="*res://scripts/singletons/jui.gd"
 
 [debug]
@@ -30,15 +30,10 @@ gdscript/warnings/narrowing_conversion=0
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
-window/stretch/mode="viewport"
 
 [dotnet]
 
 project/assembly_name="Jdungeon"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/logger/plugin.cfg")
 
 [input]
 
@@ -55,6 +50,5 @@ j_right_click={
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
