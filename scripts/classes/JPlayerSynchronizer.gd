@@ -67,8 +67,8 @@ func _on_body_network_view_area_body_entered(body: JBody2D):
 
 		bodies_in_view.append(body)
 
-		if player not in body.synchronizer.watchers:
-			body.synchronizer.watchers.append(player)
+	if player not in body.synchronizer.watchers:
+		body.synchronizer.watchers.append(player)
 
 
 func _on_body_network_view_area_body_exited(body: JBody2D):
@@ -82,8 +82,8 @@ func _on_body_network_view_area_body_exited(body: JBody2D):
 
 		bodies_in_view.erase(body)
 
-		if body.synchronizer.watchers.has(player):
-			body.synchronizer.watchers.erase(player)
+	if body.synchronizer.watchers.has(player):
+		body.synchronizer.watchers.erase(player)
 
 
 func _on_item_network_view_area_body_entered(body: JItem):
