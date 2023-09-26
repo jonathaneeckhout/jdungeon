@@ -828,7 +828,6 @@ metadata/_edit_lock_ = true
 
 [node name="RightArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(150, 0)
-scale = Vector2(1, 1)
 texture = ExtResource("4_gw0jc")
 offset = Vector2(131, 228)
 metadata/_edit_lock_ = true
@@ -836,35 +835,30 @@ metadata/_edit_lock_ = true
 [node name="RightWeapon" type="Sprite2D" parent="Sprites"]
 position = Vector2(80, 470)
 rotation = 1.57079
-scale = Vector2(1, 1)
 texture = ExtResource("8_4ai0o")
 offset = Vector2(0.00012207, 800)
 metadata/_edit_lock_ = true
 
 [node name="RightLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(190, 440)
-scale = Vector2(1, 1)
 texture = ExtResource("7_jpcwx")
 offset = Vector2(91, -212)
 metadata/_edit_lock_ = true
 
 [node name="LeftLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(390, 460)
-scale = Vector2(1, 1)
 texture = ExtResource("6_ph7fa")
 offset = Vector2(-109, -232)
 metadata/_edit_lock_ = true
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(270, 390)
-scale = Vector2(1, 1)
 texture = ExtResource("8_n1x5o")
 offset = Vector2(11, -162)
 metadata/_edit_lock_ = true
 
 [node name="Head" type="Sprite2D" parent="Sprites"]
 position = Vector2(300, -170)
-scale = Vector2(1, 1)
 texture = ExtResource("5_dr4ej")
 offset = Vector2(-19, 398)
 metadata/_edit_lock_ = true
@@ -873,14 +867,12 @@ metadata/_edit_lock_ = true
 visible = false
 position = Vector2(420, 480)
 rotation = 1.57079
-scale = Vector2(1, 1)
 texture = ExtResource("8_4ai0o")
 offset = Vector2(0.00012207, 800)
 metadata/_edit_lock_ = true
 
 [node name="LeftArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(470, -30)
-scale = Vector2(1, 1)
 texture = ExtResource("3_dw8ng")
 offset = Vector2(-189, 248)
 metadata/_edit_lock_ = true

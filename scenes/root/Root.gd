@@ -12,6 +12,9 @@ func _ready():
 
 func register_items():
 	J.register_item_scene("Gold", "res://scenes/items/varia/gold/Gold.tscn")
+	J.register_item_scene(
+		"HealthPotion", "res://scenes/items/consumables/healthpotion/HealthPotion.tscn"
+	)
 
 
 func _on_run_as_server_pressed():

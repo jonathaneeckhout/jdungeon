@@ -1,5 +1,7 @@
 extends Node
 
+var above_ui: bool = false
+
 
 func alertbox(message: String, parent: Node) -> void:
 	var dialog = AcceptDialog.new()

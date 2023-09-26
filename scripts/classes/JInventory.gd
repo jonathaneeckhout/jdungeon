@@ -15,13 +15,10 @@ var items: Array[JItem] = []
 var gold: int = 0
 
 
-func _ready():
-	if not J.is_server():
-		gold_added.connect(_on_client_gold_added)
-		gold_removed.connect(_on_client_gold_removed)
-
-
 func add_item(item: JItem) -> bool:
+	if not J.is_server():
+		return false
+
 	if item.is_gold:
 		add_gold(item.amount)
 		return true
@@ -31,12 +28,15 @@ func add_item(item: JItem) -> bool:
 
 	items.append(item)
 
-	sync_add_item.rpc_id(player.peer_id, item.name, item.item_class)
+	sync_add_item.rpc_id(player.peer_id, item.name, item.item_class, item.amount)
 
 	return true
 
 
 func remove_item(item_uuid: String):
+	if not J.is_server():
+		return false
+
 	var item: JItem = get_item(item_uuid)
 	if item != null:
 		items.erase(item)
@@ -53,11 +53,17 @@ func get_item(item_uuid: String) -> JItem:
 
 
 func add_gold(amount: int):
+	if not J.is_server():
+		return
+
 	gold += amount
 	sync_add_gold.rpc_id(player.peer_id, gold, amount)
 
 
 func remove_gold(amount: int) -> bool:
+	if not J.is_server():
+		return false
+
 	if amount <= gold:
 		gold -= amount
 		sync_remove_gold.rpc_id(player.peer_id, gold, amount)
@@ -66,26 +72,31 @@ func remove_gold(amount: int) -> bool:
 	return false
 
 
-func _on_client_gold_added(total: int, _amount: int):
-	gold = total
-
-
-func _on_client_gold_removed(total: int, _amount: int):
-	gold = total
-
-
 @rpc("call_remote", "authority", "reliable")
-func sync_add_item(item_uuid: String, item_class: String):
+func sync_add_item(item_uuid: String, item_class: String, amount: int):
+	var item = J.item_scenes[item_class].instantiate()
+	item.uuid = item_uuid
+	item.item_class = item_class
+	item.amount = amount
+
+	items.append(item)
+
 	item_added.emit(item_uuid, item_class)
 
 
 @rpc("call_remote", "authority", "reliable") func sync_remove_item(item_uuid: String):
-	item_removed.emit(item_uuid)
+	var item: JItem = get_item(item_uuid)
+	if item != null:
+		items.erase(item)
+
+		item_removed.emit(item_uuid)
 
 
 @rpc("call_remote", "authority", "reliable") func sync_add_gold(total: int, amount: int):
+	gold = total
 	gold_added.emit(total, amount)
 
 
 @rpc("call_remote", "authority", "reliable") func sync_remove_gold(total: int, amount: int):
+	gold = total
 	gold_removed.emit(total, amount)

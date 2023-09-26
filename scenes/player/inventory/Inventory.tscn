@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://uord7b0pb5jt"]
 
 [ext_resource type="Script" path="res://scenes/player/inventory/Inventory.gd" id="1_s20km"]
-[ext_resource type="PackedScene" path="res://scenes/player/inventory/InventoryPanel.tscn" id="2_3vugu"]
+[ext_resource type="PackedScene" uid="uid://bmicns3cmcurr" path="res://scenes/player/inventory/InventoryPanel.tscn" id="2_3vugu"]
 
 [node name="Inventory" type="Panel"]
 anchors_preset = 8
