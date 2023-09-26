@@ -8,6 +8,7 @@ var username: String = ""
 var player_synchronizer: JPlayerSynchronizer
 var player_input: JPlayerInput
 var player_behavior: JPlayerBehavior
+var inventory: JInventory
 
 
 func _init():
@@ -24,6 +25,11 @@ func _ready():
 	player_synchronizer.player = self
 	player_synchronizer.synchronizer = synchronizer
 	add_child(player_synchronizer)
+
+	inventory = load("res://scripts/classes/JInventory.gd").new()
+	inventory.name = "Inventory"
+	inventory.player = self
+	add_child(inventory)
 
 	if J.is_server():
 		player_behavior = load("res://scripts/classes/behaviors/JPlayerBehavior.gd").new()

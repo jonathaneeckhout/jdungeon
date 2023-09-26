@@ -32,7 +32,7 @@ func _ready():
 
 	add_child(behavior)
 
-	add_item_to_loottable("Gold", 0.5, 100)
+	add_item_to_loottable("Gold", 1.0, 100)
 
 
 func _physics_process(_delta):

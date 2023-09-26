@@ -46,9 +46,16 @@ func _ready():
 		add_child(expire_timer)
 
 
-func loot():
-	#TODO: add to players bag
-	queue_free()
+func loot(from: JPlayerBody2D) -> bool:
+	if from.inventory.add_item(self):
+		# Just to be safe, stop the expire timer
+		expire_timer.stop()
+		# Remove yourself from the world items
+		J.world.items.remove_child(self)
+
+		return true
+
+	return false
 
 
 func _on_expire_timer_timeout():
