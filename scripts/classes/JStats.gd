@@ -9,6 +9,7 @@ var hp: int = max_hp
 var attack_power_min: int = 0
 var attack_power_max: int = 10
 var attack_speed: float = 0.8
+var attack_range: float = 64.0
 var defense: int = 0
 
 var movement_speed: float = 300.0

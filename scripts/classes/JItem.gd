@@ -40,5 +40,10 @@ func _ready():
 		add_child(expire_timer)
 
 
+func loot():
+	#TODO: add to players bag
+	queue_free()
+
+
 func _on_expire_timer_timeout():
 	queue_free()
