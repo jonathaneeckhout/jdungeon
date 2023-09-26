@@ -17,6 +17,7 @@ var gold: int = 0
 
 func _ready():
 	if J.is_server():
+		J.rpcs.item.inventory_item_used.connect(_on_inventory_item_used)
 		J.rpcs.item.inventory_item_dropped.connect(_on_inventory_item_dropped)
 
 
@@ -57,6 +58,18 @@ func get_item(item_uuid: String) -> JItem:
 	return null
 
 
+func use_item(item_uuid: String):
+	if not J.is_server():
+		return false
+
+	var item: JItem = get_item(item_uuid)
+	if item and item.use(player):
+		remove_item(item_uuid)
+		return true
+
+	return false
+
+
 func add_gold(amount: int):
 	if not J.is_server():
 		return
@@ -75,6 +88,13 @@ func remove_gold(amount: int) -> bool:
 		return true
 
 	return false
+
+
+func _on_inventory_item_used(id: int, item_uuid: String):
+	if player.peer_id != id:
+		return
+
+	use_item(item_uuid)
 
 
 func _on_inventory_item_dropped(id: int, item_uuid: String):

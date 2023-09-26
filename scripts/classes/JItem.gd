@@ -54,5 +54,9 @@ func loot(from: JPlayerBody2D) -> bool:
 	return false
 
 
+func use(_user: JPlayerBody2D) -> bool:
+	return true
+
+
 func _on_expire_timer_timeout():
 	queue_free()

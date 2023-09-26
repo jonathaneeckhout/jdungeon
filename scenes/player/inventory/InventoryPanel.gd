@@ -34,11 +34,19 @@ func _gui_input(event: InputEvent):
 			drag_panel.texture = null
 			drag_panel.hide()
 			selected = false
+
 		if JUI.above_ui and inventory.mouse_above_this_panel:
 			inventory.swap_items(self, inventory.mouse_above_this_panel)
 		else:
 			if item:
 				J.rpcs.item.drop_inventory_item.rpc_id(1, item.uuid)
+	elif event.is_action_pressed("j_right_click"):
+		if not selected:
+			if item:
+				J.rpcs.item.use_inventory_item.rpc_id(1, item.uuid)
+		else:
+			selected = false
+			drag_panel.hide()
 
 
 func _physics_process(_delta):
