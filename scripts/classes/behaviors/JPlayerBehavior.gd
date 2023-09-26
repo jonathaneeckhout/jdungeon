@@ -131,7 +131,7 @@ func behavior(_delta: float):
 					player.send_new_loop_animation("Move")
 				else:
 					player.velocity = Vector2.ZERO
-					interact_target.loot()
+					interact_target.loot(player)
 					interacting = false
 					interact_target = null
 

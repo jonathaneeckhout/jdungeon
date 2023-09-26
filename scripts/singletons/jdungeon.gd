@@ -29,6 +29,8 @@ var player_scene: Resource
 var enemy_scenes: Dictionary = {}
 var item_scenes: Dictionary = {}
 
+var uuid_util: Node
+
 
 func _ready():
 	logger = load("res://addons/logger/logger.gd").new()
@@ -56,6 +58,8 @@ func init_server() -> bool:
 	if not J.global.load_server_env_variables():
 		J.logger.error("Could not load server's env variables")
 		return false
+
+	uuid_util = load("res://scripts/uuid/uuid.gd").new()
 
 	server = load("res://scripts/network/server.gd").new()
 	server.name = "Server"

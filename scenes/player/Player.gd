@@ -16,6 +16,12 @@ func _ready():
 
 	$JInterface.display_name = username
 
+	if J.is_server() or peer_id != multiplayer.get_unique_id():
+		set_process_input(false)
+		$Camera2D.queue_free()
+	else:
+		$Camera2D/UILayer/GUI/Inventory.register_signals()
+
 
 func _physics_process(_delta):
 	if loop_animation == "Move":
@@ -32,7 +38,7 @@ func update_face_direction(direction: float):
 
 
 func focus_camera():
-	$JCamera2D.make_current()
+	$Camera2D.make_current()
 
 
 func _on_loop_animation_changed(animation: String, direction: Vector2):

@@ -4,10 +4,16 @@ class_name JItem
 
 enum MODE { LOOT, ITEMSLOT }
 
+@export var uuid: String = "":
+	set(new_uuid):
+		uuid = new_uuid
+		name = new_uuid
+
+@export var expire_time: float = 30.0
+
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ITEM
 
 var expire_timer: Timer
-@export var expire_time: float = 30.0
 
 var is_gold: bool = false
 var drop_rate: float = 0.0
@@ -40,9 +46,16 @@ func _ready():
 		add_child(expire_timer)
 
 
-func loot():
-	#TODO: add to players bag
-	queue_free()
+func loot(from: JPlayerBody2D) -> bool:
+	if from.inventory.add_item(self):
+		# Just to be safe, stop the expire timer
+		expire_timer.stop()
+		# Remove yourself from the world items
+		J.world.items.remove_child(self)
+
+		return true
+
+	return false
 
 
 func _on_expire_timer_timeout():
