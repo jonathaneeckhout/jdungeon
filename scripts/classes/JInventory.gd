@@ -15,6 +15,11 @@ var items: Array[JItem] = []
 var gold: int = 0
 
 
+func _ready():
+	if J.is_server():
+		J.rpcs.item.inventory_item_dropped.connect(_on_inventory_item_dropped)
+
+
 func add_item(item: JItem) -> bool:
 	if not J.is_server():
 		return false
@@ -70,6 +75,24 @@ func remove_gold(amount: int) -> bool:
 		return true
 
 	return false
+
+
+func _on_inventory_item_dropped(id: int, item_uuid: String):
+	if player.peer_id != id:
+		return
+
+	var item = get_item(item_uuid)
+	if not item:
+		return
+
+	remove_item(item_uuid)
+
+	var random_x = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
+	var random_y = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
+	item.position = player.position + Vector2(random_x, random_y)
+
+	J.world.items.add_child(item)
+	item.start_expire_timer()
 
 
 @rpc("call_remote", "authority", "reliable")

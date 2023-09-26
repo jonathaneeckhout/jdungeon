@@ -95,4 +95,9 @@ func _on_item_added(item_uuid: String, _item_class: String):
 
 
 func _on_item_removed(item_uuid: String):
-	pass
+	for x in range(SIZE.x):
+		for y in range(SIZE.y):
+			var panel: InventoryPanel = panels[x][y]
+			if panel.item and panel.item.uuid == item_uuid:
+				panel.item = null
+				return
