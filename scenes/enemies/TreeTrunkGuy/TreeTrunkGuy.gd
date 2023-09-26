@@ -5,8 +5,7 @@ extends JEnemyBody2D
 @onready var skeleton = $Skeleton
 @onready var original_scale = $Skeleton.scale
 
-@onready
-var floating_text_scene = preload("res://scenes/templates/JFloatingText/JFloatingText.tscn")
+@onready var floating_text_scene = preload("res://scenes/templates/JFloatingText/JFloatingText.tscn")
 var is_dead: bool = false
 
 
@@ -21,21 +20,19 @@ func _ready():
 	synchronizer.got_hurt.connect(_on_got_hurt)
 	synchronizer.died.connect(_on_died)
 
-	respawned.connect(_on_respawned)
-
 	animation_player.play(loop_animation)
 
 	animation_player.animation_finished.connect(_on_animation_finished)
 
 	$JInterface.display_name = enemy_class
 
-	var behavior: JWanderBehavior = (
-		load("res://scripts/classes/behaviors/JWanderBehavior.gd").new()
-	)
+	var behavior: JWanderBehavior = load("res://scripts/classes/behaviors/JWanderBehavior.gd").new()
 	behavior.name = "WanderBehavior"
 	behavior.actor = self
 
 	add_child(behavior)
+
+	add_item_to_loottable("Gold", 0.5, 100)
 
 
 func _physics_process(_delta):
@@ -51,12 +48,14 @@ func update_face_direction(direction: float):
 		skeleton.scale = Vector2(original_scale.x * -1, original_scale.y)
 		return
 
+
 func _on_loop_animation_changed(animation: String, direction: Vector2):
 	loop_animation = animation
 
 	animation_player.play(loop_animation)
 
 	update_face_direction(direction.x)
+
 
 func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
 	if not is_dead:
@@ -80,7 +79,3 @@ func _on_died():
 	is_dead = true
 	animation_player.stop()
 	animation_player.play("Die")
-
-
-func _on_respawned():
-	is_dead = false

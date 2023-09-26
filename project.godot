@@ -48,6 +48,14 @@ j_right_click={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="World"
+2d_physics/layer_2="Players"
+2d_physics/layer_3="Enemies"
+2d_physics/layer_4="NPCs"
+2d_physics/layer_5="Items"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

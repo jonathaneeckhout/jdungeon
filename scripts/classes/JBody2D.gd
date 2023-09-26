@@ -2,12 +2,16 @@ extends CharacterBody2D
 
 class_name JBody2D
 
+signal died
+
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ENEMY
 
 var synchronizer: JSynchronizer
 var stats: JStats
 
 var loop_animation: String = "Idle"
+
+var loot_table: Array[Dictionary] = []
 
 
 func _ready():
@@ -26,9 +30,8 @@ func _ready():
 
 	stats = load("res://scripts/classes/JStats.gd").new()
 	stats.name = "Stats"
+	stats.parent = self
 	add_child(stats)
-
-	stats.died.connect(_on_stats_died)
 
 
 func attack(target: CharacterBody2D):
@@ -50,5 +53,29 @@ func send_new_loop_animation(animation: String):
 		synchronizer.sync_loop_animation(loop_animation, velocity)
 
 
-func _on_stats_died():
+func die():
+	collision_layer -= J.PHYSICS_LAYER_WORLD
+
+	died.emit()
+
 	synchronizer.sync_die()
+
+	drop_loot()
+
+
+func drop_loot():
+	for loot in loot_table:
+		if randf() < loot["drop_rate"]:
+			var item = J.item_scenes[loot["item_class"]].instantiate()
+			item.name = str(item.get_instance_id())
+			item.item_class = loot["item_class"]
+			item.mode = JItem.MODE.LOOT
+
+			var random_x = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
+			var random_y = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
+			item.position = position + Vector2(random_x, random_y)
+			J.world.items.add_child(item)
+
+
+func add_item_to_loottable(item_class: String, drop_rate: float, amount: int = 1):
+	loot_table.append({"item_class": item_class, "drop_rate": drop_rate, "amount": amount})

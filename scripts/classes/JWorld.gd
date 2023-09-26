@@ -56,6 +56,9 @@ func _ready():
 		J.rpcs.enemy.enemy_added.connect(_on_client_enemy_added)
 		J.rpcs.enemy.enemy_removed.connect(_on_client_enemy_removed)
 
+		J.rpcs.item.item_added.connect(_on_client_item_added)
+		J.rpcs.item.item_removed.connect(_on_client_item_removed)
+
 	J.world = self
 
 	load_enemies()
@@ -136,7 +139,7 @@ func _on_client_other_player_removed(username: String):
 
 
 func _on_client_enemy_added(enemy_name: String, enemy_class: String, pos: Vector2):
-	var enemy = J.enemies_scene[enemy_class].instantiate()
+	var enemy: JEnemyBody2D = J.enemy_scenes[enemy_class].instantiate()
 	enemy.name = enemy_name
 	enemy.position = pos
 
@@ -146,3 +149,17 @@ func _on_client_enemy_added(enemy_name: String, enemy_class: String, pos: Vector
 func _on_client_enemy_removed(enemy_name: String):
 	if enemies.has_node(enemy_name):
 		enemies.get_node(enemy_name).queue_free()
+
+
+func _on_client_item_added(item_name: String, item_class: String, pos: Vector2):
+	var item: JItem = J.item_scenes[item_class].instantiate()
+	item.name = item_name
+	item.item_class = item_class
+	item.position = pos
+
+	items.add_child(item)
+
+
+func _on_client_item_removed(item_name: String):
+	if items.has_node(item_name):
+		items.get_node(item_name).queue_free()

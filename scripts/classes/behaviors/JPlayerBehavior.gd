@@ -4,7 +4,7 @@ class_name JPlayerBehavior
 
 enum INTERACT_TYPE { ENEMY, NPC, ITEM }
 
-const SPEED = 300.0
+const LOOT_RANGE = 64.0
 
 @export var player: JPlayerBody2D
 @export var player_synchronizer: JPlayerSynchronizer
@@ -13,16 +13,31 @@ const SPEED = 300.0
 var attack_timer: Timer
 
 var enemies_in_attack_range: Array[JEnemyBody2D] = []
+var items_in_loot_range: Array[JItem] = []
 
 var moving: bool = false
 var move_target: Vector2 = Vector2()
 
 var interacting: bool = false
-var interact_target: JBody2D = null
+var interact_target: Variant = null
 var interact_type: INTERACT_TYPE = INTERACT_TYPE.ENEMY
 
 
 func _ready():
+	_init_attack_area()
+	_init_loot_area()
+
+	player_synchronizer.moved.connect(_on_moved)
+	player_synchronizer.interacted.connect(_on_interacted)
+
+	attack_timer = Timer.new()
+	attack_timer.name = "AttackTimer"
+
+	attack_timer.timeout.connect(_on_attack_timer_timeout)
+	add_child(attack_timer)
+
+
+func _init_attack_area():
 	var attack_area = Area2D.new()
 	attack_area.name = "AttackArea"
 	attack_area.collision_layer = 0
@@ -34,7 +49,7 @@ func _ready():
 
 	var cs_attack_area_circle = CircleShape2D.new()
 
-	cs_attack_area_circle.radius = 64.0
+	cs_attack_area_circle.radius = player_stats.attack_range
 	cs_attack_area.shape = cs_attack_area_circle
 
 	add_child(attack_area)
@@ -42,14 +57,26 @@ func _ready():
 	attack_area.body_entered.connect(_on_attack_area_enemy_entered)
 	attack_area.body_exited.connect(_on_attack_area_enemy_exited)
 
-	player_synchronizer.moved.connect(_on_moved)
-	player_synchronizer.interacted.connect(_on_interacted)
 
-	attack_timer = Timer.new()
-	attack_timer.name = "AttackTimer"
+func _init_loot_area():
+	var loot_area = Area2D.new()
+	loot_area.name = "LootArea"
+	loot_area.collision_layer = 0
+	loot_area.collision_mask = J.PHYSICS_LAYER_ITEMS
 
-	attack_timer.timeout.connect(_on_attack_timer_timeout)
-	add_child(attack_timer)
+	var cs_loot_area = CollisionShape2D.new()
+	cs_loot_area.name = "AttackAreaCollisionShape2D"
+	loot_area.add_child(cs_loot_area)
+
+	var cs_loot_area_circle = CircleShape2D.new()
+
+	cs_loot_area_circle.radius = LOOT_RANGE
+	cs_loot_area.shape = cs_loot_area_circle
+
+	add_child(loot_area)
+
+	loot_area.body_entered.connect(_on_loot_area_enemy_entered)
+	loot_area.body_exited.connect(_on_loot_area_enemy_exited)
 
 
 func _physics_process(delta: float):
@@ -70,14 +97,17 @@ func behavior(_delta: float):
 			moving = false
 			player.velocity = Vector2.ZERO
 	elif interacting:
-		if not is_instance_valid(interact_target) or interact_target.is_dead:
+		if not is_instance_valid(interact_target):
 			interacting = false
 			interact_target = null
 			return
 
 		match interact_type:
 			INTERACT_TYPE.ENEMY:
-				if not enemies_in_attack_range.has(interact_target):
+				if interact_target.is_dead:
+					interacting = false
+					interact_target = null
+				elif not enemies_in_attack_range.has(interact_target):
 					player.velocity = (
 						player.position.direction_to(interact_target.position)
 						* player_stats.movement_speed
@@ -93,7 +123,18 @@ func behavior(_delta: float):
 			INTERACT_TYPE.NPC:
 				pass
 			INTERACT_TYPE.ITEM:
-				pass
+				if not items_in_loot_range.has(interact_target):
+					player.velocity = (
+						player.position.direction_to(interact_target.position)
+						* player_stats.movement_speed
+					)
+					player.send_new_loop_animation("Move")
+				else:
+					player.velocity = Vector2.ZERO
+					interact_target.loot()
+					interacting = false
+					interact_target = null
+
 	else:
 		player.send_new_loop_animation("Idle")
 
@@ -106,6 +147,16 @@ func _on_attack_area_enemy_entered(body: JEnemyBody2D):
 func _on_attack_area_enemy_exited(body: JEnemyBody2D):
 	if enemies_in_attack_range.has(body):
 		enemies_in_attack_range.erase(body)
+
+
+func _on_loot_area_enemy_entered(body: JItem):
+	if not items_in_loot_range.has(body):
+		items_in_loot_range.append(body)
+
+
+func _on_loot_area_enemy_exited(body: JItem):
+	if items_in_loot_range.has(body):
+		items_in_loot_range.erase(body)
 
 
 func _on_moved(target_position: Vector2):
