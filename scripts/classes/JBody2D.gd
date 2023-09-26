@@ -67,7 +67,7 @@ func drop_loot():
 	for loot in loot_table:
 		if randf() < loot["drop_rate"]:
 			var item = J.item_scenes[loot["item_class"]].instantiate()
-			item.name = str(item.get_instance_id())
+			item.uuid = J.uuid_util.v4()
 			item.item_class = loot["item_class"]
 			item.mode = JItem.MODE.LOOT
 
