@@ -12,7 +12,7 @@ signal gold_removed(total: int, amount: int)
 @export var player: JPlayerBody2D
 
 var items: Array[JItem] = []
-var gold: int = 0
+var gold: int = 1000
 
 
 func _ready():

@@ -96,6 +96,14 @@ func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn
 	enemy_respawns.add_child(respawn)
 
 
+func get_player_by_peer_id(peer_id: int) -> JPlayerBody2D:
+	for player in players.get_children():
+		if player.peer_id == peer_id:
+			return player
+
+	return null
+
+
 func _on_player_logged_in(id: int, username: String):
 	J.logger.info("Adding player=[%s] with id=[%d]" % [username, id])
 

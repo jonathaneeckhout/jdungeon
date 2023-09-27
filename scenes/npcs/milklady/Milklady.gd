@@ -16,11 +16,14 @@ func _ready():
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	animation_player.play(loop_animation)
 
-	var behavior: JWanderBehavior = JWanderBehavior.new()
-	behavior.name = "WanderBehavior"
-	behavior.actor = self
+	if J.is_server():
+		var behavior: JWanderBehavior = JWanderBehavior.new()
+		behavior.name = "WanderBehavior"
+		behavior.actor = self
 
-	add_child(behavior)
+		add_child(behavior)
+
+		shop.add_item("HealthPotion", 100)
 
 
 func update_face_direction(direction: float):
