@@ -22,6 +22,7 @@ var is_gold: bool = false
 var drop_rate: float = 0.0
 
 var amount: int = 1
+var price: int = 0
 
 var healing = 0
 

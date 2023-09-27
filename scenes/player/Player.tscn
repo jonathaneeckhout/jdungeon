@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=19 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/player/base/Basecharacter.png" id="2_dug5c"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://b50k8a1sfjtn5" path="res://assets/player/base/base_trunk.png" id="8_n1x5o"]
 [ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="10_0qscs"]
 [ext_resource type="PackedScene" uid="uid://uord7b0pb5jt" path="res://scenes/player/inventory/Inventory.tscn" id="12_cqvu1"]
+[ext_resource type="PackedScene" uid="uid://dy1r3n0fpuneq" path="res://scenes/player/shop/Shop.tscn" id="12_macoo"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lk3fd"]
 radius = 16.0
@@ -828,6 +829,7 @@ metadata/_edit_lock_ = true
 
 [node name="RightArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(150, 0)
+scale = Vector2(1, 1)
 texture = ExtResource("4_gw0jc")
 offset = Vector2(131, 228)
 metadata/_edit_lock_ = true
@@ -835,30 +837,35 @@ metadata/_edit_lock_ = true
 [node name="RightWeapon" type="Sprite2D" parent="Sprites"]
 position = Vector2(80, 470)
 rotation = 1.57079
+scale = Vector2(1, 1)
 texture = ExtResource("8_4ai0o")
 offset = Vector2(0.00012207, 800)
 metadata/_edit_lock_ = true
 
 [node name="RightLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(190, 440)
+scale = Vector2(1, 1)
 texture = ExtResource("7_jpcwx")
 offset = Vector2(91, -212)
 metadata/_edit_lock_ = true
 
 [node name="LeftLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(390, 460)
+scale = Vector2(1, 1)
 texture = ExtResource("6_ph7fa")
 offset = Vector2(-109, -232)
 metadata/_edit_lock_ = true
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(270, 390)
+scale = Vector2(1, 1)
 texture = ExtResource("8_n1x5o")
 offset = Vector2(11, -162)
 metadata/_edit_lock_ = true
 
 [node name="Head" type="Sprite2D" parent="Sprites"]
 position = Vector2(300, -170)
+scale = Vector2(1, 1)
 texture = ExtResource("5_dr4ej")
 offset = Vector2(-19, 398)
 metadata/_edit_lock_ = true
@@ -867,12 +874,14 @@ metadata/_edit_lock_ = true
 visible = false
 position = Vector2(420, 480)
 rotation = 1.57079
+scale = Vector2(1, 1)
 texture = ExtResource("8_4ai0o")
 offset = Vector2(0.00012207, 800)
 metadata/_edit_lock_ = true
 
 [node name="LeftArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(470, -30)
+scale = Vector2(1, 1)
 texture = ExtResource("3_dw8ng")
 offset = Vector2(-189, 248)
 metadata/_edit_lock_ = true
@@ -951,3 +960,11 @@ offset_bottom = 0.0
 grow_horizontal = 0
 grow_vertical = 0
 size_flags_horizontal = 8
+
+[node name="Shop" parent="Camera2D/UILayer/GUI" instance=ExtResource("12_macoo")]
+visible = false
+layout_mode = 1
+offset_left = -134.5
+offset_top = -151.5
+offset_right = 134.5
+offset_bottom = 151.5

@@ -25,7 +25,9 @@ func _ready():
 		var body_network_view_area = Area2D.new()
 		body_network_view_area.name = "BodyNetworkViewArea"
 		body_network_view_area.collision_layer = 0
-		body_network_view_area.collision_mask = J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES
+		body_network_view_area.collision_mask = (
+			J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS
+		)
 		body_network_view_area.add_child(cs_body_network_view_area)
 
 		add_child(body_network_view_area)
@@ -64,7 +66,8 @@ func _on_body_network_view_area_body_entered(body: JBody2D):
 				J.rpcs.enemy.add_enemy.rpc_id(
 					player.peer_id, body.name, body.enemy_class, body.position
 				)
-
+			J.ENTITY_TYPE.NPC:
+				J.rpcs.npc.add_npc.rpc_id(player.peer_id, body.name, body.npc_class, body.position)
 		bodies_in_view.append(body)
 
 	if player not in body.synchronizer.watchers:
@@ -79,6 +82,8 @@ func _on_body_network_view_area_body_exited(body: JBody2D):
 					J.rpcs.player.remove_other_player.rpc_id(player.peer_id, body.username)
 				J.ENTITY_TYPE.ENEMY:
 					J.rpcs.enemy.remove_enemy.rpc_id(player.peer_id, body.name)
+				J.ENTITY_TYPE.NPC:
+					J.rpcs.npc.remove_npc.rpc_id(player.peer_id, body.name)
 
 		bodies_in_view.erase(body)
 

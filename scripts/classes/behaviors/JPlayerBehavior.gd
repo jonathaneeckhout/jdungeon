@@ -14,6 +14,7 @@ var attack_timer: Timer
 
 var enemies_in_attack_range: Array[JEnemyBody2D] = []
 var items_in_loot_range: Array[JItem] = []
+var npcs_in_interact_range: Array[JNPCBody2D] = []
 
 var moving: bool = false
 var move_target: Vector2 = Vector2()
@@ -26,6 +27,7 @@ var interact_type: INTERACT_TYPE = INTERACT_TYPE.ENEMY
 func _ready():
 	_init_attack_area()
 	_init_loot_area()
+	_init_interact_area()
 
 	player_synchronizer.moved.connect(_on_moved)
 	player_synchronizer.interacted.connect(_on_interacted)
@@ -79,6 +81,27 @@ func _init_loot_area():
 	loot_area.body_exited.connect(_on_loot_area_enemy_exited)
 
 
+func _init_interact_area():
+	var interact_area = Area2D.new()
+	interact_area.name = "InteractArea"
+	interact_area.collision_layer = 0
+	interact_area.collision_mask = J.PHYSICS_LAYER_NPCS
+
+	var cs_interact_area = CollisionShape2D.new()
+	cs_interact_area.name = "AttackAreaCollisionShape2D"
+	interact_area.add_child(cs_interact_area)
+
+	var cs_interact_area_circle = CircleShape2D.new()
+
+	cs_interact_area_circle.radius = LOOT_RANGE
+	cs_interact_area.shape = cs_interact_area_circle
+
+	add_child(interact_area)
+
+	interact_area.body_entered.connect(_on_interact_area_npc_entered)
+	interact_area.body_exited.connect(_on_interact_area_npc_exited)
+
+
 func _physics_process(delta: float):
 	if J.is_server():
 		behavior(delta)
@@ -121,7 +144,17 @@ func behavior(_delta: float):
 						attack_timer.start(player_stats.attack_speed)
 
 			INTERACT_TYPE.NPC:
-				pass
+				if not npcs_in_interact_range.has(interact_target):
+					player.velocity = (
+						player.position.direction_to(interact_target.position)
+						* player_stats.movement_speed
+					)
+					player.send_new_loop_animation("Move")
+				else:
+					player.velocity = Vector2.ZERO
+					interact_target.interact(player)
+					interacting = false
+					interact_target = null
 			INTERACT_TYPE.ITEM:
 				if not items_in_loot_range.has(interact_target):
 					player.velocity = (
@@ -157,6 +190,16 @@ func _on_loot_area_enemy_entered(body: JItem):
 func _on_loot_area_enemy_exited(body: JItem):
 	if items_in_loot_range.has(body):
 		items_in_loot_range.erase(body)
+
+
+func _on_interact_area_npc_entered(body: JNPCBody2D):
+	if not npcs_in_interact_range.has(body):
+		npcs_in_interact_range.append(body)
+
+
+func _on_interact_area_npc_exited(body: JNPCBody2D):
+	if npcs_in_interact_range.has(body):
+		npcs_in_interact_range.erase(body)
 
 
 func _on_moved(target_position: Vector2):

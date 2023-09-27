@@ -3,6 +3,7 @@ extends Node
 var account: Node
 var player: Node
 var enemy: Node
+var npc: Node
 var item: Node
 var clock: Node
 
@@ -19,6 +20,10 @@ func _ready():
 	enemy = load("res://scripts/network/rpcs/enemy.gd").new()
 	enemy.name = "Enemy"
 	add_child(enemy)
+
+	npc = load("res://scripts/network/rpcs/npc.gd").new()
+	npc.name = "NPC"
+	add_child(npc)
 
 	item = load("res://scripts/network/rpcs/item.gd").new()
 	item.name = "Item"

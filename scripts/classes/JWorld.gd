@@ -3,6 +3,7 @@ extends Node2D
 class_name JWorld
 
 @export var enemies_to_sync: Node2D
+@export var npcs_to_sync: Node2D
 
 var players: Node2D
 var enemies: Node2D
@@ -56,12 +57,16 @@ func _ready():
 		J.rpcs.enemy.enemy_added.connect(_on_client_enemy_added)
 		J.rpcs.enemy.enemy_removed.connect(_on_client_enemy_removed)
 
+		J.rpcs.npc.npc_added.connect(_on_client_npc_added)
+		J.rpcs.npc.npc_removed.connect(_on_client_npc_removed)
+
 		J.rpcs.item.item_added.connect(_on_client_item_added)
 		J.rpcs.item.item_removed.connect(_on_client_item_removed)
 
 	J.world = self
 
 	load_enemies()
+	load_npcs()
 
 
 func load_enemies():
@@ -73,6 +78,15 @@ func load_enemies():
 			enemies.add_child(enemy)
 
 
+func load_npcs():
+	for npc in npcs_to_sync.get_children():
+		npc.name = str(npc.get_instance_id())
+		npc.get_parent().remove_child(npc)
+
+		if J.is_server():
+			npcs.add_child(npc)
+
+
 func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn_time: float):
 	var respawn: JEnemyRespawn = load("res://scripts/classes/JEnemyRespawn.gd").new()
 	respawn.enemy_class = enemy_class
@@ -80,6 +94,14 @@ func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn
 	respawn.respawn_time = respawn_time
 
 	enemy_respawns.add_child(respawn)
+
+
+func get_player_by_peer_id(peer_id: int) -> JPlayerBody2D:
+	for player in players.get_children():
+		if player.peer_id == peer_id:
+			return player
+
+	return null
 
 
 func _on_player_logged_in(id: int, username: String):
@@ -149,6 +171,19 @@ func _on_client_enemy_added(enemy_name: String, enemy_class: String, pos: Vector
 func _on_client_enemy_removed(enemy_name: String):
 	if enemies.has_node(enemy_name):
 		enemies.get_node(enemy_name).queue_free()
+
+
+func _on_client_npc_added(npc_name: String, npc_class: String, pos: Vector2):
+	var npc: JNPCBody2D = J.npc_scenes[npc_class].instantiate()
+	npc.name = npc_name
+	npc.position = pos
+
+	npcs.add_child(npc)
+
+
+func _on_client_npc_removed(npc_name: String):
+	if npcs.has_node(npc_name):
+		npcs.get_node(npc_name).queue_free()
 
 
 func _on_client_item_added(item_uuid: String, item_class: String, pos: Vector2):
