@@ -2,6 +2,8 @@ extends JBody2D
 
 class_name JNPCBody2D
 
+var npc_class: String = ""
+
 @export var is_vendor: bool = false
 
 var shop: JShop
