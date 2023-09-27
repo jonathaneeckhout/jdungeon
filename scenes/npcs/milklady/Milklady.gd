@@ -9,6 +9,7 @@ func _ready():
 	super()
 
 	npc_class = "MilkLady"
+	is_vendor = true
 
 	stats.movement_speed = 50
 

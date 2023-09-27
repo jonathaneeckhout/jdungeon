@@ -12,6 +12,7 @@ func add_item(item_class: String, price: int) -> bool:
 		return false
 
 	var item = {
+		"uuid": J.uuid_util.v4(),
 		"class": item_class,
 		"price": price,
 	}
@@ -22,4 +23,4 @@ func add_item(item_class: String, price: int) -> bool:
 
 
 func get_output():
-	return inventory
+	return {"inventory": inventory}
