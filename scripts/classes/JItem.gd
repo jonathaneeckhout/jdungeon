@@ -12,23 +12,18 @@ enum MODE { LOOT, ITEMSLOT }
 @export var expire_time: float = 30.0
 
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ITEM
+var item_class: String = ""
 
 var expire_timer: Timer
 
+var consumable: bool = false
 var is_gold: bool = false
+
 var drop_rate: float = 0.0
+
 var amount: int = 1
 
-var item_class: String = ""
-
-var mode: MODE = MODE.LOOT:
-	set(new_mode):
-		mode = new_mode
-		match new_mode:
-			MODE.LOOT:
-				$Sprite.visible = true
-			MODE.ITEMSLOT:
-				$Sprite.visible = false
+var healing = 0
 
 
 func _ready():
@@ -39,11 +34,14 @@ func _ready():
 	if J.is_server():
 		expire_timer = Timer.new()
 		expire_timer.one_shot = true
-		if mode == MODE.LOOT:
-			expire_timer.autostart = true
+
 		expire_timer.wait_time = expire_time
 		expire_timer.timeout.connect(_on_expire_timer_timeout)
 		add_child(expire_timer)
+
+
+func start_expire_timer():
+	expire_timer.start(expire_time)
 
 
 func loot(from: JPlayerBody2D) -> bool:
@@ -56,6 +54,15 @@ func loot(from: JPlayerBody2D) -> bool:
 		return true
 
 	return false
+
+
+func use(user: JPlayerBody2D) -> bool:
+	if consumable:
+		if healing > 0:
+			user.heal(user, healing)
+		return true
+	else:
+		return false
 
 
 func _on_expire_timer_timeout():

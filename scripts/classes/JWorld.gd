@@ -151,15 +151,15 @@ func _on_client_enemy_removed(enemy_name: String):
 		enemies.get_node(enemy_name).queue_free()
 
 
-func _on_client_item_added(item_name: String, item_class: String, pos: Vector2):
+func _on_client_item_added(item_uuid: String, item_class: String, pos: Vector2):
 	var item: JItem = J.item_scenes[item_class].instantiate()
-	item.name = item_name
+	item.uuid = item_uuid
 	item.item_class = item_class
 	item.position = pos
 
 	items.add_child(item)
 
 
-func _on_client_item_removed(item_name: String):
-	if items.has_node(item_name):
-		items.get_node(item_name).queue_free()
+func _on_client_item_removed(item_uuid: String):
+	if items.has_node(item_uuid):
+		items.get_node(item_uuid).queue_free()

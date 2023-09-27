@@ -47,6 +47,12 @@ func hurt(from: CharacterBody2D, damage: int):
 	synchronizer.sync_hurt(from.name, stats.hp, stats.max_hp, damage_done)
 
 
+func heal(from: CharacterBody2D, healing: int):
+	var healing_done: int = stats.heal(healing)
+
+	synchronizer.sync_heal(from.name, stats.hp, stats.max_hp, healing_done)
+
+
 func send_new_loop_animation(animation: String):
 	if loop_animation != animation:
 		loop_animation = animation
@@ -70,12 +76,13 @@ func drop_loot():
 			item.uuid = J.uuid_util.v4()
 			item.item_class = loot["item_class"]
 			item.amount = randi_range(1, loot["amount"])
-			item.mode = JItem.MODE.LOOT
 
 			var random_x = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
 			var random_y = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
 			item.position = position + Vector2(random_x, random_y)
+
 			J.world.items.add_child(item)
+			item.start_expire_timer()
 
 
 func add_item_to_loottable(item_class: String, drop_rate: float, amount: int = 1):

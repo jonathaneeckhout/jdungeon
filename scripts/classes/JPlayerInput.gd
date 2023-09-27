@@ -34,6 +34,10 @@ func _ready():
 
 
 func _input(event):
+	# Don't do anything when above ui
+	if JUI.above_ui:
+		return
+
 	if event.is_action_pressed("j_right_click"):
 		_handle_right_click()
 

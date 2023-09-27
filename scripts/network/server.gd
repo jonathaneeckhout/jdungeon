@@ -84,6 +84,10 @@ func start() -> bool:
 	return true
 
 
+func is_user_logged_in(id: int):
+	return users[id]["logged_in"]
+
+
 func _on_peer_connected(id: int):
 	J.logger.info("Peer connected %d" % id)
 	users[id] = {

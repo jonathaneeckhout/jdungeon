@@ -33,5 +33,11 @@ func hurt(damage: int) -> int:
 	return reduced_damage
 
 
+func heal(healing: int) -> int:
+	hp = min(max_hp, hp + healing)
+
+	return healing
+
+
 func reset_hp():
 	hp = max_hp

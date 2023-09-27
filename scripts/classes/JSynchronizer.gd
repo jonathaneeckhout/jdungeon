@@ -4,6 +4,7 @@ class_name JSynchronizer
 
 signal attacked(target: String, damage: int)
 signal got_hurt(from: String, hp: int, max_hp: int, damage: int)
+signal healed(from: String, hp: int, max_hp: int, healing: int)
 signal loop_animation_changed(animation: String, direction: Vector2)
 signal died
 
@@ -18,6 +19,7 @@ var last_sync_timestamp: float = 0.0
 var server_syncs_buffer: Array[Dictionary] = []
 var attack_buffer: Array[Dictionary] = []
 var hurt_buffer: Array[Dictionary] = []
+var heal_buffer: Array[Dictionary] = []
 var loop_animation_buffer: Array[Dictionary] = []
 var die_buffer: Array[Dictionary] = []
 
@@ -137,6 +139,28 @@ func check_if_hurt():
 			return true
 
 
+func sync_heal(from: String, hp: int, max_hp: int, healing: int):
+	var timestamp = Time.get_unix_time_from_system()
+
+	for watcher in watchers:
+		heal.rpc_id(watcher.peer_id, timestamp, from, hp, max_hp, healing)
+
+	healed.emit(from, hp, max_hp, healing)
+
+
+func check_if_healed():
+	for i in range(heal_buffer.size() - 1, -1, -1):
+		if heal_buffer[i]["timestamp"] <= J.client.clock:
+			healed.emit(
+				heal_buffer[i]["from"],
+				heal_buffer[i]["hp"],
+				heal_buffer[i]["max_hp"],
+				heal_buffer[i]["healing"]
+			)
+			heal_buffer.remove_at(i)
+			return true
+
+
 func sync_loop_animation(animation: String, direction: Vector2):
 	var timestamp = Time.get_unix_time_from_system()
 
@@ -187,6 +211,13 @@ func sync(timestamp: float, pos: Vector2, vec: Vector2):
 func hurt(timestamp: float, from: String, hp: int, max_hp: int, damage: int):
 	hurt_buffer.append(
 		{"timestamp": timestamp, "from": from, "hp": hp, "max_hp": max_hp, "damage": damage}
+	)
+
+
+@rpc("call_remote", "authority", "reliable")
+func heal(timestamp: float, from: String, hp: int, max_hp: int, healing: int):
+	heal_buffer.append(
+		{"timestamp": timestamp, "from": from, "hp": hp, "max_hp": max_hp, "healing": healing}
 	)
 
 
