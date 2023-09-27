@@ -3,6 +3,7 @@ extends Node2D
 class_name JWorld
 
 @export var enemies_to_sync: Node2D
+@export var npcs_to_sync: Node2D
 
 var players: Node2D
 var enemies: Node2D
@@ -62,6 +63,7 @@ func _ready():
 	J.world = self
 
 	load_enemies()
+	load_npcs()
 
 
 func load_enemies():
@@ -71,6 +73,15 @@ func load_enemies():
 
 		if J.is_server():
 			enemies.add_child(enemy)
+
+
+func load_npcs():
+	for npc in npcs_to_sync.get_children():
+		npc.name = str(npc.get_instance_id())
+		npc.get_parent().remove_child(npc)
+
+		if J.is_server():
+			npcs.add_child(npc)
 
 
 func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn_time: float):

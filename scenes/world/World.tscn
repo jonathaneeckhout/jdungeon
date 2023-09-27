@@ -5,9 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="3_fddk3"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="4_4b353"]
 
-[node name="World" type="Node2D" node_paths=PackedStringArray("enemies_to_sync")]
+[node name="World" type="Node2D"]
 script = ExtResource("1_3w1ia")
-enemies_to_sync = NodePath("Entities/Enemies")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -47,8 +46,8 @@ position = Vector2(832, -704)
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 
+[node name="Milklady" parent="Entities/NPCs" instance=ExtResource("4_4b353")]
+position = Vector2(657, 411)
+
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
-
-[node name="Milklady" parent="." instance=ExtResource("4_4b353")]
-position = Vector2(657, 411)

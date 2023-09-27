@@ -2,6 +2,9 @@ extends JWorld
 
 
 func _ready():
+	enemies_to_sync = $Entities/Enemies
+	npcs_to_sync = $Entities/NPCs
+
 	super()
 
 	# To avoid duplicates, remove these placeholders, they are only used in the editor
