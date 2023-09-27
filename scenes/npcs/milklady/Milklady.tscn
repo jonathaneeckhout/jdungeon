@@ -1,0 +1,93 @@
+[gd_scene load_steps=10 format=3 uid="uid://dj1mpx8a8yeko"]
+
+[ext_resource type="Script" path="res://scenes/npcs/milklady/Milklady.gd" id="1_i2k6g"]
+[ext_resource type="Texture2D" uid="uid://co4caux37si5b" path="res://assets/npcs/milklady/milklady_whole.png" id="2_yblp5"]
+[ext_resource type="Texture2D" uid="uid://b8qflr2atk3il" path="res://assets/npcs/milklady/milklady_body.png" id="3_cyqqs"]
+[ext_resource type="Texture2D" uid="uid://sqhyjw8sxa2g" path="res://assets/npcs/milklady/milklady_head.png" id="4_0w10x"]
+[ext_resource type="Texture2D" uid="uid://dc103ysnnxwm6" path="res://assets/npcs/milklady/milklady_left_arm.png" id="5_1mf1y"]
+[ext_resource type="Texture2D" uid="uid://6ok6m1nqugg4" path="res://assets/npcs/milklady/milklady_left_foot.png" id="6_ba0nm"]
+[ext_resource type="Texture2D" uid="uid://bvhajaa34ilol" path="res://assets/npcs/milklady/milklady_right_arm.png" id="7_f60ad"]
+[ext_resource type="Texture2D" uid="uid://dlyuyp8sjr4qj" path="res://assets/npcs/milklady/milklady_right_foot.png" id="8_xp8pl"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6kb0l"]
+radius = 30.0
+height = 92.0
+
+[node name="Milklady" type="CharacterBody2D"]
+script = ExtResource("1_i2k6g")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(8, -43)
+shape = SubResource("CapsuleShape2D_6kb0l")
+
+[node name="Sprites" type="Node2D" parent="."]
+scale = Vector2(0.1, 0.1)
+
+[node name="MilkladyWhole" type="Sprite2D" parent="Sprites"]
+visible = false
+position = Vector2(77.0001, -471.5)
+scale = Vector2(1, 1)
+texture = ExtResource("2_yblp5")
+
+[node name="MilkladyRightArm" type="Sprite2D" parent="Sprites"]
+position = Vector2(-60, -410)
+scale = Vector2(1, 1)
+texture = ExtResource("7_f60ad")
+offset = Vector2(137, -61.5)
+
+[node name="MilkladyBody" type="Sprite2D" parent="Sprites"]
+position = Vector2(30, -200)
+scale = Vector2(1, 1)
+texture = ExtResource("3_cyqqs")
+offset = Vector2(47.0001, -271.5)
+
+[node name="MilkladyHead" type="Sprite2D" parent="Sprites"]
+position = Vector2(2.38419e-06, -430)
+scale = Vector2(1, 1)
+texture = ExtResource("4_0w10x")
+offset = Vector2(77.0001, -41.5)
+
+[node name="MilkladyRightFoot" type="Sprite2D" parent="Sprites"]
+position = Vector2(-30, -20)
+scale = Vector2(1, 1)
+texture = ExtResource("8_xp8pl")
+offset = Vector2(107, -451.5)
+
+[node name="MilkladyLeftFoot" type="Sprite2D" parent="Sprites"]
+position = Vector2(220, -20)
+scale = Vector2(1, 1)
+texture = ExtResource("6_ba0nm")
+offset = Vector2(-133, -451.5)
+
+[node name="MilkladyLeftArm" type="Sprite2D" parent="Sprites"]
+position = Vector2(170, -390)
+scale = Vector2(1, 1)
+texture = ExtResource("5_1mf1y")
+offset = Vector2(-92.9999, -101.5)
+
+[node name="Skeleton" type="Node2D" parent="."]
+scale = Vector2(0.1, 0.1)
+
+[node name="RemoteBody" type="RemoteTransform2D" parent="Skeleton"]
+position = Vector2(30, -200)
+remote_path = NodePath("../../Sprites/MilkladyBody")
+
+[node name="RemoteHead" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-30, -230)
+remote_path = NodePath("../../../Sprites/MilkladyHead")
+
+[node name="RemoteRightArm" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-90, -210)
+remote_path = NodePath("../../../Sprites/MilkladyRightArm")
+
+[node name="RemoteLeftArm" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(140, -190)
+remote_path = NodePath("../../../Sprites/MilkladyLeftArm")
+
+[node name="RemoteRightFoot" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-60, 180)
+remote_path = NodePath("../../../Sprites/MilkladyRightFoot")
+
+[node name="RemoteLeftFoot" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(190, 180)
+remote_path = NodePath("../../../Sprites/MilkladyLeftFoot")
