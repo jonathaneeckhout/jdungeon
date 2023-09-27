@@ -57,6 +57,9 @@ func _ready():
 		J.rpcs.enemy.enemy_added.connect(_on_client_enemy_added)
 		J.rpcs.enemy.enemy_removed.connect(_on_client_enemy_removed)
 
+		J.rpcs.npc.npc_added.connect(_on_client_npc_added)
+		J.rpcs.npc.npc_removed.connect(_on_client_npc_removed)
+
 		J.rpcs.item.item_added.connect(_on_client_item_added)
 		J.rpcs.item.item_removed.connect(_on_client_item_removed)
 
@@ -160,6 +163,19 @@ func _on_client_enemy_added(enemy_name: String, enemy_class: String, pos: Vector
 func _on_client_enemy_removed(enemy_name: String):
 	if enemies.has_node(enemy_name):
 		enemies.get_node(enemy_name).queue_free()
+
+
+func _on_client_npc_added(npc_name: String, npc_class: String, pos: Vector2):
+	var npc: JNPCBody2D = J.npc_scenes[npc_class].instantiate()
+	npc.name = npc_name
+	npc.position = pos
+
+	npcs.add_child(npc)
+
+
+func _on_client_npc_removed(npc_name: String):
+	if npcs.has_node(npc_name):
+		npcs.get_node(npc_name).queue_free()
 
 
 func _on_client_item_added(item_uuid: String, item_class: String, pos: Vector2):

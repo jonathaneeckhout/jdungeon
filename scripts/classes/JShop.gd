@@ -19,3 +19,7 @@ func add_item(item_class: String, price: int) -> bool:
 	inventory.append(item)
 
 	return true
+
+
+func get_output():
+	return inventory

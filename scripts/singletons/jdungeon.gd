@@ -27,6 +27,7 @@ var world: Node
 
 var player_scene: Resource
 var enemy_scenes: Dictionary = {}
+var npc_scenes: Dictionary = {}
 var item_scenes: Dictionary = {}
 
 var uuid_util: Node
@@ -98,6 +99,10 @@ func register_player_scene(player_scene_path: String):
 
 func register_enemy_scene(enemy_class: String, enemy_scene_path: String):
 	enemy_scenes[enemy_class] = load(enemy_scene_path)
+
+
+func register_npc_scene(npc_class: String, npc_scene_path: String):
+	npc_scenes[npc_class] = load(npc_scene_path)
 
 
 func register_item_scene(item_class: String, item_scene_path: String):

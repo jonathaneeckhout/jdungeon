@@ -4,6 +4,11 @@ class_name JEnemyBody2D
 
 const DESPAWN_TIME = 10.0
 
+var enemy_class: String = "":
+	set(new_class):
+		enemy_class = new_class
+		J.register_enemy_scene(enemy_class, scene_file_path)
+
 @export var respawn: bool = false
 @export var respawn_time: float = 10.0
 
@@ -14,12 +19,6 @@ var despawn_timer: Timer
 
 func _init():
 	entity_type = J.ENTITY_TYPE.ENEMY
-
-
-var enemy_class: String = "":
-	set(new_class):
-		enemy_class = new_class
-		J.register_enemy_scene(enemy_class, scene_file_path)
 
 
 func _ready():
