@@ -12,6 +12,7 @@ enum MODE { LOOT, ITEMSLOT }
 @export var expire_time: float = 30.0
 
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ITEM
+var item_class: String = ""
 
 var expire_timer: Timer
 
@@ -19,9 +20,10 @@ var consumable: bool = false
 var is_gold: bool = false
 
 var drop_rate: float = 0.0
+
 var amount: int = 1
 
-var item_class: String = ""
+var healing = 0
 
 
 func _ready():
@@ -54,8 +56,13 @@ func loot(from: JPlayerBody2D) -> bool:
 	return false
 
 
-func use(_user: JPlayerBody2D) -> bool:
-	return true
+func use(user: JPlayerBody2D) -> bool:
+	if consumable:
+		if healing > 0:
+			user.heal(user, healing)
+		return true
+	else:
+		return false
 
 
 func _on_expire_timer_timeout():

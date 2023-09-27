@@ -47,6 +47,12 @@ func hurt(from: CharacterBody2D, damage: int):
 	synchronizer.sync_hurt(from.name, stats.hp, stats.max_hp, damage_done)
 
 
+func heal(from: CharacterBody2D, healing: int):
+	var healing_done: int = stats.heal(healing)
+
+	synchronizer.sync_heal(from.name, stats.hp, stats.max_hp, healing_done)
+
+
 func send_new_loop_animation(animation: String):
 	if loop_animation != animation:
 		loop_animation = animation

@@ -8,6 +8,8 @@ radius = 20.0
 
 [node name="HealthPotion" type="StaticBody2D"]
 script = ExtResource("1_6wvtl")
+uuid = null
+expire_time = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_oppbl")

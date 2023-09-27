@@ -11,6 +11,7 @@ func _ready():
 
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.attacked.connect(_on_attacked)
+	synchronizer.healed.connect(_on_healed)
 
 	animation_player.play(loop_animation)
 
@@ -58,3 +59,7 @@ func _on_attacked(target: String, _damage: int):
 		return
 
 	update_face_direction(position.direction_to(enemy.position).x)
+
+
+func _on_healed(_from: String, _hp: int, _max_hp: int, healing: int):
+	print("Healed %d" % healing)
