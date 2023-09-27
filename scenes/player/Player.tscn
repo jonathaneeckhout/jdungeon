@@ -1,9 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=20 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/player/base/Basecharacter.png" id="2_dug5c"]
 [ext_resource type="Texture2D" uid="uid://b38ld53gomnkq" path="res://assets/player/base/base_fronthand.png" id="3_dw8ng"]
 [ext_resource type="Texture2D" uid="uid://dyv7uagfvwjw0" path="res://assets/player/base/base_handback.png" id="4_gw0jc"]
+[ext_resource type="Texture2D" uid="uid://dbrok0x3ij7yn" path="res://assets/equipment/weapons/axe.png" id="4_rv4cj"]
 [ext_resource type="Texture2D" uid="uid://dhpyicp5pnbh7" path="res://assets/player/base/base_head.png" id="5_dr4ej"]
 [ext_resource type="Texture2D" uid="uid://d2uess8ln1r1k" path="res://assets/player/base/base_leg.png" id="6_ph7fa"]
 [ext_resource type="Texture2D" uid="uid://brvhtyjeyjceq" path="res://assets/player/base/base_legback.png" id="7_jpcwx"]
@@ -838,7 +839,7 @@ metadata/_edit_lock_ = true
 position = Vector2(80, 470)
 rotation = 1.57079
 scale = Vector2(1, 1)
-texture = ExtResource("8_4ai0o")
+texture = ExtResource("4_rv4cj")
 offset = Vector2(0.00012207, 800)
 metadata/_edit_lock_ = true
 
