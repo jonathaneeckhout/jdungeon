@@ -29,6 +29,8 @@ func add_item(item: JItem) -> bool:
 		add_gold(item.amount)
 		return true
 
+	item.collision_layer = 0
+
 	if items.size() >= size:
 		return false
 
@@ -52,7 +54,7 @@ func remove_item(item_uuid: String):
 
 func get_item(item_uuid: String) -> JItem:
 	for item in items:
-		if item.name == item_uuid:
+		if item.uuid == item_uuid:
 			return item
 
 	return null
@@ -110,6 +112,7 @@ func _on_inventory_item_dropped(id: int, item_uuid: String):
 	var random_x = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
 	var random_y = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
 	item.position = player.position + Vector2(random_x, random_y)
+	item.collision_layer = J.PHYSICS_LAYER_ITEMS
 
 	J.world.items.add_child(item)
 	item.start_expire_timer()
@@ -121,6 +124,7 @@ func sync_add_item(item_uuid: String, item_class: String, amount: int):
 	item.uuid = item_uuid
 	item.item_class = item_class
 	item.amount = amount
+	item.collision_layer = 0
 
 	items.append(item)
 

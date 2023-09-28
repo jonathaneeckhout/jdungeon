@@ -9,6 +9,7 @@ var player_synchronizer: JPlayerSynchronizer
 var player_input: JPlayerInput
 var player_behavior: JPlayerBehavior
 var inventory: JInventory
+var equipment: JEquipment
 
 
 func _init():
@@ -20,19 +21,24 @@ func _ready():
 
 	collision_layer += J.PHYSICS_LAYER_PLAYERS
 
-	player_synchronizer = load("res://scripts/classes/JPlayerSynchronizer.gd").new()
+	player_synchronizer = JPlayerSynchronizer.new()
 	player_synchronizer.name = "PlayerSynchronizer"
 	player_synchronizer.player = self
 	player_synchronizer.synchronizer = synchronizer
 	add_child(player_synchronizer)
 
-	inventory = load("res://scripts/classes/JInventory.gd").new()
+	inventory = JInventory.new()
 	inventory.name = "Inventory"
 	inventory.player = self
 	add_child(inventory)
 
+	equipment = JEquipment.new()
+	equipment.name = "Equipment"
+	equipment.player = self
+	add_child(equipment)
+
 	if J.is_server():
-		player_behavior = load("res://scripts/classes/behaviors/JPlayerBehavior.gd").new()
+		player_behavior = JPlayerBehavior.new()
 		player_behavior.name = "PlayerBehavior"
 		player_behavior.player = self
 		player_behavior.player_synchronizer = player_synchronizer
@@ -40,7 +46,7 @@ func _ready():
 		add_child(player_behavior)
 
 	else:
-		player_input = load("res://scripts/classes/JPlayerInput.gd").new()
+		player_input = JPlayerInput.new()
 		player_input.name = "PlayerInput"
 		add_child(player_input)
 

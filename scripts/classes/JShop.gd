@@ -16,6 +16,7 @@ func _ready():
 
 func add_item(item_class: String, price: int) -> bool:
 	if inventory.size() >= size:
+		J.logger.warn("Can not add more items to %s's shop, shop is full" % parent.npc_class)
 		return false
 
 	var item = {

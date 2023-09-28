@@ -12,6 +12,13 @@ To get started with JDungeon, follow these steps:
 
 ## List of Features
 
+- Gameplay
+  - Enemy System
+  - NPC System
+    - Vendor NPCs
+  - Loot Drops upon Defeating Enemies
+  - Bag system
+  - Equipment system
 - User Management
   - Account Creation
   - Login System
@@ -21,20 +28,16 @@ To get started with JDungeon, follow these steps:
   - Synchronization of Damage
   - Synchronization of Attacks on Targets
   - Synchronization of Entities Deaths
+  - Synchronization of Equipment
+  - Synchronization of Bag
 - AI
   - Wander Behavior
 
 ## Feature Roadmap
 - Gameplay
-  - Introduce Equipment
-  - Introduce a Player's Bag
-  - Implement NPC Vendor
-  - Add Loot Drops upon Enemy Defeat
   - Integrate Player Leveling System
 - Networking
   - Synchronize Stats
-  - Synchronize Bag
-  - Synchronize Equipment
 - AI
   - Add Behavior to Include Wandering and Fleeing When Attacked
   - Add Wandering and Attacking Behavior
@@ -42,7 +45,6 @@ To get started with JDungeon, follow these steps:
   - Integrate Chat Panel
   - Establish General Chat Functionality
   - Implement Whisper Chat Capability
-    
 
 ## Install Instructions
 ### Step 1: Clone the repository

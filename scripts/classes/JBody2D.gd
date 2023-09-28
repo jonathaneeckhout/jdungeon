@@ -76,6 +76,7 @@ func drop_loot():
 			item.uuid = J.uuid_util.v4()
 			item.item_class = loot["item_class"]
 			item.amount = randi_range(1, loot["amount"])
+			item.collision_layer = J.PHYSICS_LAYER_ITEMS
 
 			var random_x = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
 			var random_y = randi_range(-J.DROP_RANGE, J.DROP_RANGE)

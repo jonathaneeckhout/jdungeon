@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://c6ca2i548ibmy"]
+
+[ext_resource type="Texture2D" uid="uid://b557eo3egib7" path="res://assets/equipment/weapons/club.png" id="1_8qx2e"]
+[ext_resource type="Script" path="res://scenes/items/equipment/weapons/club/Club.gd" id="1_ty7q7"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g6336"]
+radius = 14.0
+height = 52.0
+
+[node name="Club" type="StaticBody2D"]
+script = ExtResource("1_ty7q7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_g6336")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(2.38419e-07, -21)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("1_8qx2e")
+
+[node name="EquipmentSprite" type="Sprite2D" parent="."]
+position = Vector2(1.03398e-25, -78)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_8qx2e")
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("1_8qx2e")

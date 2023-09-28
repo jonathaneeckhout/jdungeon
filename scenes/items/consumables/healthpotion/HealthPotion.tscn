@@ -17,3 +17,7 @@ shape = SubResource("CircleShape2D_oppbl")
 [node name="Sprite" type="Sprite2D" parent="."]
 scale = Vector2(0.03, 0.03)
 texture = ExtResource("2_ji33d")
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_ji33d")
