@@ -21,6 +21,9 @@ func register_items():
 		"ChainMailBody", "res://scenes/items/equipment/armour/chainmailbody/ChainMailBody.tscn"
 	)
 	J.register_item_scene(
+		"ChainMailArms", "res://scenes/items/equipment/armour/chainmailarms/ChainMailArms.tscn"
+	)
+	J.register_item_scene(
 		"PlateHelm", "res://scenes/items/equipment/armour/platehelm/PlateHelm.tscn"
 	)
 	J.register_item_scene(
