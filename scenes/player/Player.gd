@@ -31,6 +31,9 @@ func _ready():
 	synchronizer.attacked.connect(_on_attacked)
 	synchronizer.healed.connect(_on_healed)
 
+	equipment.item_added.connect(_on_item_equiped)
+	equipment.item_removed.connect(_on_item_unequiped)
+
 	animation_player.play(loop_animation)
 
 	$JInterface.display_name = username
@@ -41,9 +44,6 @@ func _ready():
 	else:
 		$Camera2D/UILayer/GUI/Inventory.register_signals()
 		$Camera2D/UILayer/GUI/Equipment.register_signals()
-
-		equipment.item_added.connect(_on_item_equiped)
-		equipment.item_removed.connect(_on_item_unequiped)
 
 
 func _physics_process(_delta):

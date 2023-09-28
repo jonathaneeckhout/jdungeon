@@ -32,6 +32,9 @@ func equip_item(item: JItem) -> bool:
 
 	if _equip_item(item):
 		sync_equip_item.rpc_id(player.peer_id, item.uuid, item.item_class)
+
+		item_added.emit(item.uuid, item.item_class)
+
 		return true
 
 	return false
@@ -54,6 +57,8 @@ func unequip_item(item_uuid: String) -> JItem:
 	var item: JItem = _unequip_item(item_uuid)
 	if item:
 		sync_unequip_item.rpc_id(player.peer_id, item.uuid)
+
+		item_removed.emit(item_uuid)
 
 	return item
 
