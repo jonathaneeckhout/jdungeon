@@ -18,7 +18,6 @@ scale = Vector2(0.05, 0.05)
 
 [node name="PlatearmorBackleg" type="Sprite2D" parent="Sprite"]
 position = Vector2(-60, -460)
-scale = Vector2(1, 1)
 texture = ExtResource("3_022nx")
 
 [node name="PlatearmorFrontleg" type="Sprite2D" parent="Sprite"]
@@ -36,3 +35,7 @@ visible = false
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("2_wcnf5")
 offset = Vector2(-109, -232)
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_wcnf5")

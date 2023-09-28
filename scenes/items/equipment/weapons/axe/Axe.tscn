@@ -25,3 +25,7 @@ visible = false
 position = Vector2(1.73472e-18, -65)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("2_1b0xh")
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_1b0xh")

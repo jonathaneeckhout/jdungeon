@@ -6,7 +6,7 @@ class_name InventoryPanel
 	set(new_item):
 		item = new_item
 		if item:
-			$TextureRect.texture = item.get_node("Sprite").texture
+			$TextureRect.texture = item.get_node("Icon").texture
 		else:
 			$TextureRect.texture = null
 

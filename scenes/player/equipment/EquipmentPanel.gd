@@ -6,7 +6,7 @@ class_name EquipmentPanel
 	set(new_item):
 		item = new_item
 		if item:
-			$Panel/TextureRect.texture = item.get_node("Sprite").texture
+			$Panel/TextureRect.texture = item.get_node("Icon").texture
 		else:
 			$Panel/TextureRect.texture = null
 
