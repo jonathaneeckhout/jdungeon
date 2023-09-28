@@ -45,6 +45,10 @@ To get started with JDungeon, follow these steps:
   - Integrate Chat Panel
   - Establish General Chat Functionality
   - Implement Whisper Chat Capability
+- Content
+  - Create world map
+  - Create more enemies
+  - Create stats that make sense
 
 ## Install Instructions
 ### Step 1: Clone the repository
