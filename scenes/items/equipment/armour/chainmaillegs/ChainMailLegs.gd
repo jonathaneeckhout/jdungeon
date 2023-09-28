@@ -4,6 +4,6 @@ extends JItem
 func _init():
 	super()
 
-	item_class = "ChainMailHelm"
+	item_class = "ChainMailLegs"
 	equipment = true
-	equipment_slot = "Head"
+	equipment_slot = "Legs"
