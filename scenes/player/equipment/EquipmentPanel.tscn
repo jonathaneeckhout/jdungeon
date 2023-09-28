@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://qwimw7m784q1"]
+
+[ext_resource type="Script" path="res://scenes/player/equipment/EquipmentPanel.gd" id="1_1xyjg"]
+
+[node name="Panel" type="VBoxContainer"]
+custom_minimum_size = Vector2(64, 96)
+script = ExtResource("1_1xyjg")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+mouse_filter = 1
+text = "Slot"
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+mouse_filter = 1
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
