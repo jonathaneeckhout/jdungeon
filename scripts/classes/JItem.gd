@@ -27,6 +27,8 @@ var price: int = 0
 
 var healing = 0
 
+var equipment_slot: String = ""
+
 
 func _init():
 	# Disable physics by default

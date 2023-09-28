@@ -54,7 +54,7 @@ func remove_item(item_uuid: String):
 
 func get_item(item_uuid: String) -> JItem:
 	for item in items:
-		if item.name == item_uuid:
+		if item.uuid == item_uuid:
 			return item
 
 	return null

@@ -821,6 +821,7 @@ metadata/_edit_lock_ = true
 
 [node name="Axe" parent="Sprites/RightWeapon" instance=ExtResource("5_puovb")]
 uuid = "jojasdlkajsdl"
+expire_time = null
 
 [node name="RightLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(190, 440)

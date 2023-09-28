@@ -6,3 +6,4 @@ func _init():
 
 	item_class = "Axe"
 	equipment = true
+	equipment_slot = "LeftHand"

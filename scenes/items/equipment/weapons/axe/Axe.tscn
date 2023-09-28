@@ -9,6 +9,8 @@ height = 52.0
 
 [node name="Axe" type="StaticBody2D"]
 script = ExtResource("1_wnkji")
+uuid = null
+expire_time = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_g6336")
