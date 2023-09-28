@@ -87,7 +87,7 @@ func _on_healed(_from: String, _hp: int, _max_hp: int, healing: int):
 	print("Healed %d" % healing)
 
 
-func load_equipment_sprite(equipment_slot: String):
+func load_equipment_single_sprite(equipment_slot: String):
 	for child in equipment_sprites[equipment_slot].get_children():
 		child.queue_free()
 
@@ -103,11 +103,39 @@ func load_equipment_sprite(equipment_slot: String):
 		equipment_sprites[equipment_slot].texture = original_sprite_textures[equipment_slot]
 
 
+func load_equipment_double_sprites(equipment_slot: String):
+	for equipment_sprite in equipment_sprites[equipment_slot]:
+		for child in equipment_sprite.get_children():
+			child.queue_free()
+
+	if equipment.items[equipment_slot]:
+		equipment_sprites[equipment_slot][0].texture = null
+		equipment_sprites[equipment_slot][1].texture = null
+
+		var item_right = equipment.items[equipment_slot].duplicate()
+		item_right.scale = item_right.scale / original_scale
+		item_right.get_node("Sprite").hide()
+		item_right.get_node("EquipmentSpriteRight").show()
+		equipment_sprites[equipment_slot][0].add_child(item_right)
+
+		var item_left = equipment.items[equipment_slot].duplicate()
+		item_left.scale = item_left.scale / original_scale
+		item_left.get_node("Sprite").hide()
+		item_left.get_node("EquipmentSpriteLeft").show()
+		equipment_sprites[equipment_slot][1].add_child(item_left)
+
+	else:
+		equipment_sprites[equipment_slot][0].texture = original_sprite_textures[equipment_slot][0]
+		equipment_sprites[equipment_slot][1].texture = original_sprite_textures[equipment_slot][1]
+
+
 func equipment_changed():
-	load_equipment_sprite("Head")
-	load_equipment_sprite("Body")
-	load_equipment_sprite("RightHand")
-	load_equipment_sprite("LeftHand")
+	load_equipment_single_sprite("Head")
+	load_equipment_single_sprite("Body")
+	load_equipment_double_sprites("Arms")
+	load_equipment_double_sprites("Legs")
+	load_equipment_single_sprite("RightHand")
+	load_equipment_single_sprite("LeftHand")
 
 
 func _on_item_equiped(_item_uuid: String, _item_class: String):

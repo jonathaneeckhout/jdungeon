@@ -23,7 +23,9 @@ func register_items():
 	J.register_item_scene(
 		"PlateBody", "res://scenes/items/equipment/armour/platebody/PlateBody.tscn"
 	)
-
+	J.register_item_scene(
+		"PlateLegs", "res://scenes/items/equipment/armour/platelegs/PlateLegs.tscn"
+	)
 
 func _on_run_as_server_pressed():
 	J.logger.info("Running as server")

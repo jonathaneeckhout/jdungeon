@@ -30,6 +30,7 @@ func _ready():
 		shop.add_item("Club", 200)
 		shop.add_item("ChainMailBody", 200)
 		shop.add_item("PlateBody", 200)
+		shop.add_item("PlateLegs", 150)
 
 
 func update_face_direction(direction: float):
