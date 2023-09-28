@@ -51,8 +51,8 @@ func start_expire_timer():
 	expire_timer.start(expire_time)
 
 
-func loot(from: JPlayerBody2D) -> bool:
-	if from.inventory.add_item(self):
+func loot(player: JPlayerBody2D) -> bool:
+	if player.inventory.add_item(self):
 		# Just to be safe, stop the expire timer
 		expire_timer.stop()
 		# Remove yourself from the world items
@@ -63,12 +63,19 @@ func loot(from: JPlayerBody2D) -> bool:
 	return false
 
 
-func use(user: JPlayerBody2D) -> bool:
+func use(player: JPlayerBody2D) -> bool:
 	if consumable:
 		if healing > 0:
-			user.heal(user, healing)
+			player.heal(player, healing)
 		return true
+	elif equipment:
+		if player.equipment and player.equipment.equip_item(self):
+			return true
+		else:
+			J.logger.info("%s could not equip item %s" % [player.name, item_class])
+			return false
 	else:
+		J.logger.info("%s could not use item %s" % [player.name, item_class])
 		return false
 
 
