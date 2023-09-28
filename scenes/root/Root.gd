@@ -18,6 +18,9 @@ func register_items():
 	J.register_item_scene("Axe", "res://scenes/items/equipment/weapons/axe/Axe.tscn")
 	J.register_item_scene("Club", "res://scenes/items/equipment/weapons/club/Club.tscn")
 	J.register_item_scene(
+		"ChainMailHelm", "res://scenes/items/equipment/armour/chainmailhelm/ChainMailHelm.tscn"
+	)
+	J.register_item_scene(
 		"ChainMailBody", "res://scenes/items/equipment/armour/chainmailbody/ChainMailBody.tscn"
 	)
 	J.register_item_scene(
@@ -35,6 +38,7 @@ func register_items():
 	J.register_item_scene(
 		"PlateLegs", "res://scenes/items/equipment/armour/platelegs/PlateLegs.tscn"
 	)
+
 
 func _on_run_as_server_pressed():
 	J.logger.info("Running as server")
