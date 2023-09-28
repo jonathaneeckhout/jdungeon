@@ -53,6 +53,8 @@ func start_expire_timer():
 
 func loot(player: JPlayerBody2D) -> bool:
 	if player.inventory.add_item(self):
+		# Reset your postion
+		self.position = Vector2.ZERO
 		# Just to be safe, stop the expire timer
 		expire_timer.stop()
 		# Remove yourself from the world items

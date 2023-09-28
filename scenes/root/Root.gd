@@ -12,20 +12,54 @@ func _ready():
 
 func register_items():
 	J.register_item_scene("Gold", "res://scenes/items/varia/gold/Gold.tscn")
+
 	J.register_item_scene(
 		"HealthPotion", "res://scenes/items/consumables/healthpotion/HealthPotion.tscn"
 	)
+
 	J.register_item_scene("Axe", "res://scenes/items/equipment/weapons/axe/Axe.tscn")
+	J.register_item_scene("Sword", "res://scenes/items/equipment/weapons/sword/Sword.tscn")
 	J.register_item_scene("Club", "res://scenes/items/equipment/weapons/club/Club.tscn")
+
+	J.register_item_scene(
+		"LeatherHelm", "res://scenes/items/equipment/armour/leatherhelm/LeatherHelm.tscn"
+	)
+	J.register_item_scene(
+		"LeatherBody", "res://scenes/items/equipment/armour/leatherbody/LeatherBody.tscn"
+	)
+	J.register_item_scene(
+		"LeatherArms", "res://scenes/items/equipment/armour/leatherarms/LeatherArms.tscn"
+	)
+	J.register_item_scene(
+		"LeatherLegs", "res://scenes/items/equipment/armour/leatherlegs/LeatherLegs.tscn"
+	)
+
+	J.register_item_scene(
+		"ChainMailHelm", "res://scenes/items/equipment/armour/chainmailhelm/ChainMailHelm.tscn"
+	)
 	J.register_item_scene(
 		"ChainMailBody", "res://scenes/items/equipment/armour/chainmailbody/ChainMailBody.tscn"
+	)
+	J.register_item_scene(
+		"ChainMailArms", "res://scenes/items/equipment/armour/chainmailarms/ChainMailArms.tscn"
+	)
+	J.register_item_scene(
+		"ChainMailLegs", "res://scenes/items/equipment/armour/chainmaillegs/ChainMailLegs.tscn"
+	)
+
+	J.register_item_scene(
+		"PlateHelm", "res://scenes/items/equipment/armour/platehelm/PlateHelm.tscn"
 	)
 	J.register_item_scene(
 		"PlateBody", "res://scenes/items/equipment/armour/platebody/PlateBody.tscn"
 	)
 	J.register_item_scene(
+		"PlateArms", "res://scenes/items/equipment/armour/platearms/PlateArms.tscn"
+	)
+	J.register_item_scene(
 		"PlateLegs", "res://scenes/items/equipment/armour/platelegs/PlateLegs.tscn"
 	)
+
 
 func _on_run_as_server_pressed():
 	J.logger.info("Running as server")

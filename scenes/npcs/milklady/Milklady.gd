@@ -26,10 +26,24 @@ func _ready():
 		shop.size = 36
 
 		shop.add_item("HealthPotion", 100)
+
 		shop.add_item("Axe", 300)
+		shop.add_item("Sword", 300)
 		shop.add_item("Club", 200)
+
+		shop.add_item("LeatherHelm", 50)
+		shop.add_item("LeatherBody", 100)
+		shop.add_item("LeatherArms", 100)
+		shop.add_item("LeatherLegs", 100)
+
+		shop.add_item("ChainMailHelm", 100)
 		shop.add_item("ChainMailBody", 200)
+		shop.add_item("ChainMailArms", 200)
+		shop.add_item("ChainMailLegs", 200)
+
+		shop.add_item("PlateHelm", 100)
 		shop.add_item("PlateBody", 200)
+		shop.add_item("PlateArms", 120)
 		shop.add_item("PlateLegs", 150)
 
 
