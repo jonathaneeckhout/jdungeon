@@ -14,6 +14,15 @@ extends JPlayerBody2D
 	"LeftHand": $Sprites/LeftHand
 }
 
+@onready var original_sprite_textures = {
+	"Head": $Sprites/Head.texture,
+	"Body": $Sprites/Body.texture,
+	"Legs": [$Sprites/RightLeg.texture, $Sprites/LeftLeg.texture],
+	"Arms": [$Sprites/RightArm.texture, $Sprites/LeftArm.texture],
+	"RightHand": $Sprites/RightHand.texture,
+	"LeftHand": $Sprites/LeftHand.texture
+}
+
 
 func _ready():
 	super()
@@ -83,11 +92,15 @@ func load_equipment_sprite(equipment_slot: String):
 		child.queue_free()
 
 	if equipment.items[equipment_slot]:
+		equipment_sprites[equipment_slot].texture = null
+
 		var item = equipment.items[equipment_slot].duplicate()
 		item.scale = item.scale / original_scale
 		item.get_node("Sprite").hide()
 		item.get_node("EquipmentSprite").show()
 		equipment_sprites[equipment_slot].add_child(item)
+	else:
+		equipment_sprites[equipment_slot].texture = original_sprite_textures[equipment_slot]
 
 
 func equipment_changed():

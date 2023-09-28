@@ -17,6 +17,7 @@ scale = Vector2(0.05, 0.05)
 texture = ExtResource("1_fcvgf")
 
 [node name="EquipmentSprite" type="Sprite2D" parent="."]
+visible = false
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("1_fcvgf")
 offset = Vector2(11, -162)
