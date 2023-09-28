@@ -16,12 +16,12 @@ expire_time = null
 shape = SubResource("CapsuleShape2D_g6336")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-visible = false
 position = Vector2(2.38419e-07, -21)
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("2_1b0xh")
 
 [node name="EquipmentSprite" type="Sprite2D" parent="."]
-position = Vector2(0, 612)
-rotation = 3.14159
+visible = false
+position = Vector2(1.73472e-18, -65)
+scale = Vector2(0.1, 0.1)
 texture = ExtResource("2_1b0xh")

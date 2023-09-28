@@ -28,7 +28,7 @@ func _ready():
 
 func equip_item(item: JItem) -> bool:
 	if items[item.equipment_slot] != null:
-		unequip_item(items[item.equipment_slot])
+		unequip_item(items[item.equipment_slot].uuid)
 
 	if _equip_item(item):
 		sync_equip_item.rpc_id(player.peer_id, item.uuid, item.item_class)
