@@ -78,19 +78,23 @@ func _on_healed(_from: String, _hp: int, _max_hp: int, healing: int):
 	print("Healed %d" % healing)
 
 
-func equipment_changed():
-	for child in equipment_sprites["RightHand"].get_children():
+func load_equipment_sprite(equipment_slot: String):
+	for child in equipment_sprites[equipment_slot].get_children():
 		child.queue_free()
 
-	if equipment.items["RightHand"]:
-		var item = equipment.items["RightHand"].duplicate()
-		item.scale = item.scale / skeleton.scale
+	if equipment.items[equipment_slot]:
+		var item = equipment.items[equipment_slot].duplicate()
+		item.scale = item.scale / original_scale
 		item.get_node("Sprite").hide()
 		item.get_node("EquipmentSprite").show()
-		equipment_sprites["RightHand"].add_child(item)
+		equipment_sprites[equipment_slot].add_child(item)
 
-	for child in equipment_sprites["LeftHand"].get_children():
-		child.queue_free()
+
+func equipment_changed():
+	load_equipment_sprite("Head")
+	load_equipment_sprite("Body")
+	load_equipment_sprite("RightHand")
+	load_equipment_sprite("LeftHand")
 
 
 func _on_item_equiped(_item_uuid: String, _item_class: String):

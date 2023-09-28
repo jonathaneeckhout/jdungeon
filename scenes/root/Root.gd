@@ -17,6 +17,7 @@ func register_items():
 	)
 	J.register_item_scene("Axe", "res://scenes/items/equipment/weapons/axe/Axe.tscn")
 	J.register_item_scene("Club", "res://scenes/items/equipment/weapons/club/Club.tscn")
+	J.register_item_scene("ChainMailBody", "res://scenes/items/equipment/armour/chainmailbody/ChainMailBody.tscn")
 
 
 func _on_run_as_server_pressed():
