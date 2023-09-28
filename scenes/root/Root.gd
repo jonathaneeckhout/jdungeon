@@ -12,11 +12,15 @@ func _ready():
 
 func register_items():
 	J.register_item_scene("Gold", "res://scenes/items/varia/gold/Gold.tscn")
+
 	J.register_item_scene(
 		"HealthPotion", "res://scenes/items/consumables/healthpotion/HealthPotion.tscn"
 	)
+
 	J.register_item_scene("Axe", "res://scenes/items/equipment/weapons/axe/Axe.tscn")
+	J.register_item_scene("Sword", "res://scenes/items/equipment/weapons/sword/Sword.tscn")
 	J.register_item_scene("Club", "res://scenes/items/equipment/weapons/club/Club.tscn")
+
 	J.register_item_scene(
 		"ChainMailHelm", "res://scenes/items/equipment/armour/chainmailhelm/ChainMailHelm.tscn"
 	)
@@ -29,6 +33,7 @@ func register_items():
 	J.register_item_scene(
 		"ChainMailLegs", "res://scenes/items/equipment/armour/chainmaillegs/ChainMailLegs.tscn"
 	)
+
 	J.register_item_scene(
 		"PlateHelm", "res://scenes/items/equipment/armour/platehelm/PlateHelm.tscn"
 	)

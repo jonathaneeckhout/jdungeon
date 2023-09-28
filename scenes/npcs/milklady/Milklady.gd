@@ -28,6 +28,7 @@ func _ready():
 		shop.add_item("HealthPotion", 100)
 
 		shop.add_item("Axe", 300)
+		shop.add_item("Sword", 300)
 		shop.add_item("Club", 200)
 
 		shop.add_item("ChainMailHelm", 100)
