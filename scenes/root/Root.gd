@@ -27,6 +27,9 @@ func register_items():
 		"PlateBody", "res://scenes/items/equipment/armour/platebody/PlateBody.tscn"
 	)
 	J.register_item_scene(
+		"PlateArms", "res://scenes/items/equipment/armour/platearms/PlateArms.tscn"
+	)
+	J.register_item_scene(
 		"PlateLegs", "res://scenes/items/equipment/armour/platelegs/PlateLegs.tscn"
 	)
 

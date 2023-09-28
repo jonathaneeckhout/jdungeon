@@ -31,6 +31,7 @@ func _ready():
 		shop.add_item("ChainMailBody", 200)
 		shop.add_item("PlateHelm", 100)
 		shop.add_item("PlateBody", 200)
+		shop.add_item("PlateArms", 120)
 		shop.add_item("PlateLegs", 150)
 
 
