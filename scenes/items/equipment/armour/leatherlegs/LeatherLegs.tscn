@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://d16mnjcr76ia"]
+
+[ext_resource type="Script" path="res://scenes/items/equipment/armour/leatherlegs/LeatherLegs.gd" id="1_s5ttj"]
+[ext_resource type="Texture2D" uid="uid://bgwkuc3nsyt4b" path="res://assets/equipment/armour/leatherarmor/leatherarmor_legback.png" id="2_3hvbp"]
+[ext_resource type="Texture2D" uid="uid://j3d5lxvwoyr0" path="res://assets/equipment/armour/leatherarmor/leatherarmor_legfront.png" id="3_ptjft"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sv48u"]
+radius = 19.0263
+
+[node name="LeatherLegs" type="StaticBody2D"]
+script = ExtResource("1_s5ttj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_sv48u")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.05, 0.05)
+
+[node name="Right" type="Sprite2D" parent="Sprite"]
+position = Vector2(-60, -460)
+texture = ExtResource("2_3hvbp")
+
+[node name="Left" type="Sprite2D" parent="Sprite"]
+position = Vector2(40, -460)
+texture = ExtResource("3_ptjft")
+
+[node name="EquipmentSpriteRight" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_3hvbp")
+offset = Vector2(91, -212)
+
+[node name="EquipmentSpriteLeft" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("3_ptjft")
+offset = Vector2(-109, -232)
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("3_ptjft")

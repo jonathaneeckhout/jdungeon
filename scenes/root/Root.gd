@@ -22,6 +22,19 @@ func register_items():
 	J.register_item_scene("Club", "res://scenes/items/equipment/weapons/club/Club.tscn")
 
 	J.register_item_scene(
+		"LeatherHelm", "res://scenes/items/equipment/armour/leatherhelm/LeatherHelm.tscn"
+	)
+	J.register_item_scene(
+		"LeatherBody", "res://scenes/items/equipment/armour/leatherbody/LeatherBody.tscn"
+	)
+	J.register_item_scene(
+		"LeatherArms", "res://scenes/items/equipment/armour/leatherarms/LeatherArms.tscn"
+	)
+	J.register_item_scene(
+		"LeatherLegs", "res://scenes/items/equipment/armour/leatherlegs/LeatherLegs.tscn"
+	)
+
+	J.register_item_scene(
 		"ChainMailHelm", "res://scenes/items/equipment/armour/chainmailhelm/ChainMailHelm.tscn"
 	)
 	J.register_item_scene(
