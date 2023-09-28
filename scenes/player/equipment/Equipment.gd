@@ -8,7 +8,8 @@ const SIZE = Vector2(2, 4)
 		$VBoxContainer/GoldValue.text = str(amount)
 
 var panels = []
-var mouse_above_this_panel: EquipmentPanel
+
+@onready var player: JPlayerBody2D = $"../../../../"
 
 
 func _ready():
@@ -37,9 +38,38 @@ func _input(event):
 			show()
 
 
+func register_signals():
+	player.equipment.item_added.connect(_on_item_added)
+	player.equipment.item_removed.connect(_on_item_removed)
+
+
+func get_panel_at_slot(equipment_slot: String) -> EquipmentPanel:
+	var panel_path = "Panel_%s" % equipment_slot
+	return $GridContainer.get_node(panel_path)
+
+
 func _on_mouse_entered():
 	JUI.above_ui = true
 
 
 func _on_mouse_exited():
 	JUI.above_ui = false
+
+
+func _on_item_added(item_uuid: String, item_class: String):
+	var item: JItem = J.item_scenes[item_class].instantiate()
+	item.uuid = item_uuid
+	item.item_class = item_class
+	item.collision_layer = 0
+
+	var panel = get_panel_at_slot(item.equipment_slot)
+	if panel:
+		panel.item = item
+
+
+func _on_item_removed(item_uuid: String):
+	for y in range(SIZE.y):
+		for x in range(SIZE.x):
+			var panel: EquipmentPanel = panels[x][y]
+			if panel.item and panel.item.uuid == item_uuid:
+				panel.item = null

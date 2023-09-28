@@ -22,6 +22,7 @@ func _ready():
 		$Camera2D.queue_free()
 	else:
 		$Camera2D/UILayer/GUI/Inventory.register_signals()
+		$Camera2D/UILayer/GUI/Equipment.register_signals()
 
 
 func _physics_process(_delta):

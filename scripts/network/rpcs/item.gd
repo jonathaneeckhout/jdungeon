@@ -6,6 +6,8 @@ signal item_removed(item_uuid: String)
 signal inventory_item_used(id: int, item_uuid: String)
 signal inventory_item_dropped(id: int, item_uuid: String)
 
+signal equipment_item_removed(id: int, item_uuid: String)
+
 @rpc("call_remote", "authority", "reliable")
 func add_item(item_uuid: String, item_class: String, pos: Vector2):
 	item_added.emit(item_uuid, item_class, pos)
@@ -39,3 +41,16 @@ func add_item(item_uuid: String, item_class: String, pos: Vector2):
 		return
 
 	inventory_item_dropped.emit(id, item_uuid)
+
+
+@rpc("call_remote", "any_peer", "reliable") func remove_equipment_item(item_uuid: String):
+	if not J.is_server():
+		return
+
+	var id = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(id):
+		return
+
+	equipment_item_removed.emit(id, item_uuid)

@@ -21,7 +21,15 @@ var items = {
 }
 
 
+func _ready():
+	if J.is_server():
+		J.rpcs.item.equipment_item_removed.connect(_on_equipment_item_removed)
+
+
 func equip_item(item: JItem) -> bool:
+	if items[item.equipment_slot] != null:
+		unequip_item(items[item.equipment_slot])
+
 	if _equip_item(item):
 		sync_equip_item.rpc_id(player.peer_id, item.uuid, item.item_class)
 		return true
@@ -35,7 +43,7 @@ func _equip_item(item: JItem) -> bool:
 		return false
 
 	if items[item.equipment_slot] != null:
-		unequip_item(items[item.equipment_slot].uuid)
+		_unequip_item(items[item.equipment_slot].uuid)
 
 	items[item.equipment_slot] = item
 
@@ -70,6 +78,13 @@ func get_item(item_uuid: String) -> JItem:
 			return item
 
 	return null
+
+
+func _on_equipment_item_removed(id: int, item_uuid: String):
+	if player.peer_id != id:
+		return
+
+	unequip_item(item_uuid)
 
 
 @rpc("call_remote", "authority", "reliable")

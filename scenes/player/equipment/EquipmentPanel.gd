@@ -6,9 +6,9 @@ class_name EquipmentPanel
 	set(new_item):
 		item = new_item
 		if item:
-			$TextureRect.texture = item.get_node("Sprite").texture
+			$Panel/TextureRect.texture = item.get_node("Sprite").texture
 		else:
-			$TextureRect.texture = null
+			$Panel/TextureRect.texture = null
 
 @export var slot: String:
 	set(slot_name):
@@ -18,3 +18,11 @@ class_name EquipmentPanel
 var item_uuid: String
 
 var grid_pos: Vector2
+
+@onready var equipment = "../.."
+
+
+func _gui_input(event: InputEvent):
+	if event.is_action_pressed("j_right_click"):
+		if item:
+			J.rpcs.item.remove_equipment_item.rpc_id(1, item.uuid)
