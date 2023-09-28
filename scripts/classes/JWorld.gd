@@ -191,6 +191,7 @@ func _on_client_item_added(item_uuid: String, item_class: String, pos: Vector2):
 	item.uuid = item_uuid
 	item.item_class = item_class
 	item.position = pos
+	item.collision_layer = J.PHYSICS_LAYER_ITEMS
 
 	items.add_child(item)
 

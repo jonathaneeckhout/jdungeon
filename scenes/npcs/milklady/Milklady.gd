@@ -23,7 +23,10 @@ func _ready():
 
 		add_child(behavior)
 
+		shop.size = 36
+
 		shop.add_item("HealthPotion", 100)
+		shop.add_item("Axe", 300)
 
 
 func update_face_direction(direction: float):

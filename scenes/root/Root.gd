@@ -15,6 +15,8 @@ func register_items():
 	J.register_item_scene(
 		"HealthPotion", "res://scenes/items/consumables/healthpotion/HealthPotion.tscn"
 	)
+	J.register_item_scene("Axe", "res://scenes/items/equipment/weapons/axe/Axe.tscn")
+
 
 
 func _on_run_as_server_pressed():

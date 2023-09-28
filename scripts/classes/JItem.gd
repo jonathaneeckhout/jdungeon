@@ -17,6 +17,7 @@ var item_class: String = ""
 var expire_timer: Timer
 
 var consumable: bool = false
+var equipment: bool = false
 var is_gold: bool = false
 
 var drop_rate: float = 0.0
@@ -27,11 +28,14 @@ var price: int = 0
 var healing = 0
 
 
-func _ready():
-	collision_layer = J.PHYSICS_LAYER_ITEMS
+func _init():
+	# Disable physics by default
+	collision_layer = 0
 
 	collision_mask = 0
 
+
+func _ready():
 	if J.is_server():
 		expire_timer = Timer.new()
 		expire_timer.one_shot = true

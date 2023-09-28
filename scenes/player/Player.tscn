@@ -1,10 +1,11 @@
-[gd_scene load_steps=19 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=20 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/player/base/Basecharacter.png" id="2_dug5c"]
 [ext_resource type="Texture2D" uid="uid://b38ld53gomnkq" path="res://assets/player/base/base_fronthand.png" id="3_dw8ng"]
 [ext_resource type="Texture2D" uid="uid://dyv7uagfvwjw0" path="res://assets/player/base/base_handback.png" id="4_gw0jc"]
 [ext_resource type="Texture2D" uid="uid://dhpyicp5pnbh7" path="res://assets/player/base/base_head.png" id="5_dr4ej"]
+[ext_resource type="PackedScene" uid="uid://u35hf8h5t8f2" path="res://scenes/items/equipment/weapons/axe/Axe.tscn" id="5_puovb"]
 [ext_resource type="Texture2D" uid="uid://d2uess8ln1r1k" path="res://assets/player/base/base_leg.png" id="6_ph7fa"]
 [ext_resource type="Texture2D" uid="uid://brvhtyjeyjceq" path="res://assets/player/base/base_legback.png" id="7_jpcwx"]
 [ext_resource type="Texture2D" uid="uid://bd0hjv8heg0ms" path="res://assets/equipment/weapons/sword.png" id="8_4ai0o"]
@@ -95,118 +96,94 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("Skeleton/RemoteBody/RemoteRightArm/RemoteRightWeapon:position")
+tracks/6/path = NodePath("Skeleton/RemoteBody/RemoteLeftArm:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.8),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(-70, 470), Vector2(-70, 470)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("Skeleton/RemoteBody/RemoteRightArm/RemoteRightWeapon:rotation")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0, 0.8),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [1.57079, 1.57079]
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("Skeleton/RemoteBody/RemoteLeftArm:position")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
 "times": PackedFloat32Array(0, 0.2, 0.3, 0.8),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [Vector2(200, -420), Vector2(200, -420), Vector2(200, -420), Vector2(200, -420)]
 }
-tracks/9/type = "value"
-tracks/9/imported = false
-tracks/9/enabled = true
-tracks/9/path = NodePath("Skeleton/RemoteBody/RemoteLeftArm:rotation")
-tracks/9/interp = 1
-tracks/9/loop_wrap = true
-tracks/9/keys = {
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Skeleton/RemoteBody/RemoteLeftArm:rotation")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
 "times": PackedFloat32Array(0, 0.2, 0.3, 0.8),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [0.0, -1.16714, 1.08603, 0.0]
 }
-tracks/10/type = "value"
-tracks/10/imported = false
-tracks/10/enabled = true
-tracks/10/path = NodePath("Skeleton/RemoteBody/RemoteLeftArm/RemoteLeftWeapon:position")
-tracks/10/interp = 1
-tracks/10/loop_wrap = true
-tracks/10/keys = {
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Skeleton/RemoteBody/RemoteLeftArm/RemoteLeftWeapon:position")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(-50, 510), Vector2(-50, 510)]
 }
-tracks/11/type = "value"
-tracks/11/imported = false
-tracks/11/enabled = true
-tracks/11/path = NodePath("Skeleton/RemoteBody/RemoteLeftArm/RemoteLeftWeapon:rotation")
-tracks/11/interp = 1
-tracks/11/loop_wrap = true
-tracks/11/keys = {
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Skeleton/RemoteBody/RemoteLeftArm/RemoteLeftWeapon:rotation")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [1.57079, 1.57079]
 }
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Skeleton/RemoteBody/RemoteRightLeg:position")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.3, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(-80, 49.9999), Vector2(-80, 49.9999), Vector2(-80, 49.9999), Vector2(-80, 49.9999)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Skeleton/RemoteBody/RemoteRightLeg:rotation")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.3, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, -0.105541, 0.601118, 0.0]
+}
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
-tracks/12/path = NodePath("Skeleton/RemoteBody/RemoteRightLeg:position")
+tracks/12/path = NodePath("Skeleton/RemoteBody/RemoteLeftLeg:position")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
 "times": PackedFloat32Array(0, 0.2, 0.3, 0.8),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(-80, 49.9999), Vector2(-80, 49.9999), Vector2(-80, 49.9999), Vector2(-80, 49.9999)]
+"values": [Vector2(120, 69.9999), Vector2(120, 69.9999), Vector2(120, 69.9999), Vector2(120, 69.9999)]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
 tracks/13/enabled = true
-tracks/13/path = NodePath("Skeleton/RemoteBody/RemoteRightLeg:rotation")
+tracks/13/path = NodePath("Skeleton/RemoteBody/RemoteLeftLeg:rotation")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.3, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [0.0, -0.105541, 0.601118, 0.0]
-}
-tracks/14/type = "value"
-tracks/14/imported = false
-tracks/14/enabled = true
-tracks/14/path = NodePath("Skeleton/RemoteBody/RemoteLeftLeg:position")
-tracks/14/interp = 1
-tracks/14/loop_wrap = true
-tracks/14/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.3, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(120, 69.9999), Vector2(120, 69.9999), Vector2(120, 69.9999), Vector2(120, 69.9999)]
-}
-tracks/15/type = "value"
-tracks/15/imported = false
-tracks/15/enabled = true
-tracks/15/path = NodePath("Skeleton/RemoteBody/RemoteLeftLeg:rotation")
-tracks/15/interp = 1
-tracks/15/loop_wrap = true
-tracks/15/keys = {
 "times": PackedFloat32Array(0, 0.2, 0.3, 0.8),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
@@ -838,9 +815,11 @@ metadata/_edit_lock_ = true
 position = Vector2(80, 470)
 rotation = 1.57079
 scale = Vector2(1, 1)
-texture = ExtResource("8_4ai0o")
 offset = Vector2(0.00012207, 800)
 metadata/_edit_lock_ = true
+
+[node name="Axe" parent="Sprites/RightWeapon" instance=ExtResource("5_puovb")]
+uuid = "jojasdlkajsdl"
 
 [node name="RightLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(190, 440)

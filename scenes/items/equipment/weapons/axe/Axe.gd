@@ -4,5 +4,5 @@ extends JItem
 func _init():
 	super()
 
-	item_class = "Gold"
-	is_gold = true
+	item_class = "Axe"
+	equipment = true
