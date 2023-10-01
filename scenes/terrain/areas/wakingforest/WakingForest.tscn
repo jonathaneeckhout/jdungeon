@@ -2,7 +2,7 @@
 
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_1ksfl"]
 
-[node name="WalkingForest" type="Node2D"]
+[node name="WakingForest" type="Node2D"]
 y_sort_enabled = true
 
 [node name="Base" type="TileMap" parent="."]
