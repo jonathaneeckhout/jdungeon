@@ -1,11 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=6 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://scenes/world/World.gd" id="1_3w1ia"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/loginpanel/LoginPanel.tscn" id="2_fjr74"]
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="3_fddk3"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="4_4b353"]
+[ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="5_0b0pa"]
 
 [node name="World" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_3w1ia")
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -17,37 +19,46 @@ offset_top = -400.0
 offset_right = 400.0
 offset_bottom = 400.0
 
+[node name="Map" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Areas" type="Node2D" parent="Map"]
+y_sort_enabled = true
+
+[node name="BaseCamp" parent="Map/Areas" instance=ExtResource("5_0b0pa")]
+position = Vector2(-576, -640)
+
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Enemies" type="Node2D" parent="Entities"]
 
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(944, 464)
+position = Vector2(-1808, 664)
 respawn = true
 
 [node name="TreeTrunkGuy2" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(512, 800)
+position = Vector2(-1744, 328)
 
 [node name="TreeTrunkGuy3" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-256, 624)
+position = Vector2(-1408, 800)
 respawn = true
 
 [node name="TreeTrunkGuy4" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-872, 360)
+position = Vector2(-1480, 440)
 
 [node name="TreeTrunkGuy5" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-1312, -480)
+position = Vector2(-1608, -856)
 
 [node name="TreeTrunkGuy6" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-224, -736)
+position = Vector2(-1432, -624)
 
 [node name="TreeTrunkGuy7" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(832, -704)
+position = Vector2(-1896, -680)
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 
 [node name="Milklady" parent="Entities/NPCs" instance=ExtResource("4_4b353")]
-position = Vector2(657, 411)
+position = Vector2(320, -128)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
