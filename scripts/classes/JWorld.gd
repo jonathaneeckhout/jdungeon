@@ -2,6 +2,7 @@ extends Node2D
 
 class_name JWorld
 
+@export var map_to_sync: Node2D
 @export var enemies_to_sync: Node2D
 @export var npcs_to_sync: Node2D
 
@@ -64,6 +65,11 @@ func _ready():
 		J.rpcs.item.item_removed.connect(_on_client_item_removed)
 
 	J.world = self
+
+	# Remove map from entities to make sure it takes part of the ysort mechanics
+	map_to_sync.get_parent().remove_child(map_to_sync)
+	entities.add_child(map_to_sync)
+	map_to_sync.name = "JMap"
 
 	load_enemies()
 	load_npcs()
