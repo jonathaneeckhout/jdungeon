@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=8 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://scenes/world/World.gd" id="1_3w1ia"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/loginpanel/LoginPanel.tscn" id="2_fjr74"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="3_fddk3"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="4_4b353"]
 [ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="5_0b0pa"]
+[ext_resource type="PackedScene" uid="uid://bija15ujapx3h" path="res://scenes/terrain/areas/walkingforest/WalkingForest.tscn" id="7_oodd1"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_3w1ia")
@@ -67,6 +68,9 @@ y_sort_enabled = true
 
 [node name="BaseCamp" parent="Entities/Map/Areas" instance=ExtResource("5_0b0pa")]
 position = Vector2(-576, -640)
+
+[node name="WalkingForest" parent="Entities/Map/Areas" instance=ExtResource("7_oodd1")]
+position = Vector2(-2520, 968)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0

@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://koikh2ns5rr8"]
+
+[ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_ka7ah"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7ppt3"]
+radius = 32.0
+
+[node name="PineTreeMedium" type="StaticBody2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(-32, 64)
+scale = Vector2(2, 2)
+tile_set = ExtResource("1_ka7ah")
+format = 2
+layer_0/name = "Trunk"
+layer_0/tile_data = PackedInt32Array(-65537, 1835009, 19, -1, 1835009, 20, -131072, 1900545, 19, -65536, 1900545, 20, -131071, 1966081, 19, -65535, 1966081, 20)
+layer_1/name = "Needles"
+layer_1/enabled = true
+layer_1/modulate = Color(1, 1, 1, 1)
+layer_1/y_sort_enabled = false
+layer_1/y_sort_origin = 0
+layer_1/z_index = 0
+layer_1/tile_data = PackedInt32Array(-196609, 1769473, 16, -131073, 1769473, 17, -65537, 1769473, 18, -327680, 1835009, 15, -262144, 1835009, 16, -196608, 1835009, 17, -131072, 1835009, 18, -262143, 1900545, 16, -196607, 1900545, 17, -131071, 1900545, 18)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -24)
+shape = SubResource("CircleShape2D_7ppt3")
