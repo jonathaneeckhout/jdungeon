@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://dxk3g7lct60ej"]
+
+[ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_105wl"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wkqxe"]
+radius = 40.0
+
+[node name="Cookingfire" type="StaticBody2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(-32, 0)
+scale = Vector2(2, 2)
+tile_set = ExtResource("1_105wl")
+format = 2
+layer_0/tile_data = PackedInt32Array(-131072, 983045, 47, -65536, 983045, 48)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -40)
+shape = SubResource("CircleShape2D_wkqxe")
