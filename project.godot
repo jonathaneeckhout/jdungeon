@@ -20,6 +20,8 @@ config/icon="res://icon.svg"
 GodotLogger="*res://addons/logger/logger.gd"
 J="*res://scripts/singletons/jdungeon.gd"
 JUI="*res://scripts/singletons/jui.gd"
+BeehaveGlobalMetrics="*res://addons/beehave/metrics/beehave_global_metrics.gd"
+BeehaveGlobalDebugger="*res://addons/beehave/debug/global_debugger.gd"
 
 [debug]
 
@@ -34,6 +36,10 @@ window/size/viewport_height=1080
 [dotnet]
 
 project/assembly_name="Jdungeon"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/beehave/plugin.cfg")
 
 [input]
 
