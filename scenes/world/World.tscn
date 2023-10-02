@@ -81,9 +81,6 @@ respawn = true
 [node name="TreeTrunkGuy4" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2216, -599)
 
-[node name="TreeTrunkGuy5" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-1608, -856)
-
 [node name="TreeTrunkGuy6" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-1807, -1317)
 
