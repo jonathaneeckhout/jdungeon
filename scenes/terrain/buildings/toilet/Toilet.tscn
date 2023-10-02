@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://0h30368tgfyp"]
+
+[ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_gejuk"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_06of4"]
+size = Vector2(80, 64)
+
+[node name="Toilet" type="StaticBody2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(0, 8)
+scale = Vector2(2, 2)
+tile_set = ExtResource("1_gejuk")
+format = 2
+layer_0/tile_data = PackedInt32Array(-131073, 720901, 11, -65537, 720901, 12, -1, 720901, 13, -196608, 786437, 11, -131072, 786437, 12, -65536, 786437, 13)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_06of4")
