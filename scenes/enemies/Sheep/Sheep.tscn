@@ -1,9 +1,17 @@
-[gd_scene load_steps=12 format=3 uid="uid://dfq5lb87meq6q"]
+[gd_scene load_steps=20 format=3 uid="uid://dfq5lb87meq6q"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Sheep/Sheep.gd" id="1_6p7b5"]
 [ext_resource type="Texture2D" uid="uid://dvpbmkvp7ppqm" path="res://assets/enemies/sheep/sheep.png" id="2_57cp7"]
 [ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="3_jxmll"]
 [ext_resource type="AudioStream" uid="uid://c0bs0306fc0ph" path="res://assets/enemies/sheep/sound/sheep_bleat_hurt_short.mp3" id="4_v7v2o"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="5_yme22"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="6_5ksd8"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="7_bkydl"]
+[ext_resource type="Script" path="res://scenes/enemies/Sheep/WasAttacked.gd" id="8_v4wk5"]
+[ext_resource type="Script" path="res://scenes/enemies/Sheep/Flee.gd" id="9_ylgs8"]
+[ext_resource type="Script" path="res://scenes/enemies/Sheep/Wander.gd" id="10_cis71"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/AvoidanceRays.tscn" id="11_nla65"]
+[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_oa8ou"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_orhwg"]
 radius = 27.0
@@ -240,3 +248,29 @@ offset_bottom = 25.0
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_v7v2o")
 bus = &"SheepHurt"
+
+[node name="BeehaveTree" type="Node" parent="." node_paths=PackedStringArray("blackboard")]
+script = ExtResource("5_yme22")
+enabled = false
+actor_node_path = NodePath("..")
+blackboard = NodePath("../Blackboard")
+
+[node name="SelectorComposite" type="Node" parent="BeehaveTree"]
+script = ExtResource("6_5ksd8")
+
+[node name="SequenceComposite" type="Node" parent="BeehaveTree/SelectorComposite"]
+script = ExtResource("7_bkydl")
+
+[node name="Was Attacked?" type="Node" parent="BeehaveTree/SelectorComposite/SequenceComposite"]
+script = ExtResource("8_v4wk5")
+
+[node name="Flee" type="Node" parent="BeehaveTree/SelectorComposite/SequenceComposite"]
+script = ExtResource("9_ylgs8")
+
+[node name="Wander" type="Node" parent="BeehaveTree/SelectorComposite"]
+script = ExtResource("10_cis71")
+
+[node name="AvoidanceRays" parent="." instance=ExtResource("11_nla65")]
+
+[node name="Blackboard" type="Node" parent="."]
+script = ExtResource("12_oa8ou")

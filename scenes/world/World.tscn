@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=12 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://scenes/world/World.gd" id="1_3w1ia"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/loginpanel/LoginPanel.tscn" id="2_fjr74"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="3_6bksq"]
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="3_fddk3"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="4_4b353"]
+[ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://scenes/enemies/Sheep/Sheep.tscn" id="4_uubdx"]
 [ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="5_0b0pa"]
 [ext_resource type="PackedScene" uid="uid://bija15ujapx3h" path="res://scenes/terrain/areas/wakingforest/WakingForest.tscn" id="7_oodd1"]
 [ext_resource type="PackedScene" uid="uid://8qc41ibiwbw" path="res://scenes/terrain/nature/trees/pinetreelarge/PineTreeLarge.tscn" id="8_jrm0a"]
@@ -86,6 +87,9 @@ position = Vector2(-1807, -1317)
 
 [node name="TreeTrunkGuy7" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2022, -995)
+
+[node name="Sheep" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
+position = Vector2(-1071, -155)
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 

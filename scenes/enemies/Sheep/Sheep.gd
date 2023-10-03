@@ -3,27 +3,26 @@ extends JEnemyBody2D
 @onready var sprite := $Sprite2D
 @onready var anim_player := $AnimationPlayer
 @onready var floating_text_scene = preload("res://scenes/templates/JFloatingText/JFloatingText.tscn")
+@onready var avoidance_rays := $AvoidanceRays
+@onready var beehave_tree := $BeehaveTree
+var behavior: Node2D
 
-var is_dead: bool = false
+var is_dead := false
 
 func _ready():
 	super()
+	if J.is_server():
+		beehave_tree.enabled = true
 	enemy_class = "Sheep"
 	stats.movement_speed = 50
-	stats.max_hp = 30
+	stats.max_hp = 100
+	stats.hp = stats.max_hp
 
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)
 	synchronizer.died.connect(_on_died)
 
 	$JInterface.display_name = enemy_class
-
-	var behavior: JWanderBehavior = load("res://scripts/classes/behaviors/JWanderBehavior.gd").new()
-	behavior.name = "WanderBehavior"
-	behavior.actor = self
-
-	add_child(behavior)
-
 	add_item_to_loottable("Gold", 1.0, 5)
 
 
@@ -40,17 +39,14 @@ func update_face_direction(direction: float):
 
 func _on_loop_animation_changed(animation: String, direction: Vector2):
 	loop_animation = animation
-	anim_player.play(loop_animation)
+	anim_player.queue(animation)
 	update_face_direction(direction.x)
-
 
 func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
 	if not is_dead:
 		anim_player.stop()
 		anim_player.play("Hurt")
-
 	$JInterface.update_hp_bar(hp, max_hp)
-
 	var text = floating_text_scene.instantiate()
 	text.amount = damage
 	text.type = text.TYPES.DAMAGE
