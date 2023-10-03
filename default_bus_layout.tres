@@ -1,0 +1,4 @@
+[gd_resource type="AudioBusLayout" format=3 uid="uid://dmvi2lscdobhb"]
+
+[resource]
+bus/0/send = &"SheepHurt"

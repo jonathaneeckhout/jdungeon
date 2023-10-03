@@ -3,7 +3,7 @@ extends JNPCBody2D
 @onready var animation_player = $AnimationPlayer
 @onready var skeleton = $Skeleton
 @onready var original_scale = $Skeleton.scale
-
+@onready var avoidance_rays := $AvoidanceRays
 
 func _ready():
 	super()

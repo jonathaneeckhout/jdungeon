@@ -4,7 +4,10 @@ class_name JStats
 
 @export var parent: JBody2D
 
-var max_hp: int = 10
+var max_hp: int = 10:
+	set (new_max_hp):
+		max_hp = new_max_hp
+		hp = max_hp
 var hp: int = max_hp
 var attack_power_min: int = 0
 var attack_power_max: int = 10
