@@ -3,7 +3,7 @@ extends Node2D
 @export var ray_magnitude := 64
 @export var ray_separation_angle := 30
 
-@onready var ray_front := $RayEast
+@onready var ray_front := $RayFront
 @onready var ray_left_0 := $RayLeft0
 @onready var ray_left_1 := $RayLeft1
 @onready var ray_right_0 := $RayRight0
@@ -12,8 +12,11 @@ extends Node2D
 @onready var actor := self.get_parent()
 
 func _ready():
-	_set_ray_targets()
-	_set_ray_angles()	
+	if J.is_server():
+		_set_ray_targets()
+		_set_ray_angles()
+	else:
+		self.visible = false
 
 func _set_ray_targets():
 	ray_front.target_position = Vector2(ray_magnitude, 0)
@@ -28,18 +31,19 @@ func _set_ray_angles():
 	ray_right_0.rotation_degrees = ray_separation_angle
 	ray_right_1.rotation_degrees = ray_separation_angle * 2
 
-func find_avoidant_velocity() -> Vector2:
-	self.rotation = actor.velocity.angle()
-	var avoidant_velocity: Vector2 = actor.velocity
-	for ray in get_children():
-		if ray.is_colliding():
+func find_avoidant_velocity(velocity_multiplier: float) -> Vector2:
+	if J.is_server():
+		self.rotation = actor.velocity.angle()
+		var avoidant_velocity: Vector2 = actor.velocity
+		if _get_viable_ray():
 			var viable_ray = _get_viable_ray()
 			if viable_ray:
 				avoidant_velocity = (
 					Vector2.RIGHT.rotated(self.rotation + viable_ray.rotation) * 
-					actor.stats.movement_speed
+					velocity_multiplier
 					)
-	return avoidant_velocity
+		return avoidant_velocity
+	return Vector2.ZERO
 
 func _get_viable_ray() -> RayCast2D:
 	for ray in self.get_children():

@@ -4,7 +4,7 @@ class_name JFleeBehavior
 
 @export var actor: JBody2D
 @export var min_flee_time := 2.0
-@export var max_idle_time := 4.0
+@export var max_flee_time := 4.0
 @export var max_colliding_time := 1.0
 @export var flee_speed_multiplier := 4.0
 
@@ -27,7 +27,7 @@ func _ready():
     flee_timer.name = "FleeTimer"
     flee_timer.timeout.connect(_on_flee_timer_timeout)
     add_child(flee_timer)
-    flee_timer.start(randf_range(min_flee_time, max_idle_time))
+    flee_timer.start(randf_range(min_flee_time, max_flee_time))
     
     actor.synchronizer.got_hurt.connect(_on_got_hurt)
 
@@ -42,13 +42,11 @@ func _physics_process(_delta: float):
         if actor.is_dead:
             actor.velocity = Vector2.ZERO
         elif actor.global_position.distance_to(flee_target) > J.ARRIVAL_DISTANCE:
-            J.logger.warn("direction_to_inFLee " + str(actor.global_position.direction_to(flee_target)))
+            var velocity_multiplier := actor.stats.movement_speed * flee_speed_multiplier
             actor.velocity = (
-                actor.global_position.direction_to(flee_target) * (actor.stats.movement_speed * flee_speed_multiplier)
+                actor.global_position.direction_to(flee_target) * velocity_multiplier
             )
-            J.logger.warn("Actor Velocity is " + str(actor.velocity))
-            actor.velocity = actor.avoidance_rays.find_avoidant_velocity()
-            J.logger.warn("Actor Velocity after Avoidance is " + str(actor.velocity))
+            actor.velocity = actor.avoidance_rays.find_avoidant_velocity(velocity_multiplier)
             actor.move_and_slide()
             if actor.get_slide_collision_count() > 0:
                 if colliding_timer.is_stopped():
@@ -67,4 +65,4 @@ func _on_colliding_timer_timeout():
 
 func _on_got_hurt(_from: String, _hp: int, _max_hp: int, _damage: int):
     if !flee_timer.is_stopped():
-        flee_timer.start(randf_range(min_flee_time, max_idle_time))
+        flee_timer.start(randf_range(min_flee_time, max_flee_time))

@@ -11,7 +11,6 @@ var dead_ended = false
 func tick(actor: Node, blackboard: Blackboard):
 	var attacker_global_pos: Vector2 = blackboard.get_value("attacker_global_position")
 	if !actor.behavior or actor.behavior.name != "FleeBehavior":
-		J.logger.warn("Switched to FleeBheavior" + self.name)
 		if actor.behavior:
 			actor.behavior.queue_free()
 		actor.behavior = flee_behavior.new(flee_direction(attacker_global_pos, actor.global_position))
@@ -23,11 +22,9 @@ func tick(actor: Node, blackboard: Blackboard):
 	if not actor.behavior.dead_end.is_connected(_dead_ended):
 		actor.behavior.dead_end.connect(_dead_ended)
 	if dead_ended:
-		J.logger.warn("DeadEnded")
 		dead_ended = false
 		actor.behavior.flee_target = -actor.behavior.flee_target
 	if calmed:
-		J.logger.warn("Calmed Down")
 		calmed = false
 		actor.velocity = Vector2.ZERO
 		actor.behavior.flee_complete.disconnect(_flee_done)
@@ -36,10 +33,8 @@ func tick(actor: Node, blackboard: Blackboard):
 	return RUNNING
 
 func flee_direction(attacker_global_pos: Vector2, actor_global_pos: Vector2) -> Vector2:
-	J.logger.warn("Running from " + str(attacker_global_pos))
-	var direction := -(attacker_global_pos - actor_global_pos).normalized()
+	var direction := attacker_global_pos.direction_to(actor_global_pos)
 	var flee_target = direction * flee_magnitude_max
-	J.logger.warn("Flee Target is " + str(flee_target))
 	return flee_target
 
 func _flee_done():

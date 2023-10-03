@@ -1,15 +1,4 @@
-[gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://dmvi2lscdobhb"]
-
-[sub_resource type="AudioEffectPitchShift" id="AudioEffectPitchShift_hvm1v"]
-resource_name = "PitchShift"
-pitch_scale = 1.25
+[gd_resource type="AudioBusLayout" format=3 uid="uid://dmvi2lscdobhb"]
 
 [resource]
-bus/1/name = &"SheepHurt"
-bus/1/solo = false
-bus/1/mute = false
-bus/1/bypass_fx = false
-bus/1/volume_db = 0.0
-bus/1/send = &"Master"
-bus/1/effect/0/effect = SubResource("AudioEffectPitchShift_hvm1v")
-bus/1/effect/0/enabled = true
+bus/0/send = &"SheepHurt"

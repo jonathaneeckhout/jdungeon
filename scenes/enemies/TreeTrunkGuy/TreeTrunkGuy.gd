@@ -4,7 +4,7 @@ extends JEnemyBody2D
 
 @onready var skeleton = $Skeleton
 @onready var original_scale = $Skeleton.scale
-
+@onready var avoidance_rays := $AvoidanceRays
 @onready var floating_text_scene = preload("res://scenes/templates/JFloatingText/JFloatingText.tscn")
 var is_dead: bool = false
 

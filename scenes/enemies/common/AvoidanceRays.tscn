@@ -5,7 +5,7 @@
 [node name="AvoidanceRays" type="Node2D"]
 script = ExtResource("1_ecqvo")
 
-[node name="RayEast" type="RayCast2D" parent="."]
+[node name="RayFront" type="RayCast2D" parent="."]
 target_position = Vector2(65, 0)
 
 [node name="RayLeft0" type="RayCast2D" parent="."]

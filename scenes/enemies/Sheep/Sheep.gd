@@ -15,7 +15,7 @@ func _ready():
 		beehave_tree.enabled = true
 	enemy_class = "Sheep"
 	stats.movement_speed = 50
-	stats.max_hp = 100
+	stats.max_hp = 20
 	stats.hp = stats.max_hp
 
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)

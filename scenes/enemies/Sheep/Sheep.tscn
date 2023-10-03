@@ -1,9 +1,8 @@
-[gd_scene load_steps=20 format=3 uid="uid://dfq5lb87meq6q"]
+[gd_scene load_steps=19 format=3 uid="uid://dfq5lb87meq6q"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Sheep/Sheep.gd" id="1_6p7b5"]
 [ext_resource type="Texture2D" uid="uid://dvpbmkvp7ppqm" path="res://assets/enemies/sheep/sheep.png" id="2_57cp7"]
 [ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="3_jxmll"]
-[ext_resource type="AudioStream" uid="uid://c0bs0306fc0ph" path="res://assets/enemies/sheep/sound/sheep_bleat_hurt_short.mp3" id="4_v7v2o"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="5_yme22"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="6_5ksd8"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="7_bkydl"]
@@ -60,22 +59,10 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("AudioStreamPlayer2D:playing")
+tracks/3/path = NodePath("Sprite2D:flip_v")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Sprite2D:flip_v")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
 "times": PackedFloat32Array(0, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
@@ -121,18 +108,6 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector2(0, -2.38419e-07), Vector2(1, 2), Vector2(2, -1), Vector2(-1, 2), Vector2(2, -2), Vector2(0, -2.38419e-07)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("AudioStreamPlayer2D:playing")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
 }
 
 [sub_resource type="Animation" id="Animation_8frmy"]
@@ -195,22 +170,10 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("AudioStreamPlayer2D:playing")
+tracks/3/path = NodePath("Sprite2D:flip_v")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Sprite2D:flip_v")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -228,6 +191,7 @@ _data = {
 
 [node name="Sheep" type="CharacterBody2D"]
 script = ExtResource("1_6p7b5")
+respawn = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.1, 0.1)
@@ -244,10 +208,6 @@ libraries = {
 [node name="JInterface" parent="." instance=ExtResource("3_jxmll")]
 offset_top = -15.0
 offset_bottom = 25.0
-
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("4_v7v2o")
-bus = &"SheepHurt"
 
 [node name="BeehaveTree" type="Node" parent="." node_paths=PackedStringArray("blackboard")]
 script = ExtResource("5_yme22")
