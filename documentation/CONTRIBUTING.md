@@ -38,7 +38,11 @@ Make the desired changes or additions to the codebase in your local branch.
 ### Test your changes
 
 Test if your changes work. Make also sure that your changes don't break other functionality of the game.
-   
+
+### Use Code Style for Scripts
+
+JDungeon uses the code style defined by [GDtoolkit](https://pypi.org/project/gdtoolkit/). Use this tool to format your code. It can also be added as a plugin to VSCode.
+
 ### Commit Changes
 
 After making changes, commit them with a meaningful commit message:
