@@ -53,6 +53,8 @@ func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
 	add_child(text)
 
 func _on_died():
+	#To-Do: Make a "Dead" State for BehaviorTree, this should fix #16 for now though
+	beehave_tree.enabled = false
 	is_dead = true
 	anim_player.stop()
 	anim_player.play("Die")
