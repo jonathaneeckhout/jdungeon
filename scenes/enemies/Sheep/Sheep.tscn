@@ -190,6 +190,7 @@ _data = {
 }
 
 [node name="Sheep" type="CharacterBody2D"]
+scale = Vector2(0.8, 0.8)
 script = ExtResource("1_6p7b5")
 respawn = true
 
