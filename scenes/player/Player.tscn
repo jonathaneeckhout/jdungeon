@@ -619,7 +619,7 @@ _data = {
 }
 
 [node name="Player" type="CharacterBody2D"]
-scale = Vector2(0.75, 0.75)
+scale = Vector2(0.6, 0.6)
 script = ExtResource("1_yw2vn")
 
 [node name="Sprites" type="Node2D" parent="."]

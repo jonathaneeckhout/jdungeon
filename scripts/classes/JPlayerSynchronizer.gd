@@ -7,7 +7,7 @@ signal interacted(target_name: String)
 
 @export var player: JPlayerBody2D
 @export var synchronizer: JSynchronizer
-@export var network_sync_area_size: float = 1024.0
+@export var network_sync_area_size: float = 2048.0
 
 var bodies_in_view: Array[JBody2D] = []
 var items_in_view: Array[JItem] = []
