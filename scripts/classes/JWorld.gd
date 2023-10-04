@@ -118,6 +118,10 @@ func _on_player_logged_in(id: int, username: String):
 	player.username = username
 	player.peer_id = id
 
+	var data: JPlayerPersistency = J.server.database.load_player_data(username)
+	if data:
+		player.position = data.position
+
 	players.add_child(player)
 
 	# Add to this list for internal tracking
@@ -129,6 +133,12 @@ func _on_player_logged_in(id: int, username: String):
 func _on_peer_disconnected(id):
 	if id in players_by_id:
 		var player = players_by_id[id]
+
+		J.logger.info("Storing player=[%s]'s data" % player.name)
+		var data = JPlayerPersistency.new()
+		data.position = player.position
+
+		J.server.database.store_player_data(player.username, data)
 
 		J.logger.info("Removing player=[%s]" % player.name)
 
