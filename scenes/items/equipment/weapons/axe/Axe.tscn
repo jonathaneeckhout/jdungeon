@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://u35hf8h5t8f2"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/weapons/axe/Axe.gd" id="1_wnkji"]
-[ext_resource type="Texture2D" uid="uid://dbrok0x3ij7yn" path="res://assets/equipment/weapons/axe.png" id="2_1b0xh"]
+[ext_resource type="Texture2D" uid="uid://dbrok0x3ij7yn" path="res://assets/equipment/weapons/axe/axe.png" id="2_1b0xh"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g6336"]
 radius = 14.0
