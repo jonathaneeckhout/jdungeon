@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b557eo3egib7"
-path="res://.godot/imported/club.png-d0239279f3edc274f406caa559ecc8c2.ctex"
+uid="uid://cmw1hg3oomba4"
+path="res://.godot/imported/shield.png-6782c906932449a44739c508d58e516a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/equipment/weapons/club.png"
-dest_files=["res://.godot/imported/club.png-d0239279f3edc274f406caa559ecc8c2.ctex"]
+source_file="res://assets/equipment/weapons/shield/shield.png"
+dest_files=["res://.godot/imported/shield.png-6782c906932449a44739c508d58e516a.ctex"]
 
 [params]
 
