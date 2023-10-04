@@ -22,6 +22,9 @@ To get started with JDungeon, follow these steps:
 - User Management
   - Account Creation
   - Login System
+- AI
+  - Wander
+  - Wander and Flee When Attacked
 - Networking
   - Synchronization of Entities (Players, Enemies, NPCs, Items, etc.)
   - Synchronization of Movement/Velocity 
@@ -32,6 +35,8 @@ To get started with JDungeon, follow these steps:
   - Synchronization of Bag
 - AI
   - Wander Behavior
+- Content
+  - World map
 
 ## Feature Roadmap
 - Gameplay
@@ -39,7 +44,6 @@ To get started with JDungeon, follow these steps:
 - Networking
   - Synchronize Stats
 - AI
-  - Add Behavior to Include Wandering and Fleeing When Attacked
   - Add Wandering and Attacking Behavior
 - Chat
   - Integrate Chat Panel
