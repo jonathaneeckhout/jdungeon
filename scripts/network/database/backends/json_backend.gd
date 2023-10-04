@@ -1,5 +1,7 @@
 extends Node
 
+class_name JSONDatabaseBackend
+
 const USERS_FILEPATH = "data/users.json"
 
 
@@ -51,7 +53,7 @@ func create_account(username: String, password: String) -> bool:
 		J.logger.info("User=[%s] already exists" % username)
 		return false
 
-	users_json[username] = password
+	users_json[username] = {"password": password}
 
 	if not write_json_to_file(USERS_FILEPATH, users_json):
 		J.logger.warn("Could not store new user")
@@ -68,4 +70,46 @@ func authenticate_user(username: String, password: String) -> bool:
 		J.logger.warn("Could not json parse content of %s" % USERS_FILEPATH)
 		return false
 
-	return username in users_json and users_json[username] == password
+	return (
+		username in users_json
+		and "password" in users_json[username]
+		and users_json[username]["password"] == password
+	)
+
+
+func store_player_data(username: String, data: JPlayerPersistency) -> bool:
+	var users_json = read_json_from_file(USERS_FILEPATH)
+	if users_json == null:
+		J.logger.warn("Could not json parse content of %s" % USERS_FILEPATH)
+		return false
+
+	if not username in users_json:
+		J.logger.warn("User=[%s] does not exists" % username)
+		return false
+
+	users_json[username]["data"] = data.to_json()
+
+	if not write_json_to_file(USERS_FILEPATH, users_json):
+		J.logger.warn("Could not store player=[]'s data" % username)
+		return false
+
+	J.logger.info("Successfully created user=[%s]" % username)
+
+	return true
+
+
+func load_player_data(username: String) -> JPlayerPersistency:
+	var users_json = read_json_from_file(USERS_FILEPATH)
+	if users_json == null:
+		J.logger.warn("Could not json parse content of %s" % USERS_FILEPATH)
+		return null
+
+	if not username in users_json:
+		J.logger.warn("User=[%s] does not exists" % username)
+		return null
+
+	if not "data" in users_json[username]:
+		J.logger.info("Player=[%s] does have persistent exists" % username)
+		return null
+
+	return JPlayerPersistency.from_json(users_json[username]["data"])

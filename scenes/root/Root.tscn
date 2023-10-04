@@ -35,3 +35,26 @@ text = "Run as server"
 [node name="RunAsClientButton" type="Button" parent="SelectRunMode/VBoxContainer"]
 layout_mode = 2
 text = "Run as client"
+
+[node name="ResetButton" type="Button" parent="SelectRunMode/VBoxContainer"]
+layout_mode = 2
+text = "Reset"
+
+[node name="ComfirmResetContainer" type="VBoxContainer" parent="SelectRunMode"]
+visible = false
+layout_mode = 0
+offset_right = 256.0
+offset_bottom = 256.0
+
+[node name="Label" type="Label" parent="SelectRunMode/ComfirmResetContainer"]
+layout_mode = 2
+text = "Are you sure to reset?"
+horizontal_alignment = 1
+
+[node name="ResetYesButton" type="Button" parent="SelectRunMode/ComfirmResetContainer"]
+layout_mode = 2
+text = "Yes"
+
+[node name="ResetNoButton" type="Button" parent="SelectRunMode/ComfirmResetContainer"]
+layout_mode = 2
+text = "No"
