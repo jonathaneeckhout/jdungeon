@@ -12,6 +12,7 @@ signal back_create_account_pressed
 @onready var connect_button := $Panel/ConnectContainer/MarginContainer3/ConnectButton
 
 #LoginContainer
+@onready var login_container = $Panel/LoginContainer
 @onready var login_input := $Panel/LoginContainer/MarginContainer/VBoxContainer/LoginText
 @onready var login_password_input := $Panel/LoginContainer/MarginContainer2/VBoxContainer/LoginPasswordText
 @onready var login_button := $Panel/LoginContainer/MarginContainer3/VBoxContainer/LoginButton
@@ -34,6 +35,11 @@ func _ready():
 	goto_create_account_button.pressed.connect(_on_show_create_account_menu)
 	create_account_button.pressed.connect(_on_create_account_button_pressed)
 	goto_login_button.pressed.connect(_on_back_create_account_button_pressed)
+
+func _input(_event):
+	if login_container.is_visible_in_tree():
+			if Input.is_key_pressed(KEY_ENTER):
+				_on_login_button_pressed()
 
 func show_connect_container():
 	self.show()
