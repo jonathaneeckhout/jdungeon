@@ -34,9 +34,9 @@ func authenticate_user(username: String, password: String) -> bool:
 	return backend.authenticate_user(username, password)
 
 
-func store_player_data(username: String, data: JPlayerPersistency) -> bool:
+func store_player_data(username: String, data: Dictionary) -> bool:
 	return backend.store_player_data(username, data)
 
 
-func load_player_data(username: String) -> JPlayerPersistency:
+func load_player_data(username: String) -> Dictionary:
 	return backend.load_player_data(username)

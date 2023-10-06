@@ -48,7 +48,7 @@ func _init():
 		persistency_timer = Timer.new()
 		persistency_timer.name = "PersistencyTimer"
 		persistency_timer.autostart = true
-		persistency_timer.wait_time = 5
+		persistency_timer.wait_time = J.PERSISTENCY_INTERVAL
 		persistency_timer.timeout.connect(_on_persistency_timer_timeout)
 		add_child(persistency_timer)
 
@@ -62,11 +62,8 @@ func _init():
 
 
 func store_data():
-	J.logger.debug("Storing player=[%s]'s persistent data" % username)
-	var data = JPlayerPersistency.new()
-	data.position = position
-	data.hp = stats.hp
-	J.server.database.store_player_data(username, data)
+	J.logger.info("Storing player=[%s]'s persistent data" % username)
+	JPlayerPersistency.store_data(self)
 
 
 func _on_move(target_position: Vector2):

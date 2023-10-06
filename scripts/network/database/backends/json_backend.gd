@@ -77,7 +77,7 @@ func authenticate_user(username: String, password: String) -> bool:
 	)
 
 
-func store_player_data(username: String, data: JPlayerPersistency) -> bool:
+func store_player_data(username: String, data: Dictionary) -> bool:
 	var users_json = read_json_from_file(USERS_FILEPATH)
 	if users_json == null:
 		J.logger.warn("Could not json parse content of %s" % USERS_FILEPATH)
@@ -87,29 +87,27 @@ func store_player_data(username: String, data: JPlayerPersistency) -> bool:
 		J.logger.warn("User=[%s] does not exists" % username)
 		return false
 
-	users_json[username]["data"] = data.to_json()
+	users_json[username]["data"] = data
 
 	if not write_json_to_file(USERS_FILEPATH, users_json):
 		J.logger.warn("Could not store player=[]'s data" % username)
 		return false
 
-	J.logger.info("Successfully created user=[%s]" % username)
-
 	return true
 
 
-func load_player_data(username: String) -> JPlayerPersistency:
+func load_player_data(username: String) -> Dictionary:
 	var users_json = read_json_from_file(USERS_FILEPATH)
 	if users_json == null:
 		J.logger.warn("Could not json parse content of %s" % USERS_FILEPATH)
-		return null
+		return {}
 
 	if not username in users_json:
 		J.logger.warn("User=[%s] does not exists" % username)
-		return null
+		return {}
 
 	if not "data" in users_json[username]:
 		J.logger.info("Player=[%s] does have persistent exists" % username)
-		return null
+		return {}
 
-	return JPlayerPersistency.from_json(users_json[username]["data"])
+	return users_json[username]["data"]

@@ -2,34 +2,64 @@ extends Node
 
 class_name JPlayerPersistency
 
-var position: Vector2 = Vector2.ZERO
-var hp: int = 0
+
+static func store_data(player: JPlayerBody2D) -> bool:
+	var inventory: Dictionary = {"gold": player.inventory.gold, "items": []}
+	for item in player.inventory.items:
+		inventory["items"].append(
+			{"uuid": item.uuid, "item_class": item.item_class, "amount": item.amount}
+		)
+
+	var data: Dictionary = {
+		"position": {"x": player.position.x, "y": player.position.y},
+		"hp": player.stats.hp,
+		"inventory": inventory
+	}
+
+	return J.server.database.store_player_data(player.username, data)
 
 
-func to_json() -> Dictionary:
-	var data: Dictionary = {"position": {"x": position.x, "y": position.y}, "hp": hp}
+static func load_data(player: JPlayerBody2D) -> bool:
+	var data: Dictionary = J.server.database.load_player_data(player.username)
 
-	return data
-
-
-static func from_json(json_data: Dictionary) -> JPlayerPersistency:
 	# This function's minimal requirement is that the postion key is available in the data
-	if not "position" in json_data:
-		J.logger.debug('Invalid format of json_data, missing "position" key')
-		return null
+	if not "position" in data:
+		J.logger.debug('Invalid format of data, missing "position" key')
+		return false
 
-	if not "x" in json_data["position"]:
-		J.logger.debug('Invalid format of json_data, missing "x" key')
-		return null
+	if not "x" in data["position"]:
+		J.logger.debug('Invalid format of data, missing "x" key')
+		return false
 
-	if not "y" in json_data["position"]:
-		J.logger.debug('Invalid format of json_data, missing "y" key')
-		return null
+	if not "y" in data["position"]:
+		J.logger.debug('Invalid format of data, missing "y" key')
+		return false
 
-	var data: JPlayerPersistency = JPlayerPersistency.new()
-	data.position = Vector2(json_data["position"]["x"], json_data["position"]["y"])
+	player.position = Vector2(data["position"]["x"], data["position"]["y"])
 
-	if "hp" in json_data and json_data["hp"] > 0:
-		data.hp = json_data["hp"]
+	if "hp" in data and data["hp"] > 0:
+		player.stats.hp = data["hp"]
 
-	return data
+	if "inventory" in data:
+		if "gold" in data["inventory"]:
+			player.inventory.gold = data["inventory"]["gold"]
+
+		for item_data in data["inventory"]["items"]:
+			if not "uuid" in item_data:
+				continue
+
+			if not "item_class" in item_data:
+				continue
+
+			if not "amount" in item_data:
+				continue
+
+			var item: JItem = J.item_scenes[item_data["item_class"]].instantiate()
+			item.uuid = item_data["uuid"]
+			item.item_class = item_data["item_class"]
+			item.amount = item_data["amount"]
+			item.collision_layer = 0
+
+			player.inventory.items.append(item)
+
+	return true

@@ -119,10 +119,7 @@ func _on_player_logged_in(id: int, username: String):
 	player.peer_id = id
 
 	J.logger.info("Loading player=[%s]'s persistent data" % player.name)
-	var data: JPlayerPersistency = J.server.database.load_player_data(username)
-	if data:
-		player.position = data.position
-		player.stats.hp = data.hp
+	JPlayerPersistency.load_data(player)
 
 	players.add_child(player)
 
