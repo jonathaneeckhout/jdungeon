@@ -2,11 +2,10 @@ extends Node
 
 class_name JSONDatabaseBackend
 
-const USERS_FILEPATH = "data/users.json"
 
 
 func init() -> bool:
-	return create_file_if_not_exists(USERS_FILEPATH, {})
+	return create_file_if_not_exists(J.USERS_FILEPATH, {})
 
 
 func create_file_if_not_exists(path: String, json_data: Dictionary) -> bool:
@@ -44,9 +43,9 @@ func read_json_from_file(path: String) -> Variant:
 
 
 func create_account(username: String, password: String) -> bool:
-	var users_json = read_json_from_file(USERS_FILEPATH)
+	var users_json = read_json_from_file(J.USERS_FILEPATH)
 	if users_json == null:
-		J.logger.warn("Could not json parse content of %s" % USERS_FILEPATH)
+		J.logger.warn("Could not json parse content of %s" % J.USERS_FILEPATH)
 		return false
 
 	if username in users_json:
@@ -55,7 +54,7 @@ func create_account(username: String, password: String) -> bool:
 
 	users_json[username] = {"password": password}
 
-	if not write_json_to_file(USERS_FILEPATH, users_json):
+	if not write_json_to_file(J.USERS_FILEPATH, users_json):
 		J.logger.warn("Could not store new user")
 		return false
 
@@ -65,9 +64,9 @@ func create_account(username: String, password: String) -> bool:
 
 
 func authenticate_user(username: String, password: String) -> bool:
-	var users_json = read_json_from_file(USERS_FILEPATH)
+	var users_json = read_json_from_file(J.USERS_FILEPATH)
 	if users_json == null:
-		J.logger.warn("Could not json parse content of %s" % USERS_FILEPATH)
+		J.logger.warn("Could not json parse content of %s" % J.USERS_FILEPATH)
 		return false
 
 	return (
@@ -78,9 +77,9 @@ func authenticate_user(username: String, password: String) -> bool:
 
 
 func store_player_data(username: String, data: Dictionary) -> bool:
-	var users_json = read_json_from_file(USERS_FILEPATH)
+	var users_json = read_json_from_file(J.USERS_FILEPATH)
 	if users_json == null:
-		J.logger.warn("Could not json parse content of %s" % USERS_FILEPATH)
+		J.logger.warn("Could not json parse content of %s" % J.USERS_FILEPATH)
 		return false
 
 	if not username in users_json:
@@ -89,7 +88,7 @@ func store_player_data(username: String, data: Dictionary) -> bool:
 
 	users_json[username]["data"] = data
 
-	if not write_json_to_file(USERS_FILEPATH, users_json):
+	if not write_json_to_file(J.USERS_FILEPATH, users_json):
 		J.logger.warn("Could not store player=[]'s data" % username)
 		return false
 
@@ -97,9 +96,9 @@ func store_player_data(username: String, data: Dictionary) -> bool:
 
 
 func load_player_data(username: String) -> Dictionary:
-	var users_json = read_json_from_file(USERS_FILEPATH)
+	var users_json = read_json_from_file(J.USERS_FILEPATH)
 	if users_json == null:
-		J.logger.warn("Could not json parse content of %s" % USERS_FILEPATH)
+		J.logger.warn("Could not json parse content of %s" % J.USERS_FILEPATH)
 		return {}
 
 	if not username in users_json:
