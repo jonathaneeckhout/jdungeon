@@ -48,7 +48,8 @@ offset_bottom = 256.0
 
 [node name="Label" type="Label" parent="SelectRunMode/ComfirmResetContainer"]
 layout_mode = 2
-text = "Are you sure to reset?"
+text = "Are you sure to reset?
+This will remove any persistent data."
 horizontal_alignment = 1
 
 [node name="ResetYesButton" type="Button" parent="SelectRunMode/ComfirmResetContainer"]
