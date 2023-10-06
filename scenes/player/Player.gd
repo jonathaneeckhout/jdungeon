@@ -47,6 +47,10 @@ func _ready():
 		stats.synced.connect(_on_stats_synced)
 		stats.get_sync.rpc_id(1, peer_id)
 
+		# Get the current equipment of the player:
+		equipment.items_loaded.connect(_on_items_loaded)
+		equipment.sync_equipment.rpc_id(1)
+
 
 func _physics_process(_delta):
 	if loop_animation == "Move":
@@ -138,6 +142,10 @@ func equipment_changed():
 	load_equipment_double_sprites("Legs")
 	load_equipment_single_sprite("RightHand")
 	load_equipment_single_sprite("LeftHand")
+
+
+func _on_items_loaded():
+	equipment_changed()
 
 
 func _on_item_equiped(_item_uuid: String, _item_class: String):

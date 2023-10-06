@@ -7,7 +7,8 @@ static func store_data(player: JPlayerBody2D) -> bool:
 	var data: Dictionary = {
 		"position": {"x": player.position.x, "y": player.position.y},
 		"hp": player.stats.hp,
-		"inventory": player.inventory.get_output_data()
+		"inventory": player.inventory.get_output_data(),
+		"equipment": player.equipment.get_output_data()
 	}
 
 	return J.server.database.store_player_data(player.username, data)
@@ -37,6 +38,11 @@ static func load_data(player: JPlayerBody2D) -> bool:
 	if "inventory" in data:
 		if not player.inventory.load_from_data(data["inventory"]):
 			J.log.warn("Failed to load inventory from data")
+			return false
+
+	if "equipment" in data:
+		if not player.equipment.load_from_data(data["equipment"]):
+			J.log.warn("Failed to load equipment from data")
 			return false
 
 	return true

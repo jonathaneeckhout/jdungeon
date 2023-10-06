@@ -39,6 +39,7 @@ func _input(event):
 
 
 func register_signals():
+	player.equipment.items_loaded.connect(_on_items_loaded)
 	player.equipment.item_added.connect(_on_item_added)
 	player.equipment.item_removed.connect(_on_item_removed)
 
@@ -46,6 +47,13 @@ func register_signals():
 func get_panel_at_slot(equipment_slot: String) -> EquipmentPanel:
 	var panel_path = "Panel_%s" % equipment_slot
 	return $GridContainer.get_node(panel_path)
+
+
+func clear_all_panels():
+	for x in range(SIZE.x):
+		for y in range(SIZE.y):
+			var panel: EquipmentPanel = panels[x][y]
+			panel.item = null
 
 
 func _on_mouse_entered():
@@ -56,11 +64,10 @@ func _on_mouse_exited():
 	JUI.above_ui = false
 
 
-func _on_item_added(item_uuid: String, item_class: String):
-	var item: JItem = J.item_scenes[item_class].instantiate()
-	item.uuid = item_uuid
-	item.item_class = item_class
-	item.collision_layer = 0
+func _on_item_added(item_uuid: String, _item_class: String):
+	var item: JItem = player.equipment.get_item(item_uuid)
+	if item == null:
+		return
 
 	var panel = get_panel_at_slot(item.equipment_slot)
 	if panel:
@@ -73,3 +80,14 @@ func _on_item_removed(item_uuid: String):
 			var panel: EquipmentPanel = panels[x][y]
 			if panel.item and panel.item.uuid == item_uuid:
 				panel.item = null
+
+
+func _on_items_loaded():
+	clear_all_panels()
+
+	for slot in player.equipment.items:
+		var item: JItem = player.equipment.items[slot]
+		if item:
+			var panel = get_panel_at_slot(item.equipment_slot)
+			if panel:
+				panel.item = item

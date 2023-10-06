@@ -4,6 +4,7 @@ class_name JEquipment
 
 const SIZE = 8
 
+signal items_loaded
 signal item_added(item_uuid: String, item_class: String)
 signal item_removed(item_uuid: String)
 
@@ -85,11 +86,68 @@ func get_item(item_uuid: String) -> JItem:
 	return null
 
 
+func get_output_data() -> Dictionary:
+	var output: Dictionary = {}
+
+	for slot in items:
+		if items[slot] != null:
+			var item: JItem = items[slot]
+			output[slot] = {"uuid": item.uuid, "item_class": item.item_class, "amount": item.amount}
+
+	return output
+
+
+func load_from_data(data: Dictionary) -> bool:
+	for slot in data:
+		if not slot in items:
+			J.logger.warn("Slot=[%s] does not exist in equipment items" % slot)
+			return false
+
+		var item_data: Dictionary = data[slot]
+		if not "uuid" in item_data:
+			J.logger.warn('Failed to load equipment from data, missing "uuid" key')
+			return false
+
+		if not "item_class" in item_data:
+			J.logger.warn('Failed to load equipment from data, missing "item_class" key')
+			return false
+
+		if not "amount" in item_data:
+			J.logger.warn('Failed to load equipment from data, missing "amount" key')
+			return false
+
+		var item: JItem = J.item_scenes[item_data["item_class"]].instantiate()
+		item.uuid = item_data["uuid"]
+		item.item_class = item_data["item_class"]
+		item.amount = item_data["amount"]
+		item.collision_layer = 0
+
+		items[slot] = item
+
+	items_loaded.emit()
+
+	return true
+
+
 func _on_equipment_item_removed(id: int, item_uuid: String):
 	if player.peer_id != id:
 		return
 
 	unequip_item(item_uuid)
+
+
+@rpc("call_remote", "any_peer", "reliable") func sync_equipment():
+	if not J.is_server():
+		return
+
+	var id = multiplayer.get_remote_sender_id()
+
+	if id == player.peer_id:
+		sync_response.rpc_id(id, get_output_data())
+
+
+@rpc("call_remote", "authority", "reliable") func sync_response(equipment: Dictionary):
+	load_from_data(equipment)
 
 
 @rpc("call_remote", "authority", "reliable")
