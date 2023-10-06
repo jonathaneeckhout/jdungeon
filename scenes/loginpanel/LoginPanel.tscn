@@ -1,7 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://bdgegw7cy4d1r"]
+[gd_scene load_steps=10 format=3 uid="uid://bdgegw7cy4d1r"]
 
 [ext_resource type="Script" path="res://scenes/loginpanel/LoginPanel.gd" id="1_uhohb"]
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="2_d6ypk"]
+[ext_resource type="AudioStream" uid="uid://b3kstyb5opkj1" path="res://assets/audio/ui/login_panel/ui_click.mp3" id="3_pgl4f"]
+[ext_resource type="AudioStream" uid="uid://xvulnt1qjsua" path="res://assets/audio/ui/login_panel/village_ consort.mp3" id="4_c7ug3"]
 
 [sub_resource type="Animation" id="Animation_hddh3"]
 length = 0.001
@@ -340,7 +342,7 @@ layout_mode = 2
 theme_override_constants/margin_left = 200
 theme_override_constants/margin_right = 200
 
-[node name="ConnectButton" type="Button" parent="Panel/ConnectContainer/MarginContainer3"]
+[node name="ConnectButton" type="Button" parent="Panel/ConnectContainer/MarginContainer3" groups=["ui_button"]]
 layout_mode = 2
 size_flags_vertical = 4
 text = "Connect"
@@ -414,12 +416,12 @@ theme_override_constants/margin_right = 200
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="LoginButton" type="Button" parent="Panel/LoginContainer/MarginContainer3/VBoxContainer"]
+[node name="LoginButton" type="Button" parent="Panel/LoginContainer/MarginContainer3/VBoxContainer" groups=["ui_button"]]
 layout_mode = 2
 size_flags_vertical = 4
 text = "Connect"
 
-[node name="GoToCreateAccountButton" type="Button" parent="Panel/LoginContainer/MarginContainer3/VBoxContainer"]
+[node name="GoToCreateAccountButton" type="Button" parent="Panel/LoginContainer/MarginContainer3/VBoxContainer" groups=["ui_button"]]
 layout_mode = 2
 size_flags_vertical = 4
 text = "Create Account"
@@ -505,13 +507,13 @@ theme_override_constants/margin_right = 200
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="CreateAccountButton" type="Button" parent="Panel/CreateAccountContainer/MarginContainer3/VBoxContainer"]
+[node name="CreateAccountButton" type="Button" parent="Panel/CreateAccountContainer/MarginContainer3/VBoxContainer" groups=["ui_button"]]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
 text = "Create Account"
 
-[node name="BackToLoginButton" type="Button" parent="Panel/CreateAccountContainer/MarginContainer3/VBoxContainer"]
+[node name="BackToLoginButton" type="Button" parent="Panel/CreateAccountContainer/MarginContainer3/VBoxContainer" groups=["ui_button"]]
 layout_mode = 2
 size_flags_vertical = 4
 text = "Back"
@@ -530,3 +532,11 @@ grow_vertical = 2
 libraries = {
 "": SubResource("AnimationLibrary_3bwtf")
 }
+
+[node name="BackgroundAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_c7ug3")
+volume_db = -10.0
+
+[node name="ClickAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_pgl4f")
+volume_db = 10.0

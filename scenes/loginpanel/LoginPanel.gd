@@ -25,7 +25,12 @@ signal back_create_account_pressed
 @onready var create_account_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxContainer/CreateAccountButton
 @onready var goto_login_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxContainer/BackToLoginButton
 
+#AudioStreamers
+@onready var click_audio_stream_player:=$ClickAudioStreamPlayer
+@onready var background_audio_stream_player := $BackgroundAudioStreamPlayer
+
 @onready var _anim_player := $AnimationPlayer
+
 
 func _ready():
 	server_address_input.text = J.global.env_server_address
@@ -35,11 +40,18 @@ func _ready():
 	goto_create_account_button.pressed.connect(_on_show_create_account_menu)
 	create_account_button.pressed.connect(_on_create_account_button_pressed)
 	goto_login_button.pressed.connect(_on_back_create_account_button_pressed)
+	
+	if not J.is_server():
+		background_audio_stream_player.play()
+		background_audio_stream_player.finished.connect(background_audio_stream_player.play)
+	var buttons : Array = get_tree().get_nodes_in_group("ui_button")
+	for button in buttons:
+		button.pressed.connect(_on_button_pressed)
 
 func _input(_event):
 	if login_container.is_visible_in_tree():
 			if Input.is_key_pressed(KEY_ENTER):
-				_on_login_button_pressed()
+				login_button.emit_signal("pressed")
 
 func show_connect_container():
 	self.show()
@@ -96,3 +108,9 @@ func _on_create_account_button_pressed():
 
 func _on_back_create_account_button_pressed():
 	back_create_account_pressed.emit()
+
+func _on_button_pressed():
+	click_audio_stream_player.play()
+
+func stop_login_background_audio():
+	background_audio_stream_player.stop()

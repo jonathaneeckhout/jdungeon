@@ -113,6 +113,7 @@ func _handle_login():
 		login_panel.hide()
 		J.client.player.focus_camera()
 		state = STATES.RUNNING
+		login_panel.stop_login_background_audio()
 		fsm()
 	else:
 		JUI.alertbox("Login failed", login_panel)
