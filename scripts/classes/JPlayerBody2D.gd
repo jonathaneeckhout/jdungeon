@@ -11,13 +11,13 @@ var player_behavior: JPlayerBehavior
 var inventory: JInventory
 var equipment: JEquipment
 
+var persistency_timer: Timer
+
 
 func _init():
-	entity_type = J.ENTITY_TYPE.PLAYER
-
-
-func _ready():
 	super()
+
+	entity_type = J.ENTITY_TYPE.PLAYER
 
 	collision_layer += J.PHYSICS_LAYER_PLAYERS
 
@@ -45,6 +45,13 @@ func _ready():
 		player_behavior.player_stats = stats
 		add_child(player_behavior)
 
+		persistency_timer = Timer.new()
+		persistency_timer.name = "PersistencyTimer"
+		persistency_timer.autostart = true
+		persistency_timer.wait_time = J.PERSISTENCY_INTERVAL
+		persistency_timer.timeout.connect(_on_persistency_timer_timeout)
+		add_child(persistency_timer)
+
 	else:
 		player_input = JPlayerInput.new()
 		player_input.name = "PlayerInput"
@@ -54,9 +61,18 @@ func _ready():
 		player_input.interact.connect(_on_interact)
 
 
+func store_data():
+	J.logger.info("Storing player=[%s]'s persistent data" % username)
+	JPlayerPersistency.store_data(self)
+
+
 func _on_move(target_position: Vector2):
 	player_synchronizer.move.rpc_id(1, target_position)
 
 
 func _on_interact(target_name: String):
 	player_synchronizer.interact.rpc_id(1, target_name)
+
+
+func _on_persistency_timer_timeout():
+	store_data()

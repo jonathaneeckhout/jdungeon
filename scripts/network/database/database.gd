@@ -7,7 +7,7 @@ func init() -> bool:
 	match J.global.env_server_database_backend:
 		"json":
 			J.logger.info("Loading json database backend")
-			backend = load("res://scripts/network/database/backends/json_backend.gd").new()
+			backend = JSONDatabaseBackend.new()
 			backend.name = "Backend"
 			add_child(backend)
 
@@ -32,3 +32,11 @@ func authenticate_user(username: String, password: String) -> bool:
 		return false
 
 	return backend.authenticate_user(username, password)
+
+
+func store_player_data(username: String, data: Dictionary) -> bool:
+	return backend.store_player_data(username, data)
+
+
+func load_player_data(username: String) -> Dictionary:
+	return backend.load_player_data(username)

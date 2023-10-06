@@ -2,6 +2,7 @@ extends Node
 
 class_name JInventory
 
+signal loaded
 signal item_added(item_uuid: String, item_class: String)
 signal item_removed(item_uuid: String)
 
@@ -92,6 +93,58 @@ func remove_gold(amount: int) -> bool:
 	return false
 
 
+func get_output_data() -> Dictionary:
+	var output: Dictionary = {"gold": gold, "items": []}
+
+	for item in items:
+		output["items"].append(
+			{"uuid": item.uuid, "item_class": item.item_class, "amount": item.amount}
+		)
+
+	return output
+
+
+func load_from_data(data: Dictionary) -> bool:
+	if "gold" in data:
+		player.inventory.gold = data["gold"]
+
+		gold_added.emit(data["gold"], 0)
+	else:
+		J.logger.warn('Failed to load inventory from data, missing "gold" key')
+		return false
+
+	if "items" in data:
+		items = []
+	else:
+		J.logger.warn('Failed to load inventory from data, missing "gold" key')
+		return false
+
+	for item_data in data["items"]:
+		if not "uuid" in item_data:
+			J.logger.warn('Failed to load inventory from data, missing "uuid" key')
+			return false
+
+		if not "item_class" in item_data:
+			J.logger.warn('Failed to load inventory from data, missing "item_class" key')
+			return false
+
+		if not "amount" in item_data:
+			J.logger.warn('Failed to load inventory from data, missing "amount" key')
+			return false
+
+		var item: JItem = J.item_scenes[item_data["item_class"]].instantiate()
+		item.uuid = item_data["uuid"]
+		item.item_class = item_data["item_class"]
+		item.amount = item_data["amount"]
+		item.collision_layer = 0
+
+		items.append(item)
+
+	loaded.emit()
+
+	return true
+
+
 func _on_inventory_item_used(id: int, item_uuid: String):
 	if player.peer_id != id:
 		return
@@ -116,6 +169,20 @@ func _on_inventory_item_dropped(id: int, item_uuid: String):
 
 	J.world.items.add_child(item)
 	item.start_expire_timer()
+
+
+@rpc("call_remote", "any_peer", "reliable") func sync_inventory():
+	if not J.is_server():
+		return
+
+	var id = multiplayer.get_remote_sender_id()
+
+	if id == player.peer_id:
+		sync_response.rpc_id(id, get_output_data())
+
+
+@rpc("call_remote", "authority", "reliable") func sync_response(inventory: Dictionary):
+	load_from_data(inventory)
 
 
 @rpc("call_remote", "authority", "reliable")

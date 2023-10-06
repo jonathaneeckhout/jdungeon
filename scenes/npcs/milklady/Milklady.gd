@@ -5,7 +5,8 @@ extends JNPCBody2D
 @onready var original_scale = $Skeleton.scale
 @onready var avoidance_rays := $AvoidanceRays
 
-func _ready():
+
+func _init():
 	super()
 
 	npc_class = "MilkLady"
@@ -13,6 +14,8 @@ func _ready():
 
 	stats.movement_speed = 50
 
+
+func _ready():
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	animation_player.play(loop_animation)
 

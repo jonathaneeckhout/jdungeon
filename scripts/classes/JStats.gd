@@ -2,10 +2,12 @@ extends Node
 
 class_name JStats
 
+signal synced
+
 @export var parent: JBody2D
 
 var max_hp: int = 10:
-	set (new_max_hp):
+	set(new_max_hp):
 		max_hp = new_max_hp
 		hp = max_hp
 var hp: int = max_hp
@@ -44,3 +46,22 @@ func heal(healing: int) -> int:
 
 func reset_hp():
 	hp = max_hp
+
+
+func get_output() -> Dictionary:
+	return {"max_hp": max_hp, "hp": hp}
+
+
+@rpc("call_remote", "any_peer", "reliable") func get_sync(id: int):
+	if not J.is_server():
+		return
+
+	if id in multiplayer.get_peers():
+		sync.rpc_id(id, get_output())
+
+
+@rpc("call_remote", "authority", "unreliable") func sync(data: Dictionary):
+	max_hp = data["max_hp"]
+	hp = data["hp"]
+
+	synced.emit()

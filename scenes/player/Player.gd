@@ -25,8 +25,6 @@ extends JPlayerBody2D
 
 
 func _ready():
-	super()
-
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.attacked.connect(_on_attacked)
 	synchronizer.healed.connect(_on_healed)
@@ -44,6 +42,14 @@ func _ready():
 	else:
 		$Camera2D/UILayer/GUI/Inventory.register_signals()
 		$Camera2D/UILayer/GUI/Equipment.register_signals()
+
+		# Get the current stats of the player
+		stats.synced.connect(_on_stats_synced)
+		stats.get_sync.rpc_id(1, peer_id)
+
+		# Get the current equipment of the player:
+		equipment.loaded.connect(_on_equipment_loaded)
+		equipment.sync_equipment.rpc_id(1)
 
 
 func _physics_process(_delta):
@@ -138,9 +144,17 @@ func equipment_changed():
 	load_equipment_single_sprite("LeftHand")
 
 
+func _on_equipment_loaded():
+	equipment_changed()
+
+
 func _on_item_equiped(_item_uuid: String, _item_class: String):
 	equipment_changed()
 
 
 func _on_item_unequiped(_item_uuid: String):
 	equipment_changed()
+
+
+func _on_stats_synced():
+	$JInterface.update_hp_bar(stats.hp, stats.max_hp)

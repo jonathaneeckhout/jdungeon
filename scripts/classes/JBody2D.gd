@@ -14,7 +14,7 @@ var loop_animation: String = "Idle"
 var loot_table: Array[Dictionary] = []
 
 
-func _ready():
+func _init():
 	collision_layer = J.PHYSICS_LAYER_WORLD
 
 	if J.is_server():

@@ -2,10 +2,7 @@ extends JBody2D
 
 class_name JNPCBody2D
 
-var npc_class: String = "":
-	set(new_class):
-		npc_class = new_class
-		J.register_npc_scene(npc_class, scene_file_path)
+var npc_class: String = ""
 
 @export var is_vendor: bool = false
 
@@ -13,11 +10,9 @@ var shop: JShop
 
 
 func _init():
-	entity_type = J.ENTITY_TYPE.NPC
-
-
-func _ready():
 	super()
+
+	entity_type = J.ENTITY_TYPE.NPC
 
 	collision_layer += J.PHYSICS_LAYER_NPCS
 

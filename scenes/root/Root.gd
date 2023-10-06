@@ -5,9 +5,25 @@ func _ready():
 	$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.connect(_on_run_as_server_pressed)
 	$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.connect(_on_run_as_client_pressed)
 
+	$SelectRunMode/VBoxContainer/ResetButton.pressed.connect(_on_reset_pressed)
+
+	$SelectRunMode/ComfirmResetContainer/ResetYesButton.pressed.connect(_on_reset_yes_pressed)
+	$SelectRunMode/ComfirmResetContainer/ResetNoButton.pressed.connect(_on_reset_no_pressed)
+
 	J.register_player_scene("res://scenes/player/Player.tscn")
 
+	register_enemies()
+	register_npcs()
 	register_items()
+
+
+func register_enemies():
+	J.register_enemy_scene("Sheep", "res://scenes/enemies/Sheep/Sheep.tscn")
+	J.register_enemy_scene("TreeTrunkGuy", "res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn")
+
+
+func register_npcs():
+	J.register_npc_scene("MilkLady", "res://scenes/npcs/milklady/Milklady.tscn")
 
 
 func register_items():
@@ -92,3 +108,22 @@ func _on_run_as_client_pressed():
 	var world = load("res://scenes/world/World.tscn").instantiate()
 	world.name = "World"
 	self.add_child(world)
+
+
+func _on_reset_pressed():
+	$SelectRunMode/VBoxContainer.hide()
+	$SelectRunMode/ComfirmResetContainer.show()
+
+
+func _on_reset_yes_pressed():
+	# Remove the database file if it exists to be in a clean state after this button was pressed
+	if FileAccess.file_exists(JSONDatabaseBackend.USERS_FILEPATH):
+		DirAccess.remove_absolute(JSONDatabaseBackend.USERS_FILEPATH)
+
+	$SelectRunMode/VBoxContainer.show()
+	$SelectRunMode/ComfirmResetContainer.hide()
+
+
+func _on_reset_no_pressed():
+	$SelectRunMode/VBoxContainer.show()
+	$SelectRunMode/ComfirmResetContainer.hide()

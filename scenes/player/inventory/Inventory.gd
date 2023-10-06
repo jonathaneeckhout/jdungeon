@@ -40,10 +40,12 @@ func _input(event):
 		if visible:
 			hide()
 		else:
+			player.inventory.sync_inventory.rpc_id(1)
 			show()
 
 
 func register_signals():
+	player.inventory.loaded.connect(_on_inventory_loaded)
 	player.inventory.gold_added.connect(_on_gold_added)
 	player.inventory.gold_removed.connect(_on_gold_removed)
 
@@ -63,12 +65,39 @@ func swap_items(from: Panel, to: Panel):
 	from.item = temp_item
 
 
+func place_item_at_free_slot(item: JItem) -> bool:
+	for y in range(SIZE.y):
+		for x in range(SIZE.x):
+			var pos = Vector2(x, y)
+			var panel: InventoryPanel = get_panel_at_pos(pos)
+			if panel.item == null:
+				panel.item = item
+				return true
+	return false
+
+
+func clear_all_panels():
+	for x in range(SIZE.x):
+		for y in range(SIZE.y):
+			var panel: InventoryPanel = panels[x][y]
+			panel.item = null
+
+
 func _on_mouse_entered():
 	JUI.above_ui = true
 
 
 func _on_mouse_exited():
 	JUI.above_ui = false
+
+
+func _on_inventory_loaded():
+	clear_all_panels()
+
+	gold = player.inventory.gold
+
+	for item in player.inventory.items:
+		place_item_at_free_slot(item)
 
 
 func _on_gold_added(total: int, _amount: int):
@@ -85,13 +114,7 @@ func _on_item_added(item_uuid: String, _item_class: String):
 	if not item:
 		return
 
-	for y in range(SIZE.y):
-		for x in range(SIZE.x):
-			var pos = Vector2(x, y)
-			var panel: InventoryPanel = get_panel_at_pos(pos)
-			if panel.item == null:
-				panel.item = item
-				return
+	place_item_at_free_slot(item)
 
 
 func _on_item_removed(item_uuid: String):
