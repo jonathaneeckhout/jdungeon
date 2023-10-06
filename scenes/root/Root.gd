@@ -12,7 +12,18 @@ func _ready():
 
 	J.register_player_scene("res://scenes/player/Player.tscn")
 
+	register_enemies()
+	register_npcs()
 	register_items()
+
+
+func register_enemies():
+	J.register_enemy_scene("Sheep", "res://scenes/enemies/Sheep/Sheep.tscn")
+	J.register_enemy_scene("TreeTrunkGuy", "res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn")
+
+
+func register_npcs():
+	J.register_npc_scene("MilkLady", "res://scenes/npcs/milklady/Milklady.tscn")
 
 
 func register_items():

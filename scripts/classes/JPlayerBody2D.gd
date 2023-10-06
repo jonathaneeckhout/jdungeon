@@ -13,11 +13,9 @@ var equipment: JEquipment
 
 
 func _init():
-	entity_type = J.ENTITY_TYPE.PLAYER
-
-
-func _ready():
 	super()
+
+	entity_type = J.ENTITY_TYPE.PLAYER
 
 	collision_layer += J.PHYSICS_LAYER_PLAYERS
 

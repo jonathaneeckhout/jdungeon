@@ -9,14 +9,20 @@ var behavior: Node2D
 
 var is_dead := false
 
-func _ready():
+
+func _init():
 	super()
-	if J.is_server():
-		beehave_tree.enabled = true
+
 	enemy_class = "Sheep"
+
 	stats.movement_speed = 50
 	stats.max_hp = 20
 	stats.hp = stats.max_hp
+
+
+func _ready():
+	if J.is_server():
+		beehave_tree.enabled = true
 
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)
@@ -37,10 +43,12 @@ func update_face_direction(direction: float):
 	if direction > 0:
 		sprite.flip_h = true
 
+
 func _on_loop_animation_changed(animation: String, direction: Vector2):
 	loop_animation = animation
 	anim_player.queue(animation)
 	update_face_direction(direction.x)
+
 
 func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
 	if not is_dead:
@@ -51,6 +59,7 @@ func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
 	text.amount = damage
 	text.type = text.TYPES.DAMAGE
 	add_child(text)
+
 
 func _on_died():
 	#To-Do: Make a "Dead" State for BehaviorTree, this should fix #16 for now though

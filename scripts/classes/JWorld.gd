@@ -118,9 +118,11 @@ func _on_player_logged_in(id: int, username: String):
 	player.username = username
 	player.peer_id = id
 
+	J.logger.info("Loading player=[%s]'s persistent data" % player.name)
 	var data: JPlayerPersistency = J.server.database.load_player_data(username)
 	if data:
 		player.position = data.position
+		player.stats.hp = data.hp
 
 	players.add_child(player)
 
@@ -134,9 +136,10 @@ func _on_peer_disconnected(id):
 	if id in players_by_id:
 		var player = players_by_id[id]
 
-		J.logger.info("Storing player=[%s]'s data" % player.name)
+		J.logger.info("Storing player=[%s]'s persistent data" % player.name)
 		var data = JPlayerPersistency.new()
 		data.position = player.position
+		data.hp = player.stats.hp
 
 		J.server.database.store_player_data(player.username, data)
 

@@ -25,8 +25,6 @@ extends JPlayerBody2D
 
 
 func _ready():
-	super()
-
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.attacked.connect(_on_attacked)
 	synchronizer.healed.connect(_on_healed)

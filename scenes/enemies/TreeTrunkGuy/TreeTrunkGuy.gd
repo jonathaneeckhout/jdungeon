@@ -9,13 +9,15 @@ extends JEnemyBody2D
 var is_dead: bool = false
 
 
-func _ready():
+func _init():
 	super()
 
 	enemy_class = "TreeTrunkGuy"
 
 	stats.movement_speed = 150
 
+
+func _ready():
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)
 	synchronizer.died.connect(_on_died)
