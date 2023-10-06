@@ -43,6 +43,10 @@ func _ready():
 		$Camera2D/UILayer/GUI/Inventory.register_signals()
 		$Camera2D/UILayer/GUI/Equipment.register_signals()
 
+		# Get the current stats of the player
+		stats.synced.connect(_on_stats_synced)
+		stats.get_sync.rpc_id(1, peer_id)
+
 
 func _physics_process(_delta):
 	if loop_animation == "Move":
@@ -142,3 +146,7 @@ func _on_item_equiped(_item_uuid: String, _item_class: String):
 
 func _on_item_unequiped(_item_uuid: String):
 	equipment_changed()
+
+
+func _on_stats_synced():
+	$JInterface.update_hp_bar(stats.hp, stats.max_hp)
