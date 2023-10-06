@@ -4,7 +4,7 @@ class_name JEquipment
 
 const SIZE = 8
 
-signal items_loaded
+signal loaded
 signal item_added(item_uuid: String, item_class: String)
 signal item_removed(item_uuid: String)
 
@@ -124,7 +124,7 @@ func load_from_data(data: Dictionary) -> bool:
 
 		items[slot] = item
 
-	items_loaded.emit()
+	loaded.emit()
 
 	return true
 

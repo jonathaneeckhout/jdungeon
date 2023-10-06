@@ -2,6 +2,7 @@ extends Node
 
 class_name JInventory
 
+signal loaded
 signal item_added(item_uuid: String, item_class: String)
 signal item_removed(item_uuid: String)
 
@@ -112,6 +113,12 @@ func load_from_data(data: Dictionary) -> bool:
 		J.logger.warn('Failed to load inventory from data, missing "gold" key')
 		return false
 
+	if "items" in data:
+		items = []
+	else:
+		J.logger.warn('Failed to load inventory from data, missing "gold" key')
+		return false
+
 	for item_data in data["items"]:
 		if not "uuid" in item_data:
 			J.logger.warn('Failed to load inventory from data, missing "uuid" key')
@@ -133,7 +140,7 @@ func load_from_data(data: Dictionary) -> bool:
 
 		items.append(item)
 
-		item_added.emit(item_data["uuid"], item_data["item_class"])
+	loaded.emit()
 
 	return true
 

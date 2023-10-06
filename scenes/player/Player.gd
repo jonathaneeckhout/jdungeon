@@ -48,7 +48,7 @@ func _ready():
 		stats.get_sync.rpc_id(1, peer_id)
 
 		# Get the current equipment of the player:
-		equipment.items_loaded.connect(_on_items_loaded)
+		equipment.loaded.connect(_on_equipment_loaded)
 		equipment.sync_equipment.rpc_id(1)
 
 
@@ -144,7 +144,7 @@ func equipment_changed():
 	load_equipment_single_sprite("LeftHand")
 
 
-func _on_items_loaded():
+func _on_equipment_loaded():
 	equipment_changed()
 
 

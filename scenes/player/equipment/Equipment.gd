@@ -39,7 +39,7 @@ func _input(event):
 
 
 func register_signals():
-	player.equipment.items_loaded.connect(_on_items_loaded)
+	player.equipment.loaded.connect(_on_equipment_loaded)
 	player.equipment.item_added.connect(_on_item_added)
 	player.equipment.item_removed.connect(_on_item_removed)
 
@@ -82,7 +82,7 @@ func _on_item_removed(item_uuid: String):
 				panel.item = null
 
 
-func _on_items_loaded():
+func _on_equipment_loaded():
 	clear_all_panels()
 
 	for slot in player.equipment.items:
