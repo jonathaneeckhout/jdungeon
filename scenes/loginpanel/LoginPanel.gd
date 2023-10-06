@@ -51,7 +51,7 @@ func _ready():
 func _input(_event):
 	if login_container.is_visible_in_tree():
 			if Input.is_key_pressed(KEY_ENTER):
-				_on_login_button_pressed()
+				login_button.emit_signal("pressed")
 
 func show_connect_container():
 	self.show()
