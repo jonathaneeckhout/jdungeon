@@ -40,6 +40,8 @@ func _input(event):
 		if visible:
 			hide()
 		else:
+			clear_all_panels()
+			player.inventory.sync_inventory.rpc_id(1)
 			show()
 
 
@@ -61,6 +63,13 @@ func swap_items(from: Panel, to: Panel):
 
 	to.item = from.item
 	from.item = temp_item
+
+
+func clear_all_panels():
+	for x in range(SIZE.x):
+		for y in range(SIZE.y):
+			var panel: InventoryPanel = panels[x][y]
+			panel.item = null
 
 
 func _on_mouse_entered():
