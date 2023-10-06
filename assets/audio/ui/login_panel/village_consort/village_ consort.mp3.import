@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://xvulnt1qjsua"
+path="res://.godot/imported/village_ consort.mp3-038294c553e73f7bdce21344b7adb2c0.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/ui/login_panel/village_consort/village_ consort.mp3"
+dest_files=["res://.godot/imported/village_ consort.mp3-038294c553e73f7bdce21344b7adb2c0.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
