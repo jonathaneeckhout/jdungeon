@@ -105,6 +105,7 @@ func _on_reset_pressed():
 
 
 func _on_reset_yes_pressed():
+	# Remove the database file if it exists to be in a clean state after this button was pressed
 	if FileAccess.file_exists(JSONDatabaseBackend.USERS_FILEPATH):
 		DirAccess.remove_absolute(JSONDatabaseBackend.USERS_FILEPATH)
 
