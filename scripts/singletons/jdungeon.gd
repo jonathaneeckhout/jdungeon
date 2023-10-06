@@ -12,6 +12,8 @@ const PHYSICS_LAYER_ITEMS = 16
 const ARRIVAL_DISTANCE = 8
 const DROP_RANGE = 64
 
+const PERSISTENCY_INTERVAL = 60.0
+
 var mode: MODE = MODE.CLIENT
 
 var logger: Log

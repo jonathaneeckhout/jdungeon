@@ -136,12 +136,7 @@ func _on_peer_disconnected(id):
 	if id in players_by_id:
 		var player = players_by_id[id]
 
-		J.logger.info("Storing player=[%s]'s persistent data" % player.name)
-		var data = JPlayerPersistency.new()
-		data.position = player.position
-		data.hp = player.stats.hp
-
-		J.server.database.store_player_data(player.username, data)
+		player.store_data()
 
 		J.logger.info("Removing player=[%s]" % player.name)
 
