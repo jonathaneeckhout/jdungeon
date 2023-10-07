@@ -2,6 +2,8 @@ extends Control
 
 @onready var quit_button := $Panel/VBoxContainer/MarginContainer/QuitButton
 
+@onready var panel = $Panel
+
 func _ready():
 	quit_button.pressed.connect(_on_quit_button_pressed)
 
@@ -13,6 +15,13 @@ func _input(event):
 		else :
 			self.show()
 			JUI.above_ui=true
+	
+	if (event is InputEventMouseButton) and event.pressed:
+		var evLocal = make_input_local(event)
+		if !Rect2(Vector2(panel.position.x,panel.position.y),Vector2(panel.size.x,panel.size.y)).has_point(evLocal.position):
+			self.hide()
+
+
 
 func  _on_quit_button_pressed():
 	var quit_game_callable :Callable = Callable(self,"quit_game")
