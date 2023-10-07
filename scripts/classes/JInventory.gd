@@ -131,9 +131,7 @@ func from_json(data: Dictionary) -> bool:
 			return false
 
 		var item: JItem = J.item_scenes[item_data["item_class"]].instantiate()
-		item.uuid = item_data["uuid"]
-		item.item_class = item_data["item_class"]
-		item.amount = item_data["amount"]
+		item.from_json(item_data)
 		item.collision_layer = 0
 
 		items.append(item)
