@@ -11,3 +11,13 @@ func alertbox(message: String, parent: Node) -> void:
 	dialog.connect("close_requested", dialog.queue_free)
 	parent.add_child(dialog)
 	dialog.popup_centered()
+
+func confirmationbox(message:String,parent:Node,title:String,confirmed_action:Callable=func():) ->void:
+	var dialog = ConfirmationDialog.new()
+	dialog.title = title
+	dialog.dialog_text = message
+	dialog.unresizable = true
+	dialog.connect("close_requested",dialog.queue_free)
+	dialog.confirmed.connect(confirmed_action)
+	parent.add_child(dialog)
+	dialog.popup_centered()
