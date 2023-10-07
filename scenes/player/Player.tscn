@@ -777,4 +777,5 @@ offset_right = 159.0
 offset_bottom = 201.0
 
 [node name="GameMenu" parent="Camera2D/UILayer/GUI" instance=ExtResource("13_musf7")]
+visible = false
 layout_mode = 1
