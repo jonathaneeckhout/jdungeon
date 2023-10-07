@@ -93,18 +93,16 @@ func remove_gold(amount: int) -> bool:
 	return false
 
 
-func get_output_data() -> Dictionary:
+func to_json() -> Dictionary:
 	var output: Dictionary = {"gold": gold, "items": []}
 
 	for item in items:
-		output["items"].append(
-			{"uuid": item.uuid, "item_class": item.item_class, "amount": item.amount}
-		)
+		output["items"].append(item.to_json())
 
 	return output
 
 
-func load_from_data(data: Dictionary) -> bool:
+func from_json(data: Dictionary) -> bool:
 	if "gold" in data:
 		player.inventory.gold = data["gold"]
 
@@ -178,11 +176,11 @@ func _on_inventory_item_dropped(id: int, item_uuid: String):
 	var id = multiplayer.get_remote_sender_id()
 
 	if id == player.peer_id:
-		sync_response.rpc_id(id, get_output_data())
+		sync_response.rpc_id(id, to_json())
 
 
 @rpc("call_remote", "authority", "reliable") func sync_response(inventory: Dictionary):
-	load_from_data(inventory)
+	from_json(inventory)
 
 
 @rpc("call_remote", "authority", "reliable")

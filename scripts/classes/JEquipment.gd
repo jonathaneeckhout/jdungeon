@@ -86,18 +86,18 @@ func get_item(item_uuid: String) -> JItem:
 	return null
 
 
-func get_output_data() -> Dictionary:
+func to_json() -> Dictionary:
 	var output: Dictionary = {}
 
 	for slot in items:
 		if items[slot] != null:
 			var item: JItem = items[slot]
-			output[slot] = {"uuid": item.uuid, "item_class": item.item_class, "amount": item.amount}
+			output[slot] = item.to_json()
 
 	return output
 
 
-func load_from_data(data: Dictionary) -> bool:
+func from_json(data: Dictionary) -> bool:
 	for slot in data:
 		if not slot in items:
 			J.logger.warn("Slot=[%s] does not exist in equipment items" % slot)
@@ -143,11 +143,11 @@ func _on_equipment_item_removed(id: int, item_uuid: String):
 	var id = multiplayer.get_remote_sender_id()
 
 	if id == player.peer_id:
-		sync_response.rpc_id(id, get_output_data())
+		sync_response.rpc_id(id, to_json())
 
 
 @rpc("call_remote", "authority", "reliable") func sync_response(equipment: Dictionary):
-	load_from_data(equipment)
+	from_json(equipment)
 
 
 @rpc("call_remote", "authority", "reliable")
