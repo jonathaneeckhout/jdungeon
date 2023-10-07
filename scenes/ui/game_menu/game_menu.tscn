@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=3 uid="uid://dssmk0m8xsvxf"]
+
+[ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_j753d"]
+
+[node name="GameMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_j753d")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -302.0
+offset_top = -399.0
+offset_right = 302.0
+offset_bottom = 399.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.183
+anchor_right = 0.5
+anchor_bottom = 0.183
+offset_left = -20.0
+offset_top = -19.034
+offset_right = 20.0
+offset_bottom = 20.966
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer/MarginContainer"]
+layout_mode = 2
+text = "Quit Game
+"
