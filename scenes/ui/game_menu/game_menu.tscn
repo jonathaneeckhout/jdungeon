@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dssmk0m8xsvxf"]
+[gd_scene load_steps=3 format=3 uid="uid://dssmk0m8xsvxf"]
 
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_j753d"]
+[ext_resource type="Script" path="res://scenes/ui/game_menu/game_menu.gd" id="2_erqce"]
 
 [node name="GameMenu" type="Control"]
 layout_mode = 3
@@ -10,6 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_j753d")
+script = ExtResource("2_erqce")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
@@ -42,7 +44,7 @@ grow_horizontal = 2
 [node name="MarginContainer" type="MarginContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="Panel/VBoxContainer/MarginContainer"]
+[node name="QuitButton" type="Button" parent="Panel/VBoxContainer/MarginContainer"]
 layout_mode = 2
 text = "Quit Game
 "
