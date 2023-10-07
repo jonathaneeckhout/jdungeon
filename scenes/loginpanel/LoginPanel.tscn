@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://scenes/loginpanel/LoginPanel.gd" id="1_uhohb"]
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="2_d6ypk"]
-[ext_resource type="AudioStream" uid="uid://b3kstyb5opkj1" path="res://assets/audio/ui/login_panel/ui_click.mp3" id="3_pgl4f"]
-[ext_resource type="AudioStream" uid="uid://xvulnt1qjsua" path="res://assets/audio/ui/login_panel/village_ consort.mp3" id="4_c7ug3"]
+[ext_resource type="AudioStream" uid="uid://b3kstyb5opkj1" path="res://assets/audio/ui/login_panel/ui_click/ui_click.mp3" id="3_pgl4f"]
+[ext_resource type="AudioStream" uid="uid://xvulnt1qjsua" path="res://assets/audio/ui/login_panel/village_consort/village_ consort.mp3" id="4_c7ug3"]
 
 [sub_resource type="Animation" id="Animation_hddh3"]
 length = 0.001

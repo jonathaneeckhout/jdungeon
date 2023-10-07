@@ -15,11 +15,15 @@ func _input(event):
 		else :
 			self.show()
 			JUI.above_ui=true
-	
-	if (event is InputEventMouseButton) and event.pressed:
-		var event_local = make_input_local(event)
-		if !Rect2(Vector2(panel.position.x,panel.position.y),Vector2(panel.size.x,panel.size.y)).has_point(event_local.position):
-			self.hide()
+	if self.is_visible_in_tree():
+		if (event is InputEventMouseButton) and event.pressed:
+			var event_local = make_input_local(event)
+			if !Rect2(Vector2(panel.position.x,panel.position.y),Vector2(panel.size.x,panel.size.y)).has_point(event_local.position):
+				self.hide()
+				JUI.above_ui=false 
+				get_viewport().set_input_as_handled()
+
+
 
 
 
