@@ -17,8 +17,8 @@ func _input(event):
 			JUI.above_ui=true
 	
 	if (event is InputEventMouseButton) and event.pressed:
-		var evLocal = make_input_local(event)
-		if !Rect2(Vector2(panel.position.x,panel.position.y),Vector2(panel.size.x,panel.size.y)).has_point(evLocal.position):
+		var event_local = make_input_local(event)
+		if !Rect2(Vector2(panel.position.x,panel.position.y),Vector2(panel.size.x,panel.size.y)).has_point(event_local.position):
 			self.hide()
 
 
