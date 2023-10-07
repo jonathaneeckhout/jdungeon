@@ -8,7 +8,7 @@ func _ready():
 	quit_button.pressed.connect(_on_quit_button_pressed)
 
 func _input(event):
-	if Input.is_key_pressed(KEY_ESCAPE):
+	if event.is_action_pressed(" j_toggle_game_menu"):
 		if self.is_visible_in_tree():
 			self.hide()
 			JUI.above_ui=false
