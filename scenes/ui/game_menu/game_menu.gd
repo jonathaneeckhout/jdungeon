@@ -9,8 +9,10 @@ func _input(event):
 	if Input.is_key_pressed(KEY_ESCAPE):
 		if self.is_visible_in_tree():
 			self.hide()
+			JUI.above_ui=false
 		else :
 			self.show()
+			JUI.above_ui=true
 
 func  _on_quit_button_pressed():
 	var quit_game_callable :Callable = Callable(self,"quit_game")
