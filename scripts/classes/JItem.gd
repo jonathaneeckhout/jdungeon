@@ -81,5 +81,17 @@ func use(player: JPlayerBody2D) -> bool:
 		return false
 
 
+func to_json() -> Dictionary:
+	return {"uuid": uuid, "item_class": item_class, "amount": amount}
+
+
+func from_json(data: Dictionary) -> bool:
+	uuid = data["uuid"]
+	item_class = data["item_class"]
+	amount = data["amount"]
+
+	return true
+
+
 func _on_expire_timer_timeout():
 	queue_free()

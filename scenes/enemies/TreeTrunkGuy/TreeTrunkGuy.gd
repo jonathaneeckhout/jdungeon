@@ -18,11 +18,11 @@ func _init():
 
 
 func _ready():
-	if not J.is_server():
-		# Get the current stats of the sheep
-		if J.client.player:
-			stats.synced.connect(_on_stats_synced)
-			stats.get_sync.rpc_id(1, J.client.player.peer_id)
+	# Make sure to connect to all signals before super is called
+	if not J.is_server() and J.client.player:
+		stats.synced.connect(_on_stats_synced)
+
+	super()
 
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)

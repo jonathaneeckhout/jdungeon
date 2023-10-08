@@ -29,6 +29,11 @@ func _init():
 		add_child(despawn_timer)
 
 
+func _ready():
+	if not J.is_server() and J.client.player:
+		stats.get_sync.rpc_id(1, J.client.player.peer_id)
+
+
 func die():
 	super()
 
