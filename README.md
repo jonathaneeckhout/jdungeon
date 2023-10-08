@@ -84,7 +84,7 @@ Enjoy!
 
 ## Contributing
 
-We encourage contributions from the community. If you'd like to contribute to JDungeon, please follow the guidelines in our [Contribution Guide](documentation/CONTRIBUTING.md).
+We encourage contributions from the community. If you'd like to contribute to JDungeon, please follow the guidelines in our [Contribution Guide](CONTRIBUTING.md).
 
 
 ## Support and Community
