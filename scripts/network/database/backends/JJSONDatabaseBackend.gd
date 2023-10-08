@@ -1,10 +1,10 @@
 extends Node
 
-class_name JSONDatabaseBackend
+class_name JJSONDatabaseBackend
 
 
-
-func init() -> bool:
+# Upercase function name to match csharp style
+func Init() -> bool:
 	return create_file_if_not_exists(J.USERS_FILEPATH, {})
 
 
@@ -42,7 +42,7 @@ func read_json_from_file(path: String) -> Variant:
 	return JSON.parse_string(string_data)
 
 
-func create_account(username: String, password: String) -> bool:
+func CreateAccount(username: String, password: String) -> bool:
 	var users_json = read_json_from_file(J.USERS_FILEPATH)
 	if users_json == null:
 		J.logger.warn("Could not json parse content of %s" % J.USERS_FILEPATH)
@@ -63,7 +63,7 @@ func create_account(username: String, password: String) -> bool:
 	return true
 
 
-func authenticate_user(username: String, password: String) -> bool:
+func AuthenticateUser(username: String, password: String) -> bool:
 	var users_json = read_json_from_file(J.USERS_FILEPATH)
 	if users_json == null:
 		J.logger.warn("Could not json parse content of %s" % J.USERS_FILEPATH)

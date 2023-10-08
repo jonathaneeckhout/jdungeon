@@ -7,11 +7,18 @@ func init() -> bool:
 	match J.global.env_server_database_backend:
 		"json":
 			J.logger.info("Loading json database backend")
-			backend = JSONDatabaseBackend.new()
+			backend = JJSONDatabaseBackend.new()
+			backend.name = "Backend"
+			add_child(backend)
+		"postgres":
+			J.logger.info("Loading postgres database backend")
+			backend = (
+				load("res://scripts/network/database/backends/JPostgresDatabaseBackend.cs").new()
+			)
 			backend.name = "Backend"
 			add_child(backend)
 
-	if not backend or not backend.init():
+	if not backend or not backend.Init():
 		J.logger.err("Failed to init database")
 		return false
 
@@ -23,7 +30,7 @@ func create_account(username: String, password: String) -> bool:
 		J.logger.info("Invalid username or password")
 		return false
 
-	return backend.create_account(username, password)
+	return backend.CreateAccount(username, password)
 
 
 func authenticate_user(username: String, password: String) -> bool:
@@ -31,7 +38,7 @@ func authenticate_user(username: String, password: String) -> bool:
 		J.logger.info("Invalid username or password")
 		return false
 
-	return backend.authenticate_user(username, password)
+	return backend.AuthenticateUser(username, password)
 
 
 func store_player_data(username: String, data: Dictionary) -> bool:
