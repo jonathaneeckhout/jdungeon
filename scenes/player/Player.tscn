@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=20 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/player/base/Basecharacter.png" id="2_dug5c"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="10_0qscs"]
 [ext_resource type="PackedScene" uid="uid://uord7b0pb5jt" path="res://scenes/player/inventory/Inventory.tscn" id="12_cqvu1"]
 [ext_resource type="PackedScene" uid="uid://dy1r3n0fpuneq" path="res://scenes/player/shop/Shop.tscn" id="12_macoo"]
+[ext_resource type="PackedScene" uid="uid://dssmk0m8xsvxf" path="res://scenes/ui/game_menu/game_menu.tscn" id="13_musf7"]
 [ext_resource type="PackedScene" uid="uid://bqsdy2usb2e6d" path="res://scenes/player/equipment/Equipment.tscn" id="14_2fdu8"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lk3fd"]
@@ -774,3 +775,7 @@ offset_left = 0.0
 offset_top = -201.0
 offset_right = 159.0
 offset_bottom = 201.0
+
+[node name="GameMenu" parent="Camera2D/UILayer/GUI" instance=ExtResource("13_musf7")]
+visible = false
+layout_mode = 1
