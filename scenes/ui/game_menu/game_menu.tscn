@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dssmk0m8xsvxf"]
+[gd_scene load_steps=4 format=3 uid="uid://dssmk0m8xsvxf"]
 
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_j753d"]
 [ext_resource type="Script" path="res://scenes/ui/game_menu/game_menu.gd" id="2_erqce"]
+[ext_resource type="PackedScene" uid="uid://retyeadedkag" path="res://scenes/ui/buttons/mute_unmute_all_button.tscn" id="3_xy0qb"]
 
 [node name="GameMenu" type="Control"]
 layout_mode = 3
@@ -50,3 +51,15 @@ layout_mode = 2
 layout_mode = 2
 text = "Quit Game
 "
+
+[node name="HBoxContainer" type="AspectRatioContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -70.0
+offset_right = 64.0
+grow_vertical = 0
+
+[node name="MuteUnmuteAllButton" parent="Panel/HBoxContainer" instance=ExtResource("3_xy0qb")]
+layout_mode = 2
