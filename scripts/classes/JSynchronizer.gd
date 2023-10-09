@@ -18,14 +18,8 @@ var watchers: Array[JPlayerBody2D] = []
 
 var last_sync_timestamp: float = 0.0
 
-# TODO: optimalize this code to use one single buffer
 var server_syncs_buffer: Array[Dictionary] = []
-var attack_buffer: Array[Dictionary] = []
-var hurt_buffer: Array[Dictionary] = []
-var heal_buffer: Array[Dictionary] = []
-var loop_animation_buffer: Array[Dictionary] = []
-var die_buffer: Array[Dictionary] = []
-var experience_buffer: Array[Dictionary] = []
+var server_network_buffer: Array[Dictionary] = []
 
 
 func _physics_process(_delta):
@@ -36,11 +30,7 @@ func _physics_process(_delta):
 			sync.rpc_id(watcher.peer_id, timestamp, to_be_synced.position, to_be_synced.velocity)
 	else:
 		calculate_position()
-		check_if_attack()
-		check_if_hurt()
-		check_if_loop_animation_changed()
-		check_if_die()
-		check_if_gained_experience()
+		check_server_network_buffer()
 
 
 func calculate_position():
@@ -105,6 +95,27 @@ func extrapolate(extrapolation_factor: float, parameter: String) -> Vector2:
 	)
 
 
+func check_server_network_buffer():
+	for i in range(server_network_buffer.size() - 1, -1, -1):
+		var entry = server_network_buffer[i]
+		if entry["timestamp"] <= J.client.clock:
+			match server_network_buffer[i]["type"]:
+				"attack":
+					attacked.emit(entry["target"], entry["damage"])
+				"hurt":
+					got_hurt.emit(entry["from"], entry["hp"], entry["max_hp"], entry["damage"])
+				"heal":
+					healed.emit(entry["from"], entry["hp"], entry["max_hp"], entry["healing"])
+				"loop_animation":
+					loop_animation_changed.emit(entry["animation"], entry["direction"])
+				"die":
+					died.emit()
+				"experience":
+					experience_gained.emit(entry["from"], entry["current_exp"], entry["amount"])
+
+			server_network_buffer.remove_at(i)
+
+
 func sync_attack(target: String, damage: int):
 	var timestamp = Time.get_unix_time_from_system()
 
@@ -112,14 +123,6 @@ func sync_attack(target: String, damage: int):
 		attack.rpc_id(watcher.peer_id, timestamp, target, damage)
 
 	attacked.emit(target, damage)
-
-
-func check_if_attack():
-	for i in range(attack_buffer.size() - 1, -1, -1):
-		if attack_buffer[i]["timestamp"] <= J.client.clock:
-			attacked.emit(attack_buffer[i]["target"], attack_buffer[i]["damage"])
-			attack_buffer.remove_at(i)
-			return true
 
 
 func sync_hurt(from: String, hp: int, max_hp: int, damage: int):
@@ -131,19 +134,6 @@ func sync_hurt(from: String, hp: int, max_hp: int, damage: int):
 	got_hurt.emit(from, hp, max_hp, damage)
 
 
-func check_if_hurt():
-	for i in range(hurt_buffer.size() - 1, -1, -1):
-		if hurt_buffer[i]["timestamp"] <= J.client.clock:
-			got_hurt.emit(
-				hurt_buffer[i]["from"],
-				hurt_buffer[i]["hp"],
-				hurt_buffer[i]["max_hp"],
-				hurt_buffer[i]["damage"]
-			)
-			hurt_buffer.remove_at(i)
-			return true
-
-
 func sync_heal(from: String, hp: int, max_hp: int, healing: int):
 	var timestamp = Time.get_unix_time_from_system()
 
@@ -151,19 +141,6 @@ func sync_heal(from: String, hp: int, max_hp: int, healing: int):
 		heal.rpc_id(watcher.peer_id, timestamp, from, hp, max_hp, healing)
 
 	healed.emit(from, hp, max_hp, healing)
-
-
-func check_if_healed():
-	for i in range(heal_buffer.size() - 1, -1, -1):
-		if heal_buffer[i]["timestamp"] <= J.client.clock:
-			healed.emit(
-				heal_buffer[i]["from"],
-				heal_buffer[i]["hp"],
-				heal_buffer[i]["max_hp"],
-				heal_buffer[i]["healing"]
-			)
-			heal_buffer.remove_at(i)
-			return true
 
 
 func sync_loop_animation(animation: String, direction: Vector2):
@@ -175,16 +152,6 @@ func sync_loop_animation(animation: String, direction: Vector2):
 	loop_animation_changed.emit(animation, direction)
 
 
-func check_if_loop_animation_changed():
-	for i in range(loop_animation_buffer.size() - 1, -1, -1):
-		if loop_animation_buffer[i]["timestamp"] <= J.client.clock:
-			loop_animation_changed.emit(
-				loop_animation_buffer[i]["animation"], loop_animation_buffer[i]["direction"]
-			)
-			loop_animation_buffer.remove_at(i)
-			return true
-
-
 func sync_die():
 	var timestamp = Time.get_unix_time_from_system()
 
@@ -194,32 +161,12 @@ func sync_die():
 	died.emit()
 
 
-func check_if_die():
-	for i in range(die_buffer.size() - 1, -1, -1):
-		if die_buffer[i]["timestamp"] <= J.client.clock:
-			died.emit()
-			die_buffer.remove_at(i)
-			return true
-
-
 func sync_experience(from: String, current_exp: int, amount: int):
 	var timestamp = Time.get_unix_time_from_system()
 
 	experience.rpc_id(to_be_synced.peer_id, timestamp, from, current_exp, amount)
 
 	experience_gained.emit(from, current_exp, amount)
-
-
-func check_if_gained_experience():
-	for i in range(experience_buffer.size() - 1, -1, -1):
-		if experience_buffer[i]["timestamp"] <= J.client.clock:
-			experience_gained.emit(
-				experience_buffer[i]["from"],
-				experience_buffer[i]["current_exp"],
-				experience_buffer[i]["amount"]
-			)
-			experience_buffer.remove_at(i)
-			return true
 
 
 @rpc("call_remote", "authority", "unreliable")
@@ -233,37 +180,64 @@ func sync(timestamp: float, pos: Vector2, vec: Vector2):
 
 
 @rpc("call_remote", "authority", "reliable")
+func attack(timestamp: float, target: String, damage: int):
+	server_network_buffer.append(
+		{"type": "attack", "timestamp": timestamp, "target": target, "damage": damage}
+	)
+
+
+@rpc("call_remote", "authority", "reliable")
 func hurt(timestamp: float, from: String, hp: int, max_hp: int, damage: int):
-	hurt_buffer.append(
-		{"timestamp": timestamp, "from": from, "hp": hp, "max_hp": max_hp, "damage": damage}
+	server_network_buffer.append(
+		{
+			"type": "hurt",
+			"timestamp": timestamp,
+			"from": from,
+			"hp": hp,
+			"max_hp": max_hp,
+			"damage": damage
+		}
 	)
 
 
 @rpc("call_remote", "authority", "reliable")
 func heal(timestamp: float, from: String, hp: int, max_hp: int, healing: int):
-	heal_buffer.append(
-		{"timestamp": timestamp, "from": from, "hp": hp, "max_hp": max_hp, "healing": healing}
+	server_network_buffer.append(
+		{
+			"type": "heal",
+			"timestamp": timestamp,
+			"from": from,
+			"hp": hp,
+			"max_hp": max_hp,
+			"healing": healing
+		}
 	)
-
-
-@rpc("call_remote", "authority", "reliable")
-func attack(timestamp: float, target: String, damage: int):
-	attack_buffer.append({"timestamp": timestamp, "target": target, "damage": damage})
 
 
 @rpc("call_remote", "authority", "reliable")
 func loop_animation(timestamp: float, animation: String, direction: Vector2):
-	loop_animation_buffer.append(
-		{"timestamp": timestamp, "animation": animation, "direction": direction}
+	server_network_buffer.append(
+		{
+			"type": "loop_animation",
+			"timestamp": timestamp,
+			"animation": animation,
+			"direction": direction
+		}
 	)
 
 
 @rpc("call_remote", "authority", "reliable") func die(timestamp: float):
-	die_buffer.append({"timestamp": timestamp})
+	server_network_buffer.append({"type": "die", "timestamp": timestamp})
 
 
 @rpc("call_remote", "authority", "reliable")
 func experience(timestamp: float, from: String, current_exp: int, amount: int):
-	experience_buffer.append(
-		{"timestamp": timestamp, "from": from, "current_exp": current_exp, "amount": amount}
+	server_network_buffer.append(
+		{
+			"type": "experience",
+			"timestamp": timestamp,
+			"from": from,
+			"current_exp": current_exp,
+			"amount": amount
+		}
 	)
