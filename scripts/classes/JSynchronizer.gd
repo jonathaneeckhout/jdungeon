@@ -9,6 +9,8 @@ signal loop_animation_changed(animation: String, direction: Vector2)
 signal died
 signal experience_gained(from: String, current_exp: int, amount: int)
 
+enum SYNC_TYPES { ATTACK, HURT, HEAL, LOOP_ANIMATION, DIE, EXPERIENCE }
+
 const INTERPOLATION_OFFSET = 0.1
 const INTERPOLATION_INDEX = 2
 
@@ -100,17 +102,17 @@ func check_server_network_buffer():
 		var entry = server_network_buffer[i]
 		if entry["timestamp"] <= J.client.clock:
 			match server_network_buffer[i]["type"]:
-				"attack":
+				SYNC_TYPES.ATTACK:
 					attacked.emit(entry["target"], entry["damage"])
-				"hurt":
+				SYNC_TYPES.HURT:
 					got_hurt.emit(entry["from"], entry["hp"], entry["max_hp"], entry["damage"])
-				"heal":
+				SYNC_TYPES.HEAL:
 					healed.emit(entry["from"], entry["hp"], entry["max_hp"], entry["healing"])
-				"loop_animation":
+				SYNC_TYPES.LOOP_ANIMATION:
 					loop_animation_changed.emit(entry["animation"], entry["direction"])
-				"die":
+				SYNC_TYPES.DIE:
 					died.emit()
-				"experience":
+				SYNC_TYPES.EXPERIENCE:
 					experience_gained.emit(entry["from"], entry["current_exp"], entry["amount"])
 
 			server_network_buffer.remove_at(i)
@@ -164,6 +166,7 @@ func sync_die():
 func sync_experience(from: String, current_exp: int, amount: int):
 	var timestamp = Time.get_unix_time_from_system()
 
+	# Experience is only synced towards the player
 	experience.rpc_id(to_be_synced.peer_id, timestamp, from, current_exp, amount)
 
 	experience_gained.emit(from, current_exp, amount)
@@ -182,7 +185,7 @@ func sync(timestamp: float, pos: Vector2, vec: Vector2):
 @rpc("call_remote", "authority", "reliable")
 func attack(timestamp: float, target: String, damage: int):
 	server_network_buffer.append(
-		{"type": "attack", "timestamp": timestamp, "target": target, "damage": damage}
+		{"type": SYNC_TYPES.ATTACK, "timestamp": timestamp, "target": target, "damage": damage}
 	)
 
 
@@ -190,7 +193,7 @@ func attack(timestamp: float, target: String, damage: int):
 func hurt(timestamp: float, from: String, hp: int, max_hp: int, damage: int):
 	server_network_buffer.append(
 		{
-			"type": "hurt",
+			"type": SYNC_TYPES.HURT,
 			"timestamp": timestamp,
 			"from": from,
 			"hp": hp,
@@ -204,7 +207,7 @@ func hurt(timestamp: float, from: String, hp: int, max_hp: int, damage: int):
 func heal(timestamp: float, from: String, hp: int, max_hp: int, healing: int):
 	server_network_buffer.append(
 		{
-			"type": "heal",
+			"type": SYNC_TYPES.HEAL,
 			"timestamp": timestamp,
 			"from": from,
 			"hp": hp,
@@ -218,7 +221,7 @@ func heal(timestamp: float, from: String, hp: int, max_hp: int, healing: int):
 func loop_animation(timestamp: float, animation: String, direction: Vector2):
 	server_network_buffer.append(
 		{
-			"type": "loop_animation",
+			"type": SYNC_TYPES.LOOP_ANIMATION,
 			"timestamp": timestamp,
 			"animation": animation,
 			"direction": direction
@@ -227,14 +230,14 @@ func loop_animation(timestamp: float, animation: String, direction: Vector2):
 
 
 @rpc("call_remote", "authority", "reliable") func die(timestamp: float):
-	server_network_buffer.append({"type": "die", "timestamp": timestamp})
+	server_network_buffer.append({"type": SYNC_TYPES.DIE, "timestamp": timestamp})
 
 
 @rpc("call_remote", "authority", "reliable")
 func experience(timestamp: float, from: String, current_exp: int, amount: int):
 	server_network_buffer.append(
 		{
-			"type": "experience",
+			"type": SYNC_TYPES.EXPERIENCE,
 			"timestamp": timestamp,
 			"from": from,
 			"current_exp": current_exp,
