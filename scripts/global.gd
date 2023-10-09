@@ -1,18 +1,24 @@
 extends Node
 
-var env_server_address = ""
-var env_server_port = 0
-var env_server_max_peers = 0
-var env_server_crt = ""
-var env_server_key = ""
-var env_server_database_backend = ""
-var env_debug = false
+var env_server_address: String = ""
+var env_server_port: int = 0
+var env_server_max_peers: int = 0
+var env_server_crt: String = ""
+var env_server_key: String = ""
+var env_server_database_backend: String = ""
+var env_debug: bool = false
+
+var env_postgres_address: String = ""
+var env_postgres_port: int = 0
+var env_postgres_user: String = ""
+var env_postgress_password: String = ""
+var env_postgress_db: String = ""
 
 var server: Node
 var client: Node
 
 
-func load_server_env_variables():
+func load_server_env_variables() -> bool:
 	env_debug = J.env.get_value("DEBUG") == "true"
 
 	var env_port_str = J.env.get_value("SERVER_PORT")
@@ -39,16 +45,39 @@ func load_server_env_variables():
 	if env_server_database_backend == "":
 		return false
 
+	env_postgres_address = J.env.get_value("POSTGRES_ADDRESS")
+	if env_postgres_address == "":
+		return false
+
+	var env_postgres_port_str = J.env.get_value("POSTGRES_PORT")
+	if env_postgres_port_str == "":
+		return false
+
+	env_postgres_port = int(env_postgres_port_str)
+
+	env_postgres_user = J.env.get_value("POSTGRES_USER")
+	if env_postgres_user == "":
+		return false
+
+	env_postgress_password = J.env.get_value("POSTGRES_PASSWORD")
+	if env_postgress_password == "":
+		return false
+
+	env_postgress_db = J.env.get_value("POSTGRES_DB")
+	if env_postgress_db == "":
+		return false
 	return true
 
 
-func load_client_env_variables():
+func load_client_env_variables() -> bool:
 	env_debug = J.env.get_value("DEBUG") == "true"
 
 	env_server_address = J.env.get_value("SERVER_ADDRESS")
 
 	var env_port_str = J.env.get_value("SERVER_PORT")
-	if env_port_str != "":
-		env_server_port = int(env_port_str)
+	if env_port_str == "":
+		return false
+
+	env_server_port = int(env_port_str)
 
 	return true
