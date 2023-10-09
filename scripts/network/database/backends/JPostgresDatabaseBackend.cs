@@ -8,14 +8,13 @@ using BCrypt.Net;
 
 public partial class JPostgresDatabaseBackend : Node
 {
-	private NpgsqlConnection conn;
+	private NpgsqlDataSource dataSource;
 	private string database = "";
 
 	public bool Init()
 	{
 		var j = GetNode<Node>("/root/J");
 		var global = (Node)j.Get("global");
-
 		string address = (string)global.Get("env_postgres_address");
 		int port = (int)global.Get("env_postgres_port");
 		string user = (string)global.Get("env_postgres_user");
@@ -26,8 +25,7 @@ public partial class JPostgresDatabaseBackend : Node
 			$"Host={address};Port={port};Username={user};Password={password};Database={database};";
 		try
 		{
-			conn = new NpgsqlConnection(connectionString);
-			conn.Open();
+			dataSource = NpgsqlDataSource.Create(connectionString);
 		}
 		catch (Exception ex)
 		{
@@ -54,9 +52,8 @@ public partial class JPostgresDatabaseBackend : Node
 
 		try
 		{
-			using var cmd = new NpgsqlCommand(
-				"INSERT INTO users (username, password) VALUES (@u, @p)",
-				conn
+			using var cmd = dataSource.CreateCommand(
+				"INSERT INTO users (username, password) VALUES (@u, @p)"
 			);
 			cmd.Parameters.AddWithValue("u", username);
 			cmd.Parameters.AddWithValue("p", BCrypt.HashPassword(password));
@@ -74,9 +71,8 @@ public partial class JPostgresDatabaseBackend : Node
 	{
 		try
 		{
-			using var cmd = new NpgsqlCommand(
-				"SELECT password FROM users WHERE username = @username",
-				conn
+			using var cmd = dataSource.CreateCommand(
+				"SELECT password FROM users WHERE username = @username"
 			);
 			cmd.Parameters.AddWithValue("username", username);
 
@@ -106,9 +102,8 @@ public partial class JPostgresDatabaseBackend : Node
 	{
 		try
 		{
-			using var cmd = new NpgsqlCommand(
-				"UPDATE users SET data = @d WHERE username = @u",
-				conn
+			using var cmd = dataSource.CreateCommand(
+				"UPDATE users SET data = @d WHERE username = @u"
 			);
 			cmd.Parameters.AddWithValue("u", username);
 			cmd.Parameters.Add(new NpgsqlParameter("@d", NpgsqlTypes.NpgsqlDbType.Json) { Value = data.ToString() });
@@ -127,9 +122,8 @@ public partial class JPostgresDatabaseBackend : Node
 		var output = new Godot.Collections.Dictionary<string, Variant>();
 		try
 		{
-			using var cmd = new NpgsqlCommand(
-				"SELECT data FROM users WHERE username = @username",
-				conn
+			using var cmd = dataSource.CreateCommand(
+				"SELECT data FROM users WHERE username = @username"
 			);
 			cmd.Parameters.AddWithValue("username", username);
 
