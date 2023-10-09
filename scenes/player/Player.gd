@@ -2,6 +2,7 @@ extends JPlayerBody2D
 
 @onready var animation_player = $AnimationPlayer
 
+@onready var floating_text_scene = preload("res://scenes/templates/JFloatingText/JFloatingText.tscn")
 @onready var skeleton = $Skeleton
 @onready var original_scale = $Skeleton.scale
 
@@ -28,6 +29,7 @@ func _ready():
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.attacked.connect(_on_attacked)
 	synchronizer.healed.connect(_on_healed)
+	synchronizer.experience_gained.connect(_on_experience_gained)
 
 	equipment.item_added.connect(_on_item_equiped)
 	equipment.item_removed.connect(_on_item_unequiped)
@@ -158,3 +160,10 @@ func _on_item_unequiped(_item_uuid: String):
 
 func _on_stats_synced():
 	$JInterface.update_hp_bar(stats.hp, stats.max_hp)
+
+
+func _on_experience_gained(_from: String, _current_exp: int, amount: int):
+	var text = floating_text_scene.instantiate()
+	text.amount = amount
+	text.type = text.TYPES.EXPERIENCE
+	add_child(text)

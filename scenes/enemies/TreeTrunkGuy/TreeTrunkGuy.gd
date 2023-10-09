@@ -15,6 +15,7 @@ func _init():
 	enemy_class = "TreeTrunkGuy"
 
 	stats.movement_speed = 150
+	stats.experience_given = 50
 
 
 func _ready():

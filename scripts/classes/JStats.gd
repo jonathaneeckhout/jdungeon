@@ -24,6 +24,7 @@ var movement_speed: float = 300.0
 var level: int = 1
 var experience: int = 0
 var experience_needed: int = BASE_EXPERIENCE
+var experience_given: int = 0
 
 
 func hurt(damage: int) -> int:
@@ -36,7 +37,6 @@ func hurt(damage: int) -> int:
 	# # Die if damage is bigger than remaining hp
 	else:
 		hp = 0
-		parent.die()
 
 	return reduced_damage
 
