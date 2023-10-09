@@ -8,8 +8,9 @@ signal healed(from: String, hp: int, max_hp: int, healing: int)
 signal loop_animation_changed(animation: String, direction: Vector2)
 signal died
 signal experience_gained(from: String, current_exp: int, amount: int)
+signal level_gained(current_level: int, amount: int, experience_needed: int)
 
-enum SYNC_TYPES { ATTACK, HURT, HEAL, LOOP_ANIMATION, DIE, EXPERIENCE }
+enum SYNC_TYPES { ATTACK, HURT, HEAL, LOOP_ANIMATION, DIE, EXPERIENCE, LEVEL }
 
 const INTERPOLATION_OFFSET = 0.1
 const INTERPOLATION_INDEX = 2
@@ -114,7 +115,10 @@ func check_server_network_buffer():
 					died.emit()
 				SYNC_TYPES.EXPERIENCE:
 					experience_gained.emit(entry["from"], entry["current_exp"], entry["amount"])
-
+				SYNC_TYPES.LEVEL:
+					level_gained.emit(
+						entry["current_level"], entry["amount"], entry["experience_needed"]
+					)
 			server_network_buffer.remove_at(i)
 
 
@@ -170,6 +174,15 @@ func sync_experience(from: String, current_exp: int, amount: int):
 	experience.rpc_id(to_be_synced.peer_id, timestamp, from, current_exp, amount)
 
 	experience_gained.emit(from, current_exp, amount)
+
+
+func sync_level(current_level: int, amount: int, experience_needed: int):
+	var timestamp = Time.get_unix_time_from_system()
+
+	for watcher in watchers:
+		level.rpc_id(watcher.peer_id, timestamp, current_level, amount, experience_needed)
+
+	level_gained.emit(current_level, amount, experience_needed)
 
 
 @rpc("call_remote", "authority", "unreliable")
@@ -242,5 +255,18 @@ func experience(timestamp: float, from: String, current_exp: int, amount: int):
 			"from": from,
 			"current_exp": current_exp,
 			"amount": amount
+		}
+	)
+
+
+@rpc("call_remote", "authority", "reliable")
+func level(timestamp: float, current_level: int, amount: int, experience_needed: int):
+	server_network_buffer.append(
+		{
+			"type": SYNC_TYPES.LEVEL,
+			"timestamp": timestamp,
+			"current_level": current_level,
+			"amount": amount,
+			"experience_needed": experience_needed
 		}
 	)

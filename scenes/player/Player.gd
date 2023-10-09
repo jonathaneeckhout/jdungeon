@@ -30,6 +30,7 @@ func _ready():
 	synchronizer.attacked.connect(_on_attacked)
 	synchronizer.healed.connect(_on_healed)
 	synchronizer.experience_gained.connect(_on_experience_gained)
+	synchronizer.level_gained.connect(_on_level_gained)
 
 	equipment.item_added.connect(_on_item_equiped)
 	equipment.item_removed.connect(_on_item_unequiped)
@@ -167,3 +168,7 @@ func _on_experience_gained(_from: String, _current_exp: int, amount: int):
 	text.amount = amount
 	text.type = text.TYPES.EXPERIENCE
 	add_child(text)
+
+
+func _on_level_gained(_current_level: int, _amount: int, _experience_needed: int):
+	print("Level up")

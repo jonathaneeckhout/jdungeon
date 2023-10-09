@@ -2,6 +2,7 @@ extends Node
 
 class_name JStats
 
+signal loaded
 signal synced
 
 const BASE_EXPERIENCE = 100
@@ -52,7 +53,33 @@ func reset_hp():
 
 
 func to_json() -> Dictionary:
-	return {"max_hp": max_hp, "hp": hp}
+	return {"max_hp": max_hp, "hp": hp, "level": level, "experience": experience}
+
+
+func from_json(data: Dictionary) -> bool:
+	if "max_hp" not in data:
+		J.logger.warn('Failed to load stats from data, missing "max_hp" key')
+		return false
+
+	if "hp" not in data:
+		J.logger.warn('Failed to load stats from data, missing "hp" key')
+		return false
+	if "level" not in data:
+		J.logger.warn('Failed to load stats from data, missing "level" key')
+		return false
+
+	if "experience" not in data:
+		J.logger.warn('Failed to load stats from data, missing "experience" key')
+		return false
+
+	max_hp = data["max_hp"]
+	hp = data["hp"]
+	level = data["level"]
+	experience = data["experience"]
+
+	loaded.emit()
+
+	return true
 
 
 func calculate_experience_needed(current_level: int):
@@ -63,6 +90,7 @@ func calculate_experience_needed(current_level: int):
 func add_level(amount: int):
 	level += amount
 	experience_needed = calculate_experience_needed(level)
+	parent.synchronizer.sync_level(level, amount, experience_needed)
 
 
 func add_experience(from: String, amount: int):
