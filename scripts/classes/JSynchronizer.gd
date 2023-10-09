@@ -7,6 +7,7 @@ signal got_hurt(from: String, hp: int, max_hp: int, damage: int)
 signal healed(from: String, hp: int, max_hp: int, healing: int)
 signal loop_animation_changed(animation: String, direction: Vector2)
 signal died
+signal experience_gained(from: String, current_exp: int, amount: int)
 
 const INTERPOLATION_OFFSET = 0.1
 const INTERPOLATION_INDEX = 2
@@ -16,12 +17,15 @@ const INTERPOLATION_INDEX = 2
 var watchers: Array[JPlayerBody2D] = []
 
 var last_sync_timestamp: float = 0.0
+
+# TODO: optimalize this code to use one single buffer
 var server_syncs_buffer: Array[Dictionary] = []
 var attack_buffer: Array[Dictionary] = []
 var hurt_buffer: Array[Dictionary] = []
 var heal_buffer: Array[Dictionary] = []
 var loop_animation_buffer: Array[Dictionary] = []
 var die_buffer: Array[Dictionary] = []
+var experience_buffer: Array[Dictionary] = []
 
 
 func _physics_process(_delta):
@@ -36,6 +40,7 @@ func _physics_process(_delta):
 		check_if_hurt()
 		check_if_loop_animation_changed()
 		check_if_die()
+		check_if_gained_experience()
 
 
 func calculate_position():
@@ -197,6 +202,26 @@ func check_if_die():
 			return true
 
 
+func sync_experience(from: String, current_exp: int, amount: int):
+	var timestamp = Time.get_unix_time_from_system()
+
+	experience.rpc_id(to_be_synced.peer_id, timestamp, from, current_exp, amount)
+
+	experience_gained.emit(from, current_exp, amount)
+
+
+func check_if_gained_experience():
+	for i in range(experience_buffer.size() - 1, -1, -1):
+		if experience_buffer[i]["timestamp"] <= J.client.clock:
+			experience_gained.emit(
+				experience_buffer[i]["from"],
+				experience_buffer[i]["current_exp"],
+				experience_buffer[i]["amount"]
+			)
+			experience_buffer.remove_at(i)
+			return true
+
+
 @rpc("call_remote", "authority", "unreliable")
 func sync(timestamp: float, pos: Vector2, vec: Vector2):
 	# Ignore older syncs
@@ -235,3 +260,10 @@ func loop_animation(timestamp: float, animation: String, direction: Vector2):
 
 @rpc("call_remote", "authority", "reliable") func die(timestamp: float):
 	die_buffer.append({"timestamp": timestamp})
+
+
+@rpc("call_remote", "authority", "reliable")
+func experience(timestamp: float, from: String, current_exp: int, amount: int):
+	experience_buffer.append(
+		{"timestamp": timestamp, "from": from, "current_exp": current_exp, "amount": amount}
+	)

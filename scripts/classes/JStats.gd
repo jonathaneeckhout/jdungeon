@@ -4,6 +4,8 @@ class_name JStats
 
 signal synced
 
+const BASE_EXPERIENCE = 100
+
 @export var parent: JBody2D
 
 var max_hp: int = 10:
@@ -21,6 +23,7 @@ var movement_speed: float = 300.0
 
 var level: int = 1
 var experience: int = 0
+var experience_needed: int = BASE_EXPERIENCE
 
 
 func hurt(damage: int) -> int:
@@ -48,8 +51,28 @@ func reset_hp():
 	hp = max_hp
 
 
-func get_output() -> Dictionary:
+func to_json() -> Dictionary:
 	return {"max_hp": max_hp, "hp": hp}
+
+
+func calculate_experience_needed(current_level: int):
+	# TODO: Replace placeholder function to calculate experience needed to level up
+	return BASE_EXPERIENCE + (BASE_EXPERIENCE * (pow(current_level, 2) - 1))
+
+
+func add_level(amount: int):
+	level += amount
+	experience_needed = calculate_experience_needed(level)
+
+
+func add_experience(from: String, amount: int):
+	experience += amount
+
+	while experience >= experience_needed:
+		experience -= experience_needed
+		add_level(1)
+
+	parent.synchronizer.sync_experience(from, experience, amount)
 
 
 @rpc("call_remote", "any_peer", "reliable") func get_sync(id: int):
@@ -57,7 +80,7 @@ func get_output() -> Dictionary:
 		return
 
 	if id in multiplayer.get_peers():
-		sync.rpc_id(id, get_output())
+		sync.rpc_id(id, to_json())
 
 
 @rpc("call_remote", "authority", "unreliable") func sync(data: Dictionary):
