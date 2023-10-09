@@ -89,6 +89,7 @@ public partial class JPostgresDatabaseBackend : Node
 				bool passwordMatches = BCrypt.Verify(password, storedPasswordHash);
 				return passwordMatches;
 			}
+
 			else
 			{
 				return false;
@@ -155,11 +156,11 @@ public partial class JPostgresDatabaseBackend : Node
 
 	static bool IsUsernameValid(string username)
 	{
-		return true;
+		return !string.IsNullOrWhiteSpace(username) && username.Length >= 4;
 	}
 
 	static bool IsPasswordValid(string password)
 	{
-		return true;
+		return !string.IsNullOrWhiteSpace(password) && password.Length >= 4;
 	}
 }
