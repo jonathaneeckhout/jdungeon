@@ -42,8 +42,8 @@ func authenticate_user(username: String, password: String) -> bool:
 
 
 func store_player_data(username: String, data: Dictionary) -> bool:
-	return backend.store_player_data(username, data)
+	return backend.StorePlayerData(username, data)
 
 
 func load_player_data(username: String) -> Dictionary:
-	return backend.load_player_data(username)
+	return backend.LoadPlayerData(username)

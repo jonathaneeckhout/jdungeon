@@ -76,7 +76,7 @@ func AuthenticateUser(username: String, password: String) -> bool:
 	)
 
 
-func store_player_data(username: String, data: Dictionary) -> bool:
+func StorePlayerData(username: String, data: Dictionary) -> bool:
 	var users_json = read_json_from_file(J.USERS_FILEPATH)
 	if users_json == null:
 		J.logger.warn("Could not json parse content of %s" % J.USERS_FILEPATH)
@@ -95,7 +95,7 @@ func store_player_data(username: String, data: Dictionary) -> bool:
 	return true
 
 
-func load_player_data(username: String) -> Dictionary:
+func LoadPlayerData(username: String) -> Dictionary:
 	var users_json = read_json_from_file(J.USERS_FILEPATH)
 	if users_json == null:
 		J.logger.warn("Could not json parse content of %s" % J.USERS_FILEPATH)
