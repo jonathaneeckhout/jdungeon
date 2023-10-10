@@ -1,9 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://8t6nwakq6im5"]
 
 [ext_resource type="Script" path="res://scenes/templates/JInterface/JInterface.gd" id="1_1otx5"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbusd"]
-bg_color = Color(0.356863, 0.690196, 0.364706, 1)
+[ext_resource type="StyleBox" uid="uid://pbfuprosr3en" path="res://assets/themes/ProgressBars.tres" id="2_peeiy"]
 
 [node name="JInterface" type="Control"]
 layout_mode = 3
@@ -33,6 +31,6 @@ offset_left = -32.0
 offset_top = -48.0
 offset_right = 32.0
 offset_bottom = -21.0
-theme_override_styles/fill = SubResource("StyleBoxFlat_tbusd")
+theme_override_styles/fill = ExtResource("2_peeiy")
 value = 100.0
 metadata/_edit_lock_ = true

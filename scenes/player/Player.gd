@@ -156,6 +156,10 @@ func update_exp_bar():
 	$Camera2D/UILayer/GUI/ExpBar.value = progress
 
 
+func update_level():
+	$JInterface.display_name = username + " (%d)" % stats.level
+
+
 func _on_equipment_loaded():
 	equipment_changed()
 
@@ -171,6 +175,7 @@ func _on_item_unequiped(_item_uuid: String):
 func _on_stats_synced():
 	$JInterface.update_hp_bar(stats.hp, stats.max_hp)
 	update_exp_bar()
+	update_level()
 
 
 func _on_experience_gained(_from: String, _current_exp: int, amount: int):
@@ -183,4 +188,4 @@ func _on_experience_gained(_from: String, _current_exp: int, amount: int):
 
 
 func _on_level_gained(_current_level: int, _amount: int, _experience_needed: int):
-	print("Level up")
+	update_level()
