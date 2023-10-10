@@ -189,3 +189,31 @@ func _on_experience_gained(_from: String, _current_exp: int, amount: int):
 
 func _on_level_gained(_current_level: int, _amount: int, _experience_needed: int):
 	update_level()
+	animation_levelup()
+
+func animation_levelup(animationDuration:float = 1.2, finalScaleModifier:float = 2):
+	#Do not execute if the player is not in the scene
+	if not is_inside_tree(): return
+	
+	#Make a copy of all the sprites.
+	print_debug("LEVEL ANIM")
+	var duplicateSprites:Node2D = $Sprites.duplicate(7)
+	duplicateSprites.z_index = 1
+	add_child(duplicateSprites)
+	
+	#Setup the animation (expand and dissapear)
+	var tween:Tween = create_tween().set_parallel(true)
+	tween.tween_property(duplicateSprites, "scale", duplicateSprites.scale * finalScaleModifier, animationDuration)
+	
+	#This position change is because the sprite is not centered, so it must adjust to compensate.
+	#It is currently at -28 so it would just increase it until -56 at the same rate as itr grows
+	tween.tween_property(duplicateSprites, "position:x", duplicateSprites.poition.x * finalScaleModifier, animationDuration)
+	tween.tween_property(duplicateSprites, "modulate", Color.TRANSPARENT, animationDuration)
+	
+	#When finished, delete the sprites used for this animation.
+	tween.finished.connect(duplicateSprites.queue_free)
+	
+	#Run animation
+	tween.play()
+	
+	pass
