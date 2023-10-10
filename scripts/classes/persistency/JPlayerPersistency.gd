@@ -6,7 +6,7 @@ class_name JPlayerPersistency
 static func store_data(player: JPlayerBody2D) -> bool:
 	var data: Dictionary = {
 		"position": {"x": player.position.x, "y": player.position.y},
-		"hp": player.stats.hp,
+		"stats": player.stats.to_json(),
 		"inventory": player.inventory.to_json(),
 		"equipment": player.equipment.to_json()
 	}
@@ -32,17 +32,16 @@ static func load_data(player: JPlayerBody2D) -> bool:
 
 	player.position = Vector2(data["position"]["x"], data["position"]["y"])
 
-	if "hp" in data and data["hp"] > 0:
-		player.stats.hp = data["hp"]
+	if "stats" in data:
+		if not player.stats.from_json(data["stats"]):
+			J.logger.warn("Failed to load stats from data")
 
 	if "inventory" in data:
 		if not player.inventory.from_json(data["inventory"]):
-			J.log.warn("Failed to load inventory from data")
-			return false
+			J.logger.warn("Failed to load inventory from data")
 
 	if "equipment" in data:
 		if not player.equipment.from_json(data["equipment"]):
-			J.log.warn("Failed to load equipment from data")
-			return false
+			J.logger.warn("Failed to load equipment from data")
 
 	return true

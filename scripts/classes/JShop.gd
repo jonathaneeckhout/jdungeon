@@ -36,7 +36,7 @@ func get_item(item_uuid: String):
 			return item
 
 
-func get_output():
+func to_json():
 	return {"inventory": inventory}
 
 

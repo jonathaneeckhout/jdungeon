@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=21 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/player/base/Basecharacter.png" id="2_dug5c"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://dy1r3n0fpuneq" path="res://scenes/player/shop/Shop.tscn" id="12_macoo"]
 [ext_resource type="PackedScene" uid="uid://dssmk0m8xsvxf" path="res://scenes/ui/game_menu/game_menu.tscn" id="13_musf7"]
 [ext_resource type="PackedScene" uid="uid://bqsdy2usb2e6d" path="res://scenes/player/equipment/Equipment.tscn" id="14_2fdu8"]
+[ext_resource type="StyleBox" uid="uid://pbfuprosr3en" path="res://assets/themes/ProgressBars.tres" id="14_3h4ha"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lk3fd"]
 radius = 32.0
@@ -779,3 +780,17 @@ offset_bottom = 201.0
 [node name="GameMenu" parent="Camera2D/UILayer/GUI" instance=ExtResource("13_musf7")]
 visible = false
 layout_mode = 1
+
+[node name="ExpBar" type="ProgressBar" parent="Camera2D/UILayer/GUI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_top = -32.0
+offset_right = 320.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/fill = ExtResource("14_3h4ha")

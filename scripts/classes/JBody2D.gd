@@ -46,6 +46,13 @@ func hurt(from: CharacterBody2D, damage: int):
 
 	synchronizer.sync_hurt(from.name, stats.hp, stats.max_hp, damage_done)
 
+	# R.I.P. you're dead
+	if stats.hp <= 0:
+		if stats.experience_given > 0:
+			from.stats.add_experience(name, stats.experience_given)
+
+		die()
+
 
 func heal(from: CharacterBody2D, healing: int):
 	var healing_done: int = stats.heal(healing)

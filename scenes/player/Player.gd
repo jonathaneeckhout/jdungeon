@@ -2,6 +2,7 @@ extends JPlayerBody2D
 
 @onready var animation_player = $AnimationPlayer
 
+@onready var floating_text_scene = preload("res://scenes/templates/JFloatingText/JFloatingText.tscn")
 @onready var skeleton = $Skeleton
 @onready var original_scale = $Skeleton.scale
 
@@ -50,6 +51,9 @@ func _ready():
 		# Get the current equipment of the player:
 		equipment.loaded.connect(_on_equipment_loaded)
 		equipment.sync_equipment.rpc_id(1)
+
+		synchronizer.experience_gained.connect(_on_experience_gained)
+		synchronizer.level_gained.connect(_on_level_gained)
 
 
 func _physics_process(_delta):
@@ -144,6 +148,18 @@ func equipment_changed():
 	load_equipment_single_sprite("LeftHand")
 
 
+func update_exp_bar():
+	var progress = float(stats.experience) / stats.experience_needed * 100
+	if progress >= 100:
+		progress = 0
+
+	$Camera2D/UILayer/GUI/ExpBar.value = progress
+
+
+func update_level():
+	$JInterface.display_name = username + " (%d)" % stats.level
+
+
 func _on_equipment_loaded():
 	equipment_changed()
 
@@ -158,3 +174,18 @@ func _on_item_unequiped(_item_uuid: String):
 
 func _on_stats_synced():
 	$JInterface.update_hp_bar(stats.hp, stats.max_hp)
+	update_exp_bar()
+	update_level()
+
+
+func _on_experience_gained(_from: String, _current_exp: int, amount: int):
+	var text = floating_text_scene.instantiate()
+	text.amount = amount
+	text.type = text.TYPES.EXPERIENCE
+	add_child(text)
+
+	update_exp_bar()
+
+
+func _on_level_gained(_current_level: int, _amount: int, _experience_needed: int):
+	update_level()

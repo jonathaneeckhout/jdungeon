@@ -24,4 +24,4 @@ func _init():
 
 func interact(player: JPlayerBody2D):
 	if is_vendor:
-		J.rpcs.npc.sync_shop.rpc_id(player.peer_id, npc_class, shop.get_output())
+		J.rpcs.npc.sync_shop.rpc_id(player.peer_id, npc_class, shop.to_json())
