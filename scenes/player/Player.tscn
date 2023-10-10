@@ -779,3 +779,16 @@ offset_bottom = 201.0
 [node name="GameMenu" parent="Camera2D/UILayer/GUI" instance=ExtResource("13_musf7")]
 visible = false
 layout_mode = 1
+
+[node name="ExpBar" type="ProgressBar" parent="Camera2D/UILayer/GUI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_top = -32.0
+offset_right = 320.0
+grow_horizontal = 2
+grow_vertical = 0

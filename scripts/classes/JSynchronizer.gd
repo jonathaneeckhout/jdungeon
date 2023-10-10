@@ -106,16 +106,27 @@ func check_server_network_buffer():
 				SYNC_TYPES.ATTACK:
 					attacked.emit(entry["target"], entry["damage"])
 				SYNC_TYPES.HURT:
+					to_be_synced.stats.hp = entry["hp"]
+					to_be_synced.stats.max_hp = entry["hp"]
+
 					got_hurt.emit(entry["from"], entry["hp"], entry["max_hp"], entry["damage"])
 				SYNC_TYPES.HEAL:
+					to_be_synced.stats.hp = entry["hp"]
+					to_be_synced.stats.max_hp = entry["hp"]
+
 					healed.emit(entry["from"], entry["hp"], entry["max_hp"], entry["healing"])
 				SYNC_TYPES.LOOP_ANIMATION:
 					loop_animation_changed.emit(entry["animation"], entry["direction"])
 				SYNC_TYPES.DIE:
 					died.emit()
 				SYNC_TYPES.EXPERIENCE:
+					to_be_synced.stats.experience = entry["current_exp"]
+
 					experience_gained.emit(entry["from"], entry["current_exp"], entry["amount"])
 				SYNC_TYPES.LEVEL:
+					to_be_synced.stats.level = entry["current_level"]
+					to_be_synced.stats.experience_needed = entry["experience_needed"]
+
 					level_gained.emit(
 						entry["current_level"], entry["amount"], entry["experience_needed"]
 					)

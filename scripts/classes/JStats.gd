@@ -22,7 +22,11 @@ var defense: int = 0
 
 var movement_speed: float = 300.0
 
-var level: int = 1
+var level: int = 1:
+	set(new_level):
+		level = new_level
+		experience_needed = calculate_experience_needed(level)
+
 var experience: int = 0
 var experience_needed: int = BASE_EXPERIENCE
 var experience_given: int = 0
@@ -77,6 +81,8 @@ func from_json(data: Dictionary) -> bool:
 	level = data["level"]
 	experience = data["experience"]
 
+	# experience_needed = calculate_experience_needed(level)
+
 	loaded.emit()
 
 	return true
@@ -89,7 +95,7 @@ func calculate_experience_needed(current_level: int):
 
 func add_level(amount: int):
 	level += amount
-	experience_needed = calculate_experience_needed(level)
+	# experience_needed = calculate_experience_needed(level)
 	parent.synchronizer.sync_level(level, amount, experience_needed)
 
 
@@ -114,5 +120,7 @@ func add_experience(from: String, amount: int):
 @rpc("call_remote", "authority", "unreliable") func sync(data: Dictionary):
 	max_hp = data["max_hp"]
 	hp = data["hp"]
+	level = data["level"]
+	experience = data["experience"]
 
 	synced.emit()
