@@ -89,7 +89,7 @@ We encourage contributions from the community. If you'd like to contribute to JD
 
 ## Support and Community
 
-Join our [Community Discord](https://discord.gg/upjkY2ZZ) to connect with other players and developers, seek assistance, and stay updated on the latest developments.
+Join our [Discord server](https://discord.gg/KGwTyXumdv) to connect with other players and developers, seek assistance, and stay updated on the latest developments.
 
 ## License
 
