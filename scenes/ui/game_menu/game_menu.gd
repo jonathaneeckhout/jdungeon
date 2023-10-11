@@ -1,8 +1,9 @@
 extends Control
 
-@onready var quit_button := $Panel/VBoxContainer/MarginContainer/QuitButton
+@onready var options_button:Button = $Panel/VBoxContainer/MarginContainer2/OptionsMenu
+@onready var quit_button:Button = $Panel/VBoxContainer/MarginContainer/QuitButton
 
-@onready var panel = $Panel
+@onready var panel:Control = $Panel
 
 func _ready():
 	quit_button.pressed.connect(_on_quit_button_pressed)
@@ -15,6 +16,7 @@ func _input(event):
 		else :
 			self.show()
 			JUI.above_ui=true
+			
 	if self.is_visible_in_tree():
 		if (event is InputEventMouseButton) and event.pressed:
 			var event_local = make_input_local(event)
