@@ -1,0 +1,53 @@
+[gd_scene load_steps=4 format=3 uid="uid://32wm3d3andqy"]
+
+[ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_lryup"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/input_remapping.gd" id="2_tjvqb"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/volume_slider.gd" id="3_f1tit"]
+
+[node name="options_menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_lryup")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button Mapping" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="InputRemapping" type="VBoxContainer" parent="TabContainer/Button Mapping"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_tjvqb")
+
+[node name="Audio" type="ScrollContainer" parent="TabContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Audio"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VolumeControl" type="HSplitContainer" parent="TabContainer/Audio/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Audio/VBoxContainer/VolumeControl"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Volume"
+
+[node name="HSlider" type="HSlider" parent="TabContainer/Audio/VBoxContainer/VolumeControl"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("3_f1tit")
