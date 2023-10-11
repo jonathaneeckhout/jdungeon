@@ -31,86 +31,114 @@ offset_bottom = 400.0
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2164, 1328)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy2" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2590, 276)
+respawn = null
+respawn_time = null
 
 [node name="TreeTrunkGuy3" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-3139, 1193)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy8" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-3584, 1706)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy9" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-4239, 1075)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy10" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-4691, 1501)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy11" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-5313, 414)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy13" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-5678, -701)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy14" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-5029, -1043)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy15" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-4816, -611)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy16" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-3994, -1151)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy17" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-3149, -1262)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy12" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-5405, 1397)
 respawn = true
+respawn_time = null
 
 [node name="TreeTrunkGuy4" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2216, -599)
+respawn = null
+respawn_time = null
 
 [node name="TreeTrunkGuy6" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-1807, -1317)
+respawn = null
+respawn_time = null
 
 [node name="TreeTrunkGuy7" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2022, -995)
+respawn = null
+respawn_time = null
 
 [node name="Sheep6" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1008, -404)
+respawn_time = null
 
 [node name="Sheep8" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1243, -243)
+respawn_time = null
 
 [node name="Sheep9" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1216, 391)
+respawn_time = null
 
 [node name="Sheep10" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-814, 495)
+respawn_time = null
 
 [node name="Sheep11" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1497, 606)
+respawn_time = null
 
 [node name="Sheep12" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1424, -650)
+respawn_time = null
 
 [node name="Sheep13" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-884, -759)
+respawn_time = null
 
 [node name="Sheep7" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1104, 89)
+respawn_time = null
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 

@@ -10,6 +10,7 @@ var stats: JStats
 
 var loop_animation: String = "Idle"
 var loot_table: Array[Dictionary] = []
+var is_dead := false
 
 
 func _init():

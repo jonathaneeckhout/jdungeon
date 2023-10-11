@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://m6q3h1qhesne"]
+
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="1_csbvd"]
+[ext_resource type="Script" path="res://scenes/enemies/common/ai/sequences/flee_sequence/should_flee.gd" id="2_u0k0h"]
+[ext_resource type="PackedScene" uid="uid://dtoop6xo6ukwe" path="res://scenes/enemies/common/ai/actions/move_to/MoveTo.tscn" id="3_ysl1a"]
+
+[node name="FleeSequence" type="Node"]
+script = ExtResource("1_csbvd")
+
+[node name="ShouldFlee?" type="Node" parent="."]
+script = ExtResource("2_u0k0h")
+
+[node name="MoveTo" parent="." instance=ExtResource("3_ysl1a")]

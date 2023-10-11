@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://d4b7x1k03s5hr"]
+[gd_scene load_steps=26 format=3 uid="uid://d4b7x1k03s5hr"]
 
 [ext_resource type="Script" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.gd" id="1_j7ilt"]
 [ext_resource type="Texture2D" uid="uid://ddw7gwukhi221" path="res://assets/enemies/treetrunkguy/Treetrunkguy.png" id="2_2joj6"]
@@ -10,6 +10,14 @@
 [ext_resource type="Texture2D" uid="uid://b6k68irc0gh3s" path="res://assets/enemies/treetrunkguy/Treetrunkguy_torso.png" id="8_31yn2"]
 [ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="9_l1nhs"]
 [ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/AvoidanceRays.tscn" id="10_2fx0n"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="11_8dyih"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="12_q5ghj"]
+[ext_resource type="PackedScene" uid="uid://dbllgq1k86dyd" path="res://scenes/enemies/common/ai/sequences/death_sequence/death_sequence.tscn" id="13_rphmn"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="14_1oqp7"]
+[ext_resource type="PackedScene" uid="uid://b4h6plpm1hoii" path="res://scenes/enemies/common/ai/conditionals/is_in_combat/IsInCombat.tscn" id="15_4qoax"]
+[ext_resource type="PackedScene" uid="uid://m6q3h1qhesne" path="res://scenes/enemies/common/ai/sequences/flee_sequence/flee_sequence.tscn" id="16_k5hy6"]
+[ext_resource type="PackedScene" uid="uid://dk8p2emk8wofb" path="res://scenes/enemies/common/ai/sequences/wander_sequence/wander_sequence.tscn" id="17_i8kes"]
+[ext_resource type="PackedScene" uid="uid://bho6r0fx8owhk" path="res://scenes/enemies/common/ai/sequences/idle_sequence/idle_sequence.tscn" id="18_2p2tr"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6b05c"]
 radius = 24.0
@@ -855,3 +863,32 @@ offset_top = -128.0
 offset_bottom = -88.0
 
 [node name="AvoidanceRays" parent="." instance=ExtResource("10_2fx0n")]
+
+[node name="StuckTimer" type="Timer" parent="."]
+wait_time = 1.25
+one_shot = true
+
+[node name="BeehaveTree" type="Node" parent="." node_paths=PackedStringArray("blackboard")]
+script = ExtResource("11_8dyih")
+enabled = false
+actor_node_path = NodePath("..")
+blackboard = NodePath("@Node@18530")
+
+[node name="What am I doing with my life?" type="Node" parent="BeehaveTree"]
+script = ExtResource("12_q5ghj")
+
+[node name="DeathSequence" parent="BeehaveTree/What am I doing with my life?" instance=ExtResource("13_rphmn")]
+
+[node name="CombatSequence" type="Node" parent="BeehaveTree/What am I doing with my life?"]
+script = ExtResource("14_1oqp7")
+
+[node name="IsInCombat?" parent="BeehaveTree/What am I doing with my life?/CombatSequence" instance=ExtResource("15_4qoax")]
+
+[node name="FleeSequence" parent="BeehaveTree/What am I doing with my life?/CombatSequence" instance=ExtResource("16_k5hy6")]
+
+[node name="WanderThenIdle" type="Node" parent="BeehaveTree/What am I doing with my life?"]
+script = ExtResource("14_1oqp7")
+
+[node name="WanderSequence" parent="BeehaveTree/What am I doing with my life?/WanderThenIdle" instance=ExtResource("17_i8kes")]
+
+[node name="IdleSequence" parent="BeehaveTree/What am I doing with my life?/WanderThenIdle" instance=ExtResource("18_2p2tr")]

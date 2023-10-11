@@ -3,20 +3,17 @@ extends JEnemyBody2D
 signal destination_reached
 signal stuck
 
-@onready var anim_player := $AnimationPlayer
+@onready var animation_player := $AnimationPlayer
 @onready var floating_text_scene = preload("res://scenes/templates/JFloatingText/JFloatingText.tscn")
 @onready var avoidance_rays := $AvoidanceRays
 @onready var beehave_tree := $BeehaveTree
 @onready var destination = self.global_position:
 	set(new_destination):
 		destination = new_destination
-		J.logger.info("Setting new destination " + str(destination))
 		enroute_to_destination = true
 @onready var stuck_timer := $StuckTimer
 @onready var sprite := $Sprite2D
 
-var behavior: Node2D
-var is_dead := false
 var enroute_to_destination = false
 var movement_multiplier := 1.0
 
@@ -44,9 +41,15 @@ func _ready():
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)
 	synchronizer.died.connect(_on_died)
-	$JInterface.display_name = enemy_class
-	add_item_to_loottable("Gold", 1.0, 5)
 	stuck_timer.timeout.connect(_on_stuck_timer_timeout)
+	animation_player.play(loop_animation)
+	animation_player.animation_finished.connect(_on_animation_finished)
+	$JInterface.display_name = enemy_class
+	_add_loot()
+
+
+func _add_loot():
+	add_item_to_loottable("Gold", 1.0, 5)
 
 
 func _physics_process(_delta):
@@ -69,7 +72,6 @@ func _physics_process(_delta):
 				enroute_to_destination = false
 				velocity = Vector2.ZERO
 				send_new_loop_animation("Idle")
-				J.logger.info("Destination Reached")
 				destination_reached.emit()
 
 
@@ -80,16 +82,21 @@ func update_face_direction(direction: float):
 		sprite.flip_h = true
 
 
-func _on_loop_animation_changed(animation: String, direction: Vector2):
-	update_face_direction(direction.x)
-	loop_animation = animation
-	anim_player.queue(animation)
+func _on_animation_finished(_anim_name: String):
+	if not is_dead:
+		animation_player.play(loop_animation)
+
+
+func _on_died():
+	is_dead = true
+	animation_player.stop()
+	animation_player.play("Die")
 
 
 func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
 	if not is_dead:
-		anim_player.stop()
-		anim_player.play("Hurt")
+		animation_player.stop()
+		animation_player.play("Hurt")
 	$JInterface.update_hp_bar(hp, max_hp)
 	var text = floating_text_scene.instantiate()
 	text.amount = damage
@@ -97,10 +104,11 @@ func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
 	add_child(text)
 
 
-func _on_died():
-	is_dead = true
-	anim_player.stop()
-	anim_player.play("Die")
+func _on_loop_animation_changed(animation: String, direction: Vector2):
+	if not is_dead:
+		loop_animation = animation
+		update_face_direction(direction.x)
+		animation_player.play(animation)
 
 
 func _on_stats_synced():
