@@ -21,8 +21,6 @@ var movement_multiplier := 1.0
 
 func _init():
 	super()
-	if J.is_server():
-		beehave_tree.enabled = true
 	enemy_class = "TreeTrunkGuy"
 	stats.movement_speed = 150
 	stats.experience_given = 50
@@ -32,9 +30,9 @@ func _ready():
 	# Make sure to connect to all signals before super is called
 	if not J.is_server() and J.client.player:
 		stats.synced.connect(_on_stats_synced)
-
 	super()
-
+	if J.is_server():
+		beehave_tree.enabled = true
 	stats.max_hp = 50
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)

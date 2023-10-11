@@ -20,9 +20,7 @@ var movement_multiplier := 1.0
 
 func _init():
 	super()
-
 	enemy_class = "Sheep"
-
 	stats.movement_speed = 50
 	stats.max_hp = 20
 	stats.hp = stats.max_hp
@@ -32,12 +30,9 @@ func _ready():
 	# Make sure to connect to all signals before super is called
 	if not J.is_server() and J.client.player:
 		stats.synced.connect(_on_stats_synced)
-
 	super()
-
 	if J.is_server():
 		beehave_tree.enabled = true
-
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)
 	synchronizer.died.connect(_on_died)
