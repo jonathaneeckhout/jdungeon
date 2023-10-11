@@ -207,7 +207,7 @@ func animation_levelup(animationDuration:float = 1.2, finalScaleModifier:float =
 	
 	#This position change is because the sprite is not centered, so it must adjust to compensate.
 	#It is currently at -28 so it would just increase it until -56 at the same rate as itr grows
-	tween.tween_property(duplicateSprites, "position:x", duplicateSprites.poition.x * finalScaleModifier, animationDuration)
+	tween.tween_property(duplicateSprites, "position:x", duplicateSprites.position.x * finalScaleModifier, animationDuration)
 	tween.tween_property(duplicateSprites, "modulate", Color.TRANSPARENT, animationDuration)
 	
 	#When finished, delete the sprites used for this animation.
