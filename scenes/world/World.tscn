@@ -88,23 +88,29 @@ position = Vector2(-1807, -1317)
 [node name="TreeTrunkGuy7" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2022, -995)
 
-[node name="Sheep" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-1406, -543)
-
-[node name="Sheep2" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-931, -759)
-
-[node name="Sheep3" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-1441, 364)
-
-[node name="Sheep5" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(750, -998)
-
 [node name="Sheep6" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(750, 612)
+position = Vector2(-1008, -404)
 
-[node name="Sheep4" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-937, 498)
+[node name="Sheep8" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
+position = Vector2(-1243, -243)
+
+[node name="Sheep9" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
+position = Vector2(-1216, 391)
+
+[node name="Sheep10" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
+position = Vector2(-814, 495)
+
+[node name="Sheep11" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
+position = Vector2(-1497, 606)
+
+[node name="Sheep12" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
+position = Vector2(-1424, -650)
+
+[node name="Sheep13" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
+position = Vector2(-884, -759)
+
+[node name="Sheep7" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
+position = Vector2(-1104, 89)
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 

@@ -53,18 +53,14 @@ func _physics_process(_delta):
 func update_face_direction(direction: float):
 	if direction < 0:
 		skeleton.scale = original_scale
-		return
 	if direction > 0:
 		skeleton.scale = Vector2(original_scale.x * -1, original_scale.y)
-		return
 
 
 func _on_loop_animation_changed(animation: String, direction: Vector2):
 	loop_animation = animation
-
-	animation_player.play(loop_animation)
-
 	update_face_direction(direction.x)
+	animation_player.queue(loop_animation)
 
 
 func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):

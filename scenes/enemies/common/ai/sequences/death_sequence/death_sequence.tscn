@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://dbllgq1k86dyd"]
+
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="1_8cdtm"]
+[ext_resource type="Script" path="res://scenes/enemies/common/ai/sequences/death_sequence/IsDead.gd" id="2_vuqxj"]
+[ext_resource type="PackedScene" uid="uid://dtoop6xo6ukwe" path="res://scenes/enemies/common/ai/actions/move_to/MoveTo.tscn" id="3_762ne"]
+[ext_resource type="Script" path="res://scenes/enemies/common/ai/sequences/death_sequence/Die.gd" id="4_h1d6m"]
+
+[node name="DeathSequence" type="Node"]
+script = ExtResource("1_8cdtm")
+
+[node name="IsDead?" type="Node" parent="."]
+script = ExtResource("2_vuqxj")
+
+[node name="MoveTo" parent="." instance=ExtResource("3_762ne")]
+
+[node name="Die" type="Node" parent="."]
+script = ExtResource("4_h1d6m")

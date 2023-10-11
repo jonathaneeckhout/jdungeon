@@ -5,12 +5,10 @@ class_name JBody2D
 signal died
 
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ENEMY
-
 var synchronizer: JSynchronizer
 var stats: JStats
 
 var loop_animation: String = "Idle"
-
 var loot_table: Array[Dictionary] = []
 
 
