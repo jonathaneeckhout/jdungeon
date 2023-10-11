@@ -1,33 +1,28 @@
-extends Resource
-class_name SaveSystem
+extends Object
+class_name LocalSaveSystem
 
 const DEFAULT_PATH:String = "user://SaveFile.ini"
 
-const Sections:Dictionary = {SETTINGS = "SETTINGS", GAME_DATA = "GAME_DATA"}
-@export var savePath:String:
-	get: 
-		if savePath == "": return DEFAULT_PATH
-		else: return savePath
+const Sections:Dictionary = {SETTINGS = "SETTINGS"}
 
+static var savedData:=ConfigFile.new()
 
-var savedData:=ConfigFile.new()
-
-func _init() -> void:
-	if not FileAccess.file_exists(savePath): save_file()
+static func initialize() -> void:
+	if not FileAccess.file_exists(DEFAULT_PATH): save_file()
 	load_file()
 		
-func save_file(path:String=savePath):
+static func save_file(path:String=DEFAULT_PATH):
 	if not savedData is ConfigFile: savedData = ConfigFile.new()
 	savedData.save(path)
 
-func load_file(path:String=savePath):
+static func load_file(path:String=DEFAULT_PATH):
 	var config:=ConfigFile.new()
 	config.load(path)
 	savedData = config
 
-func set_data(section:String, key:String, value):
+static func set_data(section:String, key:String, value):
 	savedData.set_value(section, key, value)
 
-func get_data(section:String, key:String, default = null):
+static func get_data(section:String, key:String, default = null):
 	return savedData.get_value(section, key, default)
-	pass
+
