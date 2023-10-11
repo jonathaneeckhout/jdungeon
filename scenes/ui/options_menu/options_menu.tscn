@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://scenes/ui/options_menu/volume_slider.gd" id="3_f1tit"]
 
 [node name="options_menu" type="Control"]
+editor_description = "Every section should be it's own ScrollContainer"
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
