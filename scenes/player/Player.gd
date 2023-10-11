@@ -24,6 +24,9 @@ extends JPlayerBody2D
 	"LeftHand": $Sprites/LeftHand.texture
 }
 
+var death_popup_instance = load("res://scenes/player/deathpopup/DeathPopup.tscn").instantiate()
+#var died_a #for testing
+
 
 func _ready():
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
@@ -32,6 +35,8 @@ func _ready():
 
 	equipment.item_added.connect(_on_item_equiped)
 	equipment.item_removed.connect(_on_item_unequiped)
+	
+	synchronizer.died.connect(_on_died)
 
 	animation_player.play(loop_animation)
 
@@ -54,11 +59,19 @@ func _ready():
 
 		synchronizer.experience_gained.connect(_on_experience_gained)
 		synchronizer.level_gained.connect(_on_level_gained)
+		
+		add_child(death_popup_instance)
+		death_popup_instance.respawn_player.connect(_on_respawn_timer_timeout)
+		death_popup_instance.hide()
+		#died_a = false #- for testing
 
 
 func _physics_process(_delta):
 	if loop_animation == "Move":
 		update_face_direction(velocity.x)
+	#if !died_a: #- for testing
+		#_on_died()
+		#died_a = true
 
 
 func update_face_direction(direction: float):
@@ -189,3 +202,19 @@ func _on_experience_gained(_from: String, _current_exp: int, amount: int):
 
 func _on_level_gained(_current_level: int, _amount: int, _experience_needed: int):
 	update_level()
+	
+	
+func _on_died():
+	#died logic here
+	death_popup_instance.show_popup()
+
+# Timer timeout function
+func _on_respawn_timer_timeout():
+	death_popup_instance.show()
+	respawn_at_nearest_location()
+
+
+func respawn_at_nearest_location():
+	print("respawned")
+	#died_a = false# - for testing, die again
+	#respawn position here

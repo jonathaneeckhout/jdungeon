@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccq2mcrkefjnb"]
+
+[ext_resource type="Script" path="res://scenes/player/deathpopup/DeathPopup.gd" id="1_augcx"]
+
+[node name="DeathPopup" type="Panel"]
+visibility_layer = 524289
+z_index = 10
+offset_left = -802.0
+offset_top = -639.0
+offset_right = 943.0
+offset_bottom = 615.0
+script = ExtResource("1_augcx")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = -198.0
+offset_top = -143.0
+offset_right = 1919.0
+offset_bottom = 1400.0
+expand_mode = 1
+
+[node name="CountdownLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = -179.0
+offset_top = 660.0
+offset_right = 1809.0
+offset_bottom = 1384.0
+theme_override_font_sizes/font_size = 200
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DeathTextLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = -187.0
+offset_top = -107.0
+offset_right = 1865.0
+offset_bottom = 666.0
+theme_override_font_sizes/font_size = 200
+text = "YOU DIED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
