@@ -1,19 +1,34 @@
 extends Control
 class_name InputRemappingUI
-##Recommended for use in a VBoxContainer
-##Fills itself with buttons to remap actions
+## Recommended for use in a VBoxContainer
+## Fills itself with buttons to remap actions
+
+#Emitted when a button of an event is pressed
+signal remap_initiated
+
+#Succis
+signal remap_successful
+
+#When cancelled trough the j_toggle_menu
+signal remap_aborted
+
+#Emitted regardless of success or failure
+signal remap_finished
 
 
 const BUTTON_ACTIVE_MODULATE:Color = Color.WHITE * 1.5
+const Messages:Dictionary = {
+	SUCCESSFUL = "Remapping Successful.",
+	ABORTED = "Remapping Cancelled.",
+	INITIATED = "Press a button."
+}
 
-#This needs tweaking
 @export var actionsAllowed:Array[StringName] = [
-#	&"j_left_click",
-#	&"j_right_click", 
 	&"j_toggle_bag",
 	&"j_toggle_equipment",
 	]
 @export var maxEventsPerAction:int = 1
+@export var tempTextDuration:float = 2
 
 var currentAction:StringName
 var currentEvent:InputEvent
@@ -21,10 +36,37 @@ var currentButton:Button
 
 func _ready() -> void:
 	update_list()
+	remap_initiated.connect( temporary_text_signaled.bind(Messages.INITIATED, remap_finished) )
+	remap_aborted.connect( temporary_text_timed.bind(Messages.ABORTED, tempTextDuration) )
+	remap_successful.connect( temporary_text_timed.bind(Messages.SUCCESSFUL, tempTextDuration) )
+	
+#Creates text on screen that dissapears after some time or when the signal is called
+func temporary_text_timed(tempText:String, duration:float):
+	var textLabel := Label.new()
+	textLabel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER + Control.SIZE_EXPAND
+	textLabel.size_flags_vertical = Control.SIZE_SHRINK_END + Control.SIZE_EXPAND
+	textLabel.text = tempText
+	
+	add_sibling(textLabel)
+	
+	if duration > 0:
+		get_tree().create_timer(duration).timeout.connect(textLabel.queue_free)
+	
+func temporary_text_signaled(tempText:String, killSignal:Signal):
+	var textLabel := Label.new()
+	textLabel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER + Control.SIZE_EXPAND
+	textLabel.size_flags_vertical = Control.SIZE_SHRINK_END + Control.SIZE_EXPAND
+	textLabel.text = tempText
+
+	add_sibling(textLabel)
+	
+	killSignal.connect(textLabel.queue_free)
+	
 	
 func update_list():
 	#Clear all children
-	for child in get_children(): child.queue_free
+	for child in get_children(): 
+		child.queue_free()
 	
 	#Iterate trough each action
 	for action in actionsAllowed:
@@ -75,6 +117,7 @@ func on_remap_attempt(action:StringName, event:InputEvent, button:Button):
 	currentEvent = event
 	currentButton = button
 	button.modulate = BUTTON_ACTIVE_MODULATE
+	remap_initiated.emit()
 	
 	
 func terminate_remap_attempt():
@@ -82,6 +125,7 @@ func terminate_remap_attempt():
 	currentAction = &""
 	currentEvent = null
 	currentButton = null
+	remap_finished.emit()
 	
 	
 func _input(event:InputEvent):
@@ -89,11 +133,13 @@ func _input(event:InputEvent):
 	if currentAction.is_empty(): return
 	if currentEvent == null: return
 	if currentButton == null: return
-#	print_debug("Can remap")
+	
+	#A remapping is in progress, prevent the input from reaching outside of this node.
+	get_viewport().set_input_as_handled()
 	
 	#Cancel if the toggle menu button is pressed.
-	if event.is_action("j_toggle_game_menu"): 
-		print_debug("Aborted remap")
+	if event.is_action(&"j_toggle_game_menu"): 
+		remap_aborted.emit()
 		terminate_remap_attempt()
 		return
 	
@@ -110,7 +156,8 @@ func _input(event:InputEvent):
 	InputMap.action_add_event(currentAction, event)
 	
 	#Make sure it worked.
-	assert(InputMap.action_has_event(currentAction, event))
+	if not InputMap.action_has_event(currentAction, event):
+		push_error("The event was not set.")
 	if not InputMap.get_actions().size() == eventCount:
 		push_error("There's a different amount of events from before the remapping.")
 	
@@ -118,4 +165,6 @@ func _input(event:InputEvent):
 	currentButton.text = event.as_text()
 	
 	print_debug("Successfully remaped action {0} from event {1} to event {2}".format([currentAction, currentEvent.as_text(), event.as_text()]))
+	remap_successful.emit()
 	terminate_remap_attempt()
+
