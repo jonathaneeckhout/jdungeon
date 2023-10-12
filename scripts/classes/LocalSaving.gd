@@ -5,7 +5,7 @@ const DEFAULT_PATH:String = "user://SaveFile.ini"
 
 const Sections:Dictionary = {SETTINGS = "SETTINGS"}
 
-static var savedData:=ConfigFile.new()
+static var savedData := ConfigFile.new()
 
 static func initialize() -> void:
 	if not FileAccess.file_exists(DEFAULT_PATH): save_file()
