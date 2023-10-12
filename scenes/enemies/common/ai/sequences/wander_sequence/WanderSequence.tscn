@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dk8p2emk8wofb"]
 
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="1_erjyv"]
-[ext_resource type="Script" path="res://scenes/enemies/common/ai/sequences/wander_sequence/should_wander.gd" id="2_asw17"]
+[ext_resource type="Script" path="res://scenes/enemies/common/ai/sequences/wander_sequence/ShouldWander.gd" id="2_asw17"]
 [ext_resource type="Script" path="res://scenes/enemies/common/ai/actions/move_to/MoveTo.gd" id="3_pm245"]
 
 [node name="WanderSequence" type="Node"]

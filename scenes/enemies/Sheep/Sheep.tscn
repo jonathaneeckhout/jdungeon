@@ -6,12 +6,12 @@
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="5_yme22"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="7_bkydl"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="7_hnfbx"]
-[ext_resource type="PackedScene" uid="uid://dbllgq1k86dyd" path="res://scenes/enemies/common/ai/sequences/death_sequence/death_sequence.tscn" id="8_c8mlh"]
-[ext_resource type="PackedScene" uid="uid://dk8p2emk8wofb" path="res://scenes/enemies/common/ai/sequences/wander_sequence/wander_sequence.tscn" id="8_eh1yg"]
+[ext_resource type="PackedScene" uid="uid://dbllgq1k86dyd" path="res://scenes/enemies/common/ai/sequences/death_sequence/DeathSequence.tscn" id="8_c8mlh"]
+[ext_resource type="PackedScene" uid="uid://dk8p2emk8wofb" path="res://scenes/enemies/common/ai/sequences/wander_sequence/WanderSequence.tscn" id="8_eh1yg"]
 [ext_resource type="PackedScene" uid="uid://b4h6plpm1hoii" path="res://scenes/enemies/common/ai/conditionals/is_in_combat/IsInCombat.tscn" id="9_6wbxk"]
-[ext_resource type="PackedScene" uid="uid://bho6r0fx8owhk" path="res://scenes/enemies/common/ai/sequences/idle_sequence/idle_sequence.tscn" id="9_51l4p"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/AvoidanceRays.tscn" id="11_nla65"]
-[ext_resource type="PackedScene" uid="uid://m6q3h1qhesne" path="res://scenes/enemies/common/ai/sequences/flee_sequence/flee_sequence.tscn" id="11_qdpx0"]
+[ext_resource type="PackedScene" uid="uid://bho6r0fx8owhk" path="res://scenes/enemies/common/ai/sequences/idle_sequence/IdleSequence.tscn" id="9_51l4p"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/avoidance_rays/AvoidanceRays.tscn" id="11_nla65"]
+[ext_resource type="PackedScene" uid="uid://m6q3h1qhesne" path="res://scenes/enemies/common/ai/sequences/flee_sequence/FleeSequence.tscn" id="11_qdpx0"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_oa8ou"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_orhwg"]
@@ -229,21 +229,21 @@ enabled = false
 actor_node_path = NodePath("..")
 blackboard = NodePath("../Blackboard")
 
-[node name="What am I doing with my life?" type="Node" parent="BeehaveTree"]
+[node name="WhatAmIDoingWithMyLife" type="Node" parent="BeehaveTree"]
 script = ExtResource("7_hnfbx")
 
-[node name="DeathSequence" parent="BeehaveTree/What am I doing with my life?" instance=ExtResource("8_c8mlh")]
+[node name="DeathSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife" instance=ExtResource("8_c8mlh")]
 
-[node name="CombatSequence" type="Node" parent="BeehaveTree/What am I doing with my life?"]
+[node name="CombatSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
 script = ExtResource("7_bkydl")
 
-[node name="IsInCombat?" parent="BeehaveTree/What am I doing with my life?/CombatSequence" instance=ExtResource("9_6wbxk")]
+[node name="IsInCombat?" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" instance=ExtResource("9_6wbxk")]
 
-[node name="FleeSequence" parent="BeehaveTree/What am I doing with my life?/CombatSequence" instance=ExtResource("11_qdpx0")]
+[node name="FleeSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" instance=ExtResource("11_qdpx0")]
 
-[node name="WanderThenIdle" type="Node" parent="BeehaveTree/What am I doing with my life?"]
+[node name="WanderThenIdle" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
 script = ExtResource("7_bkydl")
 
-[node name="WanderSequence" parent="BeehaveTree/What am I doing with my life?/WanderThenIdle" instance=ExtResource("8_eh1yg")]
+[node name="WanderSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdle" instance=ExtResource("8_eh1yg")]
 
-[node name="IdleSequence" parent="BeehaveTree/What am I doing with my life?/WanderThenIdle" instance=ExtResource("9_51l4p")]
+[node name="IdleSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdle" instance=ExtResource("9_51l4p")]
