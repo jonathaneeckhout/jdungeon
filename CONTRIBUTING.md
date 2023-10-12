@@ -46,6 +46,14 @@ Reviewing code takes a lot of time. By doing some simple tests you can help the 
 
 JDungeon uses the code style defined by [GDtoolkit](https://pypi.org/project/gdtoolkit/). Use this tool to format your code. It can also be added as a plugin to VSCode.
 
+### Remove any Debug Code
+
+Remove any code that has been used for debugging the code. The PR should contain the code in it's final form.
+
+### Add meaningfull Logging
+
+Use the J.logger Node to write meaningfull logs. When running your code it should not bloat the logs but when a crash occurs the logs should indicate what happened.
+
 ### Commit Changes
 
 After making changes, commit them with a meaningful commit message:
