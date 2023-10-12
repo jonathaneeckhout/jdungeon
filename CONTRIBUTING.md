@@ -54,6 +54,14 @@ Remove any code that has been used for debugging the code. The PR should contain
 
 Use the J.logger Node to write meaningfull logs. When running your code it should not bloat the logs but when a crash occurs the logs should indicate what happened.
 
+### Filenames should match the Rest of the Project
+
+Scene filenames are Camel case names, same goes for the scripts attached to the scene.
+
+Classes scripts should have Camel case names as well.
+
+Scripts without any class are just all lower case names.
+
 ### Commit Changes
 
 After making changes, commit them with a meaningful commit message:
