@@ -41,9 +41,6 @@ Test if your changes work. Make also sure that your changes don't break other fu
 
 Reviewing code takes a lot of time. By doing some simple tests you can help the reviewers to prevent them spending time detecting regressions and let them focus on the newly added feature.
 
-### Document how to test your changes
-
-Inside the pull request write down how the reviewers can test the functionality.
 
 ### Use Code Style for Scripts
 
@@ -82,6 +79,10 @@ git push origin <branch-name>
 On your forked repository's GitHub page, you'll see a prompt to create a pull request from your branch to the original repository's main branch. Fill in the necessary details, including a descriptive title and a clear description of your changes.
 
 If your changes consists of UI or art stuff make sure to add some screenshots to showcase them.
+
+### Document how to test your changes
+
+Inside the pull request write down how the reviewers can test the functionality.
 
 ### Engage in Discussions/Comments
 
