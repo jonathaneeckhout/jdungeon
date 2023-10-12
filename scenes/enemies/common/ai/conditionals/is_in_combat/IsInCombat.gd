@@ -1,10 +1,12 @@
 extends ConditionLeaf
 
 @export var aggro_radius: Area2D = null
+@export var should_leash := false
+@export var leash_distance: float = 350.0
 @onready var reset_timer: Timer = $ResetTimer
 var start_combat := false
 var in_combat := false
-var target: Node2D = null
+var target: JBody2D = null
 
 
 func tick(actor: Node, blackboard: Blackboard):
@@ -24,6 +26,9 @@ func tick(actor: Node, blackboard: Blackboard):
 		if aggro_radius != null:
 			aggro_radius.body_entered.disconnect(_on_body_entered)
 	if in_combat:
+		var leash_position: Vector2 = blackboard.get_value("leash_position")
+		if should_leash and leash_position.distance_to(actor.global_position) >= leash_distance:
+			return FAILURE
 		return SUCCESS
 	return FAILURE
 

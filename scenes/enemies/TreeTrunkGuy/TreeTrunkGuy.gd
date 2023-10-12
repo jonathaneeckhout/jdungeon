@@ -90,7 +90,6 @@ func _on_died():
 	animation_player.play("Die")
 
 
-
 func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
 	if not is_dead:
 		animation_player.stop()
@@ -108,8 +107,10 @@ func _on_loop_animation_changed(animation: String, direction: Vector2):
 		update_face_direction(direction.x)
 		animation_player.play(animation)
 
+
 func _on_stats_synced():
 	$JInterface.update_hp_bar(stats.hp, stats.max_hp)
+
 
 func _on_stuck_timer_timeout():
 	stuck.emit()

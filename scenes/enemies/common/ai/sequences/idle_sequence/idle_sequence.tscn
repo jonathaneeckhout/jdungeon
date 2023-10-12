@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="1_yq2in"]
 [ext_resource type="Script" path="res://scenes/enemies/common/ai/sequences/idle_sequence/should_idle.gd" id="2_7knm0"]
-[ext_resource type="Script" path="res://scenes/enemies/common/ai/decorators/random_range_time_limiter.gd" id="3_k8akg"]
+[ext_resource type="Script" path="res://scenes/enemies/common/ai/decorators/RandomRangeTimeLimiter.gd" id="3_k8akg"]
 [ext_resource type="Script" path="res://scenes/enemies/common/ai/sequences/idle_sequence/Idle.gd" id="4_vhmeo"]
 
 [node name="IdleSequence" type="Node"]

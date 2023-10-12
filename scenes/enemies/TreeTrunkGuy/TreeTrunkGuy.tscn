@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://d4b7x1k03s5hr"]
+[gd_scene load_steps=30 format=3 uid="uid://d4b7x1k03s5hr"]
 
 [ext_resource type="Script" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.gd" id="1_j7ilt"]
 [ext_resource type="Texture2D" uid="uid://ddw7gwukhi221" path="res://assets/enemies/treetrunkguy/Treetrunkguy.png" id="2_2joj6"]
@@ -15,9 +15,12 @@
 [ext_resource type="PackedScene" uid="uid://dbllgq1k86dyd" path="res://scenes/enemies/common/ai/sequences/death_sequence/death_sequence.tscn" id="13_rphmn"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="14_1oqp7"]
 [ext_resource type="PackedScene" uid="uid://b4h6plpm1hoii" path="res://scenes/enemies/common/ai/conditionals/is_in_combat/IsInCombat.tscn" id="15_4qoax"]
-[ext_resource type="PackedScene" uid="uid://m6q3h1qhesne" path="res://scenes/enemies/common/ai/sequences/flee_sequence/flee_sequence.tscn" id="16_k5hy6"]
+[ext_resource type="PackedScene" uid="uid://c4ss75lmmvkoi" path="res://scenes/enemies/common/ai/sequences/attack_sequence/AttackSequence.tscn" id="16_va72r"]
+[ext_resource type="PackedScene" uid="uid://c32syir0x72av" path="res://scenes/enemies/common/ai/sequences/pursuit_sequence/PursuitSequence.tscn" id="17_2cn8w"]
 [ext_resource type="PackedScene" uid="uid://dk8p2emk8wofb" path="res://scenes/enemies/common/ai/sequences/wander_sequence/wander_sequence.tscn" id="17_i8kes"]
 [ext_resource type="PackedScene" uid="uid://bho6r0fx8owhk" path="res://scenes/enemies/common/ai/sequences/idle_sequence/idle_sequence.tscn" id="18_2p2tr"]
+[ext_resource type="PackedScene" uid="uid://ditk3sn70usrs" path="res://scenes/enemies/common/ai/sequences/leash_sequence/LeashSequence.tscn" id="18_qro3p"]
+[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="21_v4d8y"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6b05c"]
 radius = 24.0
@@ -772,6 +775,9 @@ _data = {
 "RESET": SubResource("Animation_6u2sm")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_01ucu"]
+radius = 275.0
+
 [node name="TreeTrunkGuy" type="CharacterBody2D"]
 scale = Vector2(0.8, 0.8)
 script = ExtResource("1_j7ilt")
@@ -874,11 +880,20 @@ offset_bottom = -88.0
 wait_time = 1.25
 one_shot = true
 
+[node name="AggroRadius" type="Area2D" parent="."]
+position = Vector2(0, -45)
+scale = Vector2(1.00615, 1)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AggroRadius"]
+shape = SubResource("CircleShape2D_01ucu")
+
 [node name="BeehaveTree" type="Node" parent="." node_paths=PackedStringArray("blackboard")]
 script = ExtResource("11_8dyih")
 enabled = false
 actor_node_path = NodePath("..")
-blackboard = NodePath("@Node@23607")
+blackboard = NodePath("../Blackboard")
 
 [node name="What am I doing with my life?" type="Node" parent="BeehaveTree"]
 script = ExtResource("12_q5ghj")
@@ -888,13 +903,26 @@ script = ExtResource("12_q5ghj")
 [node name="CombatSequence" type="Node" parent="BeehaveTree/What am I doing with my life?"]
 script = ExtResource("14_1oqp7")
 
-[node name="IsInCombat?" parent="BeehaveTree/What am I doing with my life?/CombatSequence" instance=ExtResource("15_4qoax")]
+[node name="IsInCombat?" parent="BeehaveTree/What am I doing with my life?/CombatSequence" node_paths=PackedStringArray("aggro_radius") instance=ExtResource("15_4qoax")]
+aggro_radius = NodePath("../../../../AggroRadius")
+should_leash = true
+leash_distance = 450.0
 
-[node name="FleeSequence" parent="BeehaveTree/What am I doing with my life?/CombatSequence" instance=ExtResource("16_k5hy6")]
+[node name="AggrodSelector" type="Node" parent="BeehaveTree/What am I doing with my life?/CombatSequence"]
+script = ExtResource("12_q5ghj")
 
-[node name="WanderThenIdle" type="Node" parent="BeehaveTree/What am I doing with my life?"]
+[node name="AttackSequence" parent="BeehaveTree/What am I doing with my life?/CombatSequence/AggrodSelector" instance=ExtResource("16_va72r")]
+
+[node name="PursuitSequence" parent="BeehaveTree/What am I doing with my life?/CombatSequence/AggrodSelector" instance=ExtResource("17_2cn8w")]
+
+[node name="LeashSequence" parent="BeehaveTree/What am I doing with my life?" instance=ExtResource("18_qro3p")]
+
+[node name="WanderThenIdleSequence" type="Node" parent="BeehaveTree/What am I doing with my life?"]
 script = ExtResource("14_1oqp7")
 
-[node name="WanderSequence" parent="BeehaveTree/What am I doing with my life?/WanderThenIdle" instance=ExtResource("17_i8kes")]
+[node name="WanderSequence" parent="BeehaveTree/What am I doing with my life?/WanderThenIdleSequence" instance=ExtResource("17_i8kes")]
 
-[node name="IdleSequence" parent="BeehaveTree/What am I doing with my life?/WanderThenIdle" instance=ExtResource("18_2p2tr")]
+[node name="IdleSequence" parent="BeehaveTree/What am I doing with my life?/WanderThenIdleSequence" instance=ExtResource("18_2p2tr")]
+
+[node name="Blackboard" type="Node" parent="."]
+script = ExtResource("21_v4d8y")
