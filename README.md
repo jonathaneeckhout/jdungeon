@@ -49,6 +49,9 @@ Centuries ago the world was whole. The kingdoms were diverse, numerous, and frui
 ## Feature Roadmap
 Have a look at the current open tickets of what features are on the roadmap: https://github.com/jonathaneeckhout/jdungeon/issues 
 
+## Feature Requests
+You can submit feature requests for JDungeon by opening a new issue. To do this, make sure to start the issue title with "Feature Request:" and apply the "feature request" label. Be sure to provide comprehensive details regarding the feature, its intended purpose, what it aims to achieve or resolve, and any relevant use cases. Once submitted, your feature request will undergo a review process and, if approved, will be transformed into a development task.
+
 ## Install Instructions
 ### Step 1: Clone the repository
 ```bash
