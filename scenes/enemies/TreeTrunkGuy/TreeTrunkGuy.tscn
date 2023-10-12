@@ -897,34 +897,34 @@ enabled = false
 actor_node_path = NodePath("..")
 blackboard = NodePath("../Blackboard")
 
-[node name="What am I doing with my life?" type="Node" parent="BeehaveTree"]
+[node name="WhatAmIDoingWithMyLife" type="Node" parent="BeehaveTree"]
 script = ExtResource("12_q5ghj")
 
-[node name="DeathSequence" parent="BeehaveTree/What am I doing with my life?" instance=ExtResource("13_rphmn")]
+[node name="DeathSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife" instance=ExtResource("13_rphmn")]
 
-[node name="CombatSequence" type="Node" parent="BeehaveTree/What am I doing with my life?"]
+[node name="CombatSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
 script = ExtResource("14_1oqp7")
 
-[node name="IsInCombat?" parent="BeehaveTree/What am I doing with my life?/CombatSequence" node_paths=PackedStringArray("aggro_radius") instance=ExtResource("15_4qoax")]
+[node name="IsInCombat" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" node_paths=PackedStringArray("aggro_radius") instance=ExtResource("15_4qoax")]
 aggro_radius = NodePath("../../../../AggroRadius")
 should_leash = true
 leash_distance = 450.0
 
-[node name="AggrodSelector" type="Node" parent="BeehaveTree/What am I doing with my life?/CombatSequence"]
+[node name="AggrodSelector" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence"]
 script = ExtResource("12_q5ghj")
 
-[node name="AttackSequence" parent="BeehaveTree/What am I doing with my life?/CombatSequence/AggrodSelector" instance=ExtResource("16_va72r")]
+[node name="AttackSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence/AggrodSelector" instance=ExtResource("16_va72r")]
 
-[node name="PursuitSequence" parent="BeehaveTree/What am I doing with my life?/CombatSequence/AggrodSelector" instance=ExtResource("17_2cn8w")]
+[node name="PursuitSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence/AggrodSelector" instance=ExtResource("17_2cn8w")]
 
-[node name="LeashSequence" parent="BeehaveTree/What am I doing with my life?" instance=ExtResource("18_qro3p")]
+[node name="LeashSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife" instance=ExtResource("18_qro3p")]
 
-[node name="WanderThenIdleSequence" type="Node" parent="BeehaveTree/What am I doing with my life?"]
+[node name="WanderThenIdleSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
 script = ExtResource("14_1oqp7")
 
-[node name="WanderSequence" parent="BeehaveTree/What am I doing with my life?/WanderThenIdleSequence" instance=ExtResource("17_i8kes")]
+[node name="WanderSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdleSequence" instance=ExtResource("17_i8kes")]
 
-[node name="IdleSequence" parent="BeehaveTree/What am I doing with my life?/WanderThenIdleSequence" instance=ExtResource("18_2p2tr")]
+[node name="IdleSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdleSequence" instance=ExtResource("18_2p2tr")]
 
 [node name="Blackboard" type="Node" parent="."]
 script = ExtResource("21_v4d8y")

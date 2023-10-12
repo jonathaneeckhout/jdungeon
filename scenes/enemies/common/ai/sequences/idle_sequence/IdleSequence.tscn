@@ -8,7 +8,7 @@
 [node name="IdleSequence" type="Node"]
 script = ExtResource("1_yq2in")
 
-[node name="ShouldIdle?" type="Node" parent="."]
+[node name="ShouldIdle" type="Node" parent="."]
 script = ExtResource("2_7knm0")
 
 [node name="IdleTime" type="Node" parent="."]

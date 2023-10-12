@@ -7,7 +7,7 @@
 [node name="PursuitSequence" type="Node"]
 script = ExtResource("1_g8y03")
 
-[node name="ShouldPursue?" type="Node" parent="."]
+[node name="ShouldPursue" type="Node" parent="."]
 script = ExtResource("2_7a5e8")
 
 [node name="MoveTo" parent="." instance=ExtResource("3_b3pvy")]

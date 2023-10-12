@@ -7,7 +7,7 @@
 [node name="AttackSequence" type="Node"]
 script = ExtResource("1_e2tj4")
 
-[node name="ShouldAttack?" type="Node" parent="."]
+[node name="ShouldAttack" type="Node" parent="."]
 script = ExtResource("2_r4t7x")
 
 [node name="Attack" type="Node" parent="."]

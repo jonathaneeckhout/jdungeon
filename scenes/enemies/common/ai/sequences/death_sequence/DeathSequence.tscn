@@ -8,7 +8,7 @@
 [node name="DeathSequence" type="Node"]
 script = ExtResource("1_8cdtm")
 
-[node name="IsDead?" type="Node" parent="."]
+[node name="IsDead" type="Node" parent="."]
 script = ExtResource("2_vuqxj")
 
 [node name="MoveTo" parent="." instance=ExtResource("3_762ne")]

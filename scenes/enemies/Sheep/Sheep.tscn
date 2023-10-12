@@ -237,7 +237,7 @@ script = ExtResource("7_hnfbx")
 [node name="CombatSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
 script = ExtResource("7_bkydl")
 
-[node name="IsInCombat?" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" instance=ExtResource("9_6wbxk")]
+[node name="IsInCombat" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" instance=ExtResource("9_6wbxk")]
 
 [node name="FleeSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" instance=ExtResource("11_qdpx0")]
 

@@ -7,7 +7,7 @@
 [node name="FleeSequence" type="Node"]
 script = ExtResource("1_csbvd")
 
-[node name="ShouldFlee?" type="Node" parent="."]
+[node name="ShouldFlee" type="Node" parent="."]
 script = ExtResource("2_u0k0h")
 
 [node name="MoveTo" parent="." instance=ExtResource("3_ysl1a")]

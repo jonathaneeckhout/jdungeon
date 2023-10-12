@@ -7,7 +7,7 @@
 [node name="LeashSequence" type="Node"]
 script = ExtResource("1_eapop")
 
-[node name="ShouldLeash?" type="Node" parent="."]
+[node name="ShouldLeash" type="Node" parent="."]
 script = ExtResource("2_ws5lm")
 
 [node name="MoveTo" parent="." instance=ExtResource("3_m5cyo")]

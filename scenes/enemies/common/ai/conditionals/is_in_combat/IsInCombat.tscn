@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/enemies/common/ai/conditionals/is_in_combat/IsInCombat.gd" id="1_qltg7"]
 
-[node name="IsInCombat?" type="Node"]
+[node name="IsInCombat" type="Node"]
 script = ExtResource("1_qltg7")
 
 [node name="ResetTimer" type="Timer" parent="."]
