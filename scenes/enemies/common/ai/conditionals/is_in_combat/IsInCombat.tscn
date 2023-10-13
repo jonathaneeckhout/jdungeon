@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4h6plpm1hoii"]
+
+[ext_resource type="Script" path="res://scenes/enemies/common/ai/conditionals/is_in_combat/IsInCombat.gd" id="1_qltg7"]
+
+[node name="IsInCombat" type="Node"]
+script = ExtResource("1_qltg7")
+
+[node name="ResetTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true

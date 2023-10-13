@@ -69,6 +69,10 @@ j_toggle_game_menu={
 ]
 }
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://assets/translation/en_US.en.translation")
+
 [layer_names]
 
 2d_physics/layer_1="World"
