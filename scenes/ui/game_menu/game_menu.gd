@@ -1,35 +1,66 @@
 extends Control
 
-@onready var quit_button := $Panel/VBoxContainer/MarginContainer/QuitButton
+const OPTIONS_MENU_SCENE:PackedScene = preload("res://scenes/ui/options_menu/options_menu.tscn")
 
-@onready var panel = $Panel
+@onready var options_button: Button = $Panel/VBoxContainer/MarginContainer2/OptionsMenu
+@onready var quit_button: Button = $Panel/VBoxContainer/MarginContainer/QuitButton
+
+@onready var panel: Control = $Panel
+
+#Holds a reference to the currently open sub-menu
+var subMenuReference:Node
+		
+
 
 func _ready():
 	quit_button.pressed.connect(_on_quit_button_pressed)
+	options_button.pressed.connect(_on_options_button_pressed)
 
 func _input(event):
-	if event.is_action_pressed(" j_toggle_game_menu"):
-		if self.is_visible_in_tree():
-			self.hide()
-			JUI.above_ui=false
-		else :
-			self.show()
-			JUI.above_ui=true
-	if self.is_visible_in_tree():
+	var isVisible: bool = self.is_visible_in_tree()
+	
+	if event.is_action_pressed("j_toggle_game_menu"):		
+		
+		#Show if not visible, hide otherwise.
+		self.visible = not isVisible
+		JUI.above_ui = not isVisible
+		
+		if not isVisible:
+			close_submenu()
+
+	
+	if isVisible:
+		#If the input happens outside the menu while it is open, hide it
 		if (event is InputEventMouseButton) and event.pressed:
-			var event_local = make_input_local(event)
-			if !Rect2(Vector2(panel.position.x,panel.position.y),Vector2(panel.size.x,panel.size.y)).has_point(event_local.position):
+			var event_local:InputEvent = make_input_local(event)
+			var isInsideMenu:bool = Rect2(Vector2(panel.position.x,panel.position.y),Vector2(panel.size.x,panel.size.y)).has_point(event_local.position)
+			
+			#By default say it is inside the submenu
+			var isInsideSubMenu:bool = true
+			#If a submenu exists, check if it is ACTUALLY inside
+			if is_instance_valid(subMenuReference): 
+				isInsideMenu = Rect2(Vector2(subMenuReference.position.x,subMenuReference.position.y),Vector2(subMenuReference.size.x,subMenuReference.size.y)).has_point(event_local.position)
+			
+			if not (isInsideMenu or isInsideSubMenu):
 				self.hide()
 				JUI.above_ui=false 
+				
+				close_submenu()
+					
 				get_viewport().set_input_as_handled()
+				
+func close_submenu():
+	if is_instance_valid(subMenuReference):
+		subMenuReference.queue_free()
 
-
-
-
+func _on_options_button_pressed():
+	var optionsInstance:Control = OPTIONS_MENU_SCENE.instantiate()
+	subMenuReference = optionsInstance
+	optionsInstance.quit_pressed.connect(close_submenu)
+	add_child(optionsInstance)
 
 func  _on_quit_button_pressed():
-	var quit_game_callable :Callable = Callable(self,"quit_game")
-	JUI.confirmationbox("Are you sure you want to quit the game?",self,"Quit Game?",quit_game_callable)
+	JUI.confirmationbox("Are you sure you want to quit the game?",self,"Quit Game?", quit_game)
 
 func quit_game():
 	get_tree().quit()
