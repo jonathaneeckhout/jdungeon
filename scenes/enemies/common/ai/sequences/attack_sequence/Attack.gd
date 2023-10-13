@@ -16,8 +16,7 @@ func tick(actor: Node, blackboard: Blackboard):
 		var reset_timer: Timer = blackboard.get_value("reset_timer")
 		reset_timer.start()
 		actor.attack(target)
-		return SUCCESS
-	return FAILURE
+	return SUCCESS
 
 
 func _on_swing_timer_timeout():

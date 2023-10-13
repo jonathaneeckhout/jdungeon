@@ -6,5 +6,6 @@
 script = ExtResource("1_qltg7")
 
 [node name="ResetTimer" type="Timer" parent="."]
-wait_time = 3.0
+process_callback = 0
+wait_time = 3.5
 one_shot = true

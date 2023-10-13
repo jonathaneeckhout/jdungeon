@@ -217,7 +217,8 @@ offset_bottom = 25.0
 [node name="AvoidanceRays" parent="." instance=ExtResource("11_nla65")]
 
 [node name="StuckTimer" type="Timer" parent="."]
-wait_time = 1.25
+process_callback = 0
+wait_time = 0.5
 one_shot = true
 
 [node name="Blackboard" type="Node" parent="."]
