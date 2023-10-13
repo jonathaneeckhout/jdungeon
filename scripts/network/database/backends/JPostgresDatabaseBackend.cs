@@ -36,20 +36,9 @@ public partial class JPostgresDatabaseBackend : Node
 		return true;
 	}
 
-	public bool CreateAccount(string username, string password)
+	public Godot.Collections.Dictionary<string, Variant> CreateAccount(string username, string password)
 	{
-		if (!IsUsernameValid(username))
-		{
-			GD.Print("Invalid username");
-			return false;
-		}
-
-		if (!IsPasswordValid(password))
-		{
-			GD.Print("Invalid password");
-			return true;
-		}
-
+		var output = new Godot.Collections.Dictionary<string, Variant>();
 		try
 		{
 			using var cmd = dataSource.CreateCommand(
@@ -62,9 +51,14 @@ public partial class JPostgresDatabaseBackend : Node
 		catch (Exception ex)
 		{
 			GD.Print($"Error: {ex.Message}");
-			return false;
+			output.Add("result", false);
+			output.Add("error", "Oops something went wrong");
+			return output;
 		}
-		return true;
+
+		output.Add("result", true);
+		output.Add("error", "");
+		return output;
 	}
 
 	public bool AuthenticateUser(string username, string password)
@@ -146,15 +140,5 @@ public partial class JPostgresDatabaseBackend : Node
 			GD.Print($"Error: {ex.Message}");
 			return output;
 		}
-	}
-
-	static bool IsUsernameValid(string username)
-	{
-		return !string.IsNullOrWhiteSpace(username) && username.Length >= 4;
-	}
-
-	static bool IsPasswordValid(string password)
-	{
-		return !string.IsNullOrWhiteSpace(password) && password.Length >= 4;
 	}
 }

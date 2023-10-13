@@ -42,25 +42,28 @@ func read_json_from_file(path: String) -> Variant:
 	return JSON.parse_string(string_data)
 
 
-func CreateAccount(username: String, password: String) -> bool:
-	var users_json = read_json_from_file(J.USERS_FILEPATH)
+func CreateAccount(username: String, password: String) -> Dictionary:
+	var users_json: Variant = read_json_from_file(J.USERS_FILEPATH)
+	var error: String = ""
+
 	if users_json == null:
 		J.logger.warn("Could not json parse content of %s" % J.USERS_FILEPATH)
-		return false
+		return {"result": false, "error": "Oops something went wrong"}
 
 	if username in users_json:
-		J.logger.info("User=[%s] already exists" % username)
-		return false
+		error = "User=[%s] already exists" % username
+		J.logger.info(error)
+		return {"result": false, "error": error}
 
 	users_json[username] = {"password": password}
 
 	if not write_json_to_file(J.USERS_FILEPATH, users_json):
 		J.logger.warn("Could not store new user")
-		return false
+		return {"result": false, "error": "Oops something went wrong"}
 
 	J.logger.info("Successfully created user=[%s]" % username)
 
-	return true
+	return {"result": true, "error": ""}
 
 
 func AuthenticateUser(username: String, password: String) -> bool:

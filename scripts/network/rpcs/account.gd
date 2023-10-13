@@ -10,12 +10,13 @@ signal player_logged_in(id: int, username: String)
 		return
 
 	J.logger.info("Creating account for user=[%s]" % username)
-	var id = multiplayer.get_remote_sender_id()
+	var id: int = multiplayer.get_remote_sender_id()
 
-	if J.server.database.create_account(username, password):
+	var create_account_result: Dictionary = J.server.database.create_account(username, password)
+	if create_account_result["result"]:
 		create_account_response.rpc_id(id, false, "Account created")
 	else:
-		create_account_response.rpc_id(id, true, "Failed to create account")
+		create_account_response.rpc_id(id, true, create_account_result["error"])
 
 
 @rpc("call_remote", "authority", "reliable")
