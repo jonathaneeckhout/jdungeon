@@ -96,7 +96,7 @@ func _on_run_as_client_pressed():
 	$SelectRunMode.queue_free()
 
 	if not J.init_client():
-		J.logger.err("Could not initialize the client, quitting")
+		J.logger.error("Could not initialize the client, quitting")
 		get_tree().quit()
 		return
 

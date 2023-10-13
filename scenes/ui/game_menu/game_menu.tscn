@@ -37,12 +37,19 @@ anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.183
 anchor_right = 0.5
-anchor_bottom = 0.183
+anchor_bottom = 0.333
 offset_left = -20.0
 offset_top = -19.034
 offset_right = 20.0
-offset_bottom = 20.966
+offset_bottom = 32.138
 grow_horizontal = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="OptionsMenu" type="Button" parent="Panel/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+text = "Options"
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2

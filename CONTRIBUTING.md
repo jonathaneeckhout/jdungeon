@@ -39,9 +39,28 @@ Make the desired changes or additions to the codebase in your local branch.
 
 Test if your changes work. Make also sure that your changes don't break other functionality of the game.
 
+Reviewing code takes a lot of time. By doing some simple tests you can help the reviewers to prevent them spending time detecting regressions and let them focus on the newly added feature.
+
+
 ### Use Code Style for Scripts
 
 JDungeon uses the code style defined by [GDtoolkit](https://pypi.org/project/gdtoolkit/). Use this tool to format your code. It can also be added as a plugin to VSCode.
+
+### Remove any Debug Code
+
+Remove any code that has been used for debugging the code. The PR should contain the code in it's final form.
+
+### Add meaningfull Logging
+
+Use the J.logger Node to write meaningfull logs. When running your code it should not bloat the logs but when a crash occurs the logs should indicate what happened.
+
+### Filenames should match the Rest of the Project
+
+Scene filenames are Camel case names, same goes for the scripts attached to the scene.
+
+Classes scripts should have Camel case names as well.
+
+Scripts without any class are just all lower case names.
 
 ### Commit Changes
 
@@ -76,6 +95,10 @@ git push origin <branch-name>
 On your forked repository's GitHub page, you'll see a prompt to create a pull request from your branch to the original repository's main branch. Fill in the necessary details, including a descriptive title and a clear description of your changes.
 
 If your changes consists of UI or art stuff make sure to add some screenshots to showcase them.
+
+### Document how to test your changes
+
+Inside the pull request write down how the reviewers can test the functionality.
 
 ### Engage in Discussions/Comments
 

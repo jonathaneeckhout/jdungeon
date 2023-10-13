@@ -2,3 +2,4 @@
 .godot/
 .env
 data/users.json
+*csproj.old

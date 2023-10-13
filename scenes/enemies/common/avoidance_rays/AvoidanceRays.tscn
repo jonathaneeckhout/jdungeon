@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dv6a22n6h5bly"]
 
-[ext_resource type="Script" path="res://scenes/enemies/common/AvoidanceRays.gd" id="1_ecqvo"]
+[ext_resource type="Script" path="res://scenes/enemies/common/avoidance_rays/AvoidanceRays.gd" id="1_ecqvo"]
 
 [node name="AvoidanceRays" type="Node2D"]
 script = ExtResource("1_ecqvo")
