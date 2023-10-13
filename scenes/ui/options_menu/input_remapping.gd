@@ -20,7 +20,8 @@ const BUTTON_ACTIVE_MODULATE:Color = Color.WHITE * 1.5
 const Messages:Dictionary = {
 	SUCCESSFUL = "Remapping Successful.",
 	ABORTED = "Remapping Cancelled.",
-	INITIATED = "Press a button."
+	INITIATED = "Press a button.",
+	CONFLICT = "This button is mapped."
 }
 
 @export var actionsAllowed:Array[StringName] = [
@@ -44,6 +45,8 @@ func temporary_text_timed(tempText:String, duration:float):
 	var textLabel := Label.new()
 	textLabel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER + Control.SIZE_EXPAND
 	textLabel.size_flags_vertical = Control.SIZE_SHRINK_END + Control.SIZE_EXPAND
+	#This shifts it upwards a bit. To avoid overlapping with signaled text.
+	textLabel.custom_minimum_size = Vector2(0,96)
 	textLabel.text = tempText
 	
 	add_sibling(textLabel)
@@ -114,6 +117,13 @@ func on_remap_attempt(action:StringName, event:InputEvent, button:Button):
 	button.modulate = BUTTON_ACTIVE_MODULATE
 	remap_initiated.emit()
 	
+func is_event_in_use(event:InputEvent)->bool:
+	for action in actionsAllowed:
+		if InputMap.action_has_event(action, event):
+			return true
+			
+	return false
+	
 	
 func terminate_remap_attempt():
 	currentButton.modulate = Color.WHITE
@@ -139,10 +149,17 @@ func _input(event:InputEvent):
 		return
 	
 	#Only accept certain kinds of InputEvent
-	if not (event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton): return
+	if not (event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton): 
+		return
 	#There's no controller support yet.
 	
+	#Fetch current event count to check for discrepancies later
 	var eventCount:int = InputMap.action_get_events(currentAction).size()
+	
+	#Ensure it isn't used somewhere else
+	if is_event_in_use(event):
+		temporary_text_timed(Messages.CONFLICT, tempTextDuration*0.6)
+		return
 	
 	#Ensure this event belongs to the action, it should be impossible for this to be the case
 	if not InputMap.action_has_event(currentAction, currentEvent):
