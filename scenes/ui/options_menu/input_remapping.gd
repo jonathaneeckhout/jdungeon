@@ -27,7 +27,6 @@ const Messages:Dictionary = {
 	&"j_toggle_bag",
 	&"j_toggle_equipment",
 	]
-@export var maxEventsPerAction:int = 1
 @export var tempTextDuration:float = 2
 
 var currentAction:StringName
@@ -71,7 +70,7 @@ func update_list():
 	#Iterate trough each action
 	for action in actionsAllowed:
 		
-		#Ignore inexistent inputs
+		#Ignore non-existent inputs
 		if not action in InputMap.get_actions():
 			push_error('Cannot list invalid action "{0}"'.format([action]))
 			continue
@@ -84,6 +83,7 @@ func add_remap_node(action:StringName, events:Array[InputEvent]):
 	#Splits the button to the left and actions to the right
 	var splitContainer:=HSplitContainer.new()
 	splitContainer.set_name(action)
+	splitContainer.dragger_visibility = SplitContainer.DRAGGER_HIDDEN
 	
 	#Displays the name of the action
 	var actionNameLabel:=Label.new()
@@ -100,15 +100,10 @@ func add_remap_node(action:StringName, events:Array[InputEvent]):
 	
 	actionNameLabel.text = action
 	
-	var eventCount:int = 0
 	for event in events:
-		#Stop listing events if there's too many events in the UI already
-		if eventCount >= maxEventsPerAction: break
-		
 		var remapButton:=Button.new()
 		remapButton.text = event.as_text()
 		eventContainer.add_child(remapButton)
-#		remapButton.set_meta(META_KEY_INPUTEVENT, event)
 		
 		remapButton.pressed.connect(on_remap_attempt.bind(action, event, remapButton))
 		
@@ -147,9 +142,13 @@ func _input(event:InputEvent):
 	if not (event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton): return
 	#There's no controller support yet.
 	
-	var eventCount:int = InputMap.get_actions().size()
+	var eventCount:int = InputMap.action_get_events(currentAction).size()
 	
-	#Remove the one selected
+	#Ensure this event belongs to the action, it should be impossible for this to be the case
+	if not InputMap.action_has_event(currentAction, currentEvent):
+		push_warning(str(currentEvent) + " does not belong to action " + currentAction)
+		
+	#Remove the existing event
 	InputMap.action_erase_event(currentAction, currentEvent)
 	
 	#Add the event just pressed as the new input
@@ -158,8 +157,8 @@ func _input(event:InputEvent):
 	#Make sure it worked.
 	if not InputMap.action_has_event(currentAction, event):
 		push_error("The event was not set.")
-	if not InputMap.get_actions().size() == eventCount:
-		push_error("There's a different amount of events from before the remapping.")
+	if not InputMap.action_get_events(currentAction).size() == eventCount:
+		push_error("There's a different amount of events from before the remapping for action "+currentAction + "\n" + "These are assigned now: " + str( InputMap.action_get_events(currentAction)))
 	
 	#Update the button's text
 	currentButton.text = event.as_text()
@@ -167,4 +166,6 @@ func _input(event:InputEvent):
 	print_debug("Successfully remaped action {0} from event {1} to event {2}".format([currentAction, currentEvent.as_text(), event.as_text()]))
 	remap_successful.emit()
 	terminate_remap_attempt()
+	
+	update_list()
 
