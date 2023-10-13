@@ -25,8 +25,8 @@ func _input(event):
 		self.visible = not isVisible
 		JUI.above_ui = not isVisible
 		
-		if not isVisible and is_instance_valid(subMenuReference):
-			subMenuReference.queue_free()
+		if not isVisible:
+			close_submenu()
 
 	
 	if isVisible:
@@ -45,16 +45,18 @@ func _input(event):
 				self.hide()
 				JUI.above_ui=false 
 				
-				if subMenuReference:
-					subMenuReference.queue_free()
+				close_submenu()
 					
 				get_viewport().set_input_as_handled()
 				
-	
+func close_submenu():
+	if is_instance_valid(subMenuReference):
+		subMenuReference.queue_free()
 
 func _on_options_button_pressed():
 	var optionsInstance:Control = OPTIONS_MENU_SCENE.instantiate()
 	subMenuReference = optionsInstance
+	optionsInstance.quit_pressed.connect(close_submenu)
 	add_child(optionsInstance)
 
 func  _on_quit_button_pressed():
