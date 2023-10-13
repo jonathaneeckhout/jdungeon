@@ -38,18 +38,6 @@ public partial class JPostgresDatabaseBackend : Node
 
 	public bool CreateAccount(string username, string password)
 	{
-		if (!IsUsernameValid(username))
-		{
-			GD.Print("Invalid username");
-			return false;
-		}
-
-		if (!IsPasswordValid(password))
-		{
-			GD.Print("Invalid password");
-			return true;
-		}
-
 		try
 		{
 			using var cmd = dataSource.CreateCommand(
@@ -146,15 +134,5 @@ public partial class JPostgresDatabaseBackend : Node
 			GD.Print($"Error: {ex.Message}");
 			return output;
 		}
-	}
-
-	static bool IsUsernameValid(string username)
-	{
-		return !string.IsNullOrWhiteSpace(username) && username.Length >= 4;
-	}
-
-	static bool IsPasswordValid(string password)
-	{
-		return !string.IsNullOrWhiteSpace(password) && password.Length >= 4;
 	}
 }

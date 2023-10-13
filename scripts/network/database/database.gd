@@ -26,11 +26,39 @@ func init() -> bool:
 
 
 func create_account(username: String, password: String) -> bool:
-	if username == "" or password == "":
+	if username == "" or password == "" or not is_account_valid(username, password):
 		J.logger.info("Invalid username or password")
 		return false
 
 	return backend.CreateAccount(username, password)
+
+
+func is_account_valid(username: String, password: String) -> bool:
+	var username_regex = RegEx.new()
+	# Regular expression to check for only letters and digits in the username and password
+	username_regex.compile("^[a-zA-Z0-9]+$")
+
+	var password_regex = RegEx.new()
+	# This pattern disallows white spaces
+	password_regex.compile("^[^\\s]+$")
+
+	if username.length() < 4 or username.length() > 16:
+		J.logger.warn("Username must be at least 4 characters long or maximum 16 characters long.")
+		return false
+
+	if password.length() < 4 or password.length() > 32:
+		J.logger.warn("Password must be at least 4 characters long or maximum 32 characters long.")
+		return false
+
+	if not username_regex.search(username):
+		J.logger.warn("Username can only contain letters and digits.")
+		return false
+
+	if not password_regex.search(password):
+		J.logger.warn("Password cannot contain white spaces.")
+		return false
+
+	return true
 
 
 func authenticate_user(username: String, password: String) -> bool:
