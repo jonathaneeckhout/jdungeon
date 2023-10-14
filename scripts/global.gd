@@ -17,6 +17,19 @@ var env_postgress_db: String = ""
 var server: Node
 var client: Node
 
+func load_local_settings():
+	#Load or create the file if it doesn't exist.
+	if not LocalSaveSystem.file_exists():
+		LocalSaveSystem.save_file()
+	LocalSaveSystem.load_file()
+	
+	#Set the volume
+	var volume: float = linear_to_db(LocalSaveSystem.get_data(LocalSaveSystem.Sections.SETTINGS, "volume", 1)) 
+	AudioServer.set_bus_volume_db(0, volume)
+	
+	#Set controls
+	InputRemapping.load_mappings()
+	
 
 func load_server_env_variables() -> bool:
 	env_debug = J.env.get_value("DEBUG") == "true"
