@@ -28,7 +28,7 @@ var rpcs: Node
 var server: JServer
 var client: JClient
 
-var world: Node
+var world: JWorld
 
 var player_scene: Resource
 var enemy_scenes: Dictionary = {}
