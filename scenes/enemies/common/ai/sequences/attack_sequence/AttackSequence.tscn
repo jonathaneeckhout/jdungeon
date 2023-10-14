@@ -14,4 +14,5 @@ script = ExtResource("2_r4t7x")
 script = ExtResource("3_67ykl")
 
 [node name="AttackCooldown" type="Timer" parent="Attack"]
+process_callback = 0
 one_shot = true

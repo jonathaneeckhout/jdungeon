@@ -26,10 +26,11 @@ extends JPlayerBody2D
 
 
 func _ready():
-	stats.max_hp = 100
+	stats.max_hp = 50
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.attacked.connect(_on_attacked)
 	synchronizer.healed.connect(_on_healed)
+	synchronizer.got_hurt.connect(_on_got_hurt)
 
 	equipment.item_added.connect(_on_item_equiped)
 	equipment.item_removed.connect(_on_item_unequiped)
@@ -92,6 +93,14 @@ func _on_attacked(target: String, _damage: int):
 		return
 
 	update_face_direction(position.direction_to(enemy.position).x)
+
+
+func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
+	$JInterface.update_hp_bar(hp, max_hp)
+	var text = floating_text_scene.instantiate()
+	text.amount = damage
+	text.type = text.TYPES.DAMAGE
+	add_child(text)
 
 
 func _on_healed(_from: String, _hp: int, _max_hp: int, healing: int):
