@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=22 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/player/base/Basecharacter.png" id="2_dug5c"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://dssmk0m8xsvxf" path="res://scenes/ui/game_menu/game_menu.tscn" id="13_musf7"]
 [ext_resource type="PackedScene" uid="uid://bqsdy2usb2e6d" path="res://scenes/player/equipment/Equipment.tscn" id="14_2fdu8"]
 [ext_resource type="StyleBox" uid="uid://pbfuprosr3en" path="res://assets/themes/ProgressBars.tres" id="14_3h4ha"]
+[ext_resource type="PackedScene" uid="uid://ccq2mcrkefjnb" path="res://scenes/player/deathpopup/DeathPopup.tscn" id="15_ho0h1"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lk3fd"]
 radius = 32.0
@@ -795,7 +796,6 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/fill = ExtResource("14_3h4ha")
 
-[node name="DeathPopup" type="Panel" parent="Camera2D/UILayer/GUI"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="DeathPopup" parent="Camera2D/UILayer/GUI" instance=ExtResource("15_ho0h1")]
+visible = false
+layout_mode = 1

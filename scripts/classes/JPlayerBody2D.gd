@@ -2,6 +2,8 @@ extends JBody2D
 
 class_name JPlayerBody2D
 
+signal respawned
+
 var peer_id: int = 1
 var username: String = ""
 
@@ -12,6 +14,7 @@ var inventory: JInventory
 var equipment: JEquipment
 
 var persistency_timer: Timer
+var respawn_timer: Timer
 
 
 func _init():
@@ -52,6 +55,13 @@ func _init():
 		persistency_timer.timeout.connect(_on_persistency_timer_timeout)
 		add_child(persistency_timer)
 
+		respawn_timer = Timer.new()
+		respawn_timer.name = "RespawnTimer"
+		respawn_timer.autostart = false
+		respawn_timer.wait_time = J.PLAYER_RESPAWN_TIME
+		respawn_timer.timeout.connect(_on_respawn_timer_timeout)
+		add_child(respawn_timer)
+
 	else:
 		player_input = JPlayerInput.new()
 		player_input.name = "PlayerInput"
@@ -59,6 +69,12 @@ func _init():
 
 		player_input.move.connect(_on_move)
 		player_input.interact.connect(_on_interact)
+
+
+func die():
+	super()
+
+	respawn_timer.start(J.PLAYER_RESPAWN_TIME)
 
 
 func store_data():
@@ -76,3 +92,24 @@ func _on_interact(target_name: String):
 
 func _on_persistency_timer_timeout():
 	store_data()
+
+
+func _on_respawn_timer_timeout():
+	var respawn_location: Vector2 = J.world.find_player_respawn_location(self.position)
+
+	# Set the player to the respawn location
+	position = respawn_location
+
+	#Let's bring the player back to life
+	stats.reset_hp()
+
+	velocity = Vector2.ZERO
+	loop_animation = "Idle"
+	synchronizer.sync_loop_animation(loop_animation, velocity)
+
+	# Let the player take part of the world again
+	collision_layer += J.PHYSICS_LAYER_WORLD
+
+	respawned.emit()
+
+	synchronizer.sync_respawn()

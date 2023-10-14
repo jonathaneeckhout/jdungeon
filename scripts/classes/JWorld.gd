@@ -5,6 +5,7 @@ class_name JWorld
 @export var map_to_sync: Node2D
 @export var enemies_to_sync: Node2D
 @export var npcs_to_sync: Node2D
+@export var player_respawn_locations: Node2D
 
 var players: Node2D
 var enemies: Node2D
@@ -108,6 +109,25 @@ func get_player_by_peer_id(peer_id: int) -> JPlayerBody2D:
 			return player
 
 	return null
+
+
+func find_player_respawn_location(player_position: Vector2) -> Vector2:
+	var spots = player_respawn_locations.get_children()
+
+	if len(spots) == 0:
+		J.logger.warn("No player respawn spots found, returning current player's position")
+		return player_position
+
+	var closest = spots[0].position
+	var closest_distance = closest.distance_to(player_position)
+
+	for spot in spots:
+		var distance = spot.position.distance_to(player_position)
+		if distance < closest_distance:
+			closest = spot.position
+			closest_distance = distance
+
+	return closest
 
 
 func _on_player_logged_in(id: int, username: String):

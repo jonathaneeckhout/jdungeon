@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=13 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://scenes/world/World.gd" id="1_3w1ia"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/loginpanel/LoginPanel.tscn" id="2_fjr74"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://8qc41ibiwbw" path="res://scenes/terrain/nature/trees/pinetreelarge/PineTreeLarge.tscn" id="8_jrm0a"]
 [ext_resource type="PackedScene" uid="uid://koikh2ns5rr8" path="res://scenes/terrain/nature/trees/pinetreemedium/PineTreeMedium.tscn" id="9_oy0uv"]
 [ext_resource type="PackedScene" uid="uid://dh1m2cphq5kev" path="res://scenes/terrain/nature/trees/pinetreeshort/PineTreeShort.tscn" id="10_1j8e4"]
+[ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_7jhmb"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_3w1ia")
@@ -219,6 +220,11 @@ position = Vector2(503, -741)
 
 [node name="PineTreeShort4" parent="Entities/Map/Nature" instance=ExtResource("10_1j8e4")]
 position = Vector2(72, -1061)
+
+[node name="PlayerRespawnLocations" type="Node2D" parent="."]
+
+[node name="PlayerRespawnLocation" parent="PlayerRespawnLocations" instance=ExtResource("12_7jhmb")]
+position = Vector2(-32, -48)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0

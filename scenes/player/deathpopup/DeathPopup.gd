@@ -1,27 +1,38 @@
-extends Panel
+extends Control
 
 signal respawn_player
-var respawn_time: int = 10
+var respawn_time: float = J.PLAYER_RESPAWN_TIME
 var counter = respawn_time
+var timer: Timer
+@onready var count_down_label: Label = $Panel/CountdownLabel
+
 
 func _ready():
-	$Timer.timeout.connect(_on_timer_timeout)
+	timer = Timer.new()
+	timer.name = "Timer"
+	timer.autostart = false
+	timer.timeout.connect(_on_timer_timeout)
+	add_child(timer)
+
 
 func show_popup():
 	self.show()
-	$Timer.set_wait_time(respawn_time)
-	$Timer.start()
+	timer.start(respawn_time)
+
 
 func _on_timer_timeout():
 	emit_signal("respawn_player")
 	self.hide()
-	
+
+
 func _process(_delta):
 	if !self.visible:
 		return
-		
+
 	if counter > 0:
 		counter -= 1
-		$CountdownLabel.text = "%d:%02d" % [floor($Timer.time_left / 60), int($Timer.time_left) % 60]
+		count_down_label.text = (
+			"%d:%02d" % [floor(timer.time_left / 60), int(timer.time_left) % 60]
+		)
 	else:
 		counter = respawn_time
