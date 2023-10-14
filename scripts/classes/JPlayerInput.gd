@@ -5,59 +5,112 @@ class_name JPlayerInput
 signal move(target_position: Vector2)
 signal interact(target_name: String)
 
-var mouse_area: Area2D
+#Signals for use with other UI elements
+#These MAY not be usable in collision related logic due to not being synchronized with physics
+signal hovered_enemy(node:Node2D)
+signal hovered_npc(node:Node2D)
+signal hovered_item(node:Node2D)
+signal hovered_player(node:Node2D)
 
+const CursorGraphics:Dictionary = {
+	DEFAULT=preload("res://assets/ui/cursors/DefaultCursor.png"), 
+	ATTACK=preload("res://assets/ui/cursors/AttackCursor.png"), 
+	TALK=preload("res://assets/ui/cursors/TalkCursor.png"), 
+	PICKUP=preload("res://assets/ui/cursors/LootCursor.png")}
+
+var pointParams := PhysicsPointQueryParameters2D.new()
+var targetCurrent: Node2D
+var lastHoverTarget: Node2D
 
 func _ready():
 	if J.is_server():
 		set_process_input(false)
+		set_process(false)
+		
 	else:
-		mouse_area = Area2D.new()
-		mouse_area.name = "MouseArea"
-		mouse_area.collision_layer = 0
-		mouse_area.collision_mask = (
+		#Set parameters for point-casting (can use ShapeParameters instead if necessary)
+		pointParams.collide_with_areas = true
+		pointParams.collide_with_bodies = true
+		pointParams.collision_mask = (
 			J.PHYSICS_LAYER_PLAYERS
 			+ J.PHYSICS_LAYER_ENEMIES
 			+ J.PHYSICS_LAYER_NPCS
 			+ J.PHYSICS_LAYER_ITEMS
-		)
-		var cs_mouse_area = CollisionShape2D.new()
-		cs_mouse_area.name = "MouseAreaCollisionShape2D"
-		mouse_area.add_child(cs_mouse_area)
+			)
+		
+		#Set the cursor back to default if this object is deleted for any reasons
+		tree_exiting.connect(set_cursor.bind(CursorGraphics.DEFAULT))
 
-		var cs_mouse_area_circle = CircleShape2D.new()
-
-		cs_mouse_area_circle.radius = 1.0
-		cs_mouse_area.shape = cs_mouse_area_circle
-
-		add_child(mouse_area)
-
-
-func _input(event):
+func _input(event:InputEvent):
 	# Don't do anything when above ui
 	if JUI.above_ui:
 		return
-
+	
 	if event.is_action_pressed("j_right_click"):
-		_handle_right_click()
+		_handle_right_click( get_global_mouse_position() )
 
 
-func _handle_right_click():
-	mouse_area.set_global_position(get_global_mouse_position())
+func _process(_delta: float) -> void:
+	#This update is frame based as to update the cursor visually on the client
+	update_target(get_global_mouse_position())
+	
+	#If the retrieved target is the same as last frame, skip the rest.
+	if targetCurrent == lastHoverTarget:
+		return
+		
+	#Initialize empty variable
+	var cursorToUse:Texture
+	
+	#Check any of the world nodes to see which is this target's parent
+	if targetCurrent == null:
+		cursorToUse = CursorGraphics.DEFAULT
+	elif targetCurrent.get_parent() == J.world.enemies:
+		cursorToUse = CursorGraphics.ATTACK
+		hovered_enemy.emit(targetCurrent)
+	elif targetCurrent.get_parent() == J.world.players:
+		cursorToUse = CursorGraphics.DEFAULT
+		hovered_player.emit(targetCurrent)
+	elif targetCurrent.get_parent() == J.world.npcs:
+		cursorToUse = CursorGraphics.TALK
+		hovered_npc.emit(targetCurrent)
+	elif targetCurrent.get_parent() == J.world.items:
+		cursorToUse = CursorGraphics.PICKUP
+		hovered_item.emit(targetCurrent)
+	
+	#Set the cursor
+	set_cursor(cursorToUse)
+	lastHoverTarget = targetCurrent
 
-	#The following awaits ensure that the collision cycle has occurred before calling
-	#the get_overlapping_bodies function
-	await get_tree().physics_frame
-	await get_tree().physics_frame
-
-	#Get the bodies under the mouse area
-	var bodies = mouse_area.get_overlapping_bodies()
-
-	#Move if nothing is under the mouse area
-	if bodies.is_empty():
-		move.emit(get_global_mouse_position())
+func _handle_right_click(clickGlobalPos:Vector2):
+	#Fetch targets under the cursor
+	update_target(clickGlobalPos)
+	
+	#Either move or interact depending on wether something was there or not.
+	if targetCurrent == null:
+		move.emit(pointParams.position)
+		
 	else:
-		#TODO: not sure if this needs to be improved, just take the first
-		var target = bodies[0]
-		if target != self:
-			interact.emit(target.name)
+		#Ignore if it was self
+		if targetCurrent != self:
+			interact.emit(targetCurrent.get_name())
+
+func update_target(atGlobalPoint:Vector2):
+	#Do not proceed if outside the tree
+	if not is_inside_tree(): return
+	
+	#Get the world's space
+	var directSpace:PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	
+	#Set the target position
+	pointParams.position = atGlobalPoint
+	
+	#Update collisions from point
+	var collisions: Array[Dictionary] = directSpace.intersect_point(pointParams)
+	
+	if collisions.is_empty():
+		targetCurrent = null
+	else:
+		targetCurrent = collisions.front().get("collider")
+
+func set_cursor(graphic:Texture):
+	DisplayServer.cursor_set_custom_image(graphic)
