@@ -1,5 +1,5 @@
 extends Control
-class_name InputRemappingUI
+class_name InputRemapping
 ## Recommended for use in a VBoxContainer
 ## Fills itself with buttons to remap actions
 
@@ -39,6 +39,8 @@ func _ready() -> void:
 	remap_initiated.connect( temporary_text_signaled.bind(Messages.INITIATED, remap_finished) )
 	remap_aborted.connect( temporary_text_timed.bind(Messages.ABORTED, tempTextDuration) )
 	remap_successful.connect( temporary_text_timed.bind(Messages.SUCCESSFUL, tempTextDuration) )
+	
+	tree_exiting.connect( save_mappings )
 	
 #Creates text on screen that dissapears after some time or when the signal is called
 func temporary_text_timed(tempText:String, duration:float):
@@ -186,3 +188,30 @@ func _input(event:InputEvent):
 	
 	update_list()
 
+func get_mappings_as_dict()->Dictionary:
+	var inputDict:Dictionary = {}
+	for action in actionsAllowed:
+		inputDict[action] = []
+		for event in InputMap.action_get_events(action):
+			inputDict[action].append(event)
+		
+	return inputDict
+
+func save_mappings():
+	LocalSaveSystem.set_data(LocalSaveSystem.Sections.SETTINGS, "controlMappings", get_mappings_as_dict())
+	
+static func load_mappings():
+	var inputDict:Dictionary = LocalSaveSystem.get_data(LocalSaveSystem.Sections.SETTINGS, "controlMappings", {})
+
+	if inputDict.is_empty(): 
+		push_warning("No control mapping data was found, the default mappings will be used.")
+		return
+	
+	for action in inputDict:
+		#Wipe existing events from this action
+		if InputMap.has_action(action):
+			InputMap.action_erase_events(action)
+			
+		for event in inputDict[action]:
+			InputMap.action_add_event(action, event)
+	
