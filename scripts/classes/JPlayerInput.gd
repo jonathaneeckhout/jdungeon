@@ -37,6 +37,7 @@ func _ready():
 			+ J.PHYSICS_LAYER_NPCS
 			+ J.PHYSICS_LAYER_ITEMS
 			)
+		set_cursor(CursorGraphics.DEFAULT)
 		
 		#Set the cursor back to default if this object is deleted for any reasons
 		tree_exiting.connect(set_cursor.bind(CursorGraphics.DEFAULT))
