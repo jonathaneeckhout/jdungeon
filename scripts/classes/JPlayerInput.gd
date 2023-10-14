@@ -64,15 +64,19 @@ func _process(_delta: float) -> void:
 	#Check any of the world nodes to see which is this target's parent
 	if targetCurrent == null:
 		cursorToUse = CursorGraphics.DEFAULT
+		
 	elif targetCurrent.get_parent() == J.world.enemies:
 		cursorToUse = CursorGraphics.ATTACK
 		hovered_enemy.emit(targetCurrent)
+		
 	elif targetCurrent.get_parent() == J.world.players:
 		cursorToUse = CursorGraphics.DEFAULT
 		hovered_player.emit(targetCurrent)
+		
 	elif targetCurrent.get_parent() == J.world.npcs:
 		cursorToUse = CursorGraphics.TALK
 		hovered_npc.emit(targetCurrent)
+		
 	elif targetCurrent.get_parent() == J.world.items:
 		cursorToUse = CursorGraphics.PICKUP
 		hovered_item.emit(targetCurrent)
