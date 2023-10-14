@@ -26,6 +26,7 @@ func _input(event):
 		JUI.above_ui = not isVisible
 		
 		if not isVisible:
+			LocalSaveSystem.save_file()
 			close_submenu()
 
 	
@@ -39,17 +40,19 @@ func _input(event):
 			var isInsideSubMenu:bool = true
 			#If a submenu exists, check if it is ACTUALLY inside
 			if is_instance_valid(subMenuReference): 
-				isInsideMenu = Rect2(Vector2(subMenuReference.position.x,subMenuReference.position.y),Vector2(subMenuReference.size.x,subMenuReference.size.y)).has_point(event_local.position)
+				isInsideSubMenu = Rect2(Vector2(subMenuReference.position.x,subMenuReference.position.y),Vector2(subMenuReference.size.x,subMenuReference.size.y)).has_point(event_local.position)
 			
 			if not (isInsideMenu or isInsideSubMenu):
 				self.hide()
 				JUI.above_ui=false 
 				
+				LocalSaveSystem.save_file()
 				close_submenu()
 					
 				get_viewport().set_input_as_handled()
 				
 func close_submenu():
+	LocalSaveSystem.save_file()
 	if is_instance_valid(subMenuReference):
 		subMenuReference.queue_free()
 
