@@ -108,8 +108,12 @@ func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
 	add_child(text)
 
 
-func _on_healed(_from: String, _hp: int, _max_hp: int, healing: int):
-	print("Healed %d" % healing)
+func _on_healed(_from: String, hp: int, max_hp: int, healing: int):
+	$JInterface.update_hp_bar(hp, max_hp)
+	var text = floating_text_scene.instantiate()
+	text.amount = healing
+	text.type = text.TYPES.HEALING
+	add_child(text)
 
 
 func load_equipment_single_sprite(equipment_slot: String):
