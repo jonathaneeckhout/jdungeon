@@ -153,6 +153,11 @@ func _on_peer_disconnected(id):
 	if id in players_by_id:
 		var player = players_by_id[id]
 
+		# If the player is dead, we will respawn him first before storing the player's data
+		if player.is_dead:
+			player.position = find_player_respawn_location(player.position)
+			player.stats.reset_hp()
+
 		player.store_data()
 
 		J.logger.info("Removing player=[%s]" % player.name)
