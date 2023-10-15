@@ -73,7 +73,15 @@ func _init():
 func die():
 	super()
 
+	collision_layer -= J.PHYSICS_LAYER_PLAYERS
+
 	respawn_timer.start(J.PLAYER_RESPAWN_TIME)
+
+
+func respawn(location: Vector2):
+	super(location)
+
+	collision_layer += J.PHYSICS_LAYER_PLAYERS
 
 
 func store_data():
