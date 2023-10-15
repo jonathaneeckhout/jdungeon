@@ -216,4 +216,5 @@ func _on_respawned():
 	$Camera2D/UILayer/GUI/DeathPopup.hide()
 	# Fetch your new hp
 	stats.get_sync.rpc_id(1, peer_id)
+	loop_animation = "Idle"
 	animation_player.play(loop_animation)
