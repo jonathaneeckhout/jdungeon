@@ -110,7 +110,12 @@ func _physics_process(delta: float):
 
 
 func behavior(_delta: float):
-	if moving:
+	if player.is_dead:
+		player.velocity = Vector2.ZERO
+		moving = false
+		interacting = false
+		interact_target = null
+	elif moving:
 		if player.position.distance_to(move_target) > J.ARRIVAL_DISTANCE:
 			player.velocity = (
 				player.position.direction_to(move_target) * player_stats.movement_speed

@@ -2,8 +2,6 @@ extends JBody2D
 
 class_name JPlayerBody2D
 
-signal respawned
-
 var peer_id: int = 1
 var username: String = ""
 
@@ -97,20 +95,4 @@ func _on_persistency_timer_timeout():
 
 func _on_respawn_timer_timeout():
 	var respawn_location: Vector2 = J.world.find_player_respawn_location(self.position)
-
-	# Set the player to the respawn location
-	position = respawn_location
-
-	#Let's bring the player back to life
-	stats.reset_hp()
-
-	velocity = Vector2.ZERO
-	loop_animation = "Idle"
-	synchronizer.sync_loop_animation(loop_animation, velocity)
-
-	# Let the player take part of the world again
-	collision_layer += J.PHYSICS_LAYER_WORLD
-
-	respawned.emit()
-
-	synchronizer.sync_respawn()
+	respawn(respawn_location)
