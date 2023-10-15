@@ -210,3 +210,5 @@ func _on_died():
 
 func _on_respawned():
 	$Camera2D/UILayer/GUI/DeathPopup.hide()
+	# Fetch your new hp
+	stats.get_sync.rpc_id(1, peer_id)

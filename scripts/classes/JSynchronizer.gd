@@ -270,6 +270,10 @@ func loop_animation(timestamp: float, animation: String, direction: Vector2):
 
 
 @rpc("call_remote", "authority", "reliable") func respawn(timestamp: float):
+	# Clear the buffers to reset the inter and extrapolation
+	server_syncs_buffer = []
+	server_network_buffer = []
+
 	server_network_buffer.append({"type": SYNC_TYPES.RESPAWN, "timestamp": timestamp})
 
 

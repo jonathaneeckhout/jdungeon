@@ -58,6 +58,7 @@ func _init():
 		respawn_timer = Timer.new()
 		respawn_timer.name = "RespawnTimer"
 		respawn_timer.autostart = false
+		respawn_timer.one_shot = true
 		respawn_timer.wait_time = J.PLAYER_RESPAWN_TIME
 		respawn_timer.timeout.connect(_on_respawn_timer_timeout)
 		add_child(respawn_timer)
