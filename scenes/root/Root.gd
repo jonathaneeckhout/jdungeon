@@ -10,7 +10,13 @@ func _ready():
 	register_enemies()
 	register_npcs()
 	register_items()
-
+	
+	#Argument reading.
+	var args:PackedStringArray = OS.get_cmdline_args()
+	if "j_client" in args:
+		$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.emit()
+	elif "j_server" in args:
+		$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.emit()
 
 func register_enemies():
 	J.register_enemy_scene("Sheep", "res://scenes/enemies/Sheep/Sheep.tscn")
