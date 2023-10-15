@@ -51,9 +51,9 @@ func hurt(from: CharacterBody2D, damage: int):
 		if stats.experience_given > 0:
 			from.stats.add_experience(name, stats.experience_given)
 
-	# Can't die twice
-	if not is_dead:
-		die()
+		# Can't die twice
+		if not is_dead:
+			die()
 
 
 func heal(from: CharacterBody2D, healing: int):
