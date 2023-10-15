@@ -76,7 +76,7 @@ func register_items():
 func parse_cmd_arguments():
 	var args:PackedStringArray = OS.get_cmdline_args()
 	if not args.is_empty():
-		J.logger.info("Founds launch arguments. ", str(args))
+		J.logger.info("Found launch arguments. ", str(args))
 		
 	for arg in args:
 		if arg == "j_client":
