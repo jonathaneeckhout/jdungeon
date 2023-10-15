@@ -42,6 +42,8 @@ func _ready():
 	if J.is_server() or peer_id != multiplayer.get_unique_id():
 		set_process_input(false)
 		$Camera2D.queue_free()
+		# Make sure to load equipment on server side
+		equipment_changed()
 	else:
 		$Camera2D/UILayer/GUI/Inventory.register_signals()
 		$Camera2D/UILayer/GUI/Equipment.register_signals()
@@ -206,9 +208,12 @@ func _on_level_gained(_current_level: int, _amount: int, _experience_needed: int
 
 func _on_died():
 	$Camera2D/UILayer/GUI/DeathPopup.show_popup()
+	animation_player.stop()
+	animation_player.play("Die")
 
 
 func _on_respawned():
 	$Camera2D/UILayer/GUI/DeathPopup.hide()
 	# Fetch your new hp
 	stats.get_sync.rpc_id(1, peer_id)
+	animation_player.play(loop_animation)
