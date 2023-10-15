@@ -11,12 +11,8 @@ func _ready():
 	register_npcs()
 	register_items()
 	
-	#Argument reading.
-	var args:PackedStringArray = OS.get_cmdline_args()
-	if "j_client" in args:
-		$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.emit()
-	elif "j_server" in args:
-		$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.emit()
+	parse_cmd_arguments()
+
 
 func register_enemies():
 	J.register_enemy_scene("Sheep", "res://scenes/enemies/Sheep/Sheep.tscn")
@@ -76,6 +72,20 @@ func register_items():
 	J.register_item_scene(
 		"PlateLegs", "res://scenes/items/equipment/armour/platelegs/PlateLegs.tscn"
 	)
+
+func parse_cmd_arguments():
+	var args:PackedStringArray = OS.get_cmdline_args()
+	if not args.is_empty():
+		J.logger.info("Founds launch arguments. ", str(args))
+		
+	for arg in args:
+		if arg == "j_client":
+			$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.emit()
+			break
+			
+		elif "j_server" in args:
+			$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.emit()
+			break
 
 
 func _on_run_as_server_pressed():
