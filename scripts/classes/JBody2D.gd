@@ -51,6 +51,8 @@ func hurt(from: CharacterBody2D, damage: int):
 		if stats.experience_given > 0:
 			from.stats.add_experience(name, stats.experience_given)
 
+	# Can't die twice
+	if not is_dead:
 		die()
 
 
@@ -80,12 +82,8 @@ func die():
 func respawn(location: Vector2):
 	position = location
 	is_dead = false
-	collision_layer -= J.PHYSICS_LAYER_WORLD
+	collision_layer += J.PHYSICS_LAYER_WORLD
 	stats.reset_hp()
-
-	velocity = Vector2.ZERO
-	loop_animation = "Idle"
-	synchronizer.sync_loop_animation(loop_animation, velocity)
 
 	respawned.emit()
 

@@ -106,6 +106,7 @@ func _physics_process(delta: float):
 	if J.is_server():
 		behavior(delta)
 
+	if not player.is_dead:
 		player.move_and_slide()
 
 
@@ -115,6 +116,7 @@ func behavior(_delta: float):
 		moving = false
 		interacting = false
 		interact_target = null
+		player.send_new_loop_animation("Idle")
 	elif moving:
 		if player.position.distance_to(move_target) > J.ARRIVAL_DISTANCE:
 			player.velocity = (
