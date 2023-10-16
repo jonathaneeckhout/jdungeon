@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     adb \
     openjdk-11-jdk-headless \
     rsync \
-    dotnet-sdk-7.0 \
+    dotnet-sdk-6.0 \
     && rm -rf /var/lib/apt/lists/*
 
 
