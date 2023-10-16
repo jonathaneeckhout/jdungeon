@@ -28,7 +28,7 @@ var death_popup_instance = load("res://scenes/player/deathpopup/DeathPopup.tscn"
 
 
 func _ready():
-	stats.max_hp = 50
+	stats.hp_max = 50
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.attacked.connect(_on_attacked)
 	synchronizer.healed.connect(_on_healed)
@@ -103,15 +103,15 @@ func _on_attacked(target: String, _damage: int):
 	update_face_direction(position.direction_to(enemy.position).x)
 
 
-func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
-	$JInterface.update_hp_bar(hp, max_hp)
+func _on_got_hurt(_from: String, hp: int, hp_max: int, damage: int):
+	$JInterface.update_hp_bar(hp, hp_max)
 	var text = floating_text_scene.instantiate()
 	text.amount = damage
 	text.type = text.TYPES.DAMAGE
 	add_child(text)
 
 
-func _on_healed(_from: String, _hp: int, _max_hp: int, healing: int):
+func _on_healed(_from: String, _hp: int, _hp_max: int, healing: int):
 	print("Healed %d" % healing)
 
 
@@ -191,7 +191,7 @@ func _on_item_unequiped(_item_uuid: String):
 
 
 func _on_stats_synced():
-	$JInterface.update_hp_bar(stats.hp, stats.max_hp)
+	$JInterface.update_hp_bar(stats.hp, stats.hp_max)
 	update_exp_bar()
 	update_level()
 

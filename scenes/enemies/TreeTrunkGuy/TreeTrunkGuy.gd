@@ -33,7 +33,7 @@ func _ready():
 	super()
 	if J.is_server():
 		beehave_tree.enabled = true
-	stats.max_hp = 50
+	stats.hp_max = 50
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)
 	synchronizer.died.connect(_on_died)
@@ -90,11 +90,11 @@ func _on_died():
 	animation_player.play("Die")
 
 
-func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
+func _on_got_hurt(_from: String, hp: int, hp_max: int, damage: int):
 	if not is_dead:
 		animation_player.stop()
 		animation_player.play("Hurt")
-	$JInterface.update_hp_bar(hp, max_hp)
+	$JInterface.update_hp_bar(hp, hp_max)
 	var text = floating_text_scene.instantiate()
 	text.amount = damage
 	text.type = text.TYPES.DAMAGE
@@ -109,7 +109,7 @@ func _on_loop_animation_changed(animation: String, direction: Vector2):
 
 
 func _on_stats_synced():
-	$JInterface.update_hp_bar(stats.hp, stats.max_hp)
+	$JInterface.update_hp_bar(stats.hp, stats.hp_max)
 
 
 func _on_stuck_timer_timeout():

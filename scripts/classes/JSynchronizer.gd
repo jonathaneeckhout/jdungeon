@@ -3,8 +3,8 @@ extends Node2D
 class_name JSynchronizer
 
 signal attacked(target: String, damage: int)
-signal got_hurt(from: String, hp: int, max_hp: int, damage: int)
-signal healed(from: String, hp: int, max_hp: int, healing: int)
+signal got_hurt(from: String, hp: int, hp_max: int, damage: int)
+signal healed(from: String, hp: int, hp_max: int, healing: int)
 signal loop_animation_changed(animation: String, direction: Vector2)
 signal died
 signal experience_gained(from: String, current_exp: int, amount: int)
@@ -107,14 +107,14 @@ func check_server_network_buffer():
 					attacked.emit(entry["target"], entry["damage"])
 				SYNC_TYPES.HURT:
 					to_be_synced.stats.hp = entry["hp"]
-					to_be_synced.stats.max_hp = entry["hp"]
+					to_be_synced.stats.hp_max = entry["hp"]
 
-					got_hurt.emit(entry["from"], entry["hp"], entry["max_hp"], entry["damage"])
+					got_hurt.emit(entry["from"], entry["hp"], entry["hp_max"], entry["damage"])
 				SYNC_TYPES.HEAL:
 					to_be_synced.stats.hp = entry["hp"]
-					to_be_synced.stats.max_hp = entry["hp"]
+					to_be_synced.stats.hp_max = entry["hp"]
 
-					healed.emit(entry["from"], entry["hp"], entry["max_hp"], entry["healing"])
+					healed.emit(entry["from"], entry["hp"], entry["hp_max"], entry["healing"])
 				SYNC_TYPES.LOOP_ANIMATION:
 					loop_animation_changed.emit(entry["animation"], entry["direction"])
 				SYNC_TYPES.DIE:
@@ -142,22 +142,22 @@ func sync_attack(target: String, damage: int):
 	attacked.emit(target, damage)
 
 
-func sync_hurt(from: String, hp: int, max_hp: int, damage: int):
+func sync_hurt(from: String, hp: int, hp_max: int, damage: int):
 	var timestamp = Time.get_unix_time_from_system()
 
 	for watcher in watchers:
-		hurt.rpc_id(watcher.peer_id, timestamp, from, hp, max_hp, damage)
+		hurt.rpc_id(watcher.peer_id, timestamp, from, hp, hp_max, damage)
 
-	got_hurt.emit(from, hp, max_hp, damage)
+	got_hurt.emit(from, hp, hp_max, damage)
 
 
-func sync_heal(from: String, hp: int, max_hp: int, healing: int):
+func sync_heal(from: String, hp: int, hp_max: int, healing: int):
 	var timestamp = Time.get_unix_time_from_system()
 
 	for watcher in watchers:
-		heal.rpc_id(watcher.peer_id, timestamp, from, hp, max_hp, healing)
+		heal.rpc_id(watcher.peer_id, timestamp, from, hp, hp_max, healing)
 
-	healed.emit(from, hp, max_hp, healing)
+	healed.emit(from, hp, hp_max, healing)
 
 
 func sync_loop_animation(animation: String, direction: Vector2):
@@ -214,28 +214,28 @@ func attack(timestamp: float, target: String, damage: int):
 
 
 @rpc("call_remote", "authority", "reliable")
-func hurt(timestamp: float, from: String, hp: int, max_hp: int, damage: int):
+func hurt(timestamp: float, from: String, hp: int, hp_max: int, damage: int):
 	server_network_buffer.append(
 		{
 			"type": SYNC_TYPES.HURT,
 			"timestamp": timestamp,
 			"from": from,
 			"hp": hp,
-			"max_hp": max_hp,
+			"hp_max": hp_max,
 			"damage": damage
 		}
 	)
 
 
 @rpc("call_remote", "authority", "reliable")
-func heal(timestamp: float, from: String, hp: int, max_hp: int, healing: int):
+func heal(timestamp: float, from: String, hp: int, hp_max: int, healing: int):
 	server_network_buffer.append(
 		{
 			"type": SYNC_TYPES.HEAL,
 			"timestamp": timestamp,
 			"from": from,
 			"hp": hp,
-			"max_hp": max_hp,
+			"hp_max": hp_max,
 			"healing": healing
 		}
 	)
