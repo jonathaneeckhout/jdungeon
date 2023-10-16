@@ -73,7 +73,7 @@ jobs:
           godot -v --headless --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
       - name: Add config
         run: |
-          cp .env.example build/linux/.env
+          cp .env.example build/windows/.env
       - name: Upload Artifact
         uses: actions/upload-artifact@v3.0.0
         with:
