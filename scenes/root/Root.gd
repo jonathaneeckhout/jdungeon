@@ -79,13 +79,14 @@ func parse_cmd_arguments():
 		J.logger.info("Found launch arguments. ", str(args))
 		
 	for arg in args:
-		if arg == "j_client":
-			$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.emit()
-			break
-			
-		elif "j_server" in args:
-			$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.emit()
-			break
+		match arg:
+			"j_client":
+				$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.emit()
+				break
+				
+			"j_server":
+				$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.emit()
+				break
 
 
 func _on_run_as_server_pressed():
