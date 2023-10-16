@@ -9,7 +9,7 @@ env:
 jobs:
   build-linux:
     name: Linux Export
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container:
       image: barichello/godot-ci:mono-4.1.2
     steps:
@@ -36,7 +36,7 @@ jobs:
           path: build/linux
   build-windows:
     name: Windows Export
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container:
       image: barichello/godot-ci:mono-4.1.2
     steps:
