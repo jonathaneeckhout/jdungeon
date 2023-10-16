@@ -1,4 +1,6 @@
 [![build latest jdungeon](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-latest.yml/badge.svg)](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-latest.yml)
+[![](https://dcbadge.vercel.app/api/server/KGwTyXumdv?style=flat)](https://discord.gg/KGwTyXumdv)
+
 
 # JDungeon
 
