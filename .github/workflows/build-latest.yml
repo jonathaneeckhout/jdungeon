@@ -2,7 +2,7 @@ name: build latest jdungeon
 on: [push]
 
 env:
-  GODOT_VERSION: "4.1"
+  GODOT_VERSION: "mono-4.1.2"
   EXPORT_NAME: JDungeon
   PROJECT_PATH: ./
 
