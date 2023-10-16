@@ -53,7 +53,8 @@ jobs:
         run: |
           mkdir -v -p build/windows
           cd $PROJECT_PATH
-          godot -v --headless --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
       - name: Add config
         run: |
           cp .env.example build/windows/.env
