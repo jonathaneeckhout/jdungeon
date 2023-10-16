@@ -37,7 +37,7 @@ jobs:
           godot -v --headless --export-release "Linux/X11" build/linux/$EXPORT_NAME.x86_64
       - name: Add config
         run: |
-          cp build/linux/.env.example build/linux/.env
+          cp .env.example build/linux/.env
       - name: Upload Artifact
         uses: actions/upload-artifact@v3.0.0
         with:
@@ -64,7 +64,7 @@ jobs:
           godot -v --headless --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
       - name: Add config
         run: |
-          cp build/linux/.env.example build/linux/.env
+          cp .env.example build/linux/.env
       - name: Upload Artifact
         uses: actions/upload-artifact@v3.0.0
         with:
