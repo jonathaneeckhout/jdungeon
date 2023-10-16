@@ -1,4 +1,4 @@
-name: build and push the latest docker image
+name: build and push the latest godot docker image
 on: [push]
 
 jobs:
