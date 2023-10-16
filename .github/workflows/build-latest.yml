@@ -11,7 +11,7 @@ jobs:
     name: Linux Export
     runs-on: ubuntu-22.04
     container:
-      image: mawakajaka/godot
+      image: mawakajaka/godot:dev_add_actions
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
     name: Windows Export
     runs-on: ubuntu-22.04
     container:
-      image: mawakajaka/godot
+      image: mawakajaka/godot:dev_add_actions
     steps:
       - name: Checkout
         uses: actions/checkout@v3
