@@ -21,7 +21,7 @@ func _on_respawn_timer_timeout():
 	var enemy: JEnemyBody2D = J.enemy_scenes[enemy_class].instantiate()
 	enemy.name = str(enemy.get_instance_id())
 	enemy.position = respawn_position
-	enemy.respawn = true
+	enemy.should_respawn = true
 	enemy.respawn_time = respawn_time
 
 	J.world.enemies.add_child(enemy)
