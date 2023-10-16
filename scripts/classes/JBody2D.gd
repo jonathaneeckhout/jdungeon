@@ -36,19 +36,19 @@ func _init():
 func attack(target: CharacterBody2D):
 	var damage = randi_range(stats.attack_power_min, stats.attack_power_max)
 
-	target.hurt(self, damage)
+	target.hp_hurt(self, damage)
 	synchronizer.sync_attack(target.name, damage)
 
 
 func hurt(from: CharacterBody2D, damage: int):
-	var damage_done: int = stats.hurt(damage)
+	var damage_done: int = stats.hp_hurt(damage)
 
-	synchronizer.sync_hurt(from.name, stats.hp, stats.max_hp, damage_done)
+	synchronizer.sync_hurt(from.name, stats.hp, stats.hp_max, damage_done)
 
 	# R.I.P. you're dead
 	if stats.hp <= 0:
-		if stats.experience_given > 0:
-			from.stats.add_experience(name, stats.experience_given)
+		if stats.experience_worth > 0:
+			from.stats.add_experience(name, stats.experience_worth)
 
 		die()
 
@@ -56,7 +56,7 @@ func hurt(from: CharacterBody2D, damage: int):
 func heal(from: CharacterBody2D, healing: int):
 	var healing_done: int = stats.heal(healing)
 
-	synchronizer.sync_heal(from.name, stats.hp, stats.max_hp, healing_done)
+	synchronizer.sync_heal(from.name, stats.hp, stats.hp_max, healing_done)
 
 
 func send_new_loop_animation(animation: String):
