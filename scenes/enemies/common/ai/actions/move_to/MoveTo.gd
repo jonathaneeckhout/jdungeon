@@ -30,8 +30,10 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 
 
 func _reset(actor: Node):
-	actor.stuck.disconnect(_stuck)
-	actor.destination_reached.disconnect(_destination_reached)
+	if actor.stuck.is_connected(_stuck):
+		actor.stuck.disconnect(_stuck)
+	if actor.destination_reached.is_connected(_destination_reached):
+		actor.destination_reached.disconnect(_destination_reached)
 	stuck = false
 	destination_reached = false
 

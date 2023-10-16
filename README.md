@@ -1,3 +1,7 @@
+[![build latest jdungeon](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-latest.yml/badge.svg)](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-latest.yml)
+[![](https://dcbadge.vercel.app/api/server/KGwTyXumdv?style=flat)](https://discord.gg/KGwTyXumdv)
+
+
 # JDungeon
 
 **JDungeon** is a free-to-play, open-source Massively Online Role-Playing Game (MORPG) set in a medieval fantasy world. With its top-down 2D perspective, it offers an immersive gaming experience. JDungeon is built on the principles of community-driven development, accessibility, and inclusivity.
@@ -85,7 +89,7 @@ Enjoy!
 
 We encourage contributions from the community. If you'd like to contribute to JDungeon, please follow the guidelines in our [Contribution Guide](CONTRIBUTING.md).
 
-If you plan to contribute, have a look at the open issues on GitHub. These issues play a crucial role in helping us achieve important milestones and shape the development of JDungeon. You can find the list of open issues in our [Issues](https://github.com/jonathaneeckhout/jdungeon/issues) section.
+If you plan to contribute, have a look at the open issues on GitHub. These issues play a crucial role in helping us achieve important milestones ([current milestone we're working on](https://github.com/jonathaneeckhout/jdungeon/milestone/1)) and shape the development of JDungeon. You can find the list of open issues in our [Issues](https://github.com/jonathaneeckhout/jdungeon/issues) section.
 
 This addition will provide potential contributors with a clear path to engage with the project by emphasizing the significance of the open issues in reaching project goals.
 

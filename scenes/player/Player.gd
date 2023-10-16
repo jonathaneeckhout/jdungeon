@@ -24,8 +24,6 @@ extends JPlayerBody2D
 	"LeftHand": $Sprites/LeftHand.texture
 }
 
-var death_popup_instance = load("res://scenes/player/deathpopup/DeathPopup.tscn").instantiate()
-
 
 func _ready():
 	stats.max_hp = 50
@@ -36,8 +34,6 @@ func _ready():
 
 	equipment.item_added.connect(_on_item_equiped)
 	equipment.item_removed.connect(_on_item_unequiped)
-	
-	synchronizer.died.connect(_on_died)
 
 	animation_player.play(loop_animation)
 
@@ -46,6 +42,8 @@ func _ready():
 	if J.is_server() or peer_id != multiplayer.get_unique_id():
 		set_process_input(false)
 		$Camera2D.queue_free()
+		# Make sure to load equipment on server side
+		equipment_changed()
 	else:
 		$Camera2D/UILayer/GUI/Inventory.register_signals()
 		$Camera2D/UILayer/GUI/Equipment.register_signals()
@@ -60,10 +58,9 @@ func _ready():
 
 		synchronizer.experience_gained.connect(_on_experience_gained)
 		synchronizer.level_gained.connect(_on_level_gained)
-		
-		add_child(death_popup_instance)
-		death_popup_instance.respawn_player.connect(_on_respawn_timer_timeout)
-		death_popup_instance.hide()
+
+		synchronizer.died.connect(_on_died)
+		synchronizer.respawned.connect(_on_respawned)
 
 
 func _physics_process(_delta):
@@ -111,8 +108,12 @@ func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
 	add_child(text)
 
 
-func _on_healed(_from: String, _hp: int, _max_hp: int, healing: int):
-	print("Healed %d" % healing)
+func _on_healed(_from: String, hp: int, max_hp: int, healing: int):
+	$JInterface.update_hp_bar(hp, max_hp)
+	var text = floating_text_scene.instantiate()
+	text.amount = healing
+	text.type = text.TYPES.HEALING
+	add_child(text)
 
 
 func load_equipment_single_sprite(equipment_slot: String):
@@ -207,15 +208,17 @@ func _on_experience_gained(_from: String, _current_exp: int, amount: int):
 
 func _on_level_gained(_current_level: int, _amount: int, _experience_needed: int):
 	update_level()
-	
-	
+
+
 func _on_died():
-	death_popup_instance.show_popup()
-
-func _on_respawn_timer_timeout():
-	death_popup_instance.show()
-	respawn_at_nearest_location()
+	$Camera2D/UILayer/GUI/DeathPopup.show_popup()
+	animation_player.stop()
+	animation_player.play("Die")
 
 
-func respawn_at_nearest_location():
-	print("respawned")
+func _on_respawned():
+	$Camera2D/UILayer/GUI/DeathPopup.hide()
+	# Fetch your new hp
+	stats.get_sync.rpc_id(1, peer_id)
+	loop_animation = "Idle"
+	animation_player.play(loop_animation)
