@@ -12,6 +12,7 @@ var inventory: JInventory
 var equipment: JEquipment
 
 var persistency_timer: Timer
+var respawn_timer: Timer
 
 
 func _init():
@@ -52,6 +53,14 @@ func _init():
 		persistency_timer.timeout.connect(_on_persistency_timer_timeout)
 		add_child(persistency_timer)
 
+		respawn_timer = Timer.new()
+		respawn_timer.name = "RespawnTimer"
+		respawn_timer.autostart = false
+		respawn_timer.one_shot = true
+		respawn_timer.wait_time = J.PLAYER_RESPAWN_TIME
+		respawn_timer.timeout.connect(_on_respawn_timer_timeout)
+		add_child(respawn_timer)
+
 	else:
 		player_input = JPlayerInput.new()
 		player_input.name = "PlayerInput"
@@ -59,6 +68,20 @@ func _init():
 
 		player_input.move.connect(_on_move)
 		player_input.interact.connect(_on_interact)
+
+
+func die():
+	super()
+
+	collision_layer -= J.PHYSICS_LAYER_PLAYERS
+
+	respawn_timer.start(J.PLAYER_RESPAWN_TIME)
+
+
+func respawn(location: Vector2):
+	super(location)
+
+	collision_layer += J.PHYSICS_LAYER_PLAYERS
 
 
 func store_data():
@@ -76,3 +99,8 @@ func _on_interact(target_name: String):
 
 func _on_persistency_timer_timeout():
 	store_data()
+
+
+func _on_respawn_timer_timeout():
+	var respawn_location: Vector2 = J.world.find_player_respawn_location(self.position)
+	respawn(respawn_location)

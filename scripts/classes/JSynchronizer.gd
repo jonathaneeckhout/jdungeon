@@ -7,10 +7,11 @@ signal got_hurt(from: String, hp: int, max_hp: int, damage: int)
 signal healed(from: String, hp: int, max_hp: int, healing: int)
 signal loop_animation_changed(animation: String, direction: Vector2)
 signal died
+signal respawned
 signal experience_gained(from: String, current_exp: int, amount: int)
 signal level_gained(current_level: int, amount: int, experience_needed: int)
 
-enum SYNC_TYPES { ATTACK, HURT, HEAL, LOOP_ANIMATION, DIE, EXPERIENCE, LEVEL }
+enum SYNC_TYPES { ATTACK, HURT, HEAL, LOOP_ANIMATION, DIE, RESPAWN, EXPERIENCE, LEVEL }
 
 const INTERPOLATION_OFFSET = 0.1
 const INTERPOLATION_INDEX = 2
@@ -119,6 +120,8 @@ func check_server_network_buffer():
 					loop_animation_changed.emit(entry["animation"], entry["direction"])
 				SYNC_TYPES.DIE:
 					died.emit()
+				SYNC_TYPES.RESPAWN:
+					respawned.emit()
 				SYNC_TYPES.EXPERIENCE:
 					to_be_synced.stats.experience = entry["current_exp"]
 
@@ -176,6 +179,15 @@ func sync_die():
 		die.rpc_id(watcher.peer_id, timestamp)
 
 	died.emit()
+
+
+func sync_respawn():
+	var timestamp = Time.get_unix_time_from_system()
+
+	for watcher in watchers:
+		respawn.rpc_id(watcher.peer_id, timestamp)
+
+	respawned.emit()
 
 
 func sync_experience(from: String, current_exp: int, amount: int):
@@ -255,6 +267,14 @@ func loop_animation(timestamp: float, animation: String, direction: Vector2):
 
 @rpc("call_remote", "authority", "reliable") func die(timestamp: float):
 	server_network_buffer.append({"type": SYNC_TYPES.DIE, "timestamp": timestamp})
+
+
+@rpc("call_remote", "authority", "reliable") func respawn(timestamp: float):
+	# Clear the buffers to reset the inter and extrapolation
+	server_syncs_buffer = []
+	server_network_buffer = []
+
+	server_network_buffer.append({"type": SYNC_TYPES.RESPAWN, "timestamp": timestamp})
 
 
 @rpc("call_remote", "authority", "reliable")

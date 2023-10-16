@@ -6,7 +6,7 @@ const DESPAWN_TIME = 10.0
 
 var enemy_class: String = ""
 
-@export var respawn: bool = false
+@export var should_respawn: bool = false
 @export var respawn_time: float = 10.0
 
 @onready var spawn_position: Vector2 = position
@@ -41,7 +41,7 @@ func die():
 
 
 func _on_despawn_timer_timeout():
-	if respawn:
+	if should_respawn:
 		J.world.queue_enemy_respawn(enemy_class, spawn_position, respawn_time)
 
 	queue_free()
