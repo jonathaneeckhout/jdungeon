@@ -5,15 +5,21 @@ class_name JStats
 signal loaded
 signal synced
 
-const BASE_EXPERIENCE = 100
+const EXPERIENCE_PER_LEVEL_BASE:float = 100
+
 
 @export var parent: JBody2D
 
-var max_hp: int = 10:
-	set(new_max_hp):
-		max_hp = new_max_hp
-		hp = max_hp
-var hp: int = max_hp
+var hp_max: int = 10:
+	set(new_hp_max):
+		hp_max = clamp(new_hp_max, 0, INF)
+		
+		hp = hp
+		
+var hp: int = hp_max:
+	set(new_hp):
+		hp = clamp(new_hp, -INF, hp_max)
+		
 var attack_power_min: int = 0
 var attack_power_max: int = 10
 var attack_speed: float = 0.8
@@ -23,20 +29,19 @@ var defense: int = 0
 var movement_speed: float = 300.0
 
 var level: int = 1:
-	set(new_level):
-		level = new_level
-		experience_needed = calculate_experience_needed(level)
-
+	set(newLevel):
+		level = newLevel
+		
 var experience: int = 0
-var experience_needed: int = BASE_EXPERIENCE
-var experience_given: int = 0
+
+var experience_worth:int
 
 
-func hurt(damage: int) -> int:
+func hp_hurt(damage: int) -> int:
 	# # Reduce the damage according to the defense stat
 	var reduced_damage = max(0, damage - defense)
 
-	# # Deal damage if health pool is big enough
+	# # Deal damage if hp pool is big enough
 	if reduced_damage < hp:
 		hp -= reduced_damage
 	# # Die if damage is bigger than remaining hp
@@ -46,23 +51,23 @@ func hurt(damage: int) -> int:
 	return reduced_damage
 
 
-func heal(healing: int) -> int:
-	hp = min(max_hp, hp + healing)
+func hp_heal(healing: int) -> int:
+	hp = min(hp_max, hp + healing)
 
 	return healing
 
 
-func reset_hp():
-	hp = max_hp
+func hp_reset():
+	hp = hp_max
 
 
 func to_json() -> Dictionary:
-	return {"max_hp": max_hp, "hp": hp, "level": level, "experience": experience}
+	return {"hp_max": hp_max, "hp": hp, "level": level, "experience": experience}
 
 
 func from_json(data: Dictionary) -> bool:
-	if "max_hp" not in data:
-		J.logger.warn('Failed to load stats from data, missing "max_hp" key')
+	if "hp_max" not in data:
+		J.logger.warn('Failed to load stats from data, missing "hp_max" key')
 		return false
 
 	if "hp" not in data:
@@ -76,36 +81,36 @@ func from_json(data: Dictionary) -> bool:
 		J.logger.warn('Failed to load stats from data, missing "experience" key')
 		return false
 
-	max_hp = data["max_hp"]
+	hp_max = data["hp_max"]
 	hp = data["hp"]
 	level = data["level"]
 	experience = data["experience"]
 
-	# experience_needed = calculate_experience_needed(level)
+	# levelUpExperienceRequired = calculate_experience_needed(level)
 
 	loaded.emit()
 
 	return true
 
 
-func calculate_experience_needed(current_level: int):
-	# TODO: Replace placeholder function to calculate experience needed to level up
-	return BASE_EXPERIENCE + (BASE_EXPERIENCE * (pow(current_level, 2) - 1))
+#Level is based on the amount of experience the character has
+func level_get_from_experience()->float:
+	return experience / 100
 
+func level_get_experience_to_next()->float:
+	return fmod(experience, 100)
 
-func add_level(amount: int):
-	level += amount
-	# experience_needed = calculate_experience_needed(level)
-	parent.synchronizer.sync_level(level, amount, experience_needed)
+func level_update():
+	var originalLevel:int = level
+	level = level_get_from_experience()
+	
+	if originalLevel != level:
+		parent.synchronizer.sync_level( level, level - originalLevel, level_get_experience_to_next() )
 
-
-func add_experience(from: String, amount: int):
+func experience_add(from: String, amount: int):
 	experience += amount
 
-	while experience >= experience_needed:
-		experience -= experience_needed
-		add_level(1)
-
+	level_update()
 	parent.synchronizer.sync_experience(from, experience, amount)
 
 
@@ -118,7 +123,7 @@ func add_experience(from: String, amount: int):
 
 
 @rpc("call_remote", "authority", "unreliable") func sync(data: Dictionary):
-	max_hp = data["max_hp"]
+	hp_max = data["hp_max"]
 	hp = data["hp"]
 	level = data["level"]
 	experience = data["experience"]
