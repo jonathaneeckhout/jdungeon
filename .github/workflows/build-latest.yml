@@ -39,7 +39,7 @@ jobs:
     name: Windows Export
     runs-on: ubuntu-22.04
     container:
-      image: mawakajaka/godot:dev_add_actions
+      image: mawakajaka/godot:v1.0.0
     steps:
       - name: Checkout
         uses: actions/checkout@v3
