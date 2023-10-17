@@ -83,7 +83,7 @@ func stat_set(statKey:String, value:float):
 func stat_is_read_only(statkey:String)->bool:
 	return statkey in READ_ONLY_KEYS
 
-#Takes in a value and returns its value boosted by all the matching JStatBoosts
+#Takes in a value and returns it boosted by all the matching JStatBoosts for the given stat
 func stat_get_boosted(statKey:String, statValue:float)->float:
 	stat_boost_clean_array(statToBoostDict[statKey])
 	
@@ -105,6 +105,9 @@ func stat_get_boosted(statKey:String, statValue:float)->float:
 func stat_boost_add(statBoost:JStatBoost):
 	assert(statBoost.statKey in Keys.values(), "This statBoost has a key that doesn't exist.")
 	
+	#Abort if the stack limit is not infinite and it would exceed the boosts from the current source
+	if statBoost.stackLimit > 0 and stat_boost_get_stacks_from_source(statBoost.stackSource) > statBoost.stackLimit:
+		return
 	
 	statToBoostDict[statBoost.statKey].append(statBoost)
 	stackSourceToBoostDict[statBoost.stackSource].append(statBoost)
@@ -124,7 +127,7 @@ func stat_boost_clean_array(array:Array):
 		return is_instance_valid(obj)
 	)
 
-func stat_boost_create(key:String, amount:float, source:String = "", stackLimit:int = 0):
+func stat_boost_create(key:String, amount:float, source:String = "", stackLimit:int = 0)->JStatBoost:
 	var boost:=JStatBoost.new()
 	boost.source = source
 	boost.statKey = key
