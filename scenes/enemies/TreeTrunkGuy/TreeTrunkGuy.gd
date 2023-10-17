@@ -23,7 +23,7 @@ func _init():
 	super()
 	enemy_class = "TreeTrunkGuy"
 	stats.movement_speed = 150
-	stats.experience_given = 50
+	stats.experience_worth = 50
 
 
 func _ready():
