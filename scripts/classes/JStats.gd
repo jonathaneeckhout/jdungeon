@@ -24,7 +24,7 @@ const Keys:Dictionary = {
 
 #Stats which depend on other stats should not be directly set
 #Use their update_ method instead
-const READ_ONLY_KEYS:Array[String] = [Keys.HP_MAX, Keys.EVASION]
+const READ_ONLY_KEYS:Array[String] = [Keys.HP_MAX, Keys.EVASION, Keys.LEVEL]
 
 @export var parent: JBody2D
 
@@ -44,14 +44,20 @@ var attribute_mind: float
 		
 var evasion:float
 var accuracy:float
+
+var defense: float = 0
+
+#Movement speed should PROBABLY remain unaffected as much as possible
+var movement_speed: float = 300.0
 		
+#What do i do with these?
 var attack_power_min: int = 0
 var attack_power_max: int = 10
 var attack_speed: float = 0.8
 var attack_range: float = 64.0
-var defense: float = 0
 
-var movement_speed: float = 300.0
+
+
 
 var level: int = 1:
 	set(newLevel):
@@ -74,9 +80,13 @@ func _init() -> void:
 
 func stat_get(statKey:String)->float:
 	assert(statKey in Keys.values())
+		
 	return get(statKey)
 
 func stat_set(statKey:String, value:float):
+	if statKey in READ_ONLY_KEYS:
+		push_warning("Stats of this type should not be set directly.")
+		
 	set(statKey, value)
 
 #Used as a shortcut to check if a given stat can be modified directly
@@ -87,7 +97,7 @@ func stat_is_read_only(statkey:String)->bool:
 func stat_get_boosted(statKey:String, statValue:float)->float:
 	stat_boost_clean_array(statToBoostDict[statKey])
 	
-	var multiplier: float
+	var multiplier: float = 1
 	var additive: float
 	var total: float = statValue
 	
@@ -178,6 +188,7 @@ func evasion_update():
 
 
 func to_json() -> Dictionary:
+	stat_update_all()
 	return {"hp_max": hp_max, "hp": hp, "level": level, "experience": experience}
 
 
@@ -202,8 +213,6 @@ func from_json(data: Dictionary) -> bool:
 	level = data["level"]
 	experience = data["experience"]
 
-	# levelUpExperienceRequired = calculate_experience_needed(level)
-
 	loaded.emit()
 
 	return true
@@ -219,9 +228,6 @@ func level_get_experience_to_next()->float:
 func level_update():
 	var originalLevel:int = level
 	level = level_get_from_experience()
-	
-	if originalLevel != level:
-		parent.synchronizer.sync_level( level, level - originalLevel, level_get_experience_to_next() )
 
 func experience_add(from: String, amount: int):
 	experience += amount
@@ -229,11 +235,13 @@ func experience_add(from: String, amount: int):
 	level_update()
 	parent.synchronizer.sync_experience(from, experience, amount)
 
-
+#Used by the server to sync all stats on clients
 @rpc("call_remote", "any_peer", "reliable") func get_sync(id: int):
 	if not J.is_server():
 		return
-
+	
+	stat_update_all()
+	
 	if id in multiplayer.get_peers():
 		sync.rpc_id(id, to_json())
 
@@ -267,7 +275,7 @@ class JStatBoost extends RefCounted:
 	var freeSignal:Signal:
 		set(val):
 			freeSignal = val
-			freeSignal.connect(free)
+			freeSignal.connect(self.free)
 	
 	
 	
