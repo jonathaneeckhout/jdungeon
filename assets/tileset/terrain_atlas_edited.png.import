@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bak6l34lpxnqx"
-path="res://.godot/imported/base_out_atlas.png-2ece374de552318f96a3d1d3fbf03c2a.ctex"
+uid="uid://d7cygjtrx1e7"
+path="res://.godot/imported/terrain_atlas_edited.png-9762a9ec7f1b22ba53a9fa94bb04bc3b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tileset/lpcatlas/base_out_atlas.png"
-dest_files=["res://.godot/imported/base_out_atlas.png-2ece374de552318f96a3d1d3fbf03c2a.ctex"]
+source_file="res://assets/tileset/terrain_atlas_edited.png"
+dest_files=["res://.godot/imported/terrain_atlas_edited.png-9762a9ec7f1b22ba53a9fa94bb04bc3b.ctex"]
 
 [params]
 

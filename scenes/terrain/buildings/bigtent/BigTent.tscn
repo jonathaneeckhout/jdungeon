@@ -3,7 +3,7 @@
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_41g43"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5payv"]
-size = Vector2(416, 192)
+size = Vector2(391, 191)
 
 [node name="BigTent" type="StaticBody2D"]
 
@@ -13,15 +13,15 @@ scale = Vector2(2, 2)
 tile_set = ExtResource("1_41g43")
 format = 2
 layer_0/name = "Base"
-layer_0/tile_data = PackedInt32Array(-196611, 5, 51, -131075, 5, 52, -65539, 5, 53, -3, 5, 54, -262146, 65541, 50, -196610, 65541, 51, -131074, 65541, 52, -65538, 65541, 53, -2, 65541, 54, -262145, 131077, 50, -196609, 131077, 51, -131073, 131077, 52, -65537, 5, 57, -1, 5, 58, -327680, 196613, 50, -262144, 196613, 51, -196608, 196613, 52, -131072, 65541, 57, -327679, 262149, 50, -262143, 262149, 51, -196607, 262149, 52, -131071, 131077, 57, -65535, 131077, 58, -327678, 327685, 50, -262142, 327685, 51, -196606, 327685, 52, -131070, 327685, 53, -65534, 327685, 54, -262141, 393221, 51, -196605, 393221, 52, -131069, 393221, 53, -65533, 393221, 54, -65536, 65541, 58)
+layer_0/tile_data = PackedInt32Array(-131075, 2, 49, -3, 2, 52, -65534, 327682, 52, -1, 196610, 56)
 layer_1/name = "Details"
 layer_1/enabled = true
 layer_1/modulate = Color(1, 1, 1, 1)
 layer_1/y_sort_enabled = false
 layer_1/y_sort_origin = 0
 layer_1/z_index = 0
-layer_1/tile_data = PackedInt32Array(-196605, 589825, 26, -2, 655361, 27, -65533, 655361, 28, -196609, 851969, 15)
+layer_1/tile_data = PackedInt32Array()
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(8, -96)
+position = Vector2(1.5, -95.5)
 shape = SubResource("RectangleShape2D_5payv")

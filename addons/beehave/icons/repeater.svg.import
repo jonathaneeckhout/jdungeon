@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cv3xeribgomro"
-path="res://.godot/imported/terrain_atlas.png-8b85b2ee26cb9b4abe7d47c958397274.ctex"
+uid="uid://dc7pkouhb48ml"
+path="res://.godot/imported/repeater.svg-be2d3a7f1a46d7ba1d1939553725f598.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tileset/lpcatlas/terrain_atlas.png"
-dest_files=["res://.godot/imported/terrain_atlas.png-8b85b2ee26cb9b4abe7d47c958397274.ctex"]
+source_file="res://addons/beehave/icons/repeater.svg"
+dest_files=["res://.godot/imported/repeater.svg-be2d3a7f1a46d7ba1d1939553725f598.ctex"]
 
 [params]
 
@@ -32,3 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

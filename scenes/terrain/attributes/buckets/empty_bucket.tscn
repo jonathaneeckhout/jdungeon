@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://dhtsuyl4t5btf"]
+
+[ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_nvy63"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_e3jms"]
+radius = 8.0
+
+[node name="empty bucket" type="StaticBody2D"]
+scale = Vector2(2, 2)
+
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(-16, 16)
+tile_set = ExtResource("1_nvy63")
+format = 2
+layer_0/tile_data = PackedInt32Array(-65536, 393220, 5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("CircleShape2D_e3jms")
