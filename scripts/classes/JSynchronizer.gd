@@ -125,7 +125,7 @@ func parse_server_interaction_syncs_buffer():
 					
 				SYNC_TYPES.DIE:
 					died.emit()
-          
+					
 				SYNC_TYPES.RESPAWN:
 					respawned.emit()
 
@@ -187,6 +187,11 @@ func sync_die():
 
 func sync_experience(from: String, experience_original: int, experience_delta: int):
 	var timestamp: float = Time.get_unix_time_from_system()
+	
+	for watcher in watchers:
+		buffer_experience.rpc_id(watcher.peer_id, timestamp, from, experience_original, experience_delta)
+
+	experience_gained.emit(from, experience_original, experience_delta)
 
 func sync_respawn():
 	var timestamp = Time.get_unix_time_from_system()
@@ -195,11 +200,6 @@ func sync_respawn():
 		respawn.rpc_id(watcher.peer_id, timestamp)
 
 	respawned.emit()
-
-	for watcher in watchers:
-		buffer_experience.rpc_id(watcher.peer_id, timestamp, from, experience_original, experience_delta)
-
-	experience_gained.emit(from, experience_original, experience_delta)
 
 
 @rpc("call_remote", "authority", "unreliable")
@@ -265,10 +265,10 @@ func buffer_loop_animation(timestamp: float, animation: String, direction: Vecto
 
 @rpc("call_remote", "authority", "reliable") func respawn(timestamp: float):
 	# Clear the buffers to reset the inter and extrapolation
-	server_syncs_buffer = []
-	server_network_buffer = []
+	server_interaction_syncs_buffer = []
+	server_movement_syncs_buffer = []
 
-	server_network_buffer.append({"type": SYNC_TYPES.RESPAWN, "timestamp": timestamp})
+	server_movement_syncs_buffer.append({"type": SYNC_TYPES.RESPAWN, "timestamp": timestamp})
 
 
 @rpc("call_remote", "authority", "reliable")
