@@ -28,7 +28,9 @@ var death_popup_instance = load("res://scenes/player/deathpopup/DeathPopup.tscn"
 
 
 func _ready():
-	stats.hp_max = 50
+	stats.stat_update_all()
+	stats.hp_reset()
+	
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.attacked.connect(_on_attacked)
 	synchronizer.healed.connect(_on_healed)
@@ -167,9 +169,7 @@ func equipment_changed():
 
 
 func update_exp_bar():
-	var progress = float(stats.experience) / stats.experience_needed * 100
-	if progress >= 100:
-		progress = 0
+	var progress: float = float(stats.stat_get(JStats.Keys.EXPERIENCE)) / stats.level_get_experience_to_next()
 
 	$Camera2D/UILayer/GUI/ExpBar.value = progress
 
@@ -191,7 +191,7 @@ func _on_item_unequiped(_item_uuid: String):
 
 
 func _on_stats_synced():
-	$JInterface.update_hp_bar(stats.hp, stats.hp_max)
+	$JInterface.update_hp_bar(stats.stat_get(JStats.Keys.HP), stats.stat_get(JStats.Keys.HP_MAX))
 	update_exp_bar()
 	update_level()
 
