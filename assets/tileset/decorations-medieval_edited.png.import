@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://rjx46e5p7ndc"
-path="res://.godot/imported/fence_medieval.png-a85de9b7cbc464a85a40bbb958fa8d82.ctex"
+uid="uid://yiaoy7qbbt24"
+path="res://.godot/imported/decorations-medieval_edited.png-40e18b939b2f861b7d908358380c3b4b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tileset/lpcmedievaldecoration/fence_medieval.png"
-dest_files=["res://.godot/imported/fence_medieval.png-a85de9b7cbc464a85a40bbb958fa8d82.ctex"]
+source_file="res://assets/tileset/decorations-medieval_edited.png"
+dest_files=["res://.godot/imported/decorations-medieval_edited.png-40e18b939b2f861b7d908358380c3b4b.ctex"]
 
 [params]
 

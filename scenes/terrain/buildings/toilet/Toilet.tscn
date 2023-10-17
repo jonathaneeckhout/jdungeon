@@ -12,7 +12,7 @@ position = Vector2(0, 8)
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_gejuk")
 format = 2
-layer_0/tile_data = PackedInt32Array(-131073, 720901, 11, -65537, 720901, 12, -1, 720901, 13, -196608, 786437, 11, -131072, 786437, 12, -65536, 786437, 13)
+layer_0/tile_data = PackedInt32Array(-1, 720898, 11)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -32)

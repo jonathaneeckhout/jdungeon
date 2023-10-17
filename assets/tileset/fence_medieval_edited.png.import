@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vftubta1utff"
-path="res://.godot/imported/plants.png-e56dd5da4e0d05b3e1a1c7b0b403cc0e.ctex"
+uid="uid://dyxskjuxtep4e"
+path="res://.godot/imported/fence_medieval_edited.png-36da5e306d1e2a0308593823e860d20b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tileset/lpcflowersplantsfungiwood/plants.png"
-dest_files=["res://.godot/imported/plants.png-e56dd5da4e0d05b3e1a1c7b0b403cc0e.ctex"]
+source_file="res://assets/tileset/fence_medieval_edited.png"
+dest_files=["res://.godot/imported/fence_medieval_edited.png-36da5e306d1e2a0308593823e860d20b.ctex"]
 
 [params]
 

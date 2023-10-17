@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2pl8wof7sbvu"]
+
+[ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_l707o"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_e3jms"]
+radius = 10.5
+
+[node name="square stool 1" type="StaticBody2D"]
+scale = Vector2(2, 2)
+
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(-5, 19)
+tile_set = ExtResource("1_l707o")
+format = 2
+layer_0/tile_data = PackedInt32Array(-65536, 327682, 34)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(10.5, 1)
+shape = SubResource("CircleShape2D_e3jms")

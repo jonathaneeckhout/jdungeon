@@ -3,7 +3,7 @@
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_6x1st"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lpdhc"]
-radius = 64.0
+radius = 60.0
 
 [node name="FourBags" type="StaticBody2D"]
 
@@ -11,7 +11,7 @@ radius = 64.0
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_6x1st")
 format = 2
-layer_0/tile_data = PackedInt32Array(-65537, 196610, 13, -1, 196610, 14, -131072, 262146, 13, -65536, 262146, 14)
+layer_0/tile_data = PackedInt32Array(-1, 196612, 9)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -56)

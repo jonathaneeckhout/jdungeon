@@ -3,7 +3,7 @@
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_oa6uq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5payv"]
-size = Vector2(256, 192)
+size = Vector2(239, 192)
 
 [node name="SmallTent" type="StaticBody2D"]
 
@@ -12,8 +12,8 @@ position = Vector2(0, 8)
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_oa6uq")
 format = 2
-layer_0/tile_data = PackedInt32Array(-196610, 786437, 55, -131074, 786437, 56, -65538, 786437, 57, -2, 786437, 58, -262145, 851973, 54, -196609, 851973, 55, -131073, 851973, 56, -65537, 851973, 57, -1, 851973, 58, -327680, 917509, 54, -262144, 917509, 55, -196608, 917509, 56, -131072, 917509, 57, -65536, 917509, 58, -262143, 983045, 55, -196607, 983045, 56, -131071, 983045, 57, -65535, 983045, 58)
+layer_0/tile_data = PackedInt32Array(-196608, 786434, 49)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -96)
+position = Vector2(35.5, -96)
 shape = SubResource("RectangleShape2D_5payv")

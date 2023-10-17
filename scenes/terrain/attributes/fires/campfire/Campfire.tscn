@@ -3,7 +3,7 @@
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_lir21"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sqvdw"]
-radius = 32.0
+radius = 27.0
 
 [node name="Campfire" type="StaticBody2D"]
 
@@ -12,8 +12,8 @@ position = Vector2(-32, 24)
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_lir21")
 format = 2
-layer_0/tile_data = PackedInt32Array(-131072, 524293, 47)
+layer_0/tile_data = PackedInt32Array(-65536, 524290, 47)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -24)
 shape = SubResource("CircleShape2D_sqvdw")
+metadata/_edit_group_ = true
