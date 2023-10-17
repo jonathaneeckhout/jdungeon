@@ -3,7 +3,7 @@
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_murd0"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7ppt3"]
-radius = 32.0
+radius = 19.105
 
 [node name="PineTreeLarge" type="StaticBody2D"]
 
@@ -13,15 +13,15 @@ scale = Vector2(2, 2)
 tile_set = ExtResource("1_murd0")
 format = 2
 layer_0/name = "Trunk"
-layer_0/tile_data = PackedInt32Array(-65537, 1835009, 19, -1, 1835009, 20, -131072, 1900545, 19, -65536, 1900545, 20, -131071, 1966081, 19, -65535, 1966081, 20, -196608, 1572865, 18)
+layer_0/tile_data = PackedInt32Array(-1, 1048581, 13, -196608, 983045, 13, -131073, 1048581, 9)
 layer_1/name = "Needles"
 layer_1/enabled = true
 layer_1/modulate = Color(1, 1, 1, 1)
 layer_1/y_sort_enabled = false
 layer_1/y_sort_origin = 0
 layer_1/z_index = 0
-layer_1/tile_data = PackedInt32Array(-262145, 1572865, 15, -196609, 1572865, 16, -131073, 1572865, 17, -327680, 1638401, 15, -262144, 1638401, 16, -196608, 1638401, 17, -327679, 1703937, 15, -262143, 1703937, 16, -196607, 1703937, 17)
+layer_1/tile_data = PackedInt32Array()
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -24)
+position = Vector2(0, -20)
 shape = SubResource("CircleShape2D_7ppt3")

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d3tyvct1prjos"
-path="res://.godot/imported/decorations-medieval.png-01ce422d3565b121888d3c2f25ff2a86.ctex"
+uid="uid://s402dto7d21g"
+path="res://.godot/imported/build_atlas_edited.png-bcfcd338b9cb0e08d740c92a17f4f6c3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tileset/lpcmedievaldecoration/decorations-medieval.png"
-dest_files=["res://.godot/imported/decorations-medieval.png-01ce422d3565b121888d3c2f25ff2a86.ctex"]
+source_file="res://assets/tileset/build_atlas_edited.png"
+dest_files=["res://.godot/imported/build_atlas_edited.png-bcfcd338b9cb0e08d740c92a17f4f6c3.ctex"]
 
 [params]
 

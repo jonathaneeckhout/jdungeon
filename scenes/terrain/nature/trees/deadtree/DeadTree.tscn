@@ -3,7 +3,7 @@
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_ksi8s"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7ppt3"]
-radius = 32.0
+radius = 24.0832
 
 [node name="DeadTree" type="StaticBody2D"]
 
@@ -12,8 +12,8 @@ position = Vector2(-24, 16)
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_ksi8s")
 format = 2
-layer_0/tile_data = PackedInt32Array(-131073, 1048578, 0, -65537, 1048578, 1, -1, 1048578, 2, -196608, 1114114, 0, -131072, 1114114, 1, -65536, 1114114, 2, -196607, 1179650, 0, -131071, 1179650, 1, -65535, 1179650, 2)
+layer_0/tile_data = PackedInt32Array(-1, 917509, 33)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -24)
+position = Vector2(4, -28)
 shape = SubResource("CircleShape2D_7ppt3")

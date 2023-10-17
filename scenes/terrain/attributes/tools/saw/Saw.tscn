@@ -9,4 +9,4 @@ position = Vector2(8, 16)
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_ne4e4")
 format = 2
-layer_0/tile_data = PackedInt32Array(-1, 720901, 17, -65536, 786437, 17)
+layer_0/tile_data = PackedInt32Array(-1, 720898, 17)

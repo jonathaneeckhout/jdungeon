@@ -11,7 +11,7 @@ radius = 48.6621
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_d86w6")
 format = 2
-layer_0/tile_data = PackedInt32Array(-65537, 917509, 20, -1, 917509, 21, -131072, 983045, 20, -65536, 983045, 21)
+layer_0/tile_data = PackedInt32Array(-1, 196612, 7)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -48)

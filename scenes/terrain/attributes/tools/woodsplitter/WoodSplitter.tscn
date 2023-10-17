@@ -12,7 +12,7 @@ position = Vector2(-24, 0)
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_emyc6")
 format = 2
-layer_0/tile_data = PackedInt32Array(-65536, 917509, 22)
+layer_0/tile_data = PackedInt32Array(-65536, 917506, 22)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -24)
