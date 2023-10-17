@@ -7,6 +7,7 @@ var env_server_crt: String = ""
 var env_server_key: String = ""
 var env_server_database_backend: String = ""
 var env_debug: bool = false
+var env_audio_mute: bool = false
 
 var env_postgres_address: String = ""
 var env_postgres_port: int = 0
@@ -79,5 +80,7 @@ func load_client_env_variables() -> bool:
 		return false
 
 	env_server_port = int(env_port_str)
+
+	env_audio_mute = J.env.get_value("AUDIO_MUTE") == "true"
 
 	return true
