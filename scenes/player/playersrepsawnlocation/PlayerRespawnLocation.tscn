@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://cflqdnl6156j8"]
+
+[node name="PlayerRespawnLocation" type="Node2D"]

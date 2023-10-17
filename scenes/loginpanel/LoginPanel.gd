@@ -7,26 +7,35 @@ signal show_create_account_pressed
 signal back_create_account_pressed
 
 # ConnectContainer
-@onready var server_address_input := $Panel/ConnectContainer/MarginContainer/VBoxContainer/ServerAddressText
-@onready var server_port_input := $Panel/ConnectContainer/MarginContainer2/VBoxContainer/ServerPortText
+@onready
+var server_address_input := $Panel/ConnectContainer/MarginContainer/VBoxContainer/ServerAddressText
+@onready
+var server_port_input := $Panel/ConnectContainer/MarginContainer2/VBoxContainer/ServerPortText
 @onready var connect_button := $Panel/ConnectContainer/MarginContainer3/ConnectButton
 
 #LoginContainer
 @onready var login_container = $Panel/LoginContainer
 @onready var login_input := $Panel/LoginContainer/MarginContainer/VBoxContainer/LoginText
-@onready var login_password_input := $Panel/LoginContainer/MarginContainer2/VBoxContainer/LoginPasswordText
+@onready
+var login_password_input := $Panel/LoginContainer/MarginContainer2/VBoxContainer/LoginPasswordText
 @onready var login_button := $Panel/LoginContainer/MarginContainer3/VBoxContainer/LoginButton
-@onready var goto_create_account_button := $Panel/LoginContainer/MarginContainer3/VBoxContainer/GoToCreateAccountButton
+@onready
+var goto_create_account_button := $Panel/LoginContainer/MarginContainer3/VBoxContainer/GoToCreateAccountButton
 
 #CreateAccountContainer
-@onready var register_login_input := $Panel/CreateAccountContainer/MarginContainer/VBoxContainer/LoginText
-@onready var register_password_input := $Panel/CreateAccountContainer/MarginContainer2/VBoxContainer/PasswordText
-@onready var register_password_confirm_input := $Panel/CreateAccountContainer/MarginContainer2/VBoxContainer/PasswordConfirmText
-@onready var create_account_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxContainer/CreateAccountButton
-@onready var goto_login_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxContainer/BackToLoginButton
+@onready
+var register_login_input := $Panel/CreateAccountContainer/MarginContainer/VBoxContainer/LoginText
+@onready
+var register_password_input := $Panel/CreateAccountContainer/MarginContainer2/VBoxContainer/PasswordText
+@onready
+var register_password_confirm_input := $Panel/CreateAccountContainer/MarginContainer2/VBoxContainer/PasswordConfirmText
+@onready
+var create_account_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxContainer/CreateAccountButton
+@onready
+var goto_login_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxContainer/BackToLoginButton
 
 #AudioStreamers
-@onready var click_audio_stream_player:=$ClickAudioStreamPlayer
+@onready var click_audio_stream_player := $ClickAudioStreamPlayer
 @onready var background_audio_stream_player := $BackgroundAudioStreamPlayer
 
 @onready var _anim_player := $AnimationPlayer
@@ -40,30 +49,35 @@ func _ready():
 	goto_create_account_button.pressed.connect(_on_show_create_account_menu)
 	create_account_button.pressed.connect(_on_create_account_button_pressed)
 	goto_login_button.pressed.connect(_on_back_create_account_button_pressed)
-	
+
 	if not J.is_server():
 		background_audio_stream_player.play()
 		background_audio_stream_player.finished.connect(background_audio_stream_player.play)
-	var buttons : Array = get_tree().get_nodes_in_group("ui_button")
+	var buttons: Array = get_tree().get_nodes_in_group("ui_button")
 	for button in buttons:
 		button.pressed.connect(_on_button_pressed)
 
-func _input(_event):
+
+func _input(event):
 	if login_container.is_visible_in_tree():
-			if Input.is_key_pressed(KEY_ENTER):
-				login_button.emit_signal("pressed")
+		if event.is_action_pressed("ui_accept"):
+			login_button.emit_signal("pressed")
+
 
 func show_connect_container():
 	self.show()
 	_anim_player.play("goto_connect")
 
+
 func show_create_account_container():
 	self.show()
 	_anim_player.play("goto_createaccount")
 
+
 func show_login_container():
 	self.show()
 	_anim_player.play("goto_login")
+
 
 func _on_connect_button_pressed():
 	var server_address = server_address_input.text
@@ -106,11 +120,14 @@ func _on_create_account_button_pressed():
 
 	create_account_pressed.emit(username, password)
 
+
 func _on_back_create_account_button_pressed():
 	back_create_account_pressed.emit()
 
+
 func _on_button_pressed():
 	click_audio_stream_player.play()
+
 
 func stop_login_background_audio():
 	background_audio_stream_player.stop()

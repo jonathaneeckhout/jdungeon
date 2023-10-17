@@ -3,7 +3,7 @@
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_5bqgl"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_go0me"]
-radius = 56.0
+radius = 24.0
 
 [node name="TwoBarrels" type="StaticBody2D"]
 
@@ -11,8 +11,12 @@ radius = 56.0
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_5bqgl")
 format = 2
-layer_0/tile_data = PackedInt32Array(-65537, 1900547, 8, -1, 1900547, 9, -131072, 1966083, 8, -65536, 1966083, 9)
+layer_0/tile_data = PackedInt32Array(-1, 4, 5, -65536, 65540, 5)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -48)
+position = Vector2(-31, -56)
+shape = SubResource("CircleShape2D_go0me")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(31, -23)
 shape = SubResource("CircleShape2D_go0me")

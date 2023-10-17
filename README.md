@@ -1,3 +1,7 @@
+[![build latest jdungeon](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-latest.yml/badge.svg)](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-latest.yml)
+[![](https://dcbadge.vercel.app/api/server/KGwTyXumdv?style=flat)](https://discord.gg/KGwTyXumdv)
+
+
 # JDungeon
 
 **JDungeon** is a free-to-play, open-source Massively Online Role-Playing Game (MORPG) set in a medieval fantasy world. With its top-down 2D perspective, it offers an immersive gaming experience. JDungeon is built on the principles of community-driven development, accessibility, and inclusivity.

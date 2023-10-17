@@ -55,6 +55,7 @@ func _ready():
 
 
 func _on_body_network_view_area_body_entered(body: JBody2D):
+	# Don't handle the player as we hardcoded it to be added to the watchers
 	if body == player:
 		return
 
@@ -75,6 +76,10 @@ func _on_body_network_view_area_body_entered(body: JBody2D):
 
 
 func _on_body_network_view_area_body_exited(body: JBody2D):
+	# Make sure that the player is never removed from the watchers
+	if body == player:
+		return
+
 	if bodies_in_view.has(body):
 		if player.peer_id in multiplayer.get_peers():
 			match body.entity_type:

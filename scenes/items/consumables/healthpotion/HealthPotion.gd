@@ -6,4 +6,4 @@ func _init():
 
 	item_class = "HealthPotion"
 	consumable = true
-	healing = 3
+	healing = 25

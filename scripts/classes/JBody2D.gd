@@ -3,6 +3,7 @@ extends CharacterBody2D
 class_name JBody2D
 
 signal died
+signal respawned
 
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ENEMY
 var synchronizer: JSynchronizer
@@ -50,7 +51,9 @@ func hurt(from: CharacterBody2D, damage: int):
 		if stats.experience_worth > 0:
 			from.stats.add_experience(name, stats.experience_worth)
 
-		die()
+		# Can't die twice
+		if not is_dead:
+			die()
 
 
 func heal(from: CharacterBody2D, healing: int):
@@ -66,6 +69,7 @@ func send_new_loop_animation(animation: String):
 
 
 func die():
+	is_dead = true
 	collision_layer -= J.PHYSICS_LAYER_WORLD
 
 	died.emit()
@@ -73,6 +77,17 @@ func die():
 	synchronizer.sync_die()
 
 	drop_loot()
+
+
+func respawn(location: Vector2):
+	position = location
+	is_dead = false
+	collision_layer += J.PHYSICS_LAYER_WORLD
+	stats.reset_hp()
+
+	respawned.emit()
+
+	synchronizer.sync_respawn()
 
 
 func drop_loot():

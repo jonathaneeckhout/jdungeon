@@ -7,10 +7,11 @@ signal got_hurt(from: String, hp: int, hp_max: int, damage: int)
 signal healed(from: String, hp: int, hp_max: int, healing: int)
 signal loop_animation_changed(animation: String, direction: Vector2)
 signal died
+signal respawned
 signal experience_gained(from: String, current_exp: int, amount: int)
 signal level_gained(current_level: int, amount: int, experience_needed: int)
 
-enum SYNC_TYPES { ATTACK, HURT, HEAL, LOOP_ANIMATION, DIE, EXPERIENCE, LEVEL }
+enum SYNC_TYPES { ATTACK, HURT, HEAL, LOOP_ANIMATION, DIE, RESPAWN, EXPERIENCE, LEVEL }
 
 const INTERPOLATION_OFFSET:float = 0.1
 const INTERPOLATION_INDEX:int = 2
@@ -124,7 +125,10 @@ func parse_server_interaction_syncs_buffer():
 					
 				SYNC_TYPES.DIE:
 					died.emit()
-					
+          
+				SYNC_TYPES.RESPAWN:
+					respawned.emit()
+
 				SYNC_TYPES.EXPERIENCE:
 					to_be_synced.stats.stat_set(JStats.Keys.EXPERIENCE, entry["current_exp"])
 					experience_gained.emit(entry["from"], entry["current_exp"], entry["amount"])
@@ -181,9 +185,16 @@ func sync_die():
 
 	died.emit()
 
-
 func sync_experience(from: String, experience_original: int, experience_delta: int):
 	var timestamp: float = Time.get_unix_time_from_system()
+
+func sync_respawn():
+	var timestamp = Time.get_unix_time_from_system()
+
+	for watcher in watchers:
+		respawn.rpc_id(watcher.peer_id, timestamp)
+
+	respawned.emit()
 
 	for watcher in watchers:
 		buffer_experience.rpc_id(watcher.peer_id, timestamp, from, experience_original, experience_delta)
@@ -250,6 +261,14 @@ func buffer_loop_animation(timestamp: float, animation: String, direction: Vecto
 
 @rpc("call_remote", "authority", "reliable") func buffer_die(timestamp: float):
 	server_interaction_syncs_buffer.append({"type": SYNC_TYPES.DIE, "timestamp": timestamp})
+
+
+@rpc("call_remote", "authority", "reliable") func respawn(timestamp: float):
+	# Clear the buffers to reset the inter and extrapolation
+	server_syncs_buffer = []
+	server_network_buffer = []
+
+	server_network_buffer.append({"type": SYNC_TYPES.RESPAWN, "timestamp": timestamp})
 
 
 @rpc("call_remote", "authority", "reliable")
