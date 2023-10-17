@@ -67,11 +67,11 @@ var experience: float = 0
 
 var experience_worth: float
 
-#Dictionary of stat "Keys" that holds an Array[JStatBoost] (not typed)
-var statToBoostDict:Dictionary #Format: String:Array[JStatBoost]
+#Dictionary of stat "Keys" that holds an Array[Boost] (not typed)
+var statToBoostDict:Dictionary #Format: String:Array[Boost]
 
-#Dictionary of JStatBoost.stackSource that holds Array[JStatBoost] (not typed)
-var stackSourceToBoostDict:Dictionary #Format: String:Array[JStatBoost]
+#Dictionary of Boost.stackSource that holds Array[Boost] (not typed)
+var stackSourceToBoostDict:Dictionary #Format: String:Array[Boost]
 
 func _init() -> void:
 	assert(statToBoostDict.is_empty())
@@ -93,7 +93,7 @@ func stat_set(statKey:String, value:float):
 func stat_is_read_only(statkey:String)->bool:
 	return statkey in READ_ONLY_KEYS
 
-#Takes in a value and returns it boosted by all the matching JStatBoosts for the given stat
+#Takes in a value and returns it boosted by all the matching Boosts for the given stat
 func stat_get_boosted(statKey:String, statValue:float)->float:
 	stat_boost_clean_array(statToBoostDict[statKey])
 	
@@ -102,17 +102,17 @@ func stat_get_boosted(statKey:String, statValue:float)->float:
 	var total: float = statValue
 	
 	for boost in statToBoostDict.get(statKey, []):
-		if boost is JStatBoost:
+		if boost is Boost:
 			match boost.type:
-				JStatBoost.Types.ADDITIVE:
+				Boost.Types.ADDITIVE:
 					additive += boost.value
-				JStatBoost.Types.MULTIPLICATIVE:
+				Boost.Types.MULTIPLICATIVE:
 					multiplier *= boost.value
 
 	return (total + additive) * multiplier
 
 #Stat boosts that come from the same source cannot stack, the most powerful is chosen instead
-func stat_boost_add(statBoost:JStatBoost):
+func stat_boost_add(statBoost:Boost):
 	assert(statBoost.statKey in Keys.values(), "This statBoost has a key that doesn't exist.")
 	
 	#Abort if the stack limit is not infinite and it would exceed the boosts from the current source
@@ -122,7 +122,7 @@ func stat_boost_add(statBoost:JStatBoost):
 	statToBoostDict[statBoost.statKey].append(statBoost)
 	stackSourceToBoostDict[statBoost.stackSource].append(statBoost)
 
-func stat_boost_remove_(statBoost:JStatBoost):
+func stat_boost_remove_(statBoost:Boost):
 	assert(statBoost.statKey in Keys.values(), "This statBoost has a key that doesn't exist.")
 	
 	statToBoostDict[statBoost.statKey].erase(statBoost)
@@ -137,8 +137,8 @@ func stat_boost_clean_array(array:Array):
 		return is_instance_valid(obj)
 	)
 
-func stat_boost_create(key:String, amount:float, source:String = "", stackLimit:int = 0)->JStatBoost:
-	var boost:=JStatBoost.new()
+func stat_boost_create(key:String, amount:float, source:String = "", stackLimit:int = 0)->Boost:
+	var boost:=Boost.new()
 	boost.source = source
 	boost.statKey = key
 	boost.amount = amount
@@ -255,7 +255,7 @@ func experience_add(from: String, amount: int):
 	synced.emit()
 
 
-class JStatBoost extends RefCounted:
+class Boost extends RefCounted:
 	enum Types {ADDITIVE, MULTIPLICATIVE}
 	
 	var type:Types
