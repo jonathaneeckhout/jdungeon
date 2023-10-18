@@ -19,7 +19,7 @@ func init() -> bool:
 			add_child(backend)
 
 	if not backend or not backend.Init():
-		J.logger.err("Failed to init database")
+		J.logger.error("Failed to init database")
 		return false
 
 	return true
