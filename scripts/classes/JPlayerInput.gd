@@ -29,7 +29,7 @@ func _ready():
 		
 	else:
 		#Set parameters for point-casting (can use ShapeParameters instead if necessary)
-		pointParams.collide_with_areas = true
+		pointParams.collide_with_areas = false
 		pointParams.collide_with_bodies = true
 		pointParams.collision_mask = (
 			J.PHYSICS_LAYER_PLAYERS
@@ -54,33 +54,32 @@ func _input(event:InputEvent):
 func _process(_delta: float) -> void:
 	#This update is frame based as to update the cursor visually on the client
 	update_target(get_global_mouse_position())
-	
-	#If the retrieved target is the same as last frame, skip the rest.
-	if targetCurrent == lastHoverTarget:
-		return
-		
 	#Initialize empty variable
 	var cursorToUse:Texture
 	
-	#Check any of the world nodes to see which is this target's parent
+	#If it isn't touching something, set it to default
 	if targetCurrent == null:
 		cursorToUse = CursorGraphics.DEFAULT
-		
-	elif targetCurrent.get_parent() == J.world.enemies:
-		cursorToUse = CursorGraphics.ATTACK
-		hovered_enemy.emit(targetCurrent)
-		
-	elif targetCurrent.get_parent() == J.world.players:
-		cursorToUse = CursorGraphics.DEFAULT
-		hovered_player.emit(targetCurrent)
-		
-	elif targetCurrent.get_parent() == J.world.npcs:
-		cursorToUse = CursorGraphics.TALK
-		hovered_npc.emit(targetCurrent)
-		
-	elif targetCurrent.get_parent() == J.world.items:
-		cursorToUse = CursorGraphics.PICKUP
-		hovered_item.emit(targetCurrent)
+	
+	#Otherwise set it to the appropiate cursor
+	else:
+		match targetCurrent.get("entity_type"):
+			J.ENTITY_TYPE.NPC:
+				cursorToUse = CursorGraphics.TALK
+				hovered_npc.emit(targetCurrent)
+			
+			J.ENTITY_TYPE.ITEM:
+				print_debug("Hovered item")
+				cursorToUse = CursorGraphics.PICKUP
+				hovered_item.emit(targetCurrent)
+				
+			J.ENTITY_TYPE.ENEMY:
+				cursorToUse = CursorGraphics.ATTACK
+				hovered_enemy.emit(targetCurrent)
+			
+			J.ENTITY_TYPE.PLAYER:
+				cursorToUse = CursorGraphics.DEFAULT
+				hovered_player.emit(targetCurrent)
 	
 	#Set the cursor
 	set_cursor(cursorToUse)
