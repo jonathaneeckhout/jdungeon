@@ -51,9 +51,9 @@ layout_mode = 2
 theme_override_font_sizes/normal_font_size = 32
 text = "How to report a bug: 
 
-1) Click the \"Goto Issue Page\"
+1) Click the \"Goto Issue Page\" button
 2) Press the \"New Issue\" button
-3) Give the issue a title \"Bug: <a meaningfull title>\"
+3) Give the issue a title \"Bug: <a meaningfull title>\" (replace the <> part)
 4) Give a description of what went wrong
 5) Describe a reproduction scenario
 
