@@ -25,3 +25,18 @@ func _on_message_sent(from: int, type: String, to: String, message: String):
 				J.rpcs.player.receive_message.rpc_id(
 					to_player.peer_id, type, from_player.username, message
 				)
+		# Send the message to only the target player
+		"Whisper":
+			var to_player: JPlayerBody2D = J.world.get_player_by_username(to)
+			if not to_player:
+				return
+
+			if to_player != from_player:
+				# Send the message to the player
+				J.rpcs.player.receive_message.rpc_id(
+					to_player.peer_id, type, from_player.username, message
+				)
+			# But also to yourself
+			J.rpcs.player.receive_message.rpc_id(
+				from_player.peer_id, type, from_player.username, message
+			)

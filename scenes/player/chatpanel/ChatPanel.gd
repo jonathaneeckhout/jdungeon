@@ -1,7 +1,7 @@
 extends Control
 
 const GROUPS: Dictionary = {
-	"Global": {"color": "WHITE"}, "Local": {"color": "LIGHT_BLUE"}, "Wisper": {"color": "VIOLET"}
+	"Global": {"color": "WHITE"}, "Local": {"color": "LIGHT_BLUE"}, "Whisper": {"color": "VIOLET"}
 }
 
 var current_group: String = "Global"
@@ -36,7 +36,7 @@ func _input(event):
 func change_group(value: String):
 	current_group = value
 
-	if current_group == "Wisper" and wisper_target != "":
+	if current_group == "Whisper" and wisper_target != "":
 		input_label.text = "[" + wisper_target + "]"
 	else:
 		input_label.text = "[" + current_group + "]"
@@ -59,7 +59,7 @@ func _on_text_submitted(text: String):
 	if text == "/h" or text == "/help":
 		append_chat_line_escaped(
 			"Helper",
-			"Press /g for global chat, /l for local chat and /w <name> to wisper",
+			"Press /g for global chat, /l for local chat and /w <name> to whisper",
 			"SKY_BLUE"
 		)
 		input_field.text = ""
@@ -82,9 +82,10 @@ func _on_text_submitted(text: String):
 		return
 
 	if text.begins_with("/w"):
-		wisper_target = text.replace("/w ", "")
-		if wisper_target != "":
-			change_group("Wisper")
+		if text.length() > 3:
+			wisper_target = text.replace("/w ", "")
+			if wisper_target != "":
+				change_group("Whisper")
 
 		input_field.text = ""
 		input_field.release_focus()
@@ -98,8 +99,8 @@ func _on_text_submitted(text: String):
 				J.rpcs.player.send_message.rpc_id(1, "Global", "", text)
 			"Local":
 				J.rpcs.player.send_message.rpc_id(1, "Local", "", text)
-			"Wisper":
-				J.rpcs.player.send_message.rpc_id(1, "Wisper", wisper_target, text)
+			"Whisper":
+				J.rpcs.player.send_message.rpc_id(1, "Whisper", wisper_target, text)
 			_:
 				#TODO: implement other cases
 				append_chat_line_escaped(username, text, GROUPS[current_group]["color"])
@@ -116,8 +117,8 @@ func _on_message_received(type: String, from: String, message: String):
 			append_chat_line_escaped(from, message, GROUPS["Global"]["color"])
 		"Local":
 			append_chat_line_escaped(from, message, GROUPS["Local"]["color"])
-		"Wisper":
-			append_chat_line_escaped(from, message, GROUPS["Wisper"]["color"])
+		"Whisper":
+			append_chat_line_escaped(from, message, GROUPS["Whisper"]["color"])
 
 
 func append_log_line(message: String, color: String = "YELLOW"):
