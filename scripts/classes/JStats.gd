@@ -46,6 +46,9 @@ var evasion:float
 var accuracy:float
 
 var defense: float = 0
+var resistance: float = 0:
+	set(val):
+		resistance = clamp(val, 0, 100)
 
 #Movement speed should PROBABLY remain unaffected as much as possible
 var movement_speed: float = 300.0
@@ -57,11 +60,7 @@ var attack_speed: float = 0.8
 var attack_range: float = 64.0
 
 
-
-
-var level: int = 1:
-	set(newLevel):
-		level = newLevel
+var level: int
 		
 var experience: float = 0
 
@@ -151,15 +150,14 @@ func stat_update_all():
 	pass
 
 func hp_hurt(damage: int) -> int:
-	# # Reduce the damage according to the defense stat
-	var reduced_damage = max(0, damage - defense)
+	#Reduce the damage according to the defense stat
+	var reduced_damage: float = max(0, damage - defense)
+	
+	var resistance_modifier: float = 1 - (resistance / 100)
+	var resisted_damage: float = max(0, reduced_damage * resistance_modifier)
 
-	# # Deal damage if hp pool is big enough
-	if reduced_damage < hp:
-		hp -= reduced_damage
-	# # Die if damage is bigger than remaining hp
-	else:
-		hp = 0
+	#Apply the reduction
+	hp = clamp(hp - resisted_damage, 0, hp_max)
 
 	return reduced_damage
 
@@ -186,6 +184,21 @@ func accuracy_update():
 func evasion_update():
 	evasion = stat_get_boosted(Keys.EVASION, 1)
 
+#Level is based on the amount of experience the character has
+func level_get_from_experience()->float:
+	return 1 + (experience / 100)
+
+func level_get_experience_to_next()->float:
+	return fmod(experience, 100)
+
+func level_update():
+	level = level_get_from_experience()
+
+func experience_add(from: String, amount: int):
+	experience += amount
+
+	level_update()
+	parent.synchronizer.sync_experience(from, experience, amount)
 
 func to_json() -> Dictionary:
 	stat_update_all()
@@ -216,24 +229,6 @@ func from_json(data: Dictionary) -> bool:
 	loaded.emit()
 
 	return true
-
-
-#Level is based on the amount of experience the character has
-func level_get_from_experience()->float:
-	return experience / 100
-
-func level_get_experience_to_next()->float:
-	return fmod(experience, 100)
-
-func level_update():
-	var originalLevel:int = level
-	level = level_get_from_experience()
-
-func experience_add(from: String, amount: int):
-	experience += amount
-
-	level_update()
-	parent.synchronizer.sync_experience(from, experience, amount)
 
 #Used by the server to sync all stats on clients
 @rpc("call_remote", "any_peer", "reliable") func get_sync(id: int):
