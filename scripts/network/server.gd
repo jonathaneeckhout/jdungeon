@@ -3,6 +3,7 @@ extends Node
 class_name JServer
 
 var database: Node
+var message: Node
 
 var users = {}
 
@@ -20,6 +21,10 @@ func init() -> bool:
 	if not database.init():
 		J.logger.error("Failed to init server's database")
 		return false
+
+	message = load("res://scripts/network/message.gd").new()
+	message.name = "Message"
+	add_child(message)
 
 	return true
 
@@ -84,7 +89,11 @@ func start() -> bool:
 	return true
 
 
-func is_user_logged_in(id: int):
+func get_username_by_id(id: int) -> String:
+	return users[id]["username"]
+
+
+func is_user_logged_in(id: int) -> bool:
 	return users[id]["logged_in"]
 
 

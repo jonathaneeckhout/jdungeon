@@ -31,6 +31,9 @@ func _ready():
 
 
 func _input(event):
+	if JUI.chat_active:
+		return
+
 	if event.is_action_pressed("j_toggle_equipment"):
 		if visible:
 			hide()
