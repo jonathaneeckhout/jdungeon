@@ -102,6 +102,10 @@ func update_target(atGlobalPoint:Vector2):
 	#Do not proceed if outside the tree
 	if not is_inside_tree(): return
 	
+	if JUI.above_ui:
+		targetCurrent = null
+		return
+	
 	#Get the world's space
 	var directSpace:PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	
