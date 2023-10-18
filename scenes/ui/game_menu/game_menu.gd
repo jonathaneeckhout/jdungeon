@@ -26,7 +26,6 @@ func _input(event):
 		JUI.above_ui = not isVisible
 		
 		if not isVisible:
-			LocalSaveSystem.save_file()
 			close_submenu()
 
 	
@@ -46,13 +45,14 @@ func _input(event):
 				self.hide()
 				JUI.above_ui=false 
 				
-				LocalSaveSystem.save_file()
 				close_submenu()
 					
 				get_viewport().set_input_as_handled()
 				
+#Also saves changes to disk.
 func close_submenu():
 	LocalSaveSystem.save_file()
+
 	if is_instance_valid(subMenuReference):
 		subMenuReference.queue_free()
 

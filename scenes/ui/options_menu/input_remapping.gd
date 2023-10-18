@@ -40,7 +40,8 @@ func _ready() -> void:
 	remap_aborted.connect( temporary_text_timed.bind(Messages.ABORTED, tempTextDuration) )
 	remap_successful.connect( temporary_text_timed.bind(Messages.SUCCESSFUL, tempTextDuration) )
 	
-	tree_exiting.connect( save_mappings )
+	#This merely sets the mappings on the loaded ConfigFile, it does not write to disk. Making it suitable for repeated use.
+	remap_successful.connect( save_mappings )
 	
 #Creates text on screen that dissapears after some time or when the signal is called
 func temporary_text_timed(tempText:String, duration:float):
