@@ -51,6 +51,13 @@ layout_mode = 2
 layout_mode = 2
 text = "Options"
 
+[node name="MarginContainer3" type="MarginContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ReportBugMenu" type="Button" parent="Panel/VBoxContainer/MarginContainer3"]
+layout_mode = 2
+text = "Report Bug"
+
 [node name="MarginContainer" type="MarginContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
 
