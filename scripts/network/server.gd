@@ -18,7 +18,7 @@ func init() -> bool:
 	add_child(database)
 
 	if not database.init():
-		J.logger.err("Failed to init server's database")
+		J.logger.error("Failed to init server's database")
 		return false
 
 	return true

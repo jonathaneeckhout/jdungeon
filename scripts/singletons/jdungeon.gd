@@ -15,8 +15,6 @@ const DROP_RANGE = 64
 const PERSISTENCY_INTERVAL = 60.0
 const PLAYER_RESPAWN_TIME = 10.0
 
-const USERS_FILEPATH = "data/users.json"
-
 var mode: MODE = MODE.CLIENT
 
 var logger: Log
