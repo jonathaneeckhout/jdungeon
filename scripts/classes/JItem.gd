@@ -4,6 +4,10 @@ class_name JItem
 
 enum MODE { LOOT, ITEMSLOT }
 
+enum ItemTypes { EQUIPMENT, CONSUMABLE, CURRENCY}
+
+var itemType: ItemTypes
+
 @export var uuid: String = "":
 	set(new_uuid):
 		uuid = new_uuid
@@ -16,14 +20,11 @@ var item_class: String = ""
 
 var expire_timer: Timer
 
-var consumable: bool = false
-var equipment: bool = false
-var is_gold: bool = false
-
 var drop_rate: float = 0.0
 
 var amount: int = 1
 var price: int = 0
+var value: int = 0
 
 var healing = 0
 
@@ -66,19 +67,24 @@ func loot(player: JPlayerBody2D) -> bool:
 
 
 func use(player: JPlayerBody2D) -> bool:
-	if consumable:
-		if healing > 0:
-			player.heal(player, healing)
-		return true
-	elif equipment:
-		if player.equipment and player.equipment.equip_item(self):
-			return true
-		else:
-			J.logger.info("%s could not equip item %s" % [player.name, item_class])
+	match itemType:
+		ItemTypes.CONSUMABLE:
+			if healing > 0:
+				player.heal(player, healing)
+				return true
+		
+		ItemTypes.EQUIPMENT:
+			if player.equipment and player.equipment.equip_item(self):
+				return true
+			else:
+				J.logger.info("%s could not equip item %s" % [player.name, item_class])
 			return false
-	else:
-		J.logger.info("%s could not use item %s" % [player.name, item_class])
-		return false
+		
+		_:
+			J.logger.info("%s could not use item %s" % [player.name, item_class])
+
+	return false
+
 
 
 func to_json() -> Dictionary:

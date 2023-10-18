@@ -10,7 +10,7 @@ signal gold_added(total: int, amount: int)
 signal gold_removed(total: int, amount: int)
 
 @export var size: int = 36
-@export var player: JPlayerBody2D
+@export var user: JPlayerBody2D
 
 var items: Array[JItem] = []
 var gold: int = 1000
@@ -37,7 +37,7 @@ func add_item(item: JItem) -> bool:
 
 	items.append(item)
 
-	sync_add_item.rpc_id(player.peer_id, item.name, item.item_class, item.amount)
+	sync_add_item.rpc_id(user.peer_id, item.name, item.item_class, item.amount)
 
 	return true
 
@@ -49,7 +49,7 @@ func remove_item(item_uuid: String):
 	var item: JItem = get_item(item_uuid)
 	if item != null:
 		items.erase(item)
-		sync_remove_item.rpc_id(player.peer_id, item_uuid)
+		sync_remove_item.rpc_id(user.peer_id, item_uuid)
 		return item
 
 
@@ -66,7 +66,7 @@ func use_item(item_uuid: String):
 		return false
 
 	var item: JItem = get_item(item_uuid)
-	if item and item.use(player):
+	if item and item.use(user):
 		remove_item(item_uuid)
 		return true
 
@@ -78,7 +78,7 @@ func add_gold(amount: int):
 		return
 
 	gold += amount
-	sync_add_gold.rpc_id(player.peer_id, gold, amount)
+	sync_add_gold.rpc_id(user.peer_id, gold, amount)
 
 
 func remove_gold(amount: int) -> bool:
@@ -87,7 +87,7 @@ func remove_gold(amount: int) -> bool:
 
 	if amount <= gold:
 		gold -= amount
-		sync_remove_gold.rpc_id(player.peer_id, gold, amount)
+		sync_remove_gold.rpc_id(user.peer_id, gold, amount)
 		return true
 
 	return false
@@ -104,7 +104,7 @@ func to_json() -> Dictionary:
 
 func from_json(data: Dictionary) -> bool:
 	if "gold" in data:
-		player.inventory.gold = data["gold"]
+		user.inventory.gold = data["gold"]
 
 		gold_added.emit(data["gold"], 0)
 	else:
@@ -142,14 +142,14 @@ func from_json(data: Dictionary) -> bool:
 
 
 func _on_inventory_item_used(id: int, item_uuid: String):
-	if player.peer_id != id:
+	if user.peer_id != id:
 		return
 
 	use_item(item_uuid)
 
 
 func _on_inventory_item_dropped(id: int, item_uuid: String):
-	if player.peer_id != id:
+	if user.peer_id != id:
 		return
 
 	var item = get_item(item_uuid)
@@ -160,7 +160,7 @@ func _on_inventory_item_dropped(id: int, item_uuid: String):
 
 	var random_x = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
 	var random_y = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
-	item.position = player.position + Vector2(random_x, random_y)
+	item.position = user.position + Vector2(random_x, random_y)
 	item.collision_layer = J.PHYSICS_LAYER_ITEMS
 
 	J.world.items.add_child(item)
@@ -173,7 +173,7 @@ func _on_inventory_item_dropped(id: int, item_uuid: String):
 
 	var id = multiplayer.get_remote_sender_id()
 
-	if id == player.peer_id:
+	if id == user.peer_id:
 		sync_response.rpc_id(id, to_json())
 
 

@@ -30,12 +30,12 @@ func _init():
 
 	inventory = JInventory.new()
 	inventory.name = "Inventory"
-	inventory.player = self
+	inventory.user = self
 	add_child(inventory)
 
 	equipment = JEquipment.new()
 	equipment.name = "Equipment"
-	equipment.player = self
+	equipment.user = self
 	add_child(equipment)
 
 	if J.is_server():
