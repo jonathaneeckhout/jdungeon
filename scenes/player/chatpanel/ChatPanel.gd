@@ -8,6 +8,8 @@ var current_group: String = "Global"
 var username: String = "player"
 var wisper_target: String = ""
 
+var delay_timer: Timer
+
 @onready var chat_log: RichTextLabel = $VBoxContainer/Logs/ChatLog
 @onready var log_log: RichTextLabel = $VBoxContainer/Logs/LogLog
 
@@ -23,6 +25,13 @@ func _ready():
 	$VBoxContainer/SelectButtons/ChatButton.pressed.connect(_on_chat_button_pressed)
 	$VBoxContainer/SelectButtons/LogsButton.pressed.connect(_on_logs_button_pressed)
 
+	delay_timer = Timer.new()
+	delay_timer.name = "DelayTimer"
+	delay_timer.one_shot = true
+	delay_timer.wait_time = 0.1
+	delay_timer.timeout.connect(_on_delay_timer_timeout)
+	add_child(delay_timer)
+
 
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
@@ -30,7 +39,8 @@ func _input(event):
 		JUI.chat_active = true
 	if event.is_action_pressed("ui_cancel"):
 		input_field.release_focus()
-		JUI.chat_active = false
+		# This timer is needed to prevent race conditions with other ui_cancel listeners
+		delay_timer.start()
 
 
 func change_group(value: String):
@@ -83,6 +93,7 @@ func _on_text_submitted(text: String):
 
 	if text.begins_with("/w"):
 		if text.length() > 3:
+			# Discard the /w part to get the username
 			wisper_target = text.replace("/w ", "")
 			if wisper_target != "":
 				change_group("Whisper")
@@ -90,7 +101,6 @@ func _on_text_submitted(text: String):
 		input_field.text = ""
 		input_field.release_focus()
 		JUI.chat_active = false
-		# Discard the /w part to get the username
 		return
 
 	if text != "":
@@ -102,7 +112,6 @@ func _on_text_submitted(text: String):
 			"Whisper":
 				J.rpcs.player.send_message.rpc_id(1, "Whisper", wisper_target, text)
 			_:
-				#TODO: implement other cases
 				append_chat_line_escaped(username, text, GROUPS[current_group]["color"])
 
 		# Here you have to send the message to the server
@@ -133,3 +142,7 @@ func _on_chat_button_pressed():
 func _on_logs_button_pressed():
 	chat_log.hide()
 	log_log.show()
+
+
+func _on_delay_timer_timeout():
+	JUI.chat_active = false
