@@ -69,7 +69,6 @@ func _process(_delta: float) -> void:
 				hovered_npc.emit(targetCurrent)
 			
 			J.ENTITY_TYPE.ITEM:
-				print_debug("Hovered item")
 				cursorToUse = CursorGraphics.PICKUP
 				hovered_item.emit(targetCurrent)
 				
