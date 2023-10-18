@@ -29,7 +29,7 @@ func _input(event):
 		self.visible = not isVisible
 		JUI.above_ui = not isVisible
 
-		if not isVisible:
+		if not visible:
 			close_submenu()
 
 	if isVisible:
