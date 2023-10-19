@@ -107,35 +107,27 @@ respawn_time = null
 
 [node name="Sheep6" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1008, -404)
-respawn_time = null
 
 [node name="Sheep8" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1243, -243)
-respawn_time = null
 
 [node name="Sheep9" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1216, 391)
-respawn_time = null
 
 [node name="Sheep10" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-814, 495)
-respawn_time = null
 
 [node name="Sheep11" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1497, 606)
-respawn_time = null
 
 [node name="Sheep12" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1424, -650)
-respawn_time = null
 
 [node name="Sheep13" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-884, -759)
-respawn_time = null
 
 [node name="Sheep7" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1104, 89)
-respawn_time = null
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 

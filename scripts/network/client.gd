@@ -3,7 +3,7 @@ extends Node
 
 signal connected(connected: bool)
 
-const CLOCK_SYNC_TIMER_TIME:float = 0.5
+const CLOCK_SYNC_TIMER_TIME: float = 0.5
 
 var clock: float = 0.0
 var clock_sync_timer: Timer
@@ -22,12 +22,14 @@ func _ready():
 	add_child(clock_sync_timer)
 
 
-func connect_to_server(address:String, port:int) -> bool:
+func connect_to_server(address: String, port: int) -> bool:
 	var client := ENetMultiplayerPeer.new()
 
-	var error:int = client.create_client(address, port)
+	var error: int = client.create_client(address, port)
 	if error != OK:
-		J.logger.warn( "Failed to create client. Error code {0} ({1})".format([error,error_string(error)]) )
+		J.logger.warn(
+			"Failed to create client. Error code {0} ({1})".format([error, error_string(error)])
+		)
 		return false
 
 	if client.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
@@ -43,7 +45,9 @@ func connect_to_server(address:String, port:int) -> bool:
 
 	error = client.host.dtls_client_setup(address, client_tls_options)
 	if error != OK:
-		J.logger.warn( "Failed to connect via DTLS. Error code {0} ({1})".format([error, error_string(error)]) )
+		J.logger.warn(
+			"Failed to connect via DTLS. Error code {0} ({1})".format([error, error_string(error)])
+		)
 		return false
 
 	multiplayer.multiplayer_peer = client
