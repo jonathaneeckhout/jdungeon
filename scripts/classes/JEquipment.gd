@@ -40,6 +40,11 @@ func _ready():
 	if J.is_server():
 		J.rpcs.item.equipment_item_removed.connect(_on_equipment_item_removed)
 
+func equipped_get_all()->Array[JItem]:
+	return items.values().filter(
+		func(item:JItem):
+			return item != null
+	)
 
 func equip_item(item: JItem) -> bool:
 	if items[item.equipment_slot] != null:
