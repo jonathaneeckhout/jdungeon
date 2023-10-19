@@ -107,7 +107,7 @@ func _on_respawn_timer_timeout():
 	var respawn_location: Vector2 = J.world.find_player_respawn_location(self.position)
 	respawn(respawn_location)
 
-func equipment_update_boosts():
+func equipment_update_boosts(_uuid:String, _item_class:String):
 	var equippedItems: Array[JItem] = equipment.equipped_get_all()
 	
 	for item in equippedItems:
