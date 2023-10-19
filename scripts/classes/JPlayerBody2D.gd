@@ -36,6 +36,8 @@ func _init():
 	equipment = JEquipment.new()
 	equipment.name = "Equipment"
 	equipment.user = self
+	equipment.item_added.connect(equipment_update_boosts)
+	equipment.item_removed.connect(equipment_update_boosts)
 	add_child(equipment)
 
 	if J.is_server():
@@ -104,3 +106,13 @@ func _on_persistency_timer_timeout():
 func _on_respawn_timer_timeout():
 	var respawn_location: Vector2 = J.world.find_player_respawn_location(self.position)
 	respawn(respawn_location)
+
+func equipment_update_boosts():
+	var equippedItems: Array[JItem] = equipment.equipped_get_all()
+	
+	for item in equippedItems:
+		
+		for boost in item.equipment_boosts:
+			
+			stats.stat_boost_add(boost)
+
