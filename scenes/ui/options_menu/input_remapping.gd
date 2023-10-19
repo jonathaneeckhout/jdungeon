@@ -79,7 +79,7 @@ func update_list():
 	for action in actionsAllowed:
 		#Ignore non-existent inputs
 		if not action in InputMap.get_actions():
-			push_error('Cannot list invalid action "{0}"'.format([action]))
+			J.logger.error('Cannot list invalid action "{0}"'.format([action]))
 			continue
 
 		#Add nodes for each of them
@@ -184,9 +184,9 @@ func _input(event: InputEvent):
 
 	#Make sure it worked.
 	if not InputMap.action_has_event(currentAction, event):
-		push_error("The event was not set.")
+		J.logger.error("The event was not set.")
 	if not InputMap.action_get_events(currentAction).size() == eventCount:
-		push_error(
+		J.logger.error(
 			(
 				"There's a different amount of events from before the remapping for action "
 				+ currentAction
@@ -199,7 +199,7 @@ func _input(event: InputEvent):
 	#Update the button's text
 	currentButton.text = event.as_text()
 
-	print_debug(
+	J.logger.info(
 		"Successfully remaped action {0} from event {1} to event {2}".format(
 			[currentAction, currentEvent.as_text(), event.as_text()]
 		)
