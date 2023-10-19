@@ -39,6 +39,8 @@ func load_local_settings():
 func load_server_env_variables() -> bool:
 	env_debug = J.env.get_value("DEBUG") == "true"
 
+	J.logger.info("DEBUG=[%s]" % str(env_debug))
+
 	var env_port_str = J.env.get_value("SERVER_PORT")
 	if env_port_str == "":
 		J.logger.error("Could not load SERVER_PORT env varaible")
@@ -122,6 +124,8 @@ func load_server_env_variables() -> bool:
 
 func load_client_env_variables() -> bool:
 	env_debug = J.env.get_value("DEBUG") == "true"
+
+	J.logger.info("DEBUG=[%s]" % str(env_debug))
 
 	env_server_address = J.env.get_value("SERVER_ADDRESS")
 	if env_server_address == "":
