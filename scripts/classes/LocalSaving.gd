@@ -7,18 +7,25 @@ const Sections:Dictionary = {SETTINGS = "SETTINGS"}
 
 static var savedData := ConfigFile.new()
 
-static func initialize() -> void:
-	if not FileAccess.file_exists(DEFAULT_PATH): save_file()
-	load_file()
+static func file_exists() -> bool:
+	return FileAccess.file_exists(DEFAULT_PATH)
 		
 static func save_file(path:String=DEFAULT_PATH):
 	if not savedData is ConfigFile: savedData = ConfigFile.new()
-	savedData.save(path)
+	var errCode:int = savedData.save(path)
+	if errCode != OK:
+		push_error( "Could not perform a local save. Error code {0} ({1})".format([errCode,error_string(errCode)]) )
+		
+	return errCode
 
 static func load_file(path:String=DEFAULT_PATH):
 	var config:=ConfigFile.new()
-	config.load(path)
+	var errCode:int = config.load(path)
 	savedData = config
+	if errCode != OK:
+				push_error( "Could not perform a local load. Error code {0} ({1})".format([errCode,error_string(errCode)]) )
+				
+	return errCode
 
 static func set_data(section:String, key:String, value):
 	savedData.set_value(section, key, value)

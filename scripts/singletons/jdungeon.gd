@@ -58,7 +58,9 @@ func init_server() -> bool:
 	mode = MODE.SERVER
 
 	Engine.set_physics_ticks_per_second(20)
-
+	
+	J.global.load_local_settings()
+		
 	if not J.global.load_server_env_variables():
 		J.logger.error("Could not load server's env variables")
 		return false
@@ -72,6 +74,7 @@ func init_server() -> bool:
 	if not server.init():
 		J.logger.error("Could not load init server")
 		return false
+		
 
 	return true
 
@@ -80,10 +83,14 @@ func init_client() -> bool:
 	mode = MODE.CLIENT
 
 	Engine.set_physics_ticks_per_second(60)
-
+	
+	J.global.load_local_settings()
+		
 	if not J.global.load_client_env_variables():
 		J.logger.error("Could not load client's env variables")
 		return false
+	
+	
 
 	client = load("res://scripts/network/client.gd").new()
 	client.name = "Client"
@@ -94,7 +101,6 @@ func init_client() -> bool:
 
 func is_server() -> bool:
 	return J.mode == J.MODE.SERVER
-
 
 func register_player_scene(player_scene_path: String):
 	player_scene = load(player_scene_path)

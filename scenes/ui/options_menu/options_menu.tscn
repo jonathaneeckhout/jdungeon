@@ -58,6 +58,8 @@ text = "Volume"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
 script = ExtResource("3_f1tit")
 
 [node name="QuitButton" type="Button" parent="."]
