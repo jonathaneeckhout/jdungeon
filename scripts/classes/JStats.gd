@@ -5,6 +5,8 @@ class_name JStats
 signal loaded
 signal synced
 
+signal stat_changed(statName:String)
+
 const EXPERIENCE_PER_LEVEL_BASE:float = 100
 
 const Keys:Dictionary = {
@@ -24,7 +26,7 @@ const Keys:Dictionary = {
 
 #Stats which depend on other stats should not be directly set
 #Use their update_ method instead
-const READ_ONLY_KEYS:Array[String] = [Keys.HP_MAX, Keys.EVASION, Keys.LEVEL]
+const READ_ONLY_KEYS:Array[String] = [Keys.HP_MAX, Keys.EVASION, Keys.ACCURACY, Keys.LEVEL]
 
 @export var parent: JBody2D
 
@@ -79,7 +81,20 @@ func _init() -> void:
 
 func stat_get(statKey:String)->float:
 	assert(statKey in Keys.values())
-		
+	
+	#Auto update relevant stats when they are retrieved
+	if statKey in READ_ONLY_KEYS:
+		assert(has_method(&"update_" + statKey), "There is no method for updating this read-only stat.")
+		Callable(self, &"update_" + statKey).call()
+	
+	return stat_get_boosted(statKey, get(statKey))
+
+#Returns the stat without boosts
+func stat_get_raw(statKey:String)->float:
+	if statKey in READ_ONLY_KEYS:
+		assert(has_method(&"update_" + statKey), "There is no method for updating this read-only stat.")
+		Callable(self, &"update_" + statKey).call()
+	
 	return get(statKey)
 
 func stat_set(statKey:String, value:float):
@@ -87,6 +102,8 @@ func stat_set(statKey:String, value:float):
 		push_warning("Stats of this type should not be set directly.")
 		
 	set(statKey, value)
+	
+	stat_changed.emit(statKey)
 
 #Used as a shortcut to check if a given stat can be modified directly
 func stat_is_read_only(statkey:String)->bool:
@@ -113,19 +130,28 @@ func stat_get_boosted(statKey:String, statValue:float)->float:
 #Stat boosts that come from the same source cannot stack
 func stat_boost_add(statBoost:Boost):
 	assert(statBoost.statKey in Keys.values(), "This statBoost has a key that doesn't exist.")
+	var wasAdded: bool
 	
 	#Abort if the stack limit is not infinite and it would exceed the boosts from the current source
 	if statBoost.stackLimit > 0 and stat_boost_get_stacks_from_source(statBoost.stackSource) > statBoost.stackLimit:
 		return
 	
-	#If it is already in the dicts
+	#Only add it if it is not already in the dicts
 	if not statToBoostDict[statBoost.statKey].has(statBoost):
 		statToBoostDict[statBoost.statKey].append(statBoost)
-		
-		assert(not stackSourceToBoostDict[statBoost.stackSource].has(statBoost))
+		wasAdded = true
+	
+	#Add this source to the dict if not present
+	if not stackSourceToBoostDict.has(statBoost.stackSource):
+		stackSourceToBoostDict[statBoost.stackSource] = []
+	
+	#Add this item to the source dictionary if not present
+	if not stackSourceToBoostDict[statBoost.stackSource].has(statBoost):
 		stackSourceToBoostDict[statBoost.stackSource].append(statBoost)
-	else: 
-		print_debug("Duplicate boost!")
+		
+	#The signal should be emitted last to ensure the boost has been properly registered before anything else tries to touch it
+	if wasAdded:
+		stat_changed.emit(statBoost.statKey)
 
 func stat_boost_remove_(statBoost:Boost):
 	assert(statBoost.statKey in Keys.values(), "This statBoost has a key that doesn't exist.")
@@ -134,8 +160,8 @@ func stat_boost_remove_(statBoost:Boost):
 	stackSourceToBoostDict[statBoost.stackSource].erase(statBoost)
 
 func stat_boost_get_stacks_from_source(stackSource:String)->int:
-	stat_boost_clean_array(stackSourceToBoostDict[stackSource])
-	return stackSourceToBoostDict[stackSource].size()
+	stat_boost_clean_array(stackSourceToBoostDict.get(stackSource, []))
+	return stackSourceToBoostDict.get(stackSource, []).size()
 		
 func stat_boost_clean_array(array:Array):
 	array = array.filter( func(obj:Object):
@@ -150,10 +176,10 @@ func stat_boost_create(key:String, amount:float, source:String = "", stackLimit:
 	boost.stackLimit = stackLimit
 	return boost
 
-func stat_update_all():
-	hp_max_update()
-	evasion_update()
-	level_update()
+func update_all_stats():
+	update_hp_max()
+	update_evasion()
+	update_level()
 	pass
 
 func hp_hurt(damage: float) -> float:
@@ -178,19 +204,23 @@ func hp_heal(healing: float) -> float:
 func hp_reset():
 	hp = hp_max
 
-func hp_max_update():
+#Do NOT use stat_set in update methods, otherwise it will cause an infinite recursion.
+func update_hp_max():
 	#Base 100 hp_max
 	#Plus 20 hp_max per level
 	#Finally using strength as a modifier (10 strength = 10% more HP)
 	var hpMax:float = (100 + level * 20) * (1 + attribute_strength / 100)
 	hp_max = stat_get_boosted(Keys.HP_MAX, hpMax)
 
-func accuracy_update():
+func update_accuracy():
 	accuracy = stat_get_boosted(Keys.ACCURACY, 100)
 
-func evasion_update():
-	evasion = stat_get_boosted(Keys.EVASION, 1)
+func update_evasion():
+	evasion = stat_get_boosted(Keys.EVASION, 0)
 
+func update_level():
+	level = level_get_from_experience()
+	
 #Level is based on the amount of experience the character has
 func level_get_from_experience()->float:
 	return 1 + (experience / 100)
@@ -198,17 +228,15 @@ func level_get_from_experience()->float:
 func level_get_experience_to_next()->float:
 	return fmod(experience, 100)
 
-func level_update():
-	level = level_get_from_experience()
 
 func experience_add(from: String, amount: int):
 	experience += amount
 
-	level_update()
+	update_level()
 	parent.synchronizer.sync_experience(from, experience, amount)
 
 func to_json() -> Dictionary:
-	stat_update_all()
+	update_all_stats()
 	return {"hp_max": hp_max, "hp": hp, "level": level, "experience": experience}
 
 
@@ -242,7 +270,7 @@ func from_json(data: Dictionary) -> bool:
 	if not J.is_server():
 		return
 	
-	stat_update_all()
+	update_all_stats()
 	
 	if id in multiplayer.get_peers():
 		sync.rpc_id(id, to_json())
