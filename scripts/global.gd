@@ -1,5 +1,8 @@
 extends Node
 
+var env_run_as_server: bool = false
+var env_run_as_client: bool = false
+
 var env_server_address: String = ""
 var env_server_port: int = 0
 var env_server_max_peers: int = 0
@@ -34,6 +37,13 @@ func load_local_settings():
 
 	#Set controls
 	InputRemapping.load_mappings()
+
+
+func load_common_env_variables() -> bool:
+	env_run_as_server = J.env.get_value("RUN_AS_SERVER") == "true"
+	env_run_as_client = J.env.get_value("RUN_AS_CLIENT") == "true"
+
+	return true
 
 
 func load_server_env_variables() -> bool:

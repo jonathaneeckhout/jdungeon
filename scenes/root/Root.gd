@@ -10,8 +10,15 @@ func _ready():
 	register_enemies()
 	register_npcs()
 	register_items()
-	
-	parse_cmd_arguments()
+
+	J.global.load_common_env_variables()
+
+	if J.global.env_run_as_server:
+		$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.emit()
+	elif J.global.env_run_as_client:
+		$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.emit()
+	else:
+		parse_cmd_arguments()
 
 
 func register_enemies():
@@ -73,17 +80,18 @@ func register_items():
 		"PlateLegs", "res://scenes/items/equipment/armour/platelegs/PlateLegs.tscn"
 	)
 
+
 func parse_cmd_arguments():
-	var args:PackedStringArray = OS.get_cmdline_args()
+	var args: PackedStringArray = OS.get_cmdline_args()
 	if not args.is_empty():
 		J.logger.info("Found launch arguments. ", str(args))
-		
+
 	for arg in args:
 		match arg:
 			"j_client":
 				$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.emit()
 				break
-				
+
 			"j_server":
 				$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.emit()
 				break
