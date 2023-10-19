@@ -25,7 +25,6 @@ func _input(event):
 	if JUI.chat_active:
 		return
 
-
 	var isVisible: bool = self.is_visible_in_tree()
 
 	if event.is_action_pressed("j_toggle_game_menu"):
@@ -69,7 +68,8 @@ func _input(event):
 				close_submenu()
 
 				get_viewport().set_input_as_handled()
-		
+
+
 #Also saves changes to disk.
 func close_submenu():
 	LocalSaveSystem.save_file()
