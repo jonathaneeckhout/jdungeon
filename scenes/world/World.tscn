@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=10 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://scenes/world/World.gd" id="1_3w1ia"]
-[ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/loginpanel/LoginPanel.tscn" id="2_fjr74"]
+[ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="2_fjr74"]
+[ext_resource type="PackedScene" uid="uid://d4d0gkqhmeiru" path="res://scenes/ui/disclaimerpanel/DisclaimerPanel.tscn" id="3_17w7r"]
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="3_fddk3"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="4_4b353"]
 [ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://scenes/enemies/Sheep/Sheep.tscn" id="4_uubdx"]
@@ -20,6 +21,10 @@ offset_left = -400.0
 offset_top = -400.0
 offset_right = 400.0
 offset_bottom = 400.0
+
+[node name="DisclaimerPanel" parent="UI" node_paths=PackedStringArray("login_panel") instance=ExtResource("3_17w7r")]
+visible = false
+login_panel = NodePath("../LoginPanel")
 
 [node name="Entities" type="Node2D" parent="."]
 

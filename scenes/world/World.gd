@@ -20,7 +20,10 @@ func _ready():
 		var client = load("res://scenes/world/clientfsm.gd").new()
 		client.name = "ClientFSM"
 		add_child(client)
-		$UI/LoginPanel.show()
+		if J.global.env_debug:
+			$UI/LoginPanel.show()
+		else:
+			$UI/DisclaimerPanel.show()
 
 
 func _physics_process(delta):
