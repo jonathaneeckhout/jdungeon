@@ -37,8 +37,6 @@ func load_local_settings():
 
 
 func load_server_env_variables() -> bool:
-	J.logger.info("Loading server's env variables")
-
 	env_debug = J.env.get_value("DEBUG") == "true"
 
 	var env_port_str = J.env.get_value("SERVER_PORT")

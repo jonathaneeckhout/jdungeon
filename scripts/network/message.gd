@@ -29,6 +29,7 @@ func _on_message_sent(from: int, type: String, to: String, message: String):
 		"Whisper":
 			var to_player: JPlayerBody2D = J.world.get_player_by_username(to)
 			if not to_player:
+				J.logger.info("Player=[%s] does not exist" % to)
 				return
 
 			if to_player != from_player:

@@ -36,6 +36,7 @@ func create_account_response(error: bool, reason: String = ""):
 	J.server.users[id]["logged_in"] = res
 
 	if res:
+		J.logger.info("Player=[%s] successfully logged in" % username)
 		J.server.users[id]["username"] = username
 		player_logged_in.emit(id, username)
 
