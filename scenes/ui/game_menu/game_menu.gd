@@ -22,9 +22,15 @@ func _ready():
 
 
 func _input(event):
+	if JUI.chat_active:
+		return
+
+
 	var isVisible: bool = self.is_visible_in_tree()
 
 	if event.is_action_pressed("j_toggle_game_menu"):
+		print("HIER")
+
 		#Show if not visible, hide otherwise.
 		self.visible = not isVisible
 		JUI.above_ui = not isVisible
