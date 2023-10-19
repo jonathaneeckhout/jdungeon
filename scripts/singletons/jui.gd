@@ -1,6 +1,7 @@
 extends Node
 
 var above_ui: bool = false
+var chat_active: bool = false
 
 
 func alertbox(message: String, parent: Node) -> void:

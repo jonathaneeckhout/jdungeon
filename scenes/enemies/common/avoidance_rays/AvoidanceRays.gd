@@ -11,12 +11,14 @@ extends Node2D
 
 @onready var actor := self.get_parent()
 
+
 func _ready():
 	if J.is_server():
 		_set_ray_targets()
 		_set_ray_angles()
 	else:
 		self.visible = false
+
 
 func _set_ray_targets():
 	ray_front.target_position = Vector2(ray_magnitude, 0)
@@ -25,11 +27,13 @@ func _set_ray_targets():
 	ray_right_0.target_position = Vector2(ray_magnitude / 1.5, 0)
 	ray_right_1.target_position = Vector2(ray_magnitude / 2.0, 0)
 
+
 func _set_ray_angles():
 	ray_left_0.rotation_degrees = -ray_separation_angle
 	ray_left_1.rotation_degrees = ray_separation_angle * -2
 	ray_right_0.rotation_degrees = ray_separation_angle
 	ray_right_1.rotation_degrees = ray_separation_angle * 2
+
 
 func find_avoidant_velocity(velocity_multiplier: float) -> Vector2:
 	if J.is_server():
@@ -39,11 +43,11 @@ func find_avoidant_velocity(velocity_multiplier: float) -> Vector2:
 			var viable_ray = _get_viable_ray()
 			if viable_ray:
 				avoidant_velocity = (
-					Vector2.RIGHT.rotated(self.rotation + viable_ray.rotation) * 
-					velocity_multiplier
-					)
+					Vector2.RIGHT.rotated(self.rotation + viable_ray.rotation) * velocity_multiplier
+				)
 		return avoidant_velocity
 	return Vector2.ZERO
+
 
 func _get_viable_ray() -> RayCast2D:
 	for ray in self.get_children():

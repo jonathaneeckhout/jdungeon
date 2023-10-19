@@ -1,0 +1,71 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmf2tmcuq22vg"]
+
+[ext_resource type="Script" path="res://scenes/player/chatpanel/ChatPanel.gd" id="1_4dbdm"]
+
+[node name="ChatPanel" type="Control"]
+custom_minimum_size = Vector2(512, 326)
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -326.0
+offset_right = 512.0
+grow_vertical = 0
+script = ExtResource("1_4dbdm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="SelectButtons" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="ChatButton" type="Button" parent="VBoxContainer/SelectButtons"]
+layout_mode = 2
+text = "Chat"
+
+[node name="LogsButton" type="Button" parent="VBoxContainer/SelectButtons"]
+layout_mode = 2
+text = "Logs"
+
+[node name="Logs" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(512, 256)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="ChatLog" type="RichTextLabel" parent="VBoxContainer/Logs"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+scroll_following = true
+
+[node name="LogLog" type="RichTextLabel" parent="VBoxContainer/Logs"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+scroll_following = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Global:"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3

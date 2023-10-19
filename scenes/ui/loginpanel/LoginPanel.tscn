@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://bdgegw7cy4d1r"]
 
-[ext_resource type="Script" path="res://scenes/loginpanel/LoginPanel.gd" id="1_uhohb"]
+[ext_resource type="Script" path="res://scenes/ui/loginpanel/LoginPanel.gd" id="1_uhohb"]
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="2_d6ypk"]
 [ext_resource type="PackedScene" uid="uid://retyeadedkag" path="res://scenes/ui/buttons/mute_unmute_all_button.tscn" id="3_lpu63"]
 [ext_resource type="AudioStream" uid="uid://b3kstyb5opkj1" path="res://assets/audio/ui/login_panel/ui_click/ui_click.mp3" id="3_pgl4f"]

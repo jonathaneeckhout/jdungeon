@@ -111,6 +111,10 @@ func get_player_by_peer_id(peer_id: int) -> JPlayerBody2D:
 	return null
 
 
+func get_player_by_username(username: String) -> JPlayerBody2D:
+	return players.get_node_or_null(username)
+
+
 func find_player_respawn_location(player_position: Vector2) -> Vector2:
 	var spots = player_respawn_locations.get_children()
 

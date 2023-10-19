@@ -23,6 +23,7 @@ var back_create_account_pressed: bool = false
 
 @onready var login_panel := $"../UI/LoginPanel"
 
+
 func _ready():
 	# Add a short timer to deffer the fsm() calls
 	fsm_timer = Timer.new()

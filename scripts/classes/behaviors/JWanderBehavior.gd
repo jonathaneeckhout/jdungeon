@@ -66,6 +66,7 @@ func _physics_process(_delta: float):
 
 			actor.send_new_loop_animation("Idle")
 
+
 func find_random_spot(origin: Vector2, distance: float) -> Vector2:
 	return Vector2(
 		float(randi_range(origin.x - distance, origin.x + distance)),
@@ -83,4 +84,3 @@ func _on_colliding_timer_timeout():
 
 func _on_died():
 	is_dead = true
-

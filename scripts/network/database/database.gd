@@ -28,6 +28,7 @@ func init() -> bool:
 func create_account(username: String, password: String) -> Dictionary:
 	var validation_result: Dictionary = is_account_valid(username, password)
 	if not validation_result["result"]:
+		J.logger.info("Invalid account for username=[%s]" % username)
 		return validation_result
 
 	return backend.CreateAccount(username, password)
