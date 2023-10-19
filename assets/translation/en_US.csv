@@ -3,3 +3,15 @@ j_left_click,Left click
 j_right_click,Right click
 j_toggle_bag,Toggle bag
 j_toggle_equipment,Toggle equipment
+j_toggle_stats,Toggle stats screen
+hp,Hit Points
+hp_max,Max Hit Points
+defense,Defense
+resistance,Resistance
+attribute_strength,Strength
+attribute_dexterity,Dexterity
+attribute_mind,Mind
+evasion,Evasion
+accuracy,Accuracy
+experience,Experience
+level,Level
