@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://d4d0gkqhmeiru"]
+
+[ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_uls1l"]
+[ext_resource type="Script" path="res://scenes/ui/disclaimerpanel/DisclaimerPanel.gd" id="2_d1wi6"]
+
+[node name="DisclaimerPanel" type="Control"]
+custom_minimum_size = Vector2(800, 800)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_uls1l")
+script = ExtResource("2_d1wi6")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ConnectContainer" type="VBoxContainer" parent="Panel"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -138.0
+offset_right = 250.0
+offset_bottom = 138.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/ConnectContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel/ConnectContainer/MarginContainer"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 24
+text = "Disclaimer: Early Development Phase
+--------------------------------------------------------------------------------------
+This game is currently in its early development phase. As such, we would like to inform our players of a few important points:
+--------------------------------------------------------------------------------------
+1) Please be aware that you may encounter crashes and encounter various bugs while playing this game. We are continuously working to improve the stability and functionality of the game, but early development is a time when such issues are more likely to occur.
+--------------------------------------------------------------------------------------
+2) In the course of future developments and updates, it may become necessary to reset user accounts or in-game progress. We understand that this can be frustrating, but such measures may be required to ensure the game's long-term quality and balance.
+--------------------------------------------------------------------------------------
+3) Our team is committed to delivering the best possible gaming experience. We are actively addressing reported bugs and issues, and we appreciate your patience and understanding as we work to solve as many problems as possible.
+--------------------------------------------------------------------------------------
+Kind regards,
+JDungeon team"
+fit_content = true
+
+[node name="MarginContainer3" type="MarginContainer" parent="Panel/ConnectContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_right = 200
+
+[node name="AgreeButton" type="Button" parent="Panel/ConnectContainer/MarginContainer3" groups=["ui_button"]]
+layout_mode = 2
+size_flags_vertical = 4
+text = "I Agree"
