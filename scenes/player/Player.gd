@@ -26,7 +26,7 @@ extends JPlayerBody2D
 
 
 func _ready():
-	stats.stat_update_all()
+	stats.update_all_stats()
 	stats.hp_reset()
 	
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
