@@ -97,7 +97,7 @@ func stat_get_boosted(statKey:String, statValue:float)->float:
 	stat_boost_clean_array(statToBoostDict[statKey])
 	
 	var multiplier: float = 1
-	var additive: float
+	var additive: float = 0
 	var total: float = statValue
 	
 	for boost in statToBoostDict.get(statKey, []):
@@ -110,7 +110,7 @@ func stat_get_boosted(statKey:String, statValue:float)->float:
 
 	return (total + additive) * multiplier
 
-#Stat boosts that come from the same source cannot stack, the most powerful is chosen instead
+#Stat boosts that come from the same source cannot stack
 func stat_boost_add(statBoost:Boost):
 	assert(statBoost.statKey in Keys.values(), "This statBoost has a key that doesn't exist.")
 	
@@ -118,8 +118,14 @@ func stat_boost_add(statBoost:Boost):
 	if statBoost.stackLimit > 0 and stat_boost_get_stacks_from_source(statBoost.stackSource) > statBoost.stackLimit:
 		return
 	
-	statToBoostDict[statBoost.statKey].append(statBoost)
-	stackSourceToBoostDict[statBoost.stackSource].append(statBoost)
+	#If it is already in the dicts
+	if not statToBoostDict[statBoost.statKey].has(statBoost):
+		statToBoostDict[statBoost.statKey].append(statBoost)
+		
+		assert(not stackSourceToBoostDict[statBoost.stackSource].has(statBoost))
+		stackSourceToBoostDict[statBoost.stackSource].append(statBoost)
+	else: 
+		print_debug("Duplicate boost!")
 
 func stat_boost_remove_(statBoost:Boost):
 	assert(statBoost.statKey in Keys.values(), "This statBoost has a key that doesn't exist.")
@@ -141,6 +147,7 @@ func stat_boost_create(key:String, amount:float, source:String = "", stackLimit:
 	boost.source = source
 	boost.statKey = key
 	boost.amount = amount
+	boost.stackLimit = stackLimit
 	return boost
 
 func stat_update_all():
@@ -149,7 +156,7 @@ func stat_update_all():
 	level_update()
 	pass
 
-func hp_hurt(damage: int) -> int:
+func hp_hurt(damage: float) -> float:
 	#Reduce the damage according to the defense stat
 	var reduced_damage: float = max(0, damage - defense)
 	
@@ -159,10 +166,10 @@ func hp_hurt(damage: int) -> int:
 	#Apply the reduction
 	hp = clamp(hp - resisted_damage, 0, hp_max)
 
-	return reduced_damage
+	return resisted_damage
 
 
-func hp_heal(healing: int) -> int:
+func hp_heal(healing: float) -> float:
 	hp = min(hp_max, hp + healing)
 
 	return healing

@@ -26,7 +26,7 @@ func add_item(item: JItem) -> bool:
 	if not J.is_server():
 		return false
 
-	if item.is_gold:
+	if item.itemType == JItem.ItemTypes.CURRENCY:
 		add_gold(item.amount)
 		return true
 

@@ -13,7 +13,7 @@ var itemType: ItemTypes
 		uuid = new_uuid
 		name = new_uuid
 
-@export var expire_time: float = 30.0
+@export var expire_time: float = 60.0
 
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ITEM
 var item_class: String = ""
@@ -29,6 +29,8 @@ var value: int = 0
 var healing = 0
 
 var equipment_slot: String = ""
+
+var equipment_boosts: Array[JStats.Boost]
 
 
 func _init():

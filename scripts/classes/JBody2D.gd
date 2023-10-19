@@ -35,9 +35,9 @@ func _init():
 
 
 func attack(target: CharacterBody2D):
-	var damage = randi_range(stats.attack_power_min, stats.attack_power_max)
+	var damage: float = randi_range(stats.attack_power_min, stats.attack_power_max)
 
-	target.hp_hurt(self, damage)
+	target.hurt(self, damage)
 	synchronizer.sync_attack(target.name, damage)
 
 
@@ -109,3 +109,5 @@ func drop_loot():
 
 func add_item_to_loottable(item_class: String, drop_rate: float, amount: int = 1):
 	loot_table.append({"item_class": item_class, "drop_rate": drop_rate, "amount": amount})
+
+
