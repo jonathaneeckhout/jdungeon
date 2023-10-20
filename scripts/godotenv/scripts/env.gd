@@ -15,14 +15,14 @@ func get_value(valuename: String):
 		J.logger.info("Getting environment value=[%s]" % valuename)
 		return env[valuename]
 
-	J.logger.warn("Could not find environment value=[%s]" % valuename)
+	J.logger.info("Could not find environment value=[%s]" % valuename)
 	# return empty
 	return ""
 
 
 func parse(filename:String):
 	if !FileAccess.file_exists(filename):
-		J.logger.warn("File=[%s] does not exist" % filename)
+		J.logger.info("File=[%s] does not exist" % filename)
 		return {}
 
 	var file:FileAccess = FileAccess.open(filename, FileAccess.READ)

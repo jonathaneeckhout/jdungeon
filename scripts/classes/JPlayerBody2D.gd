@@ -70,6 +70,13 @@ func _init():
 		player_input.interact.connect(_on_interact)
 
 
+func _ready():
+	super()
+
+	if not J.is_server() and J.client.player:
+		equipment.sync_equipment.rpc_id(1, J.client.player.peer_id)
+
+
 func die():
 	super()
 

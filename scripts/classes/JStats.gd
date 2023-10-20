@@ -9,11 +9,9 @@ const BASE_EXPERIENCE = 100
 
 @export var parent: JBody2D
 
-var max_hp: int = 10:
-	set(new_max_hp):
-		max_hp = new_max_hp
-		hp = max_hp
+var max_hp: int = 10
 var hp: int = max_hp
+
 var attack_power_min: int = 0
 var attack_power_max: int = 10
 var attack_speed: float = 0.8
@@ -109,15 +107,21 @@ func add_experience(from: String, amount: int):
 	parent.synchronizer.sync_experience(from, experience, amount)
 
 
-@rpc("call_remote", "any_peer", "reliable") func get_sync(id: int):
+@rpc("call_remote", "any_peer", "reliable") func sync_stats(id: int):
 	if not J.is_server():
 		return
 
+	var caller_id = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(caller_id):
+		return
+
 	if id in multiplayer.get_peers():
-		sync.rpc_id(id, to_json())
+		sync_response.rpc_id(id, to_json())
 
 
-@rpc("call_remote", "authority", "unreliable") func sync(data: Dictionary):
+@rpc("call_remote", "authority", "unreliable") func sync_response(data: Dictionary):
 	max_hp = data["max_hp"]
 	hp = data["hp"]
 	level = data["level"]

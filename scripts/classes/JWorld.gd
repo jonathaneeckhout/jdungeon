@@ -181,16 +181,17 @@ func _on_client_player_added(id: int, username: String, pos: Vector2):
 
 	player.position = pos
 
-	players.add_child(player)
-
 	J.client.player = player
 
+	players.add_child(player)
 
-func _on_client_other_player_added(username: String, pos: Vector2):
+
+func _on_client_other_player_added(username: String, pos: Vector2, loop_animation: String):
 	var player = J.player_scene.instantiate()
 	player.name = username
 	player.username = username
 	player.position = pos
+	player.loop_animation = loop_animation
 
 	players.add_child(player)
 
@@ -200,10 +201,13 @@ func _on_client_other_player_removed(username: String):
 		players.get_node(username).queue_free()
 
 
-func _on_client_enemy_added(enemy_name: String, enemy_class: String, pos: Vector2):
+func _on_client_enemy_added(
+	enemy_name: String, enemy_class: String, pos: Vector2, loop_animation: String
+):
 	var enemy: JEnemyBody2D = J.enemy_scenes[enemy_class].instantiate()
 	enemy.name = enemy_name
 	enemy.position = pos
+	enemy.loop_animation = loop_animation
 
 	enemies.add_child(enemy)
 
@@ -213,10 +217,13 @@ func _on_client_enemy_removed(enemy_name: String):
 		enemies.get_node(enemy_name).queue_free()
 
 
-func _on_client_npc_added(npc_name: String, npc_class: String, pos: Vector2):
+func _on_client_npc_added(
+	npc_name: String, npc_class: String, pos: Vector2, loop_animation: String
+):
 	var npc: JNPCBody2D = J.npc_scenes[npc_class].instantiate()
 	npc.name = npc_name
 	npc.position = pos
+	npc.loop_animation = loop_animation
 
 	npcs.add_child(npc)
 

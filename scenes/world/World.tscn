@@ -33,103 +33,110 @@ login_panel = NodePath("../LoginPanel")
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2164, 1328)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy2" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2590, 276)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy3" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-3139, 1193)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy8" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-3584, 1706)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy9" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-4239, 1075)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy10" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-4691, 1501)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy11" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-5313, 414)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy13" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-5678, -701)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy14" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-5029, -1043)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy15" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-4816, -611)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy16" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-3994, -1151)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy17" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-3149, -1262)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy12" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-5405, 1397)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy4" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2216, -599)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy6" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-1807, -1317)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="TreeTrunkGuy7" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2022, -995)
 should_respawn = true
-respawn_time = null
+respawn_time = 20.0
 
 [node name="Sheep6" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1008, -404)
+should_respawn = true
 
 [node name="Sheep8" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1243, -243)
+should_respawn = true
 
 [node name="Sheep9" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1216, 391)
+should_respawn = true
 
 [node name="Sheep10" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-814, 495)
+should_respawn = true
 
 [node name="Sheep11" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1497, 606)
+should_respawn = true
 
 [node name="Sheep12" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1424, -650)
+should_respawn = true
 
 [node name="Sheep13" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-884, -759)
+should_respawn = true
 
 [node name="Sheep7" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1104, 89)
