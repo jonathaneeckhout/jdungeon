@@ -230,7 +230,7 @@ func level_get_from_experience()->float:
 	return 1 + (experience / 100)
 
 func level_get_experience_to_next()->float:
-	return fmod(experience, 100)
+	return min(fmod(experience, 100), 0)
 
 
 func experience_add(from: String, amount: int):
@@ -276,10 +276,7 @@ func from_json(data: Dictionary) -> bool:
 
 
 @rpc("call_remote", "authority", "unreliable") func sync_response(data: Dictionary):
-	hp_max = data["hp_max"]
-
 	hp = data["hp"]
-	level = data["level"]
 	experience = data["experience"]
 
 	synced.emit()

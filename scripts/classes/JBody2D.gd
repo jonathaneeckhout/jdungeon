@@ -52,7 +52,7 @@ func hurt(from: CharacterBody2D, damage: float):
 	# R.I.P. you're dead
 	if stats.hp <= 0:
 		if stats.experience_worth > 0:
-			from.stats.add_experience(name, stats.experience_worth)
+			from.stats.experience_add(name, stats.experience_worth)
 
 		# Can't die twice
 		if not is_dead:
@@ -60,7 +60,7 @@ func hurt(from: CharacterBody2D, damage: float):
 
 
 func heal(from: CharacterBody2D, healing: int):
-	var healing_done: int = stats.heal(healing)
+	var healing_done: int = stats.hp_heal(healing)
 
 	synchronizer.sync_heal(from.name, stats.hp, stats.hp_max, healing_done)
 
