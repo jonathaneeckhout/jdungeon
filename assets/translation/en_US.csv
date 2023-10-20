@@ -8,6 +8,8 @@ hp,Hit Points
 hp_max,Max Hit Points
 defense,Defense
 resistance,Resistance
+attack_power,Attack Power
+attack_cooldown,Attack Interval
 attribute_strength,Strength
 attribute_dexterity,Dexterity
 attribute_mind,Mind
