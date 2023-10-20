@@ -28,8 +28,9 @@ extends JPlayerBody2D
 
 func _init():
 	super()
-	stats.update_all_stats()
-	stats.hp_reset()
+	stats.update_hp_max()
+	stats.stat_set(stats.Keys.HP, stats.stat_get(stats.Keys.HP_MAX))
+
 
 func _ready():
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
