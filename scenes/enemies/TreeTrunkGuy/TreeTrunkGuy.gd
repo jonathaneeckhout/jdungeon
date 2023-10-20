@@ -27,14 +27,11 @@ func _init():
 
 
 func _ready():
-	# Make sure to connect to all signals before super is called
-	if not J.is_server() and J.client.player:
-		stats.synced.connect(_on_stats_synced)
 	super()
 	if J.is_server():
 		beehave_tree.enabled = true
 
-  stats.update_hp_max()
+	stats.update_hp_max()
 	stats.stat_set(JStats.Keys.HP, stats.stat_get(JStats.Keys.HP_MAX))
 
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)

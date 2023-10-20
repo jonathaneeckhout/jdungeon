@@ -265,13 +265,6 @@ func from_json(data: Dictionary) -> bool:
 
 	return true
 
-#Used by the server to sync all stats on clients (UNUSED???)
-@rpc("call_remote", "any_peer", "reliable") func get_sync(id: int):
-	if not J.is_server():
-		return
-	
-	update_all_stats()
-
 @rpc("call_remote", "any_peer", "reliable") func sync_stats(id: int):
 	if not J.is_server():
 		return

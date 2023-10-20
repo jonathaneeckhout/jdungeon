@@ -22,7 +22,7 @@ signal loaded
 signal item_added(item_uuid: String, item_class: String)
 signal item_removed(item_uuid: String)
 
-@export var user: JBody2D
+@export var player: JBody2D
 
 var items: Dictionary = {
 	"Head": null,
@@ -95,8 +95,8 @@ func _unequip_item(item_uuid: String) -> JItem:
 	if item:
 		items[item.equipment_slot] = null
 
-		if user.inventory:
-			user.inventory.add_item(item)
+		if player.inventory:
+			player.inventory.add_item(item)
 		else:
 			J.logger.warn("Player does not have a inventory, item will be lost")
 
@@ -154,7 +154,7 @@ func from_json(data: Dictionary) -> bool:
 
 
 func _on_equipment_item_removed(id: int, item_uuid: String):
-	if user.peer_id != id:
+	if player.peer_id != id:
 		return
 
 	unequip_item(item_uuid)
@@ -167,7 +167,7 @@ func _on_equipment_item_removed(id: int, item_uuid: String):
 	var caller_id = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(caller_id):
+	if not J.server.is_player_logged_in(caller_id):
 		return
 
 	if id in multiplayer.get_peers():

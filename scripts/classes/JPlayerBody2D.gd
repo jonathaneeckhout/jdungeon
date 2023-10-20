@@ -35,7 +35,7 @@ func _init():
 
 	equipment = JEquipment.new()
 	equipment.name = "Equipment"
-	equipment.user = self
+	equipment.player = self
 	equipment.item_added.connect(equipment_update_boosts)
 	equipment.item_removed.connect(equipment_update_boosts)
 	add_child(equipment)
