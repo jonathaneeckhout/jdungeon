@@ -28,7 +28,7 @@ const Keys:Dictionary = {
 
 #Stats which depend on other stats should not be directly set
 #Use their update_ method instead
-const READ_ONLY_KEYS:Array[String] = [Keys.HP_MAX, Keys.EVASION, Keys.ACCURACY, Keys.LEVEL]
+const READ_ONLY_KEYS:Array[String] = [Keys.HP_MAX, Keys.EVASION, Keys.ACCURACY, Keys.LEVEL, Keys.ATTACK_DAMAGE]
 
 @export var parent: JBody2D
 
@@ -213,6 +213,9 @@ func update_hp_max():
 	var hpMax:float = (100 + level * 20) * (1 + attribute_strength / 100)
 	hp_max = stat_get_boosted(Keys.HP_MAX, hpMax)
 
+func update_attack_power():
+	attack_power = stat_get_boosted(Keys.ATTACK_DAMAGE, 5)
+
 func update_accuracy():
 	accuracy = stat_get_boosted(Keys.ACCURACY, 100)
 
@@ -303,7 +306,12 @@ class Boost extends RefCounted:
 	#How many can be stacked, anything lower than 0 means it is infinite
 	var stackLimit:int = 1
 	
-	var statKey:String
+	var statKey:String:
+		set(val):
+			statKey = val
+			if not statKey in Keys.values():
+				push_error("Invalid stat key " + statKey)
+	
 	
 	var value:float
 	
@@ -314,4 +322,18 @@ class Boost extends RefCounted:
 			freeSignal.connect(self.free)
 	
 	
-	
+	static func create_addi_boost(_source:String, _stat:String, _value:float)->Boost:
+		var newBoost := Boost.new()
+		newBoost.type = Types.ADDITIVE
+		newBoost.statKey = _stat
+		newBoost.value = _value
+		newBoost.stackSource = _source
+		return newBoost
+
+	static func create_mult_boost(_source:String, _stat:String, _value:float)->Boost:
+		var newBoost := Boost.new()
+		newBoost.type = Types.MULTIPLICATIVE
+		newBoost.statKey = _stat
+		newBoost.value = _value
+		newBoost.stackSource = _source
+		return newBoost
