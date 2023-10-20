@@ -13,6 +13,8 @@ const Keys:Dictionary = {
 	HP="hp",
 	HP_MAX="hp_max",
 	DEFENSE="defense",
+	ATTACK_DAMAGE="attack_power",
+	ATTACK_COOLDOWN="attack_cooldown",
 	RESISTANCE="resistance",
 	STRENGTH="attribute_strength",
 	DEXTERITY="attribute_dexterity",
@@ -56,9 +58,8 @@ var resistance: float = 0:
 var movement_speed: float = 300.0
 		
 #What do i do with these?
-var attack_power_min: int = 0
-var attack_power_max: int = 10
-var attack_speed: float = 0.8
+var attack_power: float = 5
+var attack_cooldown: float = 0.8
 var attack_range: float = 64.0
 
 

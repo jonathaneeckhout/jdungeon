@@ -146,8 +146,15 @@ func behavior(_delta: float):
 					player.velocity = Vector2.ZERO
 
 					if attack_timer.is_stopped():
-						player.attack(interact_target)
-						attack_timer.start(player_stats.attack_speed)
+						
+						var attackInfo := JBody2D.AttackInformation.new()
+						attackInfo.target = interact_target
+						attackInfo.cooldownExpected = player_stats.stat_get(JStats.Keys.ATTACK_COOLDOWN)
+						attackInfo.damage = player_stats.stat_get(JStats.Keys.ATTACK_DAMAGE)
+						attackInfo.attacker = player
+						
+						player.attack(attackInfo)
+						attack_timer.start(attackInfo.cooldownExpected)
 
 			INTERACT_TYPE.NPC:
 				if not npcs_in_interact_range.has(interact_target):

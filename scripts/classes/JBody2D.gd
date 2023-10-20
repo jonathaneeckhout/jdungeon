@@ -39,15 +39,13 @@ func _ready():
 		stats.sync_stats.rpc_id(1, J.client.player.peer_id)
 
 
-func attack(target: CharacterBody2D):
-	var damage: float = randi_range(stats.attack_power_min, stats.attack_power_max)
-
-	target.hurt(self, damage)
-	synchronizer.sync_attack(target.name, damage)
+func attack(information: AttackInformation):
+	information.target.hurt( information.attacker, information.damage )
+	synchronizer.sync_attack( information.target.get_name(),  information.damage )
 
 
-func hurt(from: CharacterBody2D, damage: int):
-	var damage_done: int = stats.hp_hurt(damage)
+func hurt(from: CharacterBody2D, damage: float):
+	var damage_done: float = stats.hp_hurt(damage)
 
 	synchronizer.sync_hurt(from.name, stats.hp, stats.hp_max, damage_done)
 
@@ -115,4 +113,10 @@ func drop_loot():
 func add_item_to_loottable(item_class: String, drop_rate: float, amount: int = 1):
 	loot_table.append({"item_class": item_class, "drop_rate": drop_rate, "amount": amount})
 
-
+#This acts as a data container to enable more complex abilities later, which may need to know more than just the target
+class AttackInformation extends Object:
+	var attacker: JBody2D
+	var target: JBody2D
+	var damage: float
+	var cooldownExpected: float
+	
