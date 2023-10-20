@@ -7,7 +7,7 @@ func _ready() -> void:
 	if user and targetContainer:
 		renew_displays()
 	else:
-		push_error("This StatDisplay has null properties and cannot initialize on its own")
+		push_error("This StatDisplay has no user")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("j_toggle_stats"):
