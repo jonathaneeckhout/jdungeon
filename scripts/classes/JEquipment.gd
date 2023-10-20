@@ -41,7 +41,7 @@ func _ready():
 		J.rpcs.item.equipment_item_removed.connect(_on_equipment_item_removed)
 
 func equipped_get_all()->Array[JItem]:
-	var arr: Array[JItem]
+	var arr: Array[JItem] = []
 	
 	arr.assign(
 		items.values().filter(
