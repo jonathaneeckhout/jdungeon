@@ -1,7 +1,7 @@
 extends Node
 
 signal player_added(id: int, username: String, pos: Vector2)
-signal other_player_added(username: String, pos: Vector2)
+signal other_player_added(username: String, pos: Vector2, loop_animation: String)
 signal other_player_removed(username: String)
 signal message_sent(from: int, type: String, to: String, message: String)
 signal message_received(type: String, from: String, message: String)
@@ -11,8 +11,9 @@ func add_player(id: int, username: String, pos: Vector2):
 	player_added.emit(id, username, pos)
 
 
-@rpc("call_remote", "authority", "reliable") func add_other_player(username: String, pos: Vector2):
-	other_player_added.emit(username, pos)
+@rpc("call_remote", "authority", "reliable")
+func add_other_player(username: String, pos: Vector2, loop_animation: String):
+	other_player_added.emit(username, pos, loop_animation)
 
 
 @rpc("call_remote", "authority", "reliable") func remove_other_player(username: String):
