@@ -107,7 +107,7 @@ func _on_loop_animation_changed(animation: String, direction: Vector2):
 
 
 func _on_stats_synced():
-	$JInterface.update_hp_bar(stats.hp, stats.hp_max)
+	$JInterface.update_hp_bar( stats.stat_get(JStats.Keys.HP), stats.stat_get(JStats.Keys.HP_MAX) )
 
 
 func _on_stuck_timer_timeout():

@@ -59,7 +59,7 @@ func _ready():
 		# Remove the camera with ui on the server's side
 		$Camera2D.queue_free()
 
-		$JInterface.update_hp_bar(stats.hp, stats.max_hp)
+		$JInterface.update_hp_bar( stats.stat_get(JStats.Keys.HP), stats.stat_get(JStats.Keys.HP_MAX) )
 		# Make sure to load equipment on server side
 		equipment_changed()
 	else:

@@ -164,10 +164,10 @@ func _on_equipment_item_removed(id: int, item_uuid: String):
 	if not J.is_server():
 		return
 
-	var caller_id = multiplayer.get_remote_sender_id()
+	var caller_id: int = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_player_logged_in(caller_id):
+	if not J.server.is_user_logged_in(caller_id):
 		return
 
 	if id in multiplayer.get_peers():
