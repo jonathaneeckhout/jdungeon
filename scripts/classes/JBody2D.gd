@@ -34,6 +34,11 @@ func _init():
 	add_child(stats)
 
 
+func _ready():
+	if not J.is_server() and J.client.player:
+		stats.sync_stats.rpc_id(1, J.client.player.peer_id)
+
+
 func attack(target: CharacterBody2D):
 	var damage: float = randi_range(stats.attack_power_min, stats.attack_power_max)
 

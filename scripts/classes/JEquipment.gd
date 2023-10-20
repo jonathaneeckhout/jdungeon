@@ -56,7 +56,8 @@ func equip_item(item: JItem) -> bool:
 		unequip_item(items[item.equipment_slot].uuid)
 
 	if _equip_item(item):
-		sync_equip_item.rpc_id(user.peer_id, item.uuid, item.item_class)
+		for watcher in player.synchronizer.watchers:
+			sync_equip_item.rpc_id(watcher.peer_id, item.uuid, item.item_class)
 
 		item_added.emit(item.uuid, item.item_class)
 
@@ -81,7 +82,8 @@ func _equip_item(item: JItem) -> bool:
 func unequip_item(item_uuid: String) -> JItem:
 	var item: JItem = _unequip_item(item_uuid)
 	if item:
-		sync_unequip_item.rpc_id(user.peer_id, item.uuid)
+		for watcher in player.synchronizer.watchers:
+			sync_unequip_item.rpc_id(watcher.peer_id, item.uuid)
 
 		item_removed.emit(item_uuid)
 
@@ -158,13 +160,17 @@ func _on_equipment_item_removed(id: int, item_uuid: String):
 	unequip_item(item_uuid)
 
 
-@rpc("call_remote", "any_peer", "reliable") func sync_equipment():
+@rpc("call_remote", "any_peer", "reliable") func sync_equipment(id: int):
 	if not J.is_server():
 		return
 
-	var id = multiplayer.get_remote_sender_id()
+	var caller_id = multiplayer.get_remote_sender_id()
 
-	if id == user.peer_id:
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(caller_id):
+		return
+
+	if id in multiplayer.get_peers():
 		sync_response.rpc_id(id, to_json())
 
 

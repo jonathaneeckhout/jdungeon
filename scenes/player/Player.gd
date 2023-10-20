@@ -25,44 +25,55 @@ extends JPlayerBody2D
 }
 
 
-func _ready():
+
+func _init():
+	super()
 	stats.update_all_stats()
 	stats.hp_reset()
-	
+
+func _ready():
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.attacked.connect(_on_attacked)
 	synchronizer.healed.connect(_on_healed)
 	synchronizer.got_hurt.connect(_on_got_hurt)
 
+	equipment.loaded.connect(_on_equipment_loaded)
 	equipment.item_added.connect(_on_item_equiped)
 	equipment.item_removed.connect(_on_item_unequiped)
+
+	stats.synced.connect(_on_stats_synced)
+
+	synchronizer.died.connect(_on_died)
+	synchronizer.respawned.connect(_on_respawned)
 
 	animation_player.play(loop_animation)
 
 	$JInterface.display_name = username
 
-	if J.is_server() or peer_id != multiplayer.get_unique_id():
+	super()
+
+	if J.is_server():
+		# No input is handeld on server's side
 		set_process_input(false)
+		# Remove the camera with ui on the server's side
 		$Camera2D.queue_free()
+
+		$JInterface.update_hp_bar(stats.hp, stats.max_hp)
 		# Make sure to load equipment on server side
 		equipment_changed()
 	else:
-		$Camera2D/UILayer/GUI/Inventory.register_signals()
-		$Camera2D/UILayer/GUI/Equipment.register_signals()
+		if peer_id != multiplayer.get_unique_id():
+			# No input is handeld on other player's side
+			set_process_input(false)
+			# Remove the camera with ui on the other player's side
+			$Camera2D.queue_free()
 
-		# Get the current stats of the player
-		stats.synced.connect(_on_stats_synced)
-		stats.get_sync.rpc_id(1, peer_id)
-
-		# Get the current equipment of the player:
-		equipment.loaded.connect(_on_equipment_loaded)
-		equipment.sync_equipment.rpc_id(1)
+		else:
+			$Camera2D/UILayer/GUI/Inventory.register_signals()
+			$Camera2D/UILayer/GUI/Equipment.register_signals()
 
 		synchronizer.experience_gained.connect(_on_experience_gained)
 		synchronizer.level_gained.connect(_on_level_gained)
-
-		synchronizer.died.connect(_on_died)
-		synchronizer.respawned.connect(_on_respawned)
 
 
 func _physics_process(_delta):
@@ -191,8 +202,11 @@ func _on_item_unequiped(_item_uuid: String):
 
 func _on_stats_synced():
 	$JInterface.update_hp_bar(stats.stat_get(JStats.Keys.HP), stats.stat_get(JStats.Keys.HP_MAX))
-	update_exp_bar()
-	update_level()
+
+	if not J.is_server() and peer_id == multiplayer.get_unique_id():
+		update_exp_bar()
+		update_level()
+
 
 
 func _on_experience_gained(_from: String, _current_exp: int, amount: int):
@@ -209,14 +223,20 @@ func _on_level_gained(_current_level: int, _amount: int, _experience_needed: int
 
 
 func _on_died():
-	$Camera2D/UILayer/GUI/DeathPopup.show_popup()
+	if not J.is_server() and peer_id == multiplayer.get_unique_id():
+		$Camera2D/UILayer/GUI/DeathPopup.show_popup()
+
 	animation_player.stop()
 	animation_player.play("Die")
 
 
 func _on_respawned():
-	$Camera2D/UILayer/GUI/DeathPopup.hide()
-	# Fetch your new hp
-	stats.get_sync.rpc_id(1, peer_id)
 	loop_animation = "Idle"
 	animation_player.play(loop_animation)
+
+	# Fetch your new hp
+	if not J.is_server():
+		if peer_id == multiplayer.get_unique_id():
+			$Camera2D/UILayer/GUI/DeathPopup.hide()
+
+		stats.sync_stats.rpc_id(1, peer_id)

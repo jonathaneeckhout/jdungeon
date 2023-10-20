@@ -33,7 +33,10 @@ func _ready():
 	super()
 	if J.is_server():
 		beehave_tree.enabled = true
-	stats.hp_max = 50
+
+  stats.update_hp_max()
+	stats.stat_set(JStats.Keys.HP, stats.stat_get(JStats.Keys.HP_MAX))
+
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)
 	synchronizer.died.connect(_on_died)

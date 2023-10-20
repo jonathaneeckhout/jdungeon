@@ -265,19 +265,31 @@ func from_json(data: Dictionary) -> bool:
 
 	return true
 
-#Used by the server to sync all stats on clients
+#Used by the server to sync all stats on clients (UNUSED???)
 @rpc("call_remote", "any_peer", "reliable") func get_sync(id: int):
 	if not J.is_server():
 		return
 	
 	update_all_stats()
-	
+
+@rpc("call_remote", "any_peer", "reliable") func sync_stats(id: int):
+	if not J.is_server():
+		return
+
+	var caller_id = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(caller_id):
+		return
+
 	if id in multiplayer.get_peers():
-		sync.rpc_id(id, to_json())
+		sync_response.rpc_id(id, to_json())
 
 
-@rpc("call_remote", "authority", "unreliable") func sync(data: Dictionary):
+
+@rpc("call_remote", "authority", "unreliable") func sync_response(data: Dictionary):
 	hp_max = data["hp_max"]
+
 	hp = data["hp"]
 	level = data["level"]
 	experience = data["experience"]

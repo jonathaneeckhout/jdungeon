@@ -173,7 +173,11 @@ func _on_inventory_item_dropped(id: int, item_uuid: String):
 
 	var id = multiplayer.get_remote_sender_id()
 
-	if id == user.peer_id:
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(id):
+		return
+
+	if id == player.peer_id:
 		sync_response.rpc_id(id, to_json())
 
 
