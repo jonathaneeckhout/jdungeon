@@ -241,28 +241,19 @@ func experience_add(from: String, amount: int):
 
 func to_json() -> Dictionary:
 	update_all_stats()
-	return {"hp_max": hp_max, "hp": hp, "level": level, "experience": experience}
+	return {"hp": hp, "experience": experience}
 
 
 func from_json(data: Dictionary) -> bool:
-	if "hp_max" not in data:
-		J.logger.warn('Failed to load stats from data, missing "hp_max" key')
-		return false
-
 	if "hp" not in data:
 		J.logger.warn('Failed to load stats from data, missing "hp" key')
-		return false
-	if "level" not in data:
-		J.logger.warn('Failed to load stats from data, missing "level" key')
 		return false
 
 	if "experience" not in data:
 		J.logger.warn('Failed to load stats from data, missing "experience" key')
 		return false
 
-	hp_max = data["hp_max"]
 	hp = data["hp"]
-	level = data["level"]
 	experience = data["experience"]
 
 	loaded.emit()
