@@ -36,8 +36,8 @@ func _init():
 	equipment = JEquipment.new()
 	equipment.name = "Equipment"
 	equipment.player = self
-	equipment.item_added.connect(equipment_update_boosts)
-	equipment.item_removed.connect(equipment_update_boosts)
+	equipment.item_added.connect(equipment_add_boosts)
+	equipment.item_removed.connect(equipment_remove_boost)
 	add_child(equipment)
 
 	if J.is_server():
@@ -77,6 +77,7 @@ func _ready():
 
 	if not J.is_server() and J.client.player:
 		equipment.sync_equipment.rpc_id(1, J.client.player.peer_id)
+	
 
 
 func die():
@@ -119,12 +120,17 @@ func equipment_update_boosts_all():
 		for boost in item.equipment_boosts:
 			stats.stat_boost_add(boost)
 
-func equipment_update_boosts(_uuid:String, _item_class:String = ""):
+#Whenever an item is added, all items try to add their boosts
+func equipment_add_boosts(_uuid:String="", _class:String=""):
 	var equippedItems: Array[JItem] = equipment.equipped_get_all()
 	
 	for item in equippedItems:
 		
 		for boost in item.equipment_boosts:
-			
+			assert(boost.stackSource == item.uuid, "This boost's source should be the same as the uuid of the item, but it isn't. Was this boost transfered to the item from a different one?")
+			assert(boost.stackLimit == 1, "Boosts from equipment should have a stackLimit of 1 to avoid duplication.")
 			stats.stat_boost_add(boost)
+			
 
+func equipment_remove_boost(uuid:String):
+	stats.stat_boost_remove_by_source(uuid)
