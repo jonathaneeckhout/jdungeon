@@ -21,29 +21,31 @@ func renew_displays():
 	for statName in user.stats.Keys.values():
 		add_single_stat(statName, statName)
 
-func add_single_stat(statName:String, propertyPath:NodePath):
-	var newStat:=SingleStat.new(user.stats, statName, propertyPath)
+func add_single_stat(statName:String, statKeyUsed:NodePath):
+	var newStat := SingleStat.new(user.stats, statName, statKeyUsed)
 
 	targetContainer.add_child(newStat)
 	
 class SingleStat extends HSplitContainer:
 	
 	var statsObject: JStats
-	var propertyPath: NodePath
+	var statKeyUsed: NodePath
 	var statName: String
 	
 	var labelStatName := Label.new()
 	var labelStatValue := Label.new()
 	
-	func _init(i_statsObject:Node, i_statName:String, i_propertyPath:NodePath) -> void:
+	func _init(i_statsObject:Node, i_statName:String, i_statKeyUsed:NodePath) -> void:
 		statsObject = i_statsObject
-		propertyPath = i_propertyPath
+		statKeyUsed = i_statKeyUsed
 		statName = i_statName
 		
 		statsObject.stat_changed.connect( _on_stat_changed )
 		dragger_visibility = SplitContainer.DRAGGER_HIDDEN
 		
 	func _ready() -> void:
+		set_name(statName)
+		
 		labelStatName.text = tr(statName)
 		labelStatName.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		add_child(labelStatName)
@@ -56,6 +58,6 @@ class SingleStat extends HSplitContainer:
 			_on_stat_changed(stat)
 		
 	func _on_stat_changed(statKey: String):
-		if NodePath(statKey) == propertyPath:
-			labelStatValue.text = str( statsObject.stat_get(statName) )
+		if NodePath(statKey) == statKeyUsed:
+			labelStatValue.text = str( statsObject.stat_get(statKey) )
 
