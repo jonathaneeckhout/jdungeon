@@ -13,10 +13,10 @@ signal hovered_item(node: Node2D)
 signal hovered_player(node: Node2D)
 
 const CursorGraphics: Dictionary = {
-	DEFAULT = preload("res://assets/ui/cursors/DefaultCursor.png"),
-	ATTACK = preload("res://assets/ui/cursors/AttackCursor.png"),
-	TALK = preload("res://assets/ui/cursors/TalkCursor.png"),
-	PICKUP = preload("res://assets/ui/cursors/LootCursor.png")
+	DEFAULT = preload("res://assets/images/ui/cursors/DefaultCursor.png"),
+	ATTACK = preload("res://assets/images/ui/cursors/AttackCursor.png"),
+	TALK = preload("res://assets/images/ui/cursors/TalkCursor.png"),
+	PICKUP = preload("res://assets/images/ui/cursors/LootCursor.png")
 }
 
 var pointParams := PhysicsPointQueryParameters2D.new()

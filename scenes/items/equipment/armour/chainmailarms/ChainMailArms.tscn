@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://21bf63kh2um5"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/armour/chainmailarms/ChainMailArms.gd" id="1_w1jeb"]
-[ext_resource type="Texture2D" uid="uid://w8a0s2m51ydm" path="res://assets/equipment/armour/chainmail/chainmail_backhand.png" id="2_48ru2"]
-[ext_resource type="Texture2D" uid="uid://cbeu7ogmwhy08" path="res://assets/equipment/armour/chainmail/chainmail_fronthand.png" id="3_m8bql"]
+[ext_resource type="Texture2D" uid="uid://w8a0s2m51ydm" path="res://assets/images/equipment/armour/chainmail/chainmail_backhand.png" id="2_48ru2"]
+[ext_resource type="Texture2D" uid="uid://cbeu7ogmwhy08" path="res://assets/images/equipment/armour/chainmail/chainmail_fronthand.png" id="3_m8bql"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sv48u"]
 radius = 19.0263
