@@ -1,14 +1,14 @@
 [gd_scene load_steps=15 format=3 uid="uid://dj1mpx8a8yeko"]
 
 [ext_resource type="Script" path="res://scenes/npcs/milklady/Milklady.gd" id="1_i2k6g"]
-[ext_resource type="Texture2D" uid="uid://co4caux37si5b" path="res://assets/npcs/milklady/milklady_whole.png" id="2_yblp5"]
-[ext_resource type="Texture2D" uid="uid://b8qflr2atk3il" path="res://assets/npcs/milklady/milklady_body.png" id="3_cyqqs"]
-[ext_resource type="Texture2D" uid="uid://sqhyjw8sxa2g" path="res://assets/npcs/milklady/milklady_head.png" id="4_0w10x"]
-[ext_resource type="Texture2D" uid="uid://dc103ysnnxwm6" path="res://assets/npcs/milklady/milklady_left_arm.png" id="5_1mf1y"]
-[ext_resource type="Texture2D" uid="uid://6ok6m1nqugg4" path="res://assets/npcs/milklady/milklady_left_foot.png" id="6_ba0nm"]
-[ext_resource type="Texture2D" uid="uid://bvhajaa34ilol" path="res://assets/npcs/milklady/milklady_right_arm.png" id="7_f60ad"]
-[ext_resource type="Texture2D" uid="uid://dlyuyp8sjr4qj" path="res://assets/npcs/milklady/milklady_right_foot.png" id="8_xp8pl"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/AvoidanceRays.tscn" id="9_cj3ww"]
+[ext_resource type="Texture2D" uid="uid://co4caux37si5b" path="res://assets/images/npcs/milklady/milklady_whole.png" id="2_yblp5"]
+[ext_resource type="Texture2D" uid="uid://b8qflr2atk3il" path="res://assets/images/npcs/milklady/milklady_body.png" id="3_cyqqs"]
+[ext_resource type="Texture2D" uid="uid://sqhyjw8sxa2g" path="res://assets/images/npcs/milklady/milklady_head.png" id="4_0w10x"]
+[ext_resource type="Texture2D" uid="uid://dc103ysnnxwm6" path="res://assets/images/npcs/milklady/milklady_left_arm.png" id="5_1mf1y"]
+[ext_resource type="Texture2D" uid="uid://6ok6m1nqugg4" path="res://assets/images/npcs/milklady/milklady_left_foot.png" id="6_ba0nm"]
+[ext_resource type="Texture2D" uid="uid://bvhajaa34ilol" path="res://assets/images/npcs/milklady/milklady_right_arm.png" id="7_f60ad"]
+[ext_resource type="Texture2D" uid="uid://dlyuyp8sjr4qj" path="res://assets/images/npcs/milklady/milklady_right_foot.png" id="8_xp8pl"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/avoidance_rays/AvoidanceRays.tscn" id="9_cj3ww"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6kb0l"]
 radius = 30.0
