@@ -11,7 +11,7 @@ signal respawned
 signal experience_gained(from: String, current_exp: int, amount: int)
 signal level_gained(current_level: int, amount: int, experience_needed: int)
 
-enum SYNC_TYPES { ATTACK, HURT, HEAL, LOOP_ANIMATION, DIE, RESPAWN, EXPERIENCE, LEVEL }
+enum SYNC_TYPES { ATTACK, HURT, HEAL, LOOP_ANIMATION, DIE, RESPAWN, EXPERIENCE }
 
 const INTERPOLATION_OFFSET:float = 0.1
 const INTERPOLATION_INDEX:int = 2
@@ -133,11 +133,6 @@ func parse_server_interaction_syncs_buffer():
 					to_be_synced.stats.stat_set(JStats.Keys.EXPERIENCE, entry["current_exp"])
 					experience_gained.emit(entry["from"], entry["current_exp"], entry["amount"])
 					
-				SYNC_TYPES.LEVEL:
-					to_be_synced.stats.stat_set(JStats.Keys.LEVEL, entry["hp"]).level = entry["current_level"]
-					level_gained.emit(
-						entry["current_level"], entry["amount"], entry["experience_needed"]
-					)
 					
 			server_interaction_syncs_buffer.remove_at(i)
 
@@ -283,15 +278,3 @@ func buffer_experience(timestamp: float, from: String, current_exp: int, amount:
 		}
 	)
 
-
-@rpc("call_remote", "authority", "reliable")
-func buffer_level(timestamp: float, current_level: int, amount: int, experience_needed: int):
-	server_interaction_syncs_buffer.append(
-		{
-			"type": SYNC_TYPES.LEVEL,
-			"timestamp": timestamp,
-			"current_level": current_level,
-			"amount": amount,
-			"experience_needed": experience_needed
-		}
-	)
