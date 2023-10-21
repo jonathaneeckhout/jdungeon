@@ -185,7 +185,7 @@ func update_exp_bar():
 
 
 func update_level():
-	$JInterface.display_name = username + " (%d)" % stats.level
+	$JInterface.display_name = username + " (%d)" % stats.stat_get(JStats.Keys.LEVEL)
 
 
 func _on_equipment_loaded():
