@@ -22,7 +22,8 @@ const Keys:Dictionary = {
 	EVASION="evasion",
 	ACCURACY="accuracy",
 	EXPERIENCE="experience",
-	LEVEL="level"
+	LEVEL="level",
+	
 	
 }
 
@@ -31,23 +32,14 @@ const Keys:Dictionary = {
 const READ_ONLY_KEYS:Array[String] = [Keys.HP_MAX, Keys.EVASION, Keys.ACCURACY, Keys.LEVEL, Keys.ATTACK_DAMAGE]
 
 @export var parent: JBody2D
-
-var hp_max: int = 10:
-	set(new_hp_max):
-		hp_max = clamp(new_hp_max, 0, INF)
-		#Update hp clamping
-		hp = hp
 		
-var hp: int = hp_max:
+var hp: int = stat_get(Keys.HP_MAX):
 	set(new_hp):
-		hp = clamp(new_hp, -INF, hp_max)
+		hp = clamp(new_hp, -INF, stat_get(Keys.HP_MAX))
 		
 var attribute_strength: float
 var attribute_dexterity: float
 var attribute_mind: float
-		
-var evasion:float
-var accuracy:float
 
 var defense: float = 0
 var resistance: float = 0:
@@ -85,22 +77,14 @@ func stat_get(statKey:String)->float:
 	
 	#Auto update relevant stats when they are retrieved
 	if statKey in READ_ONLY_KEYS:
-		assert(has_method(&"update_" + statKey), "There is no method for updating this read-only stat.")
-		Callable(self, &"update_" + statKey).call()
+		assert(has_method(&"get_updated_" + statKey), "There is no method for updating this read-only stat.")
+		return Callable(self, &"get_updated_" + statKey).call()
 	
 	return stat_get_boosted(statKey, get(statKey))
 
-#Returns the stat without boosts
-func stat_get_raw(statKey:String)->float:
-	if statKey in READ_ONLY_KEYS:
-		assert(has_method(&"update_" + statKey), "There is no method for updating this read-only stat.")
-		Callable(self, &"update_" + statKey).call()
-	
-	return get(statKey)
-
 func stat_set(statKey:String, value:float):
 	if statKey in READ_ONLY_KEYS:
-		push_warning("Stats of this type should not be set directly.")
+		push_warning("Stats of type {0} should not be set directly.".format([statKey]))
 		
 	set(statKey, value)
 	
@@ -112,7 +96,7 @@ func stat_is_read_only(statkey:String)->bool:
 
 #Takes in a value and returns it boosted by all the matching Boosts for the given stat
 func stat_get_boosted(statKey:String, statValue:float)->float:
-	stat_boost_clean_array(statToBoostDict[statKey])
+	stat_boost_clean_array(statToBoostDict.get(statKey, []))
 	
 	var multiplier: float = 1
 	var additive: float = 0
@@ -134,7 +118,7 @@ func stat_boost_add(statBoost:Boost):
 	var wasAdded: bool
 	
 	#Abort if the stack limit is not infinite and it would exceed the boosts from the current source
-	if statBoost.stackLimit > 0 and stat_boost_get_stacks_from_source(statBoost.stackSource) > statBoost.stackLimit:
+	if statBoost.stackLimit > 0 and stat_boost_get_stacks(statBoost.stackSource) > statBoost.stackLimit:
 		return
 	
 	#Only add it if it is not already in the dicts
@@ -154,14 +138,30 @@ func stat_boost_add(statBoost:Boost):
 	if wasAdded:
 		stat_changed.emit(statBoost.statKey)
 
-func stat_boost_remove_(statBoost:Boost):
+func stat_boost_remove_by_reference(statBoost:Boost):
 	assert(statBoost.statKey in Keys.values(), "This statBoost has a key that doesn't exist.")
 	
-	statToBoostDict[statBoost.statKey].erase(statBoost)
-	stackSourceToBoostDict[statBoost.stackSource].erase(statBoost)
+	statToBoostDict.get(statBoost.statKey, []).erase(statBoost)
+	stackSourceToBoostDict.get(statBoost.stackSource, []).erase(statBoost)
+	
+	stat_changed.emit(statBoost.statKey)
 
-func stat_boost_get_stacks_from_source(stackSource:String)->int:
+#Removes every boost that have a given source. May remove multiple
+func stat_boost_remove_by_source(stackSource:String):
 	stat_boost_clean_array(stackSourceToBoostDict.get(stackSource, []))
+	var statsChanged: Array[String] = []
+	
+	for boost in stackSourceToBoostDict.get(stackSource, []):
+		statsChanged.append(boost.statKey)
+		statToBoostDict.get(boost.statKey).erase(boost)
+		
+	stackSourceToBoostDict.get(stackSource, []).clear()
+	
+	for stat in statsChanged:
+		stat_changed.emit(stat)
+		
+func stat_boost_get_stacks(stackSource: String)->int:
+	stat_boost_clean_array(stackSourceToBoostDict.get(stackSource, []))	
 	return stackSourceToBoostDict.get(stackSource, []).size()
 		
 func stat_boost_clean_array(array:Array):
@@ -177,12 +177,6 @@ func stat_boost_create(key:String, amount:float, source:String = "", stackLimit:
 	boost.stackLimit = stackLimit
 	return boost
 
-func update_all_stats():
-	update_hp_max()
-	update_evasion()
-	update_level()
-	pass
-
 func hp_hurt(damage: float) -> float:
 	#Reduce the damage according to the defense stat
 	var reduced_damage: float = max(0, damage - defense)
@@ -191,56 +185,58 @@ func hp_hurt(damage: float) -> float:
 	var resisted_damage: float = max(0, reduced_damage * resistance_modifier)
 
 	#Apply the reduction
-	hp = clamp(hp - resisted_damage, 0, hp_max)
+	stat_set(Keys.HP, clamp(hp - resisted_damage, 0, stat_get(JStats.Keys.HP_MAX) ))
 
 	return resisted_damage
 
 
 func hp_heal(healing: float) -> float:
-	hp = min(hp_max, hp + healing)
-
+	stat_set(Keys.HP, min(stat_get(JStats.Keys.HP_MAX), hp + healing) )
+	
 	return healing
 
 
 func hp_reset():
-	hp = hp_max
+	hp = stat_get(JStats.Keys.HP_MAX)
 
 #Do NOT use stat_set in update methods, otherwise it will cause an infinite recursion.
-func update_hp_max():
+func get_updated_hp_max():
 	#Base 100 hp_max
 	#Plus 20 hp_max per level
 	#Finally using strength as a modifier (10 strength = 10% more HP)
 	var hpMax:float = (100 + level * 20) * (1 + attribute_strength / 100)
-	hp_max = stat_get_boosted(Keys.HP_MAX, hpMax)
+	return stat_get_boosted(Keys.HP_MAX, hpMax)
 
-func update_attack_power():
-	attack_power = stat_get_boosted(Keys.ATTACK_DAMAGE, 5)
+func get_updated_attack_power()->float:
+	return stat_get_boosted(Keys.ATTACK_DAMAGE, 5)
 
-func update_accuracy():
-	accuracy = stat_get_boosted(Keys.ACCURACY, 100)
+func get_updated_accuracy()->float:
+	return stat_get_boosted(Keys.ACCURACY, 100)
 
-func update_evasion():
-	evasion = stat_get_boosted(Keys.EVASION, 0)
+func get_updated_evasion()->float:
+	return stat_get_boosted(Keys.EVASION, 0)
 
-func update_level():
-	level = level_get_from_experience()
+func get_updated_level()->float:
+	return level_get_from_experience()
 	
 #Level is based on the amount of experience the character has
 func level_get_from_experience()->float:
-	return 1 + (experience / 100)
+	var lvl: float = 1 + floor(experience / 100)
+	return lvl
 
 func level_get_experience_to_next()->float:
 	return min(fmod(experience, 100), 0)
 
 
 func experience_add(from: String, amount: int):
+	print("Gained %d experience" % amount)
 	experience += amount
+	stat_changed.emit(Keys.EXPERIENCE)
+	stat_changed.emit(Keys.LEVEL)
 
-	update_level()
 	parent.synchronizer.sync_experience(from, experience, amount)
 
 func to_json() -> Dictionary:
-	update_all_stats()
 	return {"hp": hp, "experience": experience}
 
 
