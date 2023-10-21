@@ -28,7 +28,6 @@ extends JPlayerBody2D
 
 func _init():
 	super()
-	stats.update_hp_max()
 	stats.stat_set(stats.Keys.HP, stats.stat_get(stats.Keys.HP_MAX))
 
 

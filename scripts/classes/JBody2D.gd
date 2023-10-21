@@ -47,7 +47,7 @@ func attack(information: AttackInformation):
 func hurt(from: CharacterBody2D, damage: float):
 	var damage_done: float = stats.hp_hurt(damage)
 
-	synchronizer.sync_hurt(from.name, stats.hp, stats.hp_max, damage_done)
+	synchronizer.sync_hurt(from.name, stats.hp, stats.stat_get(JStats.Keys.HP_MAX), damage_done)
 
 	# R.I.P. you're dead
 	if stats.hp <= 0:
@@ -62,7 +62,7 @@ func hurt(from: CharacterBody2D, damage: float):
 func heal(from: CharacterBody2D, healing: int):
 	var healing_done: int = stats.hp_heal(healing)
 
-	synchronizer.sync_heal(from.name, stats.hp, stats.hp_max, healing_done)
+	synchronizer.sync_heal(from.name, stats.hp, stats.stat_get(JStats.Keys.HP_MAX), healing_done)
 
 
 func send_new_loop_animation(animation: String):
@@ -86,7 +86,7 @@ func respawn(location: Vector2):
 	position = location
 	is_dead = false
 	collision_layer += J.PHYSICS_LAYER_WORLD
-	stats.reset_hp()
+	stats.hp_reset()
 
 	respawned.emit()
 

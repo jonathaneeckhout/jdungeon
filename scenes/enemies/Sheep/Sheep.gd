@@ -22,8 +22,8 @@ func _init():
 	super()
 	enemy_class = "Sheep"
 	stats.movement_speed = 50
-	stats.hp_max = 20
-	stats.hp = stats.hp_max
+	stats.stat_set(JStats.Keys.HP_MAX, 20)
+	stats.stat_set(JStats.Keys.HP, stats.stat_get(JStats.Keys.HP_MAX))
 
 
 func _ready():
