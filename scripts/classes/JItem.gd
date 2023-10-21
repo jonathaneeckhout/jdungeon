@@ -6,12 +6,15 @@ enum MODE { LOOT, ITEMSLOT }
 
 enum ItemTypes { EQUIPMENT, CONSUMABLE, CURRENCY}
 
+signal uuid_changed(new_uuid: String)
+
 var itemType: ItemTypes
 
 @export var uuid: String = "":
 	set(new_uuid):
 		uuid = new_uuid
 		name = new_uuid
+		uuid_changed.emit(uuid)
 
 @export var expire_time: float = 60.0
 
@@ -36,9 +39,10 @@ var equipment_boosts: Array[JStats.Boost]
 func _init():
 	# Disable physics by default
 	collision_layer = 0
-
 	collision_mask = 0
-
+	
+	#Keep all boosts with the same uuid as the item that owns them.
+	uuid_changed.connect(update_boost_source)
 
 func _ready():
 	if J.is_server():
@@ -103,3 +107,7 @@ func from_json(data: Dictionary) -> bool:
 
 func _on_expire_timer_timeout():
 	queue_free()
+
+func update_boost_source(newUuid: String):
+	for boost in equipment_boosts:
+		boost.stackSource = newUuid
