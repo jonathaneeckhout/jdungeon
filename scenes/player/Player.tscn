@@ -1,13 +1,13 @@
 [gd_scene load_steps=25 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
-[ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/player/base/Basecharacter.png" id="2_dug5c"]
-[ext_resource type="Texture2D" uid="uid://b38ld53gomnkq" path="res://assets/player/base/base_fronthand.png" id="3_dw8ng"]
-[ext_resource type="Texture2D" uid="uid://dyv7uagfvwjw0" path="res://assets/player/base/base_handback.png" id="4_gw0jc"]
-[ext_resource type="Texture2D" uid="uid://dhpyicp5pnbh7" path="res://assets/player/base/base_head.png" id="5_dr4ej"]
-[ext_resource type="Texture2D" uid="uid://d2uess8ln1r1k" path="res://assets/player/base/base_leg.png" id="6_ph7fa"]
-[ext_resource type="Texture2D" uid="uid://brvhtyjeyjceq" path="res://assets/player/base/base_legback.png" id="7_jpcwx"]
-[ext_resource type="Texture2D" uid="uid://b50k8a1sfjtn5" path="res://assets/player/base/base_trunk.png" id="8_n1x5o"]
+[ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/images/player/base/Basecharacter.png" id="2_j04kt"]
+[ext_resource type="Texture2D" uid="uid://dyv7uagfvwjw0" path="res://assets/images/player/base/base_handback.png" id="3_tiexf"]
+[ext_resource type="Texture2D" uid="uid://brvhtyjeyjceq" path="res://assets/images/player/base/base_legback.png" id="4_dve7u"]
+[ext_resource type="Texture2D" uid="uid://d2uess8ln1r1k" path="res://assets/images/player/base/base_leg.png" id="5_rmogm"]
+[ext_resource type="Texture2D" uid="uid://b50k8a1sfjtn5" path="res://assets/images/player/base/base_trunk.png" id="6_i0x1f"]
+[ext_resource type="Texture2D" uid="uid://dhpyicp5pnbh7" path="res://assets/images/player/base/base_head.png" id="7_mfldg"]
+[ext_resource type="Texture2D" uid="uid://b38ld53gomnkq" path="res://assets/images/player/base/base_fronthand.png" id="8_1uo8h"]
 [ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="10_0qscs"]
 [ext_resource type="PackedScene" uid="uid://uord7b0pb5jt" path="res://scenes/player/inventory/Inventory.tscn" id="12_cqvu1"]
 [ext_resource type="PackedScene" uid="uid://dy1r3n0fpuneq" path="res://scenes/player/shop/Shop.tscn" id="12_macoo"]
@@ -878,12 +878,12 @@ scale = Vector2(0.1, 0.1)
 [node name="Basecharacter" type="Sprite2D" parent="Sprites"]
 visible = false
 position = Vector2(280, 230)
-texture = ExtResource("2_dug5c")
+texture = ExtResource("2_j04kt")
 metadata/_edit_lock_ = true
 
 [node name="RightArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(150, 0)
-texture = ExtResource("4_gw0jc")
+texture = ExtResource("3_tiexf")
 offset = Vector2(131, 228)
 metadata/_edit_lock_ = true
 
@@ -895,25 +895,25 @@ metadata/_edit_lock_ = true
 
 [node name="RightLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(190, 440)
-texture = ExtResource("7_jpcwx")
+texture = ExtResource("4_dve7u")
 offset = Vector2(91, -212)
 metadata/_edit_lock_ = true
 
 [node name="LeftLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(390, 460)
-texture = ExtResource("6_ph7fa")
+texture = ExtResource("5_rmogm")
 offset = Vector2(-109, -232)
 metadata/_edit_lock_ = true
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(270, 390)
-texture = ExtResource("8_n1x5o")
+texture = ExtResource("6_i0x1f")
 offset = Vector2(11, -162)
 metadata/_edit_lock_ = true
 
 [node name="Head" type="Sprite2D" parent="Sprites"]
 position = Vector2(300, -170)
-texture = ExtResource("5_dr4ej")
+texture = ExtResource("7_mfldg")
 offset = Vector2(-19, 398)
 metadata/_edit_lock_ = true
 
@@ -925,7 +925,7 @@ metadata/_edit_lock_ = true
 
 [node name="LeftArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(470, -30)
-texture = ExtResource("3_dw8ng")
+texture = ExtResource("8_1uo8h")
 offset = Vector2(-189, 248)
 metadata/_edit_lock_ = true
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://b2bfdwtgsm2im"]
 
-[ext_resource type="Texture2D" uid="uid://diq50vh7loupx" path="res://assets/equipment/armour/chainmail/chainmail_trunk.png" id="1_fcvgf"]
+[ext_resource type="Texture2D" uid="uid://diq50vh7loupx" path="res://assets/images/equipment/armour/chainmail/chainmail_trunk.png" id="1_fcvgf"]
 [ext_resource type="Script" path="res://scenes/items/equipment/armour/chainmailbody/ChainMailBody.gd" id="1_yct1v"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sv48u"]

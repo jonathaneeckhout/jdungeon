@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://lhfnxllp70h5"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/armour/platearms/PlateArms.gd" id="1_3jr2i"]
-[ext_resource type="Texture2D" uid="uid://cfwmxg3ekssot" path="res://assets/equipment/armour/platearmor/platearmor_backhand.png" id="2_71ep6"]
-[ext_resource type="Texture2D" uid="uid://b7ues7pvgp1m7" path="res://assets/equipment/armour/platearmor/platearmor_fronthand.png" id="3_cep7n"]
+[ext_resource type="Texture2D" uid="uid://cfwmxg3ekssot" path="res://assets/images/equipment/armour/platearmor/platearmor_backhand.png" id="2_71ep6"]
+[ext_resource type="Texture2D" uid="uid://b7ues7pvgp1m7" path="res://assets/images/equipment/armour/platearmor/platearmor_fronthand.png" id="3_cep7n"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sv48u"]
 radius = 19.0263
