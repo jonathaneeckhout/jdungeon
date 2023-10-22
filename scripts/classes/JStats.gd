@@ -124,7 +124,6 @@ func stat_boost_add(statBoost:Boost):
 	#Only add it if it is not already in the dicts
 	if not statToBoostDict[statBoost.statKey].has(statBoost):
 		statToBoostDict[statBoost.statKey].append(statBoost)
-		wasAdded = true
 	
 	#Add this source to the dict if not present
 	if not stackSourceToBoostDict.has(statBoost.stackSource):
@@ -134,9 +133,7 @@ func stat_boost_add(statBoost:Boost):
 	if not stackSourceToBoostDict[statBoost.stackSource].has(statBoost):
 		stackSourceToBoostDict[statBoost.stackSource].append(statBoost)
 		
-	#The signal should be emitted last to ensure the boost has been properly registered before anything else tries to touch it
-	if wasAdded:
-		stat_changed.emit(statBoost.statKey)
+	stat_changed.emit(statBoost.statKey)
 
 func stat_boost_remove_by_reference(statBoost:Boost):
 	assert(statBoost.statKey in Keys.values(), "This statBoost has a key that doesn't exist.")
