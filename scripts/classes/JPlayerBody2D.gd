@@ -117,20 +117,15 @@ func _on_respawn_timer_timeout():
 
 func equipment_update_boosts_all():
 	for item in equipment.equipped_get_all():
-		for boost in item.equipment_boosts:
-			stats.stat_boost_add(boost)
-
-#Whenever an item is added, all items try to add their boosts
-func equipment_add_boosts(_uuid:String="", _class:String=""):
-	var equippedItems: Array[JItem] = equipment.equipped_get_all()
-	
-	for item in equippedItems:
-		
+		print_debug( "Found equipped item with boosts: " + str(item.equipment_boosts) )
 		for boost in item.equipment_boosts:
 			assert(boost.stackSource == item.uuid, "This boost's source should be the same as the uuid of the item, but it isn't. Was this boost transfered to the item from a different one?")
 			assert(boost.stackLimit == 1, "Boosts from equipment should have a stackLimit of 1 to avoid duplication.")
 			stats.stat_boost_add(boost)
-			
 
+#Whenever an item is added, all items try to add their boosts
+func equipment_add_boosts(_uuid:String="", _class:String=""):
+	equipment_update_boosts_all()
+			
 func equipment_remove_boost(uuid:String):
 	stats.stat_boost_remove_by_source(uuid)
