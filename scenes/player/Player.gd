@@ -25,14 +25,12 @@ extends JPlayerBody2D
 }
 
 
-
 func _init():
 	super()
 	stats.stat_set(stats.Keys.HP, stats.stat_get(stats.Keys.HP_MAX))
 
 
 func _ready():
-	print("Hello from Mawakajaka")
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.attacked.connect(_on_attacked)
 	synchronizer.healed.connect(_on_healed)
@@ -59,7 +57,9 @@ func _ready():
 		# Remove the camera with ui on the server's side
 		$Camera2D.queue_free()
 
-		$JInterface.update_hp_bar( stats.stat_get(JStats.Keys.HP), stats.stat_get(JStats.Keys.HP_MAX) )
+		$JInterface.update_hp_bar(
+			stats.stat_get(JStats.Keys.HP), stats.stat_get(JStats.Keys.HP_MAX)
+		)
 		# Make sure to load equipment on server side
 		equipment_changed()
 	else:
@@ -122,10 +122,12 @@ func _on_got_hurt(_from: String, hp: int, hp_max: int, damage: int):
 	add_child(text)
 
 
-
-func _on_healed(_from: String, _hp: int, _hp_max: int, healing: int):
-	print("Healed %d" % healing)
-
+func _on_healed(_from: String, hp: int, hp_max: int, healing: int):
+	$JInterface.update_hp_bar(hp, hp_max)
+	var text = floating_text_scene.instantiate()
+	text.amount = healing
+	text.type = text.TYPES.HEALING
+	add_child(text)
 
 
 func load_equipment_single_sprite(equipment_slot: String):
@@ -180,7 +182,9 @@ func equipment_changed():
 
 
 func update_exp_bar():
-	var progress: float = float(stats.stat_get(JStats.Keys.EXPERIENCE)) / stats.level_get_experience_to_next()
+	var progress: float = (
+		float(stats.stat_get(JStats.Keys.EXPERIENCE)) / stats.level_get_experience_to_next()
+	)
 
 	$Camera2D/UILayer/GUI/ExpBar.value = progress
 
@@ -207,7 +211,6 @@ func _on_stats_synced():
 	if not J.is_server() and peer_id == multiplayer.get_unique_id():
 		update_exp_bar()
 		update_level()
-
 
 
 func _on_experience_gained(_from: String, _current_exp: int, amount: int):
