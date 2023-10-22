@@ -115,7 +115,6 @@ func stat_get_boosted(statKey:String, statValue:float)->float:
 #Stat boosts that come from the same source cannot stack
 func stat_boost_add(statBoost:Boost):
 	assert(statBoost.statKey in Keys.values(), "This statBoost has a key that doesn't exist.")
-	var wasAdded: bool
 	
 	#Abort if the stack limit is not infinite and it would exceed the boosts from the current source
 	if statBoost.stackLimit > 0 and stat_boost_get_stacks(statBoost.stackSource) > statBoost.stackLimit:

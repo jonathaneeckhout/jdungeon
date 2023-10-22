@@ -19,9 +19,9 @@ func renew_displays():
 		child.queue_free()
 		
 	for statName in user.stats.Keys.values():
-		add_single_stat(statName, statName)
+		add_single_stat(statName)
 
-func add_single_stat(statName:String, statKeyUsed:NodePath):
+func add_single_stat(statKeyUsed:NodePath):
 	var newStat := SingleStat.new(user.stats, statKeyUsed)
 
 	targetContainer.add_child(newStat)
