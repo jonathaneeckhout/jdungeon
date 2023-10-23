@@ -14,7 +14,7 @@ var server_port_input := $Panel/ConnectContainer/MarginContainer2/VBoxContainer/
 @onready var connect_button := $Panel/ConnectContainer/MarginContainer3/ConnectButton
 
 #LoginContainer
-@onready var login_container = $Panel/LoginContainer
+@onready var login_container := $Panel/LoginContainer
 @onready var login_input := $Panel/LoginContainer/MarginContainer/VBoxContainer/LoginText
 @onready
 var login_password_input := $Panel/LoginContainer/MarginContainer2/VBoxContainer/LoginPasswordText
@@ -41,7 +41,7 @@ var goto_login_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxCont
 @onready var _anim_player := $AnimationPlayer
 
 
-func _ready():
+func _ready():	
 	server_address_input.text = J.global.env_server_address
 	server_port_input.text = str(J.global.env_server_port)
 	connect_button.pressed.connect(_on_connect_button_pressed)
@@ -53,10 +53,14 @@ func _ready():
 	if not J.is_server():
 		background_audio_stream_player.play()
 		background_audio_stream_player.finished.connect(background_audio_stream_player.play)
+		server_address_input.grab_focus.call_deferred()
+		
 	var buttons: Array = get_tree().get_nodes_in_group("ui_button")
 	for button in buttons:
 		button.pressed.connect(_on_button_pressed)
-
+		
+		
+	
 
 func _input(event):
 	if login_container.is_visible_in_tree():
@@ -67,16 +71,21 @@ func _input(event):
 func show_connect_container():
 	self.show()
 	_anim_player.play("goto_connect")
+	server_address_input.grab_focus.call_deferred()
+	
 
 
 func show_create_account_container():
 	self.show()
 	_anim_player.play("goto_createaccount")
+	register_login_input.grab_focus.call_deferred()
+	
 
 
 func show_login_container():
 	self.show()
 	_anim_player.play("goto_login")
+	login_input.grab_focus.call_deferred()
 
 
 func _on_connect_button_pressed():
