@@ -1,0 +1,130 @@
+[gd_scene load_steps=2 format=3 uid="uid://dirsk8pf0bxh5"]
+
+[ext_resource type="Script" path="res://scenes/player/statdisplay/StatDisplay.gd" id="1_j3bvc"]
+
+[node name="StatDisplay" type="Panel"]
+anchors_preset = -1
+anchor_left = 0.7
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_j3bvc")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StatList" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HPSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/HPSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Hit Points:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/HPSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HPMaxSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/HPMaxSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Maximum Hit Points:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/HPMaxSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LevelSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/LevelSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Level:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/LevelSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ExperienceSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/ExperienceSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Experience:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/ExperienceSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ExperienceNeededSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/ExperienceNeededSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Needed experience:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/ExperienceNeededSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AttackPowerMinSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/AttackPowerMinSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Minimum Attack Power:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/AttackPowerMinSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AttackPowerMaxSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/AttackPowerMaxSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Maximum Attack Power:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/AttackPowerMaxSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DefenseSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/DefenseSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Defense:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/DefenseSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3

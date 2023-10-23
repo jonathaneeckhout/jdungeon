@@ -23,18 +23,20 @@ func _init():
 	super()
 	enemy_class = "TreeTrunkGuy"
 	stats.movement_speed = 150
-	stats.experience_given = 50
+	stats.hp_max = 150
+	stats.hp = stats.hp_max
+	stats.experience_worth = 50
 
 
 func _ready():
 	# Make sure to connect to all signals before super is called
 	if not J.is_server() and J.client.player:
-		stats.synced.connect(_on_stats_synced)
+		stats.stats_changed.connect(_on_stats_changed)
 	super()
 	if J.is_server():
 		beehave_tree.enabled = true
-	stats.max_hp = 50
-	stats.hp = stats.max_hp
+	stats.hp_max = 50
+	stats.hp = stats.hp_max
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)
 	synchronizer.died.connect(_on_died)
@@ -91,11 +93,11 @@ func _on_died():
 	animation_player.play("Die")
 
 
-func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
+func _on_got_hurt(_from: String, hp: int, damage: int):
 	if not is_dead:
 		animation_player.stop()
 		animation_player.play("Hurt")
-	$JInterface.update_hp_bar(hp, max_hp)
+	$JInterface.update_hp_bar(hp, stats.hp_max)
 	var text = floating_text_scene.instantiate()
 	text.amount = damage
 	text.type = text.TYPES.DAMAGE
@@ -109,8 +111,9 @@ func _on_loop_animation_changed(animation: String, direction: Vector2):
 		animation_player.play(animation)
 
 
-func _on_stats_synced():
-	$JInterface.update_hp_bar(stats.hp, stats.max_hp)
+func _on_stats_changed(type: JStats.TYPE):
+	if type == JStats.TYPE.HP or type == JStats.TYPE.HP_MAX:
+		$JInterface.update_hp_bar(stats.hp, stats.hp_max)
 
 
 func _on_stuck_timer_timeout():

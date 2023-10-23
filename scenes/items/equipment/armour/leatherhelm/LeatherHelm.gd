@@ -5,5 +5,5 @@ func _init():
 	super()
 
 	item_class = "LeatherHelm"
-	equipment = true
+	item_type = ITEM_TYPE.EQUIPMENT
 	equipment_slot = "Head"
