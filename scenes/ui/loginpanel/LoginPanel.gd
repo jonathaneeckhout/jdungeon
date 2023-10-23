@@ -58,9 +58,7 @@ func _ready():
 	var buttons: Array = get_tree().get_nodes_in_group("ui_button")
 	for button in buttons:
 		button.pressed.connect(_on_button_pressed)
-		
-		
-	
+
 
 func _input(event):
 	if login_container.is_visible_in_tree():
