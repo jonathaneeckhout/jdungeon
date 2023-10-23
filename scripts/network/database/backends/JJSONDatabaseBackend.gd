@@ -109,7 +109,7 @@ func LoadPlayerData(username: String) -> Dictionary:
 		return {}
 
 	if not "data" in users_json[username]:
-		J.logger.info("Player=[%s] does have persistent exists" % username)
+		J.logger.info("Player=[%s] does not have persistent data" % username)
 		return {}
 
 	return users_json[username]["data"]

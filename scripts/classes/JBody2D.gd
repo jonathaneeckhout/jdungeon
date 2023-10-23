@@ -49,12 +49,12 @@ func attack(target: CharacterBody2D):
 func hurt(from: CharacterBody2D, damage: int):
 	var damage_done: int = stats.hurt(damage)
 
-	synchronizer.sync_hurt(from.name, stats.hp, stats.max_hp, damage_done)
+	synchronizer.sync_hurt(from.name, stats.hp, damage_done)
 
 	# R.I.P. you're dead
 	if stats.hp <= 0:
-		if stats.experience_given > 0:
-			from.stats.add_experience(name, stats.experience_given)
+		if stats.experience_worth > 0:
+			from.stats.add_experience(name, stats.experience_worth)
 
 		# Can't die twice
 		if not is_dead:
@@ -64,7 +64,7 @@ func hurt(from: CharacterBody2D, damage: int):
 func heal(from: CharacterBody2D, healing: int):
 	var healing_done: int = stats.heal(healing)
 
-	synchronizer.sync_heal(from.name, stats.hp, stats.max_hp, healing_done)
+	synchronizer.sync_heal(from.name, stats.hp, healing_done)
 
 
 func send_new_loop_animation(animation: String):
