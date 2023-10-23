@@ -1,14 +1,14 @@
 extends Node
 
-signal npc_added(npc_name: String, npc_class: String, pos: Vector2)
+signal npc_added(npc_name: String, npc_class: String, pos: Vector2, loop_animation: String)
 signal npc_removed(npc_name: String)
 
 signal shop_updated(vendor: String, shop: Dictionary)
 signal shop_item_bought(id: int, vendor: String, item_uuid: String)
 
 @rpc("call_remote", "authority", "reliable")
-func add_npc(npc_name: String, npc_class: String, pos: Vector2):
-	npc_added.emit(npc_name, npc_class, pos)
+func add_npc(npc_name: String, npc_class: String, pos: Vector2, loop_animation: String):
+	npc_added.emit(npc_name, npc_class, pos, loop_animation)
 
 
 @rpc("call_remote", "authority", "reliable") func remove_npc(npc_name: String):

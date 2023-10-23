@@ -1,11 +1,11 @@
 [gd_resource type="TileSet" load_steps=13 format=3 uid="uid://pjsyexx3ov10"]
 
-[ext_resource type="Texture2D" uid="uid://d7cygjtrx1e7" path="res://assets/tileset/terrain_atlas_edited.png" id="1_nsqed"]
-[ext_resource type="Texture2D" uid="uid://s402dto7d21g" path="res://assets/tileset/build_atlas_edited.png" id="2_6fwd0"]
-[ext_resource type="Texture2D" uid="uid://yiaoy7qbbt24" path="res://assets/tileset/decorations-medieval_edited.png" id="3_mlfwd"]
-[ext_resource type="Texture2D" uid="uid://brux6s8i24g8p" path="res://assets/tileset/obj_misk_atlas_edited.png" id="5_jc6kk"]
-[ext_resource type="Texture2D" uid="uid://bo2wnnetih5hi" path="res://assets/tileset/plants_edited.png" id="6_0mukp"]
-[ext_resource type="Texture2D" uid="uid://dyxskjuxtep4e" path="res://assets/tileset/fence_medieval_edited.png" id="6_if5t3"]
+[ext_resource type="Texture2D" uid="uid://d7cygjtrx1e7" path="res://assets/images/tileset/terrain_atlas_edited.png" id="1_nsqed"]
+[ext_resource type="Texture2D" uid="uid://s402dto7d21g" path="res://assets/images/tileset/build_atlas_edited.png" id="2_6fwd0"]
+[ext_resource type="Texture2D" uid="uid://yiaoy7qbbt24" path="res://assets/images/tileset/decorations-medieval_edited.png" id="3_mlfwd"]
+[ext_resource type="Texture2D" uid="uid://brux6s8i24g8p" path="res://assets/images/tileset/obj_misk_atlas_edited.png" id="5_jc6kk"]
+[ext_resource type="Texture2D" uid="uid://bo2wnnetih5hi" path="res://assets/images/tileset/plants_edited.png" id="6_0mukp"]
+[ext_resource type="Texture2D" uid="uid://dyxskjuxtep4e" path="res://assets/images/tileset/fence_medieval_edited.png" id="6_if5t3"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gvh02"]
 texture = ExtResource("1_nsqed")

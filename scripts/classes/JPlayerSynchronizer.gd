@@ -62,13 +62,18 @@ func _on_body_network_view_area_body_entered(body: JBody2D):
 	if not bodies_in_view.has(body):
 		match body.entity_type:
 			J.ENTITY_TYPE.PLAYER:
-				J.rpcs.player.add_other_player.rpc_id(player.peer_id, body.username, body.position)
+				J.rpcs.player.add_other_player.rpc_id(
+					player.peer_id, body.username, body.position, body.loop_animation
+				)
 			J.ENTITY_TYPE.ENEMY:
 				J.rpcs.enemy.add_enemy.rpc_id(
-					player.peer_id, body.name, body.enemy_class, body.position
+					player.peer_id, body.name, body.enemy_class, body.position, body.loop_animation
 				)
 			J.ENTITY_TYPE.NPC:
-				J.rpcs.npc.add_npc.rpc_id(player.peer_id, body.name, body.npc_class, body.position)
+				J.rpcs.npc.add_npc.rpc_id(
+					player.peer_id, body.name, body.npc_class, body.position, body.loop_animation
+				)
+
 		bodies_in_view.append(body)
 
 	if player not in body.synchronizer.watchers:
@@ -120,6 +125,10 @@ func _on_item_network_view_area_body_exited(body: JItem):
 
 	var id = multiplayer.get_remote_sender_id()
 
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(id):
+		return
+
 	if id == player.peer_id:
 		moved.emit(pos)
 
@@ -129,6 +138,10 @@ func _on_item_network_view_area_body_exited(body: JItem):
 		return
 
 	var id = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(id):
+		return
 
 	if id == player.peer_id:
 		interacted.emit(target)

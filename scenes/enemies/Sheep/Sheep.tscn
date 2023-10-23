@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=3 uid="uid://dfq5lb87meq6q"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Sheep/Sheep.gd" id="1_6p7b5"]
-[ext_resource type="Texture2D" uid="uid://dvpbmkvp7ppqm" path="res://assets/enemies/sheep/sheep.png" id="2_57cp7"]
+[ext_resource type="Texture2D" uid="uid://dvpbmkvp7ppqm" path="res://assets/images/enemies/sheep/sheep.png" id="2_57cp7"]
 [ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="3_jxmll"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="5_yme22"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="7_bkydl"]

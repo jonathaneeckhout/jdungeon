@@ -26,7 +26,7 @@ func add_item(item: JItem) -> bool:
 	if not J.is_server():
 		return false
 
-	if item.is_gold:
+	if item.item_type == JItem.ITEM_TYPE.CURRENCY:
 		add_gold(item.amount)
 		return true
 
@@ -172,6 +172,10 @@ func _on_inventory_item_dropped(id: int, item_uuid: String):
 		return
 
 	var id = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(id):
+		return
 
 	if id == player.peer_id:
 		sync_response.rpc_id(id, to_json())
