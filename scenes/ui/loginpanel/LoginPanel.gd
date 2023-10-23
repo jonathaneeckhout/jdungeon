@@ -41,7 +41,7 @@ var goto_login_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxCont
 @onready var _anim_player := $AnimationPlayer
 
 
-func _ready():	
+func _ready():
 	server_address_input.text = J.global.env_server_address
 	server_port_input.text = str(J.global.env_server_port)
 	connect_button.pressed.connect(_on_connect_button_pressed)
