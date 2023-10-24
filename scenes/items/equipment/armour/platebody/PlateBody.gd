@@ -5,5 +5,6 @@ func _init():
 	super()
 
 	item_class = "PlateBody"
-	equipment = true
+	item_type = ITEM_TYPE.EQUIPMENT
 	equipment_slot = "Body"
+	boost.defense = 3

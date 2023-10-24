@@ -3,8 +3,8 @@ extends Node2D
 class_name JSynchronizer
 
 signal attacked(target: String, damage: int)
-signal got_hurt(from: String, hp: int, max_hp: int, damage: int)
-signal healed(from: String, hp: int, max_hp: int, healing: int)
+signal got_hurt(from: String, hp: int, damage: int)
+signal healed(from: String, hp: int, healing: int)
 signal loop_animation_changed(animation: String, direction: Vector2)
 signal died
 signal respawned
@@ -13,8 +13,8 @@ signal level_gained(current_level: int, amount: int, experience_needed: int)
 
 enum SYNC_TYPES { ATTACK, HURT, HEAL, LOOP_ANIMATION, DIE, RESPAWN, EXPERIENCE, LEVEL }
 
-const INTERPOLATION_OFFSET = 0.1
-const INTERPOLATION_INDEX = 2
+const INTERPOLATION_OFFSET: float = 0.1
+const INTERPOLATION_INDEX: float = 2
 
 @export var to_be_synced: CharacterBody2D
 
@@ -27,7 +27,7 @@ var server_network_buffer: Array[Dictionary] = []
 
 
 func _physics_process(_delta):
-	var timestamp = Time.get_unix_time_from_system()
+	var timestamp: float = Time.get_unix_time_from_system()
 
 	if J.is_server():
 		for watcher in watchers:
@@ -108,14 +108,12 @@ func check_server_network_buffer():
 					attacked.emit(entry["target"], entry["damage"])
 				SYNC_TYPES.HURT:
 					to_be_synced.stats.hp = entry["hp"]
-					to_be_synced.stats.max_hp = entry["hp"]
 
-					got_hurt.emit(entry["from"], entry["hp"], entry["max_hp"], entry["damage"])
+					got_hurt.emit(entry["from"], entry["hp"], entry["damage"])
 				SYNC_TYPES.HEAL:
 					to_be_synced.stats.hp = entry["hp"]
-					to_be_synced.stats.max_hp = entry["hp"]
 
-					healed.emit(entry["from"], entry["hp"], entry["max_hp"], entry["healing"])
+					healed.emit(entry["from"], entry["hp"], entry["healing"])
 				SYNC_TYPES.LOOP_ANIMATION:
 					loop_animation_changed.emit(entry["animation"], entry["direction"])
 				SYNC_TYPES.DIE:
@@ -137,7 +135,7 @@ func check_server_network_buffer():
 
 
 func sync_attack(target: String, damage: int):
-	var timestamp = Time.get_unix_time_from_system()
+	var timestamp: float = Time.get_unix_time_from_system()
 
 	for watcher in watchers:
 		attack.rpc_id(watcher.peer_id, timestamp, target, damage)
@@ -145,26 +143,26 @@ func sync_attack(target: String, damage: int):
 	attacked.emit(target, damage)
 
 
-func sync_hurt(from: String, hp: int, max_hp: int, damage: int):
-	var timestamp = Time.get_unix_time_from_system()
+func sync_hurt(from: String, hp: int, damage: int):
+	var timestamp: float = Time.get_unix_time_from_system()
 
 	for watcher in watchers:
-		hurt.rpc_id(watcher.peer_id, timestamp, from, hp, max_hp, damage)
+		hurt.rpc_id(watcher.peer_id, timestamp, from, hp, damage)
 
-	got_hurt.emit(from, hp, max_hp, damage)
+	got_hurt.emit(from, hp, damage)
 
 
-func sync_heal(from: String, hp: int, max_hp: int, healing: int):
-	var timestamp = Time.get_unix_time_from_system()
+func sync_heal(from: String, hp: int, healing: int):
+	var timestamp: float = Time.get_unix_time_from_system()
 
 	for watcher in watchers:
-		heal.rpc_id(watcher.peer_id, timestamp, from, hp, max_hp, healing)
+		heal.rpc_id(watcher.peer_id, timestamp, from, hp, healing)
 
-	healed.emit(from, hp, max_hp, healing)
+	healed.emit(from, hp, healing)
 
 
 func sync_loop_animation(animation: String, direction: Vector2):
-	var timestamp = Time.get_unix_time_from_system()
+	var timestamp: float = Time.get_unix_time_from_system()
 
 	for watcher in watchers:
 		loop_animation.rpc_id(watcher.peer_id, timestamp, animation, direction)
@@ -173,7 +171,7 @@ func sync_loop_animation(animation: String, direction: Vector2):
 
 
 func sync_die():
-	var timestamp = Time.get_unix_time_from_system()
+	var timestamp: float = Time.get_unix_time_from_system()
 
 	for watcher in watchers:
 		die.rpc_id(watcher.peer_id, timestamp)
@@ -182,7 +180,7 @@ func sync_die():
 
 
 func sync_respawn():
-	var timestamp = Time.get_unix_time_from_system()
+	var timestamp: float = Time.get_unix_time_from_system()
 
 	for watcher in watchers:
 		respawn.rpc_id(watcher.peer_id, timestamp)
@@ -191,7 +189,7 @@ func sync_respawn():
 
 
 func sync_experience(from: String, current_exp: int, amount: int):
-	var timestamp = Time.get_unix_time_from_system()
+	var timestamp: float = Time.get_unix_time_from_system()
 
 	# Experience is only synced towards the player
 	experience.rpc_id(to_be_synced.peer_id, timestamp, from, current_exp, amount)
@@ -200,7 +198,7 @@ func sync_experience(from: String, current_exp: int, amount: int):
 
 
 func sync_level(current_level: int, amount: int, experience_needed: int):
-	var timestamp = Time.get_unix_time_from_system()
+	var timestamp: float = Time.get_unix_time_from_system()
 
 	for watcher in watchers:
 		level.rpc_id(watcher.peer_id, timestamp, current_level, amount, experience_needed)
@@ -226,28 +224,20 @@ func attack(timestamp: float, target: String, damage: int):
 
 
 @rpc("call_remote", "authority", "reliable")
-func hurt(timestamp: float, from: String, hp: int, max_hp: int, damage: int):
+func hurt(timestamp: float, from: String, hp: int, damage: int):
 	server_network_buffer.append(
-		{
-			"type": SYNC_TYPES.HURT,
-			"timestamp": timestamp,
-			"from": from,
-			"hp": hp,
-			"max_hp": max_hp,
-			"damage": damage
-		}
+		{"type": SYNC_TYPES.HURT, "timestamp": timestamp, "from": from, "hp": hp, "damage": damage}
 	)
 
 
 @rpc("call_remote", "authority", "reliable")
-func heal(timestamp: float, from: String, hp: int, max_hp: int, healing: int):
+func heal(timestamp: float, from: String, hp: int, healing: int):
 	server_network_buffer.append(
 		{
 			"type": SYNC_TYPES.HEAL,
 			"timestamp": timestamp,
 			"from": from,
 			"hp": hp,
-			"max_hp": max_hp,
 			"healing": healing
 		}
 	)

@@ -5,5 +5,5 @@ func _init():
 	super()
 
 	item_class = "HealthPotion"
-	consumable = true
-	healing = 25
+	item_type = ITEM_TYPE.CONSUMABLE
+	boost.hp = 25

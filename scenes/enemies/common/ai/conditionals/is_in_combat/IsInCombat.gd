@@ -63,7 +63,7 @@ func _on_target_died():
 	_blackboard.set_value("is_resetting", true)
 
 
-func _on_got_hurt(from: String, _hp: int, _max_hp: int, _damage: int):
+func _on_got_hurt(from: String, _hp: int, _damage: int):
 	if in_combat:
 		reset_timer.start()
 	if target == null:

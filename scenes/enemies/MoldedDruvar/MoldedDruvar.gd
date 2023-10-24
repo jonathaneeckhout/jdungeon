@@ -21,11 +21,15 @@ var movement_multiplier := 1.0
 
 func _init():
 	super()
-	enemy_class = "TreeTrunkGuy"
-	stats.movement_speed = 150
-	stats.hp_max = 150
+	enemy_class = "MoldedDruvar"
+	stats.movement_speed = 75
+	stats.hp_max = 85
 	stats.hp = stats.hp_max
-	stats.experience_worth = 50
+	stats.experience_worth = 80
+	stats.attack_power_min = 20
+	stats.attack_power_max = 50
+	stats.attack_speed = 2.0
+	stats.defense = 8
 
 
 func _ready():
@@ -35,8 +39,6 @@ func _ready():
 	super()
 	if J.is_server():
 		beehave_tree.enabled = true
-	stats.hp_max = 50
-	stats.hp = stats.hp_max
 	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
 	synchronizer.got_hurt.connect(_on_got_hurt)
 	synchronizer.died.connect(_on_died)
@@ -48,8 +50,7 @@ func _ready():
 
 
 func _add_loot():
-	add_item_to_loottable("Gold", 1.0, 100)
-	add_item_to_loottable("HealthPotion", 1.0, 1)
+	add_item_to_loottable("Gold", 25, 100)
 
 
 func _physics_process(_delta):

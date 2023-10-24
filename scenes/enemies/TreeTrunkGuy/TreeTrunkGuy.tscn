@@ -783,6 +783,8 @@ scale = Vector2(0.8, 0.8)
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_j7ilt")
+should_respawn = true
+respawn_time = 20.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -48)

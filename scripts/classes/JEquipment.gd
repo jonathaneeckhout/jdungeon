@@ -81,11 +81,20 @@ func _unequip_item(item_uuid: String) -> JItem:
 
 func get_item(item_uuid: String) -> JItem:
 	for equipment_slot in items:
-		var item = items[equipment_slot]
+		var item: JItem = items[equipment_slot]
 		if item != null and item.uuid == item_uuid:
 			return item
 
 	return null
+
+
+func get_boost() -> JBoost:
+	var boost: JBoost = JBoost.new()
+	for equipment_slot in items:
+		var item: JItem = items[equipment_slot]
+		if item != null:
+			boost.add_boost(item.boost)
+	return boost
 
 
 func to_json() -> Dictionary:
@@ -140,7 +149,7 @@ func _on_equipment_item_removed(id: int, item_uuid: String):
 	if not J.is_server():
 		return
 
-	var caller_id = multiplayer.get_remote_sender_id()
+	var caller_id: int = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
 	if not J.server.is_user_logged_in(caller_id):
@@ -156,7 +165,7 @@ func _on_equipment_item_removed(id: int, item_uuid: String):
 
 @rpc("call_remote", "authority", "reliable")
 func sync_equip_item(item_uuid: String, item_class: String):
-	var item = J.item_scenes[item_class].instantiate()
+	var item: JItem = J.item_scenes[item_class].instantiate()
 	item.uuid = item_uuid
 	item.item_class = item_class
 	item.collision_layer = 0
