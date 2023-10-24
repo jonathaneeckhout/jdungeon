@@ -1,6 +1,12 @@
 name: build-test
 run-name: ${{ github.head_ref || github.ref_name }}-build-test
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 
 env:
