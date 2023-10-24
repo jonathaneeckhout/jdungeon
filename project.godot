@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Jdungeon"
+config/name="GoodGaem"
 run/main_scene="res://scenes/root/Root.tscn"
 config/features=PackedStringArray("4.1", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
