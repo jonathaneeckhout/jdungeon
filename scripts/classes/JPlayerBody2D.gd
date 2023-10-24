@@ -3,13 +3,15 @@ extends JBody2D
 class_name JPlayerBody2D
 
 const PLAYER_HP_MAX_DEFAULT: int = 100
-const PLAYER_ATTACK_POWER_MIN_DEFAULT: int = 0
+const PLAYER_ATTACK_POWER_MIN_DEFAULT: int = 1
 const PLAYER_ATTACK_POWER_MAX_DEFAULT: int = 5
 const PLAYER_ATTACK_SPEED_DEFAULT: float = 0.8
 const PLAYER_ATTACK_RANGE_DEFAULT: float = 64.0
 const PLAYER_DEFENSE_DEFAULT: int = 0
 const PLAYER_MOVEMENT_SPEED_DEFAULT: float = 300.0
-const PLAYER_HP_GAIN_PER_LEVEL: int = 20
+
+const PLAYER_HP_GAIN_PER_LEVEL: int = 8
+const PLAYER_ATTACK_POWER_GAIN_PER_LEVEL: int = 1
 
 var peer_id: int = 1
 var username: String = ""
@@ -178,8 +180,7 @@ func respawn(location: Vector2):
 
 
 func calculate_and_apply_boosts():
-	var boost: JBoost = JBoost.new()
-	boost.hp_max = stats.calculate_hp_max_level_boost()
+	var boost: JBoost = calculate_level_boost()
 
 	var equipment_boost: JBoost = equipment.get_boost()
 	boost.add_boost(equipment_boost)
@@ -191,6 +192,14 @@ func update_boosts():
 	load_default_stats()
 
 	calculate_and_apply_boosts()
+
+
+func calculate_level_boost() -> JBoost:
+	var boost: JBoost = JBoost.new()
+	boost.hp_max = int((stats.level - 1) * PLAYER_HP_GAIN_PER_LEVEL)
+	boost.attack_power_min = int((stats.level - 1) * PLAYER_ATTACK_POWER_GAIN_PER_LEVEL)
+	boost.attack_power_max = boost.attack_power_min
+	return boost
 
 
 func _on_move(target_position: Vector2):

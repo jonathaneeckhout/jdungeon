@@ -22,10 +22,12 @@ var movement_multiplier := 1.0
 func _init():
 	super()
 	enemy_class = "TreeTrunkGuy"
-	stats.movement_speed = 150
-	stats.hp_max = 150
+	stats.movement_speed = 200
+	stats.hp_max = 50
 	stats.hp = stats.hp_max
 	stats.experience_worth = 50
+	stats.attack_power_min = 10
+	stats.attack_power_max = 15
 
 
 func _ready():
@@ -48,8 +50,8 @@ func _ready():
 
 
 func _add_loot():
-	add_item_to_loottable("Gold", 1.0, 100)
-	add_item_to_loottable("HealthPotion", 1.0, 1)
+	add_item_to_loottable("Gold", 0.75, 100)
+	add_item_to_loottable("HealthPotion", 0.5, 1)
 
 
 func _physics_process(_delta):

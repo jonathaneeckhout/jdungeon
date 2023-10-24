@@ -50,7 +50,8 @@ func _ready():
 
 
 func _add_loot():
-	add_item_to_loottable("Gold", 25, 100)
+	add_item_to_loottable("Gold", 0.75, 300)
+	add_item_to_loottable("Club", 0.05, 1)
 
 
 func _physics_process(_delta):

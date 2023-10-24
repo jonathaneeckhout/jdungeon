@@ -45,7 +45,7 @@ func _ready():
 
 
 func _add_loot():
-	add_item_to_loottable("Gold", 1.0, 5)
+	add_item_to_loottable("Gold", 0.5, 20)
 
 
 func _physics_process(_delta):
