@@ -30,8 +30,8 @@ grow_vertical = 2
 
 [node name="RunAsServerButton" type="Button" parent="SelectRunMode/VBoxContainer"]
 layout_mode = 2
-text = "Run as server"
+text = "1 - Run as server"
 
 [node name="RunAsClientButton" type="Button" parent="SelectRunMode/VBoxContainer"]
 layout_mode = 2
-text = "Run as client"
+text = "2 - Run as client"
