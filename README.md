@@ -1,4 +1,4 @@
-[![build latest jdungeon](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-latest.yml/badge.svg)](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-latest.yml)
+[![build latest jdungeon](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-artifacts-and-push-docker-image.yml/badge.svg)](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-artifacts-and-push-docker-image.yml)
 [![](https://dcbadge.vercel.app/api/server/KGwTyXumdv?style=flat)](https://discord.gg/KGwTyXumdv)
 
 
