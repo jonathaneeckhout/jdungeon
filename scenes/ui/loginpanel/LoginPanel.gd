@@ -54,7 +54,7 @@ func _ready():
 		background_audio_stream_player.play()
 		background_audio_stream_player.finished.connect(background_audio_stream_player.play)
 		server_address_input.grab_focus.call_deferred()
-		
+
 	var buttons: Array = get_tree().get_nodes_in_group("ui_button")
 	for button in buttons:
 		button.pressed.connect(_on_button_pressed)
@@ -70,14 +70,12 @@ func show_connect_container():
 	self.show()
 	_anim_player.play("goto_connect")
 	server_address_input.grab_focus.call_deferred()
-	
 
 
 func show_create_account_container():
 	self.show()
 	_anim_player.play("goto_createaccount")
 	register_login_input.grab_focus.call_deferred()
-	
 
 
 func show_login_container():

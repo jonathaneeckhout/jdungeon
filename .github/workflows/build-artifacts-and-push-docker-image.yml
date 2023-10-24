@@ -1,0 +1,107 @@
+name: build-artifacts-and-push-docker-image
+run-name: ${{ github.head_ref || github.ref_name }}-build-artifacts-and-push-docker-image
+on:
+  push:
+    branches:
+      - main
+      # Add other branches here, if needed
+    tags:
+      - 'v*'
+
+
+env:
+  GODOT_VERSION: "4.1.2"
+  EXPORT_NAME: jdungeon
+  PROJECT_PATH: ./
+
+jobs:
+  build-linux:
+    name: Build JDungeon for Linux
+    runs-on: ubuntu-22.04
+    container:
+      image: mawakajaka/godot:v1.0.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
+      - name: Linux Build
+        run: |
+          mkdir -v -p build/linux
+          cd $PROJECT_PATH
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless --export-release "Linux/X11" build/linux/$EXPORT_NAME.x86_64
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless --export-release "Linux/X11" build/linux/$EXPORT_NAME.x86_64
+      - name: Add config
+        run: |
+          cp .env.example build/linux/.env
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: jdungeon-linux
+          path: build/linux
+  build-windows:
+    name: Build JDungeon for Windows
+    runs-on: ubuntu-22.04
+    container:
+      image: mawakajaka/godot:v1.0.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
+      - name: Windows Build
+        run: |
+          mkdir -v -p build/windows
+          cd $PROJECT_PATH
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
+      - name: Add config
+        run: |
+          cp .env.example build/windows/.env
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: jdungeon-windows
+          path: build/windows
+
+  push_to_registry:
+    name: Create Linux Docker image and push to Docker Hub
+    needs: build-linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: jdungeon-linux
+          path: build/linux
+      - name: Make executable
+        run: |
+          chmod +x build/linux/jdungeon.x86_64
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: mawakajaka/jdungeon-server
+      - name: Build and push Docker image
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
