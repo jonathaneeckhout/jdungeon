@@ -11,7 +11,7 @@ const PLAYER_DEFENSE_DEFAULT: int = 0
 const PLAYER_MOVEMENT_SPEED_DEFAULT: float = 300.0
 
 const PLAYER_HP_GAIN_PER_LEVEL: int = 8
-const PLAYER_ATTACK_POWER_GAIN_PER_LEVEL: int = 1
+const PLAYER_ATTACK_POWER_GAIN_PER_LEVEL: float = 0.2
 
 var peer_id: int = 1
 var username: String = ""
@@ -197,7 +197,7 @@ func update_boosts():
 func calculate_level_boost() -> JBoost:
 	var boost: JBoost = JBoost.new()
 	boost.hp_max = int((stats.level - 1) * PLAYER_HP_GAIN_PER_LEVEL)
-	boost.attack_power_min = int((stats.level - 1) * PLAYER_ATTACK_POWER_GAIN_PER_LEVEL)
+	boost.attack_power_min = int(stats.level * PLAYER_ATTACK_POWER_GAIN_PER_LEVEL)
 	boost.attack_power_max = boost.attack_power_min
 	return boost
 
