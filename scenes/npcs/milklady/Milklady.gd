@@ -30,24 +30,24 @@ func _ready():
 
 		shop.add_item("HealthPotion", 100)
 
-		shop.add_item("Axe", 300)
-		shop.add_item("Sword", 300)
-		shop.add_item("Club", 200)
+		shop.add_item("Axe", 10000)
+		shop.add_item("Sword", 5000)
+		shop.add_item("Club", 300)
 
-		shop.add_item("LeatherHelm", 50)
+		shop.add_item("LeatherHelm", 100)
 		shop.add_item("LeatherBody", 100)
 		shop.add_item("LeatherArms", 100)
 		shop.add_item("LeatherLegs", 100)
 
-		shop.add_item("ChainMailHelm", 100)
-		shop.add_item("ChainMailBody", 200)
-		shop.add_item("ChainMailArms", 200)
-		shop.add_item("ChainMailLegs", 200)
+		shop.add_item("ChainMailHelm", 1000)
+		shop.add_item("ChainMailBody", 1000)
+		shop.add_item("ChainMailArms", 1000)
+		shop.add_item("ChainMailLegs", 1000)
 
-		shop.add_item("PlateHelm", 100)
-		shop.add_item("PlateBody", 200)
-		shop.add_item("PlateArms", 120)
-		shop.add_item("PlateLegs", 150)
+		shop.add_item("PlateHelm", 10000)
+		shop.add_item("PlateBody", 10000)
+		shop.add_item("PlateArms", 10000)
+		shop.add_item("PlateLegs", 10000)
 
 
 func update_face_direction(direction: float):

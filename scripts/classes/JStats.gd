@@ -21,7 +21,6 @@ signal stats_changed(stat_type: TYPE)
 signal gained_level
 
 const BASE_EXPERIENCE: int = 100
-const HP_GAIN_PER_LEVEL: int = 20
 
 @export var parent: JBody2D
 
@@ -107,10 +106,6 @@ func heal(healing: int) -> int:
 
 func reset_hp():
 	hp = hp_max
-
-
-func calculate_hp_max_level_boost() -> int:
-	return int((level - 1) * HP_GAIN_PER_LEVEL)
 
 
 func to_json() -> Dictionary:
