@@ -37,6 +37,7 @@ func _input(event: InputEvent) -> void:
 func register_enemies():
 	J.register_enemy_scene("Sheep", "res://scenes/enemies/Sheep/Sheep.tscn")
 	J.register_enemy_scene("TreeTrunkGuy", "res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn")
+	J.register_enemy_scene("MoldedDruvar", "res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn")
 
 
 func register_npcs():

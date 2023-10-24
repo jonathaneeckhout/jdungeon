@@ -1,15 +1,29 @@
-[gd_scene load_steps=19 format=3 uid="uid://drmaubupv57n1"]
+[gd_scene load_steps=29 format=3 uid="uid://drmaubupv57n1"]
 
+[ext_resource type="Script" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.gd" id="1_ba1y1"]
 [ext_resource type="Texture2D" uid="uid://dqwsc70v1poc8" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_backhand.png" id="1_fnuxl"]
 [ext_resource type="Texture2D" uid="uid://bklq7s00gbtuh" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_backleg.png" id="2_xe2qq"]
 [ext_resource type="Texture2D" uid="uid://duhp2c25iba6a" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_topleg.png" id="3_x4duj"]
 [ext_resource type="Texture2D" uid="uid://dexspslu6tit4" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_trunk.png" id="4_uuhj7"]
 [ext_resource type="Texture2D" uid="uid://dfgac1m50tnbp" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_Head.png" id="5_af0rv"]
 [ext_resource type="Texture2D" uid="uid://dgaxltrsj2mbj" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_tophand.png" id="6_ajo5s"]
+[ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="8_olobp"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/avoidance_rays/AvoidanceRays.tscn" id="9_whu8q"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="10_xhds1"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="11_hywmq"]
+[ext_resource type="PackedScene" uid="uid://dbllgq1k86dyd" path="res://scenes/enemies/common/ai/sequences/death_sequence/DeathSequence.tscn" id="12_8aom2"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="13_a7ko2"]
+[ext_resource type="PackedScene" uid="uid://b4h6plpm1hoii" path="res://scenes/enemies/common/ai/conditionals/is_in_combat/IsInCombat.tscn" id="14_0ay2y"]
+[ext_resource type="PackedScene" uid="uid://c4ss75lmmvkoi" path="res://scenes/enemies/common/ai/sequences/attack_sequence/AttackSequence.tscn" id="15_xroah"]
+[ext_resource type="PackedScene" uid="uid://c32syir0x72av" path="res://scenes/enemies/common/ai/sequences/pursuit_sequence/PursuitSequence.tscn" id="16_ro5io"]
+[ext_resource type="PackedScene" uid="uid://ditk3sn70usrs" path="res://scenes/enemies/common/ai/sequences/leash_sequence/LeashSequence.tscn" id="17_k4dru"]
+[ext_resource type="PackedScene" uid="uid://dk8p2emk8wofb" path="res://scenes/enemies/common/ai/sequences/wander_sequence/WanderSequence.tscn" id="18_3opgl"]
+[ext_resource type="PackedScene" uid="uid://bho6r0fx8owhk" path="res://scenes/enemies/common/ai/sequences/idle_sequence/IdleSequence.tscn" id="19_p33m3"]
+[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="20_vnsr5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_n3uon"]
-radius = 23.0
-height = 164.0
+radius = 17.0
+height = 108.0
 
 [sub_resource type="Animation" id="Animation_6om0n"]
 resource_name = "Die"
@@ -755,231 +769,22 @@ _data = {
 "Die": SubResource("Animation_6om0n"),
 "Hurt": SubResource("Animation_7v558"),
 "Idle": SubResource("Animation_sw53p"),
-"Moving": SubResource("Animation_ky2tr"),
+"Move": SubResource("Animation_ky2tr"),
 "RESET": SubResource("Animation_ye05s")
 }
 
-[sub_resource type="Animation" id="Animation_rg2po"]
-resource_name = "IdleToMoving"
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprites/BackHand:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 0.0441946),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(-50, 4), Vector2(-100, 8), Vector2(-250, 20)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprites/BackHand:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 0.0441946),
-"update": 0,
-"values": [0.0, 0.223241, 0.446482, 1.11621]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprites/TopHand:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 0.0441946),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(-58, -28), Vector2(-111, -81), Vector2(-190, -240)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Sprites/TopHand:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 0.0441946),
-"update": 0,
-"values": [0.0, 0.201503, 0.403007, 1.00752]
-}
-
-[sub_resource type="Animation" id="Animation_70i0c"]
-resource_name = "Moving"
-length = 1.5
-loop_mode = 1
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprites/BackHand:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.75, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(-250, 20), Vector2(-250, 20), Vector2(-250, 20)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprites/BackHand:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.75, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [1.11621, 1.309, 1.11621]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprites/TopHand:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.75, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(-190, -240), Vector2(-200, -170), Vector2(-190, -240)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Sprites/TopHand:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.75, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [1.00752, 0.785398, 1.00752]
-}
-
-[sub_resource type="Animation" id="Animation_wpl21"]
-resource_name = "MovingToIdle"
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprites/BackHand:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1.51573, 1),
-"update": 0,
-"values": [Vector2(-250, 20), Vector2(0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprites/BackHand:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1.51573, 1),
-"update": 0,
-"values": [1.11621, 0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprites/TopHand:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1.51573, 1),
-"update": 0,
-"values": [Vector2(-190, -240), Vector2(0, 0)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Sprites/TopHand:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1.51573, 1),
-"update": 0,
-"values": [1.00752, 0.0]
-}
-
-[sub_resource type="Animation" id="Animation_ekmrt"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprites/BackHand:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprites/BackHand:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprites/TopHand:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Sprites/TopHand:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_ry7p7"]
-_data = {
-"IdleToMoving": SubResource("Animation_rg2po"),
-"Moving": SubResource("Animation_70i0c"),
-"MovingToIdle": SubResource("Animation_wpl21"),
-"RESET": SubResource("Animation_ekmrt")
-}
+[sub_resource type="CircleShape2D" id="CircleShape2D_dqm6v"]
+radius = 200.0
 
 [node name="MoldedDruvar" type="CharacterBody2D"]
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_ba1y1")
+should_respawn = true
+respawn_time = 20.0
 
 [node name="Sprites" type="Node2D" parent="."]
-scale = Vector2(0.1, 0.1)
+scale = Vector2(0.06, 0.06)
 
 [node name="BackHand" type="Sprite2D" parent="Sprites"]
 scale = Vector2(1, 1)
@@ -1006,7 +811,7 @@ scale = Vector2(1, 1)
 texture = ExtResource("6_ajo5s")
 
 [node name="Skeleton" type="Node2D" parent="."]
-scale = Vector2(0.1, 0.1)
+scale = Vector2(0.06, 0.06)
 
 [node name="RemoteBody" type="RemoteTransform2D" parent="Skeleton"]
 remote_path = NodePath("../../Sprites/Body")
@@ -1034,7 +839,60 @@ libraries = {
 "": SubResource("AnimationLibrary_sumus")
 }
 
-[node name="ArmsOnlyAnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_ry7p7")
-}
+[node name="JInterface" parent="." instance=ExtResource("8_olobp")]
+offset_top = -36.0
+offset_bottom = 4.0
+
+[node name="AvoidanceRays" parent="." instance=ExtResource("9_whu8q")]
+
+[node name="StuckTimer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 0.5
+one_shot = true
+
+[node name="AggroRadius" type="Area2D" parent="."]
+position = Vector2(0, -45)
+scale = Vector2(1.00615, 1)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AggroRadius"]
+position = Vector2(0, 44)
+shape = SubResource("CircleShape2D_dqm6v")
+
+[node name="BeehaveTree" type="Node" parent="."]
+script = ExtResource("10_xhds1")
+enabled = false
+actor_node_path = NodePath("..")
+
+[node name="WhatAmIDoingWithMyLife" type="Node" parent="BeehaveTree"]
+script = ExtResource("11_hywmq")
+
+[node name="DeathSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife" instance=ExtResource("12_8aom2")]
+
+[node name="CombatSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
+script = ExtResource("13_a7ko2")
+
+[node name="IsInCombat" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" node_paths=PackedStringArray("aggro_radius") instance=ExtResource("14_0ay2y")]
+aggro_radius = NodePath("../../../../AggroRadius")
+should_leash = true
+leash_distance = 450.0
+
+[node name="AggrodSelector" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence"]
+script = ExtResource("11_hywmq")
+
+[node name="AttackSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence/AggrodSelector" instance=ExtResource("15_xroah")]
+
+[node name="PursuitSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence/AggrodSelector" instance=ExtResource("16_ro5io")]
+
+[node name="LeashSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife" instance=ExtResource("17_k4dru")]
+
+[node name="WanderThenIdleSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
+script = ExtResource("13_a7ko2")
+
+[node name="WanderSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdleSequence" instance=ExtResource("18_3opgl")]
+
+[node name="IdleSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdleSequence" instance=ExtResource("19_p33m3")]
+
+[node name="Blackboard" type="Node" parent="."]
+script = ExtResource("20_vnsr5")

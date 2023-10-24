@@ -1,6 +1,6 @@
 extends ConditionLeaf
 
-@export var wander_radius := 75.0
+@onready var wander_radius: float = get_parent().wander_radius
 
 var spawn_position := Vector2.ZERO
 var wander_destination := Vector2.ZERO
