@@ -19,8 +19,6 @@ func _init():
 
 	entity_type = J.ENTITY_TYPE.ENEMY
 
-	collision_layer += J.PHYSICS_LAYER_ENEMIES
-
 	if J.is_server():
 		despawn_timer = Timer.new()
 		despawn_timer.name = "DespawnTimer"
