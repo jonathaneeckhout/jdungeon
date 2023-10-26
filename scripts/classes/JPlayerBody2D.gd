@@ -31,8 +31,6 @@ func _init():
 
 	entity_type = J.ENTITY_TYPE.PLAYER
 
-	collision_layer += J.PHYSICS_LAYER_PLAYERS
-
 	player_synchronizer = JPlayerSynchronizer.new()
 	player_synchronizer.name = "PlayerSynchronizer"
 	player_synchronizer.player = self
