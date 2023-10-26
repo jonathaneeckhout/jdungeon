@@ -131,6 +131,9 @@ func _on_run_as_server_pressed():
 		get_tree().quit()
 		return
 
+	if J.global.env_minimize_server_on_start:
+		get_tree().root.mode = Window.MODE_MINIMIZED
+
 
 func _on_run_as_client_pressed():
 	J.logger.info("Running as client")

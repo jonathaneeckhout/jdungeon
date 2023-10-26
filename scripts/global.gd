@@ -2,6 +2,7 @@ extends Node
 
 var env_run_as_server: bool = false
 var env_run_as_client: bool = false
+var env_minimize_server_on_start: bool = false
 
 var env_server_address: String = ""
 var env_server_port: int = 0
@@ -43,7 +44,8 @@ func load_local_settings():
 func load_common_env_variables() -> bool:
 	env_run_as_server = J.env.get_value("RUN_AS_SERVER") == "true"
 	env_run_as_client = J.env.get_value("RUN_AS_CLIENT") == "true"
-
+	env_minimize_server_on_start = J.env.get_value("MINIMIZE_SERVER_ON_START") == "true"
+	J.logger.info("MINIMIZE_SERVER_ON_START=[%s]" % str(env_minimize_server_on_start))
 	return true
 
 
