@@ -6,7 +6,7 @@
 
 [node name="WanderSequence" type="Node"]
 script = ExtResource("1_xnhn0")
-wander_radius = 150.0
+wander_radius = 100.0
 
 [node name="ShouldWander" type="Node" parent="."]
 script = ExtResource("2_asw17")

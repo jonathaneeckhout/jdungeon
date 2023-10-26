@@ -1,6 +1,5 @@
 extends ConditionLeaf
 
-@export var aggro_radius: Area2D = null
 @export var should_leash := false
 @export var leash_distance: float = 350.0
 @export var targetable_entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
@@ -9,11 +8,14 @@ var start_combat := false
 var in_combat := false
 var target: CharacterBody2D = null
 var _blackboard: Blackboard
+var aggro_radius: Area2D
 
 
 func tick(actor: Node, blackboard: Blackboard):
 	if not _blackboard:
 		_blackboard = blackboard
+	if aggro_radius == null:
+		aggro_radius = blackboard.get_value("aggro_radius")
 	if blackboard.get_value("is_resetting"):
 		_reset(actor)
 		return FAILURE
@@ -48,6 +50,18 @@ func tick(actor: Node, blackboard: Blackboard):
 			return FAILURE
 		return SUCCESS
 	return FAILURE
+
+
+func _set_default_aggro_radius(actor: Node) -> void:
+	aggro_radius = Area2D.new()
+	var shape = CircleShape2D.new()
+	shape.radius = 200.0
+	var collision_shape = CollisionShape2D.new()
+	collision_shape.shape = shape
+	aggro_radius.add_child(collision_shape)
+	aggro_radius.collision_layer = 0
+	aggro_radius.collision_mask = 2
+	actor.add_child(aggro_radius)
 
 
 func _on_body_entered(body: Node2D):
