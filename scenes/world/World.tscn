@@ -8,8 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://dh827s71bdr6o" path="res://scenes/ui/versioncheckpanel/VersionCheckPanel.tscn" id="4_5aijd"]
 [ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://scenes/enemies/Sheep/Sheep.tscn" id="4_uubdx"]
 [ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="5_0b0pa"]
-[ext_resource type="PackedScene" uid="uid://drmaubupv57n1" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn" id="6_17gjh"]
 [ext_resource type="PackedScene" uid="uid://bija15ujapx3h" path="res://scenes/terrain/areas/wakingforest/WakingForest.tscn" id="7_oodd1"]
+[ext_resource type="PackedScene" uid="uid://cpw0d00b7prm0" path="res://scenes/terrain/areas/harbor/harbor.tscn" id="9_70hw5"]
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_7jhmb"]
 
 [node name="World" type="Node2D"]
@@ -36,55 +36,64 @@ visible = false
 [node name="Enemies" type="Node2D" parent="Entities"]
 
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-2164, 1328)
+position = Vector2(-1894, 844)
 
 [node name="TreeTrunkGuy2" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-2590, 276)
+position = Vector2(-2669, 42)
 
 [node name="TreeTrunkGuy3" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-3139, 1193)
+position = Vector2(-3439, 870)
 
 [node name="TreeTrunkGuy8" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-3584, 1706)
+position = Vector2(-2713, 1314)
 
 [node name="TreeTrunkGuy9" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-4239, 1075)
+position = Vector2(-4428, 1212)
+
+[node name="TreeTrunkGuy18" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
+position = Vector2(-4590, 394)
+
+[node name="TreeTrunkGuy19" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
+position = Vector2(-4098, -1332)
+
+[node name="TreeTrunkGuy20" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
+position = Vector2(-2870, -499)
 
 [node name="TreeTrunkGuy10" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-4691, 1501)
+position = Vector2(-5580, 1135)
 
 [node name="TreeTrunkGuy11" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-5313, 414)
+position = Vector2(-5160, 229)
 
 [node name="TreeTrunkGuy13" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-5678, -701)
+position = Vector2(-5644, -639)
 
 [node name="TreeTrunkGuy14" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-5029, -1043)
+position = Vector2(-5015, -1210)
 
 [node name="TreeTrunkGuy15" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-4816, -611)
+position = Vector2(-4900, -313)
 
 [node name="TreeTrunkGuy16" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-3994, -1151)
+position = Vector2(-4382, -816)
 
 [node name="TreeTrunkGuy17" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-3149, -1262)
+position = Vector2(-3405, -1229)
 
 [node name="TreeTrunkGuy12" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-5405, 1397)
+position = Vector2(-5173, 768)
 
 [node name="TreeTrunkGuy4" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-2216, -599)
+position = Vector2(-2178, -701)
 
 [node name="TreeTrunkGuy6" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-1807, -1317)
+position = Vector2(-1882, -1198)
 
 [node name="TreeTrunkGuy7" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-2022, -995)
+position = Vector2(-2438, -1397)
 
 [node name="Sheep6" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-1008, -404)
+position = Vector2(-1099, -418)
 should_respawn = true
 
 [node name="Sheep8" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
@@ -92,15 +101,15 @@ position = Vector2(-1243, -243)
 should_respawn = true
 
 [node name="Sheep9" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-1216, 391)
+position = Vector2(-1177, 449)
 should_respawn = true
 
 [node name="Sheep10" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-814, 495)
+position = Vector2(-970, 458)
 should_respawn = true
 
 [node name="Sheep11" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-1497, 606)
+position = Vector2(-1299, 694)
 should_respawn = true
 
 [node name="Sheep12" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
@@ -108,24 +117,11 @@ position = Vector2(-1424, -650)
 should_respawn = true
 
 [node name="Sheep13" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-884, -759)
+position = Vector2(-1034, -776)
 should_respawn = true
 
 [node name="Sheep7" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-1104, 89)
-should_respawn = true
-
-[node name="MoldedDruvar" parent="Entities/Enemies" instance=ExtResource("6_17gjh")]
-position = Vector2(-4385, 101)
-
-[node name="MoldedDruvar2" parent="Entities/Enemies" instance=ExtResource("6_17gjh")]
-position = Vector2(-3553, 71)
-
-[node name="MoldedDruvar3" parent="Entities/Enemies" instance=ExtResource("6_17gjh")]
-position = Vector2(-3891, 420)
-
-[node name="MoldedDruvar4" parent="Entities/Enemies" instance=ExtResource("6_17gjh")]
-position = Vector2(-4086, -163)
+position = Vector2(-1176, 146)
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 
@@ -144,10 +140,14 @@ position = Vector2(-576, -640)
 [node name="WakingForest" parent="Entities/Map/Areas" instance=ExtResource("7_oodd1")]
 position = Vector2(-1536, -64)
 
+[node name="Harbor" parent="Entities/Map/Areas" instance=ExtResource("9_70hw5")]
+position = Vector2(-1536, 3480)
+
 [node name="PlayerRespawnLocations" type="Node2D" parent="."]
 
 [node name="PlayerRespawnLocation" parent="PlayerRespawnLocations" instance=ExtResource("12_7jhmb")]
 position = Vector2(-32, -48)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+visible = false
 anchor_mode = 0
