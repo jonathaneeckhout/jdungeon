@@ -14,8 +14,6 @@ func _init():
 
 	entity_type = J.ENTITY_TYPE.NPC
 
-	collision_layer += J.PHYSICS_LAYER_NPCS
-
 	if J.is_server():
 		shop = JShop.new()
 		shop.name = "Shop"

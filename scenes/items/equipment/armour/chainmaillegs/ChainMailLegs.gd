@@ -5,5 +5,6 @@ func _init():
 	super()
 
 	item_class = "ChainMailLegs"
-	equipment = true
+	item_type = ITEM_TYPE.EQUIPMENT
 	equipment_slot = "Legs"
+	boost.defense = 2

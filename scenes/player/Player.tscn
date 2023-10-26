@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=25 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/images/player/base/Basecharacter.png" id="2_j04kt"]
@@ -16,6 +16,7 @@
 [ext_resource type="StyleBox" uid="uid://pbfuprosr3en" path="res://assets/themes/ProgressBars.tres" id="14_3h4ha"]
 [ext_resource type="PackedScene" uid="uid://ccq2mcrkefjnb" path="res://scenes/player/deathpopup/DeathPopup.tscn" id="15_ho0h1"]
 [ext_resource type="PackedScene" uid="uid://dmf2tmcuq22vg" path="res://scenes/player/chatpanel/ChatPanel.tscn" id="16_xx8pu"]
+[ext_resource type="PackedScene" uid="uid://dirsk8pf0bxh5" path="res://scenes/player/statdisplay/StatDisplay.tscn" id="17_3wdg5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lk3fd"]
 radius = 32.0
@@ -1047,3 +1048,8 @@ layout_mode = 1
 
 [node name="ChatPanel" parent="Camera2D/UILayer/GUI" instance=ExtResource("16_xx8pu")]
 layout_mode = 1
+
+[node name="StatDisplay" parent="Camera2D/UILayer/GUI" node_paths=PackedStringArray("player") instance=ExtResource("17_3wdg5")]
+visible = false
+layout_mode = 1
+player = NodePath("../../../..")

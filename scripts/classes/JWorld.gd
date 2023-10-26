@@ -142,8 +142,8 @@ func _on_player_logged_in(id: int, username: String):
 	player.username = username
 	player.peer_id = id
 
-	J.logger.info("Loading player=[%s]'s persistent data" % player.name)
-	JPlayerPersistency.load_data(player)
+	# Load the player's stats
+	player.load_data()
 
 	players.add_child(player)
 
@@ -162,7 +162,7 @@ func _on_peer_disconnected(id):
 			player.position = find_player_respawn_location(player.position)
 			player.stats.reset_hp()
 
-		player.store_data()
+		player.store_persistent_data()
 
 		J.logger.info("Removing player=[%s]" % player.name)
 

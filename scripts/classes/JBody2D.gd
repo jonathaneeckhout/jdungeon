@@ -15,14 +15,6 @@ var is_dead := false
 
 
 func _init():
-	collision_layer = J.PHYSICS_LAYER_WORLD
-
-	if J.is_server():
-		collision_mask = J.PHYSICS_LAYER_WORLD
-	else:
-		# Don't handle collision on client side
-		collision_mask = 0
-
 	synchronizer = load("res://scripts/classes/JSynchronizer.gd").new()
 	synchronizer.name = "Synchronizer"
 	synchronizer.to_be_synced = self
@@ -32,6 +24,41 @@ func _init():
 	stats.name = "Stats"
 	stats.parent = self
 	add_child(stats)
+
+	#Call this at the last moment, prevents possible errors from non-ready collisions and allows overriden _init methods to run first.
+	_init_collisions.call_deferred()
+
+
+func _init_collisions():
+	#Each creature only exists on their own layer, they collide with the world thanks to their collision_mask
+	match entity_type:
+		J.ENTITY_TYPE.PLAYER:
+			collision_layer = J.PHYSICS_LAYER_PLAYERS
+		J.ENTITY_TYPE.ENEMY:
+			collision_layer = J.PHYSICS_LAYER_ENEMIES
+		J.ENTITY_TYPE.NPC:
+			collision_layer = J.PHYSICS_LAYER_NPCS
+
+	if J.is_server():
+		#By default, only collide with the world. No other entities.
+		collision_mask = J.PHYSICS_LAYER_WORLD
+
+		#Set what it will collide with
+		match entity_type:
+			#The player cannot walk past NPCs and enemies. But other players cannot block their path.
+			J.ENTITY_TYPE.PLAYER:
+				collision_mask += J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS
+
+			#Enemies can be blocked by NPCs and players.
+			J.ENTITY_TYPE.ENEMY:
+				collision_mask += J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_NPCS
+
+			#NPCs cannot be stopped by any entity.
+			J.ENTITY_TYPE.NPC:
+				collision_mask = 0
+	else:
+		# Don't handle collision on client side
+		collision_mask = 0
 
 
 func _ready():
@@ -49,12 +76,12 @@ func attack(target: CharacterBody2D):
 func hurt(from: CharacterBody2D, damage: int):
 	var damage_done: int = stats.hurt(damage)
 
-	synchronizer.sync_hurt(from.name, stats.hp, stats.max_hp, damage_done)
+	synchronizer.sync_hurt(from.name, stats.hp, damage_done)
 
 	# R.I.P. you're dead
 	if stats.hp <= 0:
-		if stats.experience_given > 0:
-			from.stats.add_experience(name, stats.experience_given)
+		if stats.experience_worth > 0:
+			from.stats.add_experience(name, stats.experience_worth)
 
 		# Can't die twice
 		if not is_dead:
@@ -64,7 +91,7 @@ func hurt(from: CharacterBody2D, damage: int):
 func heal(from: CharacterBody2D, healing: int):
 	var healing_done: int = stats.heal(healing)
 
-	synchronizer.sync_heal(from.name, stats.hp, stats.max_hp, healing_done)
+	synchronizer.sync_heal(from.name, stats.hp, healing_done)
 
 
 func send_new_loop_animation(animation: String):

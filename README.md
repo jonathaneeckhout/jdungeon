@@ -1,4 +1,4 @@
-[![build latest jdungeon](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-latest.yml/badge.svg)](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-latest.yml)
+[![build latest jdungeon](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-artifacts-and-push-docker-image.yml/badge.svg)](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-artifacts-and-push-docker-image.yml)
 [![](https://dcbadge.vercel.app/api/server/KGwTyXumdv?style=flat)](https://discord.gg/KGwTyXumdv)
 
 
@@ -9,12 +9,16 @@
 ## Overview
 
 To get started with JDungeon, follow these steps:
-1. [Lore](#lore)
-2. [List of Features](#list-of-features)
-3. [Feature Roadmap](#feature-roadmap)
-4. [Feature Requests](#feature-requests)
-5. [Install Instructions](#install-instructions)
-6. [Contributor Guide](#contributing)
+1. [Let's Play!](#let's-play!)
+2. [Lore](#lore)
+3. [List of Features](#list-of-features)
+4. [Feature Roadmap](#feature-roadmap)
+5. [Feature Requests](#feature-requests)
+6. [Install Instructions](#install-instructions)
+7. [Contributor Guide](#contributing)
+
+## Let's Play!
+Our game is live and running now that we've hit Milestone 1! Come play [JDungeon](https://jdungeon.org/) with us!
 
 ## Lore
 Centuries ago the world was whole. The kingdoms were diverse, numerous, and fruitful. The world enjoyed relative peace barring the occasional border conflict. Not much is known anymore of this bright past. The histories are as fragmented as the world itself, each Shard possessing a modicum of knowledge. We don't know what happened. We don't know why. We don't know who. All we know is that the Shards drift further and faster every year. The land itself is not gone. There's no magic that can do that. But to move it? To encourage the very foundation of the earth to shift and set sail? Well, apparently that is possible. In the past there were several Rooted Shards. The last vestiges of normalcy. You could charter transport between them. The magnetic poles of each Root were set and were navigable. They didn't just blip in and out of existence. The Shard would not be persuaded. It liked where it was and it would damn well remain there. But just as water chisels away at the earth, so does time carve away bits of the soul. Now all that's left is...us. Formerly South Radix, now just Radix. You can't be "South" if there's nothing to be South of eh?

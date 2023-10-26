@@ -5,4 +5,4 @@ func _init():
 	super()
 
 	item_class = "Gold"
-	is_gold = true
+	item_type = ITEM_TYPE.CURRENCY

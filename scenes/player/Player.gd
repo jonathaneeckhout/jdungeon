@@ -27,8 +27,6 @@ extends JPlayerBody2D
 
 func _init():
 	super()
-	stats.max_hp = 50
-	stats.hp = stats.max_hp
 
 
 func _ready():
@@ -41,7 +39,7 @@ func _ready():
 	equipment.item_added.connect(_on_item_equiped)
 	equipment.item_removed.connect(_on_item_unequiped)
 
-	stats.synced.connect(_on_stats_synced)
+	stats.stats_changed.connect(_on_stats_changed)
 
 	synchronizer.died.connect(_on_died)
 	synchronizer.respawned.connect(_on_respawned)
@@ -58,7 +56,7 @@ func _ready():
 		# Remove the camera with ui on the server's side
 		$Camera2D.queue_free()
 
-		$JInterface.update_hp_bar(stats.hp, stats.max_hp)
+		$JInterface.update_hp_bar(stats.hp, stats.hp_max)
 		# Make sure to load equipment on server side
 		equipment_changed()
 	else:
@@ -113,16 +111,16 @@ func _on_attacked(target: String, _damage: int):
 	update_face_direction(position.direction_to(enemy.position).x)
 
 
-func _on_got_hurt(_from: String, hp: int, max_hp: int, damage: int):
-	$JInterface.update_hp_bar(hp, max_hp)
+func _on_got_hurt(_from: String, hp: int, damage: int):
+	$JInterface.update_hp_bar(hp, stats.hp_max)
 	var text = floating_text_scene.instantiate()
 	text.amount = damage
 	text.type = text.TYPES.DAMAGE
 	add_child(text)
 
 
-func _on_healed(_from: String, hp: int, max_hp: int, healing: int):
-	$JInterface.update_hp_bar(hp, max_hp)
+func _on_healed(_from: String, hp: int, healing: int):
+	$JInterface.update_hp_bar(hp, stats.hp_max)
 	var text = floating_text_scene.instantiate()
 	text.amount = healing
 	text.type = text.TYPES.HEALING
@@ -136,7 +134,7 @@ func load_equipment_single_sprite(equipment_slot: String):
 	if equipment.items[equipment_slot]:
 		equipment_sprites[equipment_slot].texture = null
 
-		var item = equipment.items[equipment_slot].duplicate()
+		var item: JItem = equipment.items[equipment_slot].duplicate()
 		item.scale = item.scale / original_scale
 		item.get_node("Sprite").hide()
 		item.get_node("EquipmentSprite").show()
@@ -154,13 +152,13 @@ func load_equipment_double_sprites(equipment_slot: String):
 		equipment_sprites[equipment_slot][0].texture = null
 		equipment_sprites[equipment_slot][1].texture = null
 
-		var item_right = equipment.items[equipment_slot].duplicate()
+		var item_right: JItem = equipment.items[equipment_slot].duplicate()
 		item_right.scale = item_right.scale / original_scale
 		item_right.get_node("Sprite").hide()
 		item_right.get_node("EquipmentSpriteRight").show()
 		equipment_sprites[equipment_slot][0].add_child(item_right)
 
-		var item_left = equipment.items[equipment_slot].duplicate()
+		var item_left: JItem = equipment.items[equipment_slot].duplicate()
 		item_left.scale = item_left.scale / original_scale
 		item_left.get_node("Sprite").hide()
 		item_left.get_node("EquipmentSpriteLeft").show()
@@ -181,7 +179,7 @@ func equipment_changed():
 
 
 func update_exp_bar():
-	var progress = float(stats.experience) / stats.experience_needed * 100
+	var progress: float = float(stats.experience) / stats.experience_needed * 100
 	if progress >= 100:
 		progress = 0
 
@@ -204,12 +202,18 @@ func _on_item_unequiped(_item_uuid: String):
 	equipment_changed()
 
 
-func _on_stats_synced():
-	$JInterface.update_hp_bar(stats.hp, stats.max_hp)
+func _on_stats_changed(type: JStats.TYPE):
+	if type == JStats.TYPE.HP or type == JStats.TYPE.HP_MAX:
+		$JInterface.update_hp_bar(stats.hp, stats.hp_max)
+		return
 
 	if not J.is_server() and peer_id == multiplayer.get_unique_id():
-		update_exp_bar()
-		update_level()
+		if type == JStats.TYPE.EXPERIENCE:
+			update_exp_bar()
+			return
+		if type == JStats.TYPE.LEVEL:
+			update_level()
+			return
 
 
 func _on_experience_gained(_from: String, _current_exp: int, amount: int):

@@ -3,16 +3,17 @@ extends JEnemyBody2D
 signal destination_reached
 signal stuck
 
-@onready var animation_player := $AnimationPlayer
-@onready var floating_text_scene = preload("res://scenes/templates/JFloatingText/JFloatingText.tscn")
+@onready var animation_player = $AnimationPlayer
+@onready var skeleton = $Skeleton
+@onready var original_scale = $Skeleton.scale
 @onready var avoidance_rays := $AvoidanceRays
-@onready var beehave_tree := $BeehaveTree
+@onready var floating_text_scene = preload("res://scenes/templates/JFloatingText/JFloatingText.tscn")
 @onready var destination = self.global_position:
 	set(new_destination):
 		destination = new_destination
 		enroute_to_destination = true
 @onready var stuck_timer := $StuckTimer
-@onready var sprite := $Sprite2D
+@onready var beehave_tree := $BeehaveTree
 
 var enroute_to_destination = false
 var movement_multiplier := 1.0
@@ -20,11 +21,15 @@ var movement_multiplier := 1.0
 
 func _init():
 	super()
-	enemy_class = "Sheep"
-	stats.movement_speed = 50
-	stats.hp_max = 20
+	enemy_class = "MoldedDruvar"
+	stats.movement_speed = 75
+	stats.hp_max = 85
 	stats.hp = stats.hp_max
-	stats.experience_worth = 10
+	stats.experience_worth = 80
+	stats.attack_power_min = 20
+	stats.attack_power_max = 50
+	stats.attack_speed = 2.0
+	stats.defense = 8
 
 
 func _ready():
@@ -45,7 +50,8 @@ func _ready():
 
 
 func _add_loot():
-	add_item_to_loottable("Gold", 0.5, 20)
+	add_item_to_loottable("Gold", 0.75, 300)
+	add_item_to_loottable("Club", 0.05, 1)
 
 
 func _physics_process(_delta):
@@ -73,9 +79,9 @@ func _physics_process(_delta):
 
 func update_face_direction(direction: float):
 	if direction < 0:
-		sprite.flip_h = false
+		skeleton.scale = original_scale
 	if direction > 0:
-		sprite.flip_h = true
+		skeleton.scale = Vector2(original_scale.x * -1, original_scale.y)
 
 
 func _on_animation_finished(_anim_name: String):

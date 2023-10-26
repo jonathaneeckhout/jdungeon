@@ -1,5 +1,13 @@
-name: build latest jdungeon
-on: [push]
+name: build-artifacts-and-push-docker-image
+run-name: ${{ github.head_ref || github.ref_name }}-build-artifacts-and-push-docker-image
+on:
+  push:
+    branches:
+      - main
+      # Add other branches here, if needed
+    tags:
+      - 'v*'
+
 
 env:
   GODOT_VERSION: "4.1.2"
@@ -8,7 +16,7 @@ env:
 
 jobs:
   build-linux:
-    name: Linux Export
+    name: Build JDungeon for Linux
     runs-on: ubuntu-22.04
     container:
       image: mawakajaka/godot:v1.0.0
@@ -36,7 +44,7 @@ jobs:
           name: jdungeon-linux
           path: build/linux
   build-windows:
-    name: Windows Export
+    name: Build JDungeon for Windows
     runs-on: ubuntu-22.04
     container:
       image: mawakajaka/godot:v1.0.0
@@ -65,7 +73,7 @@ jobs:
           path: build/windows
 
   push_to_registry:
-    name: Push Docker image to Docker Hub
+    name: Create Linux Docker image and push to Docker Hub
     needs: build-linux
     runs-on: ubuntu-latest
     steps:

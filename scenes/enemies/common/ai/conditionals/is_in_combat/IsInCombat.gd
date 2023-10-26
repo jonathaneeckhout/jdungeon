@@ -3,6 +3,7 @@ extends ConditionLeaf
 @export var aggro_radius: Area2D = null
 @export var should_leash := false
 @export var leash_distance: float = 350.0
+@export var targetable_entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
 @onready var reset_timer: Timer = $ResetTimer
 var start_combat := false
 var in_combat := false
@@ -50,7 +51,7 @@ func tick(actor: Node, blackboard: Blackboard):
 
 
 func _on_body_entered(body: Node2D):
-	if target == null:
+	if target == null and body.get("entity_type") == targetable_entity_type:
 		start_combat = true
 		target = body
 
@@ -63,7 +64,7 @@ func _on_target_died():
 	_blackboard.set_value("is_resetting", true)
 
 
-func _on_got_hurt(from: String, _hp: int, _max_hp: int, _damage: int):
+func _on_got_hurt(from: String, _hp: int, _damage: int):
 	if in_combat:
 		reset_timer.start()
 	if target == null:
