@@ -29,6 +29,7 @@ visible = false
 login_panel = NodePath("../LoginPanel")
 
 [node name="VersionCheckPanel" parent="UI" instance=ExtResource("4_5aijd")]
+visible = false
 
 [node name="Entities" type="Node2D" parent="."]
 
