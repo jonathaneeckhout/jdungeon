@@ -62,7 +62,7 @@ should_respawn = true
 respawn_time = 20.0
 
 [node name="TreeTrunkGuy19" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-3790, 502)
+position = Vector2(-4098, -1332)
 should_respawn = true
 respawn_time = 20.0
 
@@ -183,4 +183,5 @@ position = Vector2(-1536, 3480)
 position = Vector2(-32, -48)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+visible = false
 anchor_mode = 0
