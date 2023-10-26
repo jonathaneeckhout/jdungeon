@@ -23,7 +23,16 @@ func _ready():
 		if J.global.env_debug:
 			$UI/LoginPanel.show()
 		else:
-			$UI/DisclaimerPanel.show()
+			# Show the check version panel
+			$UI/VersionCheckPanel.show()
+			# Only hide the check panel if the versions match.
+			if await $UI/VersionCheckPanel.check_version():
+				$UI/VersionCheckPanel.hide()
+				$UI/DisclaimerPanel.show()
+			else:
+				J.logger.error(
+					"Client's version does not match the Server's version. Not the running game."
+				)
 
 
 func _physics_process(delta):
