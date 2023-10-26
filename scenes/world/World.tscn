@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=12 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://scenes/world/World.gd" id="1_3w1ia"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="2_fjr74"]
 [ext_resource type="PackedScene" uid="uid://d4d0gkqhmeiru" path="res://scenes/ui/disclaimerpanel/DisclaimerPanel.tscn" id="3_17w7r"]
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="3_fddk3"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="4_4b353"]
+[ext_resource type="PackedScene" uid="uid://dh827s71bdr6o" path="res://scenes/ui/versioncheckpanel/VersionCheckPanel.tscn" id="4_5aijd"]
 [ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://scenes/enemies/Sheep/Sheep.tscn" id="4_uubdx"]
 [ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="5_0b0pa"]
 [ext_resource type="PackedScene" uid="uid://drmaubupv57n1" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn" id="6_17gjh"]
@@ -26,6 +27,8 @@ offset_bottom = 400.0
 [node name="DisclaimerPanel" parent="UI" node_paths=PackedStringArray("login_panel") instance=ExtResource("3_17w7r")]
 visible = false
 login_panel = NodePath("../LoginPanel")
+
+[node name="VersionCheckPanel" parent="UI" instance=ExtResource("4_5aijd")]
 
 [node name="Entities" type="Node2D" parent="."]
 

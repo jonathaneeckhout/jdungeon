@@ -1,6 +1,7 @@
 # JDungeon Specific Ignores
 .env
 data/users.json
+.version.json
 
 # Godot 4+ specific ignores
 .godot/

@@ -12,6 +12,7 @@ var env_server_database_backend: String = ""
 var env_server_json_backend_file: String = ""
 var env_debug: bool = false
 var env_audio_mute: bool = false
+var env_version_file: String = ""
 
 var env_postgres_address: String = ""
 var env_postgres_port: int = 0
@@ -156,5 +157,7 @@ func load_client_env_variables() -> bool:
 	env_audio_mute = J.env.get_value("AUDIO_MUTE") == "true"
 
 	J.logger.info("AUDIO_MUTE=[%s]" % str(env_audio_mute))
+
+	env_version_file = J.env.get_value("VERSION_FILE")
 
 	return true
