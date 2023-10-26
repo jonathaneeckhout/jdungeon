@@ -3,8 +3,10 @@
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_kpsqp"]
 
 [node name="Harbor" type="Node2D"]
+y_sort_enabled = true
 
 [node name="Ground" type="TileMap" parent="."]
+z_index = -1
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_kpsqp")
 format = 2
