@@ -12,6 +12,10 @@ var version: String = ""
 func _ready():
 	exit_button.pressed.connect(_on_exit_button_pressed)
 
+	if J.global.env_debug:
+		J.logger.info("Not checking versions in debug configuration")
+		return
+
 	if not FileAccess.file_exists(J.global.env_version_file):
 		J.logger.error("Version file=[%s] does not exist" % J.global.env_version_file)
 		return
