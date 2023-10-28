@@ -19,8 +19,8 @@
 [ext_resource type="PackedScene" uid="uid://dirsk8pf0bxh5" path="res://scenes/player/statdisplay/StatDisplay.tscn" id="17_3wdg5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lk3fd"]
-radius = 32.0
-height = 72.0001
+radius = 24.6666
+height = 49.3333
 
 [sub_resource type="Animation" id="Animation_jutxx"]
 resource_name = "Attack"
