@@ -12270,6 +12270,15 @@ texture_region_size = Vector2i(32, 32)
 4:29/0/y_sort_origin = -9
 4:29/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 4:29/0/physics_layer_0/angular_velocity = 0.0
+0:32/0 = 0
+0:32/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:32/0/physics_layer_0/angular_velocity = 0.0
+1:32/0 = 0
+1:32/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+1:32/0/physics_layer_0/angular_velocity = 0.0
+2:32/0 = 0
+2:32/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+2:32/0/physics_layer_0/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5l4kn"]
 texture = ExtResource("6_my7h2")
