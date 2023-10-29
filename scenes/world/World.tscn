@@ -95,27 +95,35 @@ position = Vector2(-2438, -1397)
 
 [node name="Sheep6" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1099, -418)
+should_respawn = true
 
 [node name="Sheep8" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1243, -243)
+should_respawn = true
 
 [node name="Sheep9" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1177, 449)
+should_respawn = true
 
 [node name="Sheep10" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-970, 458)
+should_respawn = true
 
 [node name="Sheep11" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1299, 694)
+should_respawn = true
 
 [node name="Sheep12" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1424, -650)
+should_respawn = true
 
 [node name="Sheep13" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1034, -776)
+should_respawn = true
 
 [node name="Sheep7" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1176, 146)
+should_respawn = true
 
 [node name="MoldedDruvar" parent="Entities/Enemies" instance=ExtResource("7_4j64e")]
 position = Vector2(-3888, 232)
