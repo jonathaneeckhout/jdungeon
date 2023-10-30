@@ -1,9 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://32wm3d3andqy"]
+[gd_scene load_steps=10 format=3 uid="uid://32wm3d3andqy"]
 
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_lryup"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/options_menu.gd" id="2_pbfwl"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/input_remapping.gd" id="2_tjvqb"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/volume_slider.gd" id="3_f1tit"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/tooltip_delay_slider.gd" id="3_mfjog"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/language_menu.gd" id="4_7x2u8"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/shadow_quality_slider.gd" id="4_syp6t"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/global_illumination_check.gd" id="5_itcgf"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/antialiasing_slider.gd" id="5_x71q0"]
 
 [node name="options_menu" type="Control"]
 editor_description = "Every section should be it's own ScrollContainer"
@@ -27,14 +32,130 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 48
 
-[node name="Button Mapping" type="ScrollContainer" parent="TabContainer"]
+[node name="Game" type="ScrollContainer" parent="TabContainer"]
 layout_mode = 2
 
-[node name="InputRemapping" type="VBoxContainer" parent="TabContainer/Button Mapping"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Game"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("2_tjvqb")
+
+[node name="TooltipDelay" type="HSplitContainer" parent="TabContainer/Game/VBoxContainer"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Game/VBoxContainer/TooltipDelay"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tooltip Delay"
+
+[node name="HSlider" type="HSlider" parent="TabContainer/Game/VBoxContainer/TooltipDelay"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 10.0
+step = 0.1
+script = ExtResource("3_mfjog")
+
+[node name="Label" type="Label" parent="TabContainer/Game/VBoxContainer/TooltipDelay/HSlider"]
+layout_mode = 1
+anchors_preset = -1
+offset_right = 1.0
+offset_bottom = 42.0
+grow_horizontal = 0
+
+[node name="Language" type="HSplitContainer" parent="TabContainer/Game/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Does not take effect until a restart or change of scene.
+Disclaimer: There is no guarantee of official support of other languages. But in the future it will be possible for players to mod in their own translations using Godot's built-in translation system."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Game/VBoxContainer/Language"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Language"
+
+[node name="LangMenu" type="MenuButton" parent="TabContainer/Game/VBoxContainer/Language"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_lryup")
+text = "Select..."
+script = ExtResource("4_7x2u8")
+
+[node name="Graphics" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Graphics"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ShadowQuality" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Resolution and quality of shadows."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/ShadowQuality"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Shadow Quality"
+
+[node name="HSlider2" type="HSlider" parent="TabContainer/Graphics/VBoxContainer/ShadowQuality"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 5.0
+rounded = true
+script = ExtResource("4_syp6t")
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/ShadowQuality/HSlider2"]
+layout_mode = 1
+anchors_preset = -1
+offset_right = 1.0
+offset_bottom = 42.0
+grow_horizontal = 0
+
+[node name="HalfGlobalIllumination" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Renders certain global lights at half the resolution of the game. It has a big performance boost but it may cause visual oddities."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/HalfGlobalIllumination"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Halve Global Illumination Resolution"
+
+[node name="Check" type="CheckBox" parent="TabContainer/Graphics/VBoxContainer/HalfGlobalIllumination"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Enabled"
+script = ExtResource("5_itcgf")
+
+[node name="AntiAliasing" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Renders certain global lights at half the resolution of the game. It has a big performance boost but it may cause visual oddities."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/AntiAliasing"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Anti-aliasing (MSAA)"
+
+[node name="HSlider2" type="HSlider" parent="TabContainer/Graphics/VBoxContainer/AntiAliasing"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 3.0
+rounded = true
+script = ExtResource("5_x71q0")
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/AntiAliasing/HSlider2"]
+layout_mode = 1
+anchors_preset = -1
+offset_right = 1.0
+offset_bottom = 42.0
+grow_horizontal = 0
 
 [node name="Audio" type="ScrollContainer" parent="TabContainer"]
 visible = false
@@ -61,6 +182,22 @@ size_flags_vertical = 1
 max_value = 1.0
 step = 0.01
 script = ExtResource("3_f1tit")
+
+[node name="Label" type="Label" parent="TabContainer/Audio/VBoxContainer/VolumeControl/HSlider"]
+layout_mode = 1
+anchors_preset = -1
+grow_horizontal = 0
+text = "100%"
+
+[node name="Button Mapping" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="InputRemapping" type="VBoxContainer" parent="TabContainer/Button Mapping"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_tjvqb")
 
 [node name="QuitButton" type="Button" parent="."]
 layout_mode = 1

@@ -110,7 +110,7 @@ func add_remap_node(action: StringName, events: Array[InputEvent]):
 
 	for event in events:
 		var remapButton := Button.new()
-		remapButton.text = event.as_text()
+		remapButton.text = event.as_text().replace(" (Physical)", "")
 		eventContainer.add_child(remapButton)
 
 		remapButton.pressed.connect(on_remap_attempt.bind(action, event, remapButton))
