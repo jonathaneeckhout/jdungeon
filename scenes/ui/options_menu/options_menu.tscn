@@ -8,9 +8,9 @@
 [ext_resource type="Script" path="res://scenes/ui/options_menu/language_menu.gd" id="4_7x2u8"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/shadow_quality_slider.gd" id="4_syp6t"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/global_illumination_check.gd" id="5_itcgf"]
-[ext_resource type="Script" path="res://scenes/ui/options_menu/fpx_limit_slider.gd" id="5_qm41t"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/antialiasing_slider.gd" id="5_x71q0"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/fullscren_check.gd" id="5_y24x2"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/fps_limit_slider.gd" id="6_3j83h"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/vsync_check.gd" id="6_d4fxa"]
 
 [node name="options_menu" type="Control"]
@@ -36,7 +36,6 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 48
 
 [node name="Game" type="ScrollContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Game"]
@@ -88,6 +87,7 @@ text = "Select..."
 script = ExtResource("4_7x2u8")
 
 [node name="Graphics" type="ScrollContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Graphics"]
@@ -131,7 +131,7 @@ max_value = 245.0
 step = 5.0
 value = 20.0
 rounded = true
-script = ExtResource("5_qm41t")
+script = ExtResource("6_3j83h")
 
 [node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/Maximum FPS/HSlider2"]
 layout_mode = 1

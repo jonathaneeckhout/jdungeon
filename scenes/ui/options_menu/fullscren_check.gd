@@ -1,10 +1,13 @@
 extends CheckBox
 
+
 func _ready() -> void:
-	button_pressed = LocalSaveSystem.get_data(LocalSaveSystem.Sections.SETTINGS, "graphics_fullscreen", false)
+	button_pressed = LocalSaveSystem.get_data(
+		LocalSaveSystem.Sections.SETTINGS, "graphics_fullscreen", false
+	)
 	toggled.connect(fullscreen_update)
 	fullscreen_update(button_pressed)
-	
+
 
 func fullscreen_update(full: bool):
 	if full:
@@ -13,4 +16,3 @@ func fullscreen_update(full: bool):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 
 	LocalSaveSystem.set_data(LocalSaveSystem.Sections.SETTINGS, "graphics_fullscreen", full)
-	
