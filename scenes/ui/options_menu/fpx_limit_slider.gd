@@ -10,9 +10,14 @@ func _ready() -> void:
 
 func fps_update(newValue: float):
 	var fps: int = int(newValue)
-	textLabel.text = str(fps)
 	
-	Engine.max_fps = fps
+	if newValue == max_value:
+		textLabel.text = "Unlimited"
+		Engine.max_fps = 0
+		
+	else:
+		textLabel.text = str(fps)
+		Engine.max_fps = fps
 
 	LocalSaveSystem.set_data(LocalSaveSystem.Sections.SETTINGS, "graphics_fps_limit", fps)
 	
