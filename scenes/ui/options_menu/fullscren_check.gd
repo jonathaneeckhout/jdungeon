@@ -2,6 +2,7 @@ extends CheckBox
 
 func _ready() -> void:
 	button_pressed = LocalSaveSystem.get_data(LocalSaveSystem.Sections.SETTINGS, "graphics_fullscreen", false)
+	toggled.connect(fullscreen_update)
 	fullscreen_update(button_pressed)
 	
 
