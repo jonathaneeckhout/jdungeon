@@ -163,21 +163,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "VSync"
 
-[node name="HSlider2" type="HSlider" parent="TabContainer/Graphics/VBoxContainer/VSync"]
+[node name="HSlider2" type="OptionButton" parent="TabContainer/Graphics/VBoxContainer/VSync"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 1
-max_value = 3.0
-value = 3.0
-rounded = true
+allow_reselect = true
 script = ExtResource("6_d4fxa")
-
-[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/VSync/HSlider2"]
-layout_mode = 1
-anchors_preset = -1
-offset_right = 1.0
-offset_bottom = 42.0
-grow_horizontal = 0
 
 [node name="ShadowQuality" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
 layout_mode = 2
