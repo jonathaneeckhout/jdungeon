@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://32wm3d3andqy"]
+[gd_scene load_steps=13 format=3 uid="uid://32wm3d3andqy"]
 
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_lryup"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/options_menu.gd" id="2_pbfwl"]
@@ -8,7 +8,10 @@
 [ext_resource type="Script" path="res://scenes/ui/options_menu/language_menu.gd" id="4_7x2u8"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/shadow_quality_slider.gd" id="4_syp6t"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/global_illumination_check.gd" id="5_itcgf"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/fpx_limit_slider.gd" id="5_qm41t"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/antialiasing_slider.gd" id="5_x71q0"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/fullscren_check.gd" id="5_y24x2"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/vsync_check.gd" id="6_d4fxa"]
 
 [node name="options_menu" type="Control"]
 editor_description = "Every section should be it's own ScrollContainer"
@@ -33,6 +36,7 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 48
 
 [node name="Game" type="ScrollContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Game"]
@@ -67,7 +71,8 @@ grow_horizontal = 0
 [node name="Language" type="HSplitContainer" parent="TabContainer/Game/VBoxContainer"]
 layout_mode = 2
 tooltip_text = "Does not take effect until a restart or change of scene.
-Disclaimer: There is no guarantee of official support of other languages. But in the future it will be possible for players to mod in their own translations using Godot's built-in translation system."
+Disclaimer: There is no guarantee of official support of other languages. 
+But in the future it will be possible for players to mod in their own translations using Godot's built-in translation system."
 dragger_visibility = 1
 
 [node name="Label" type="Label" parent="TabContainer/Game/VBoxContainer/Language"]
@@ -83,13 +88,96 @@ text = "Select..."
 script = ExtResource("4_7x2u8")
 
 [node name="Graphics" type="ScrollContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Graphics"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Fullscreen" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Sets how high the FPS can go. Lower values can reduce power consumption and heat.
+While VSync is active, this value has no effect if it is above the monitor's refresh rate."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/Fullscreen"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Fullscreen"
+
+[node name="Check" type="CheckBox" parent="TabContainer/Graphics/VBoxContainer/Fullscreen"]
+layout_mode = 2
+size_flags_horizontal = 2
+script = ExtResource("5_y24x2")
+
+[node name="Maximum FPS" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Sets how high the FPS can go. Lower values can reduce power consumption and heat.
+While VSync is active, this value has no effect if it is above the monitor's refresh rate."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/Maximum FPS"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "FPS Limit"
+
+[node name="HSlider2" type="HSlider" parent="TabContainer/Graphics/VBoxContainer/Maximum FPS"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 20.0
+max_value = 240.0
+step = 5.0
+value = 20.0
+rounded = true
+script = ExtResource("5_qm41t")
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/Maximum FPS/HSlider2"]
+layout_mode = 1
+anchors_preset = -1
+offset_right = 1.0
+offset_bottom = 42.0
+grow_horizontal = 0
+
+[node name="VSync" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Disabled: Display frames as fast as possible. 
+The most performant, but may cause tearing.
+
+Enabled: Limits FPS to the monitor's refresh rate. 
+Prevents tearing.
+
+Adaptive: Same as enabled. 
+But it will automatically disable VSync while the FPS are below the monitor's refresh rate.
+Minimizes the impact on performance. 
+(Not compatible with OpenGL3/Compatibility mode rendering, it acts like \"Enabled\" instead)
+ 
+Mailbox: Removes tearing with less of an impact on performance than \"Enabled\". 
+While having the same power consumption as \"Disabled\". 
+(Not compatible with OpenGL3/Compatibility mode rendering, it acts like \"Enabled\" instead)"
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/VSync"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VSync"
+
+[node name="HSlider2" type="HSlider" parent="TabContainer/Graphics/VBoxContainer/VSync"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 3.0
+value = 3.0
+rounded = true
+script = ExtResource("6_d4fxa")
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/VSync/HSlider2"]
+layout_mode = 1
+anchors_preset = -1
+offset_right = 1.0
+offset_bottom = 42.0
+grow_horizontal = 0
 
 [node name="ShadowQuality" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
 layout_mode = 2
@@ -134,7 +222,7 @@ script = ExtResource("5_itcgf")
 
 [node name="AntiAliasing" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "Renders certain global lights at half the resolution of the game. It has a big performance boost but it may cause visual oddities."
+tooltip_text = "Smooths edges."
 dragger_visibility = 1
 
 [node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/AntiAliasing"]

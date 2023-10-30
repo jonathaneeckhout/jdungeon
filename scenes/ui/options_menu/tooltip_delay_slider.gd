@@ -3,7 +3,7 @@ extends HSlider
 @onready var textLabel:Label = $Label
 
 func _ready() -> void:
-	value = LocalSaveSystem.get_data(LocalSaveSystem.Sections.SETTINGS, "tooltip_delay", max_value)
+	value = LocalSaveSystem.get_data(LocalSaveSystem.Sections.SETTINGS, "tooltip_delay", 0.2)
 	value_changed.connect(delay_update)
 	delay_update(value)
 	

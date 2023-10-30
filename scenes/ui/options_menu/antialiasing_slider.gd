@@ -15,6 +15,7 @@ func shadow_update(newValue: float):
 	
 	textLabel.text = QualityList[quality]
 	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", quality)
+	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", quality)
 
 	LocalSaveSystem.set_data(LocalSaveSystem.Sections.SETTINGS, "graphics_antialiasing_msaa", newValue)
 
