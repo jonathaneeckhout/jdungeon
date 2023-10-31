@@ -24,7 +24,7 @@
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6b05c"]
 radius = 24.0
-height = 112.0
+height = 95.0
 
 [sub_resource type="Animation" id="Animation_wkh27"]
 resource_name = "Die"
@@ -907,10 +907,12 @@ libraries = {
 }
 
 [node name="AvoidanceRays" parent="." instance=ExtResource("10_2fx0n")]
+position = Vector2(0, -45)
+ray_magnitude = 75
 
 [node name="StuckTimer" type="Timer" parent="."]
 process_callback = 0
-wait_time = 0.25
+wait_time = 0.15
 one_shot = true
 
 [node name="AggroRadius" type="Area2D" parent="."]

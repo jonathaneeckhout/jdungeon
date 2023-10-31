@@ -21,21 +21,9 @@ func tick(actor: Node, blackboard: Blackboard):
 				spawn_position.y * randf_range(0.85, 1.15)
 			)
 		else:
-			wander_destination = _random_point_within_radius(actor, spawn_position, wander_radius)
+			wander_destination = _make_rand_vector(spawn_position, wander_radius)
 		blackboard.set_value("destination_global_position", wander_destination)
 	return SUCCESS
-
-
-func _random_point_within_radius(actor: Node, origin: Vector2, distance: float) -> Vector2:
-	var open_check := RayCast2D.new()
-	actor.add_child(open_check)
-	open_check.collision_mask = J.PHYSICS_LAYER_WORLD
-	var dst: Vector2 = _make_rand_vector(origin, distance)
-	open_check.target_position = dst
-	while open_check.is_colliding():
-		dst = _make_rand_vector(origin, distance)
-	open_check.queue_free()
-	return dst
 
 
 func _make_rand_vector(origin: Vector2, distance: float) -> Vector2:
