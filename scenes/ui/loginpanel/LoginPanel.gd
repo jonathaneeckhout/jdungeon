@@ -7,6 +7,8 @@ signal show_create_account_pressed
 signal back_create_account_pressed
 
 # ConnectContainer
+@onready var connect_container := $Panel/ConnectContainer
+
 @onready
 var server_address_input := $Panel/ConnectContainer/MarginContainer/VBoxContainer/ServerAddressText
 @onready
@@ -61,6 +63,10 @@ func _ready():
 
 
 func _input(event):
+	if connect_container.is_visible_in_tree():
+		if event.is_action_pressed("ui_accept"):
+			connect_button.emit_signal("pressed")
+
 	if login_container.is_visible_in_tree():
 		if event.is_action_pressed("ui_accept"):
 			login_button.emit_signal("pressed")

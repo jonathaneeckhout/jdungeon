@@ -1,33 +1,18 @@
-extends JNPCBody2D
+extends NPC
 
-@onready var animation_player = $AnimationPlayer
-@onready var skeleton = $Skeleton
-@onready var original_scale = $Skeleton.scale
-@onready var avoidance_rays := $AvoidanceRays
+@onready var wander_behavior: WanderBehaviorComponent = $WanderBehaviorCopmonent
+@onready var avoidance_rays: AvoidanceRaysComponent = $AvoidanceRaysComponent
+@onready var shop: ShopSynchronizerComponent = $ShopSynchronizerComponent
 
 
 func _init():
 	super()
-
 	npc_class = "MilkLady"
-	is_vendor = true
-
-	stats.movement_speed = 50
 
 
 func _ready():
-	synchronizer.loop_animation_changed.connect(_on_loop_animation_changed)
-	animation_player.play(loop_animation)
-
+	# Server side
 	if J.is_server():
-		var behavior: JWanderBehavior = JWanderBehavior.new()
-		behavior.name = "WanderBehavior"
-		behavior.actor = self
-
-		add_child(behavior)
-
-		shop.size = 36
-
 		shop.add_item("HealthPotion", 100)
 
 		shop.add_item("Axe", 10000)
@@ -48,20 +33,17 @@ func _ready():
 		shop.add_item("PlateBody", 10000)
 		shop.add_item("PlateArms", 10000)
 		shop.add_item("PlateLegs", 10000)
+	# Client side
+	else:
+		# Behavior is not handeld on client's side
+		wander_behavior.queue_free()
+		# Behavior is not handeld on client's side
+		avoidance_rays.queue_free()
 
 
-func update_face_direction(direction: float):
-	if direction < 0:
-		skeleton.scale = original_scale
+func interact(player: Player):
+	if player.get("peer_id") == null:
+		J.logger.error("player node does not have the peer_id variable")
 		return
-	if direction > 0:
-		skeleton.scale = Vector2(original_scale.x * -1, original_scale.y)
-		return
 
-
-func _on_loop_animation_changed(animation: String, direction: Vector2):
-	loop_animation = animation
-
-	animation_player.play(loop_animation)
-
-	update_face_direction(direction.x)
+	shop.open_shop(player.peer_id)

@@ -1,6 +1,6 @@
 extends Control
 
-@export var player: JPlayerBody2D
+@export var stats: StatsSynchronizerComponent
 
 @onready var hp_value_label: Label = $ScrollContainer/StatList/HPSplitContainer/Value
 @onready var hp_max_value_label: Label = $ScrollContainer/StatList/HPMaxSplitContainer/Value
@@ -16,11 +16,11 @@ var attack_power_max_value_label: Label = $ScrollContainer/StatList/AttackPowerM
 
 
 func _ready() -> void:
-	if player:
-		player.stats.stats_changed.connect(_on_stats_changed)
+	if stats:
+		stats.stats_changed.connect(_on_stats_changed)
 		renew_values()
 	else:
-		J.logger.error("Player is not assigned")
+		J.logger.error("Stats is not assigned")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -29,40 +29,40 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func renew_values():
-	hp_value_label.text = str(player.stats.hp)
-	hp_max_value_label.text = str(player.stats.hp_max)
-	level_value_label.text = str(player.stats.level)
-	experience_value_label.text = str(player.stats.experience)
-	experience_needed_value_label.text = str(player.stats.experience_needed)
-	attack_power_min_value_label.text = str(player.stats.attack_power_min)
-	attack_power_max_value_label.text = str(player.stats.attack_power_max)
-	defense_value_label.text = str(player.stats.defense)
+	hp_value_label.text = str(stats.hp)
+	hp_max_value_label.text = str(stats.hp_max)
+	level_value_label.text = str(stats.level)
+	experience_value_label.text = str(stats.experience)
+	experience_needed_value_label.text = str(stats.experience_needed)
+	attack_power_min_value_label.text = str(stats.attack_power_min)
+	attack_power_max_value_label.text = str(stats.attack_power_max)
+	defense_value_label.text = str(stats.defense)
 
 
-func _on_stats_changed(type: JStats.TYPE):
+func _on_stats_changed(type: StatsSynchronizerComponent.TYPE):
 	match type:
-		JStats.TYPE.HP_MAX:
-			hp_max_value_label.text = str(player.stats.hp_max)
-		JStats.TYPE.HP:
-			hp_value_label.text = str(player.stats.hp)
-		JStats.TYPE.ATTACK_POWER_MIN:
-			attack_power_min_value_label.text = str(player.stats.attack_power_min)
-		JStats.TYPE.ATTACK_POWER_MAX:
-			attack_power_max_value_label.text = str(player.stats.attack_power_max)
-		JStats.TYPE.ATTACK_SPEED:
+		StatsSynchronizerComponent.TYPE.HP_MAX:
+			hp_max_value_label.text = str(stats.hp_max)
+		StatsSynchronizerComponent.TYPE.HP:
+			hp_value_label.text = str(stats.hp)
+		StatsSynchronizerComponent.TYPE.ATTACK_POWER_MIN:
+			attack_power_min_value_label.text = str(stats.attack_power_min)
+		StatsSynchronizerComponent.TYPE.ATTACK_POWER_MAX:
+			attack_power_max_value_label.text = str(stats.attack_power_max)
+		StatsSynchronizerComponent.TYPE.ATTACK_SPEED:
 			# TODO: not added yet
 			pass
-		JStats.TYPE.ATTACK_RANGE:
+		StatsSynchronizerComponent.TYPE.ATTACK_RANGE:
 			# TODO: not added yet
 			pass
-		JStats.TYPE.DEFENSE:
-			defense_value_label.text = str(player.stats.defense)
-		JStats.TYPE.MOVEMENT_SPEED:
+		StatsSynchronizerComponent.TYPE.DEFENSE:
+			defense_value_label.text = str(stats.defense)
+		StatsSynchronizerComponent.TYPE.MOVEMENT_SPEED:
 			# TODO: not added yet
 			pass
-		JStats.TYPE.LEVEL:
-			level_value_label.text = str(player.stats.level)
-		JStats.TYPE.EXPERIENCE:
-			experience_value_label.text = str(player.stats.experience)
-		JStats.TYPE.EXPERIENCE_NEEDED:
-			experience_needed_value_label.text = str(player.stats.experience_needed)
+		StatsSynchronizerComponent.TYPE.LEVEL:
+			level_value_label.text = str(stats.level)
+		StatsSynchronizerComponent.TYPE.EXPERIENCE:
+			experience_value_label.text = str(stats.experience)
+		StatsSynchronizerComponent.TYPE.EXPERIENCE_NEEDED:
+			experience_needed_value_label.text = str(stats.experience_needed)

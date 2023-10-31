@@ -12,7 +12,7 @@ func tick(actor: Node, blackboard: Blackboard):
 	if ready_to_attack:
 		swing_timer.start()
 		ready_to_attack = false
-		var target: JBody2D = blackboard.get_value("aggro_target")
+		var target: CharacterBody2D = blackboard.get_value("aggro_target")
 		var reset_timer: Timer = blackboard.get_value("reset_timer")
 		reset_timer.start()
 		actor.attack(target)

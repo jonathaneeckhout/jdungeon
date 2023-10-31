@@ -1,6 +1,6 @@
 extends Panel
 
-@export var item: JItem:
+@export var item: Item:
 	set(new_item):
 		item = new_item
 		if item:
@@ -21,8 +21,8 @@ func _ready():
 
 
 func _gui_input(event: InputEvent):
-	if event.is_action_pressed("j_right_click"):
-		J.rpcs.npc.buy_shop_item.rpc_id(1, shop.vendor, item.uuid)
+	if event.is_action_pressed("j_right_click") and shop.shop_synchronizer != null:
+		shop.shop_synchronizer.buy_shop_item.rpc_id(1, item.uuid)
 
 
 func _on_mouse_entered():

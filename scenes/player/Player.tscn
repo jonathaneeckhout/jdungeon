@@ -1,22 +1,35 @@
-[gd_scene load_steps=25 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=38 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/images/player/base/Basecharacter.png" id="2_j04kt"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="2_p6rt0"]
+[ext_resource type="PackedScene" uid="uid://c48o4jjb7nijf" path="res://scripts/components/inputsynchronizercomponent/InputSynchronizerComponent.tscn" id="3_07d0t"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="3_f33x3"]
+[ext_resource type="PackedScene" uid="uid://d2wwaeyvgno55" path="res://scripts/components/networkviewsynchronizercomponent/NetworkViewSynchronizerComponent.tscn" id="3_sohky"]
 [ext_resource type="Texture2D" uid="uid://dyv7uagfvwjw0" path="res://assets/images/player/base/base_handback.png" id="3_tiexf"]
 [ext_resource type="Texture2D" uid="uid://brvhtyjeyjceq" path="res://assets/images/player/base/base_legback.png" id="4_dve7u"]
 [ext_resource type="Texture2D" uid="uid://d2uess8ln1r1k" path="res://assets/images/player/base/base_leg.png" id="5_rmogm"]
 [ext_resource type="Texture2D" uid="uid://b50k8a1sfjtn5" path="res://assets/images/player/base/base_trunk.png" id="6_i0x1f"]
+[ext_resource type="PackedScene" uid="uid://1dsekcllclva" path="res://scripts/components/playerbehaviorcomponent/PlayerBehaviorComponent.tscn" id="6_xf4id"]
 [ext_resource type="Texture2D" uid="uid://dhpyicp5pnbh7" path="res://assets/images/player/base/base_head.png" id="7_mfldg"]
 [ext_resource type="Texture2D" uid="uid://b38ld53gomnkq" path="res://assets/images/player/base/base_fronthand.png" id="8_1uo8h"]
-[ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="10_0qscs"]
+[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="8_gf6y5"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="9_5pqlh"]
+[ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://scripts/components/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="10_6gj4a"]
+[ext_resource type="PackedScene" uid="uid://cka62nlyw5gm5" path="res://scripts/components/equipmentsynchronizercomponent/EquipmentSynchronizerComponent.tscn" id="12_5ivre"]
 [ext_resource type="PackedScene" uid="uid://uord7b0pb5jt" path="res://scenes/player/inventory/Inventory.tscn" id="12_cqvu1"]
 [ext_resource type="PackedScene" uid="uid://dy1r3n0fpuneq" path="res://scenes/player/shop/Shop.tscn" id="12_macoo"]
+[ext_resource type="PackedScene" uid="uid://6qny4jufpgg3" path="res://scripts/components/playerrespawncomponent/PlayerRespawnComponent.tscn" id="12_qxjy0"]
+[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="13_6010j"]
 [ext_resource type="PackedScene" uid="uid://dssmk0m8xsvxf" path="res://scenes/ui/game_menu/game_menu.tscn" id="13_musf7"]
+[ext_resource type="PackedScene" uid="uid://8hhnyrweana5" path="res://scripts/components/persistentplayerdatacomponent/PersistentPlayerDataComponent.tscn" id="13_n3v8n"]
 [ext_resource type="PackedScene" uid="uid://bqsdy2usb2e6d" path="res://scenes/player/equipment/Equipment.tscn" id="14_2fdu8"]
 [ext_resource type="StyleBox" uid="uid://pbfuprosr3en" path="res://assets/themes/ProgressBars.tres" id="14_3h4ha"]
 [ext_resource type="PackedScene" uid="uid://ccq2mcrkefjnb" path="res://scenes/player/deathpopup/DeathPopup.tscn" id="15_ho0h1"]
 [ext_resource type="PackedScene" uid="uid://dmf2tmcuq22vg" path="res://scenes/player/chatpanel/ChatPanel.tscn" id="16_xx8pu"]
 [ext_resource type="PackedScene" uid="uid://dirsk8pf0bxh5" path="res://scenes/player/statdisplay/StatDisplay.tscn" id="17_3wdg5"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="18_bmbbk"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="18_ot7di"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lk3fd"]
 radius = 32.0
@@ -869,7 +882,51 @@ _data = {
 
 [node name="Player" type="CharacterBody2D"]
 scale = Vector2(0.6, 0.6)
+collision_layer = 3
+collision_mask = 5
 script = ExtResource("1_yw2vn")
+
+[node name="PersistentPlayerDataComponent" parent="." node_paths=PackedStringArray("stats", "inventory", "equipment") instance=ExtResource("13_n3v8n")]
+stats = NodePath("../StatsSynchronizerComponent")
+inventory = NodePath("../InventorySynchronizerComponent")
+equipment = NodePath("../EquipmentSynchronizerComponent")
+store_interval_time = 5.0
+
+[node name="NetworkViewSynchronizerComponent" parent="." instance=ExtResource("3_sohky")]
+
+[node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("3_f33x3")]
+
+[node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("18_ot7di")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("2_p6rt0")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+attack_power_min = 1
+
+[node name="InputSynchronizerComponent" parent="." instance=ExtResource("3_07d0t")]
+
+[node name="PlayerBehaviorComponent" parent="." node_paths=PackedStringArray("input_synchronizer", "stats_component", "animation_synchronizer") instance=ExtResource("6_xf4id")]
+input_synchronizer = NodePath("../InputSynchronizerComponent")
+stats_component = NodePath("../StatsSynchronizerComponent")
+animation_synchronizer = NodePath("../AnimationSynchronizerComponent")
+
+[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("8_gf6y5")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+animation_player = NodePath("../AnimationPlayer")
+
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("9_5pqlh")]
+skeleton = NodePath("../Skeleton")
+
+[node name="InventorySynchronizerComponent" parent="." instance=ExtResource("10_6gj4a")]
+
+[node name="EquipmentSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("12_5ivre")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="PlayerRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("12_qxjy0")]
+stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("13_6010j")]
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="Sprites" type="Node2D" parent="."]
 position = Vector2(-28, -100)
@@ -975,9 +1032,10 @@ libraries = {
 "": SubResource("AnimationLibrary_cqja8")
 }
 
-[node name="JInterface" parent="." instance=ExtResource("10_0qscs")]
-offset_top = -176.0
-offset_bottom = -136.0
+[node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("18_bmbbk")]
+offset_top = -173.333
+offset_bottom = -133.333
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
@@ -1023,6 +1081,7 @@ offset_left = 0.0
 offset_top = -201.0
 offset_right = 159.0
 offset_bottom = 201.0
+gold = null
 
 [node name="GameMenu" parent="Camera2D/UILayer/GUI" instance=ExtResource("13_musf7")]
 visible = false
@@ -1049,7 +1108,7 @@ layout_mode = 1
 [node name="ChatPanel" parent="Camera2D/UILayer/GUI" instance=ExtResource("16_xx8pu")]
 layout_mode = 1
 
-[node name="StatDisplay" parent="Camera2D/UILayer/GUI" node_paths=PackedStringArray("player") instance=ExtResource("17_3wdg5")]
+[node name="StatDisplay" parent="Camera2D/UILayer/GUI" node_paths=PackedStringArray("stats") instance=ExtResource("17_3wdg5")]
 visible = false
 layout_mode = 1
-player = NodePath("../../../..")
+stats = NodePath("../../../../StatsSynchronizerComponent")

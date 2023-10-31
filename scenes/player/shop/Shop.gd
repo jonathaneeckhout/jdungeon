@@ -2,16 +2,20 @@ extends Panel
 
 const SIZE = Vector2(4, 4)
 
-@export var gold := 0:
+var gold := 0:
 	set(amount):
 		gold = amount
 		$VBoxContainer/GoldValue.text = str(amount)
 
 var panels = []
-var vendor: String = ""
+
+var shop_synchronizer: ShopSynchronizerComponent
 
 
 func _ready():
+	if J.is_server():
+		return
+
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 
@@ -29,12 +33,13 @@ func _ready():
 			i += 1
 	$CloseButton.pressed.connect(_on_close_button_pressed)
 
-	J.rpcs.npc.shop_updated.connect(_on_shop_updated)
+	J.client.shop_opened.connect(_on_shop_opened)
 
 
 func _input(event):
 	if event.is_action_pressed("j_right_click") and not JUI.above_ui:
 		hide()
+		shop_synchronizer = null
 
 
 func get_panel_at_pos(pos: Vector2):
@@ -43,7 +48,7 @@ func get_panel_at_pos(pos: Vector2):
 
 
 func add_item(item_uuid: String, item_class: String, price: int):
-	var item: JItem = J.item_scenes[item_class].instantiate()
+	var item: Item = J.item_scenes[item_class].instantiate()
 	item.uuid = item_uuid
 	item.item_class = item_class
 
@@ -60,6 +65,12 @@ func add_item(item_uuid: String, item_class: String, price: int):
 func remove_item(pos: Vector2):
 	var panel = panels[pos.x][pos.y]
 	panel.item = null
+
+
+func clear_shop():
+	for x in range(SIZE.x):
+		for y in range(SIZE.y):
+			remove_item(Vector2(x, y))
 
 
 func display_info(pos: Vector2, label: String, price: int):
@@ -81,16 +92,28 @@ func _on_mouse_exited():
 	JUI.above_ui = false
 
 
-func _on_shop_updated(vendor_name: String, items: Dictionary):
-	vendor = vendor_name
-	$Label.text = "%s's shop" % vendor
+func _on_shop_opened(vendor_name: String):
+	var vendor: Node2D = J.world.npcs.get_node_or_null(vendor_name)
+	if vendor == null:
+		J.logger.info("Can not find npc=[%s]" % vendor_name)
+		return
 
-	for x in range(SIZE.x):
-		for y in range(SIZE.y):
-			remove_item(Vector2(x, y))
+	if vendor.get("npc_class") == null:
+		J.logger.error("vendor does not have the npc_class variable")
+		return
 
-	for item_data in items["inventory"]:
-		add_item(item_data["uuid"], item_data["class"], item_data["price"])
+	if vendor.get("shop") == null:
+		J.logger.error("vendor does not have the shop variable")
+		return
+
+	shop_synchronizer = vendor.shop
+
+	$Label.text = "%s's shop" % vendor.npc_class
+
+	clear_shop()
+
+	for item_data in vendor.shop.inventory:
+		add_item(item_data["uuid"], item_data["item_class"], item_data["price"])
 
 	show()
 

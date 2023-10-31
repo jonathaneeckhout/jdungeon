@@ -1,14 +1,22 @@
-[gd_scene load_steps=29 format=3 uid="uid://drmaubupv57n1"]
+[gd_scene load_steps=37 format=3 uid="uid://drmaubupv57n1"]
 
 [ext_resource type="Script" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.gd" id="1_ba1y1"]
 [ext_resource type="Texture2D" uid="uid://dqwsc70v1poc8" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_backhand.png" id="1_fnuxl"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_82l3i"]
 [ext_resource type="Texture2D" uid="uid://bklq7s00gbtuh" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_backleg.png" id="2_xe2qq"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_evc6g"]
 [ext_resource type="Texture2D" uid="uid://duhp2c25iba6a" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_topleg.png" id="3_x4duj"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_q10uy"]
 [ext_resource type="Texture2D" uid="uid://dexspslu6tit4" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_trunk.png" id="4_uuhj7"]
+[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="5_305lq"]
 [ext_resource type="Texture2D" uid="uid://dfgac1m50tnbp" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_Head.png" id="5_af0rv"]
+[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="5_r0u52"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="5_y1ndl"]
 [ext_resource type="Texture2D" uid="uid://dgaxltrsj2mbj" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_tophand.png" id="6_ajo5s"]
-[ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="8_olobp"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/avoidance_rays/AvoidanceRays.tscn" id="9_whu8q"]
+[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_lms8h"]
+[ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="6_vd6gg"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="7_lx7n7"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="9_whu8q"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="10_xhds1"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="11_hywmq"]
 [ext_resource type="PackedScene" uid="uid://dbllgq1k86dyd" path="res://scenes/enemies/common/ai/sequences/death_sequence/DeathSequence.tscn" id="12_8aom2"]
@@ -780,8 +788,42 @@ radius = 200.0
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_ba1y1")
-should_respawn = true
-respawn_time = 20.0
+
+[node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("2_82l3i")]
+
+[node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_evc6g")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_q10uy")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+hp_max = 85
+hp = 85
+attack_power_min = 20
+attack_power_max = 50
+attack_speed = 2.0
+defense = 8
+movement_speed = 75.0
+
+[node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_vd6gg")]
+stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_lms8h")]
+stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("5_r0u52")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+animation_player = NodePath("../AnimationPlayer")
+
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("7_lx7n7")]
+skeleton = NodePath("../Skeleton")
+
+[node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("5_y1ndl")]
+offset_top = -48.0
+offset_bottom = -8.0
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+
+[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("5_305lq")]
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="Sprites" type="Node2D" parent="."]
 scale = Vector2(0.06, 0.06)
@@ -838,10 +880,6 @@ shape = SubResource("CapsuleShape2D_n3uon")
 libraries = {
 "": SubResource("AnimationLibrary_sumus")
 }
-
-[node name="JInterface" parent="." instance=ExtResource("8_olobp")]
-offset_top = -36.0
-offset_bottom = 4.0
 
 [node name="AvoidanceRays" parent="." instance=ExtResource("9_whu8q")]
 
