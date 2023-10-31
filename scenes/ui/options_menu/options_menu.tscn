@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://32wm3d3andqy"]
+[gd_scene load_steps=15 format=3 uid="uid://32wm3d3andqy"]
 
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_lryup"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/options_menu.gd" id="2_pbfwl"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scenes/ui/options_menu/language_menu.gd" id="4_7x2u8"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/shadow_quality_slider.gd" id="4_syp6t"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/global_illumination_check.gd" id="5_itcgf"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/local_data_folder.gd" id="5_og4gi"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/antialiasing_slider.gd" id="5_x71q0"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/fullscren_check.gd" id="5_y24x2"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/fps_limit_slider.gd" id="6_3j83h"]
@@ -37,7 +38,6 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 48
 
 [node name="Game" type="ScrollContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Game"]
@@ -87,6 +87,21 @@ size_flags_horizontal = 3
 theme = ExtResource("1_lryup")
 text = "Select..."
 script = ExtResource("4_7x2u8")
+
+[node name="LocalDataFolder" type="HSplitContainer" parent="TabContainer/Game/VBoxContainer"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Game/VBoxContainer/LocalDataFolder"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Open Local Data Folder"
+
+[node name="OpenFolder" type="Button" parent="TabContainer/Game/VBoxContainer/LocalDataFolder"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "OPEN"
+script = ExtResource("5_og4gi")
 
 [node name="Graphics" type="ScrollContainer" parent="TabContainer"]
 visible = false
@@ -280,6 +295,7 @@ size_flags_vertical = 3
 script = ExtResource("2_tjvqb")
 
 [node name="Accessibility" type="ScrollContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Accessibility"]
