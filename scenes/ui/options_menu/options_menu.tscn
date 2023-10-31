@@ -73,7 +73,7 @@ grow_horizontal = 0
 layout_mode = 2
 tooltip_text = "Does not take effect until a restart or change of scene.
 Disclaimer: There is no guarantee of official support of other languages. 
-But in the future it will be possible for players to mod in their own translations using Godot's built-in translation system."
+You may add your own .translation file in the User Data/translations folder"
 dragger_visibility = 1
 
 [node name="Label" type="Label" parent="TabContainer/Game/VBoxContainer/Language"]

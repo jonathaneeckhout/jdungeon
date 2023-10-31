@@ -1,7 +1,8 @@
 extends OptionButton
-## This setting is used by "res://assets/shaders/colorblindness_assistance_material.gd" 
+## This setting is used by "res://assets/shaders/colorblindness_assistance_material.gd"
 
 const FilterSettings: Array[String] = ["Disabled", "Deutranopia", "Protanopia", "Tritanopia"]
+
 
 func _init() -> void:
 	#There must be as many settings as there are Shaders
@@ -22,4 +23,6 @@ func filter_update(id: int):
 	text = str(FilterSettings[id])
 	selected = id
 
-	LocalSaveSystem.set_data(LocalSaveSystem.Sections.SETTINGS, "accessibility_colourblindness_filter", id)
+	LocalSaveSystem.set_data(
+		LocalSaveSystem.Sections.SETTINGS, "accessibility_colourblindness_filter", id
+	)

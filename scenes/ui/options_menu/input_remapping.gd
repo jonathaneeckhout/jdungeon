@@ -24,11 +24,7 @@ const Messages: Dictionary = {
 }
 
 @export var actionsAllowed: Array[StringName] = [
-	&"j_toggle_bag",
-	&"j_toggle_equipment",
-	&"j_toggle_stats",
-	&"j_ui_chat_toggle",
-	&"j_ui_toggle"
+	&"j_toggle_bag", &"j_toggle_equipment", &"j_toggle_stats", &"j_ui_chat_toggle", &"j_ui_toggle"
 ]
 @export var tempTextDuration: float = 2
 
