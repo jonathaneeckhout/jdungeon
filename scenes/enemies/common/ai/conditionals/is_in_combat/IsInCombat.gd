@@ -7,7 +7,7 @@ extends ConditionLeaf
 @onready var reset_timer: Timer = $ResetTimer
 var start_combat := false
 var in_combat := false
-var target: JBody2D = null
+var target: CharacterBody2D = null
 var _blackboard: Blackboard
 
 
@@ -22,16 +22,16 @@ func tick(actor: Node, blackboard: Blackboard):
 	if aggro_radius != null:
 		if not aggro_radius.body_entered.is_connected(_on_body_entered):
 			aggro_radius.body_entered.connect(_on_body_entered)
-	if not actor.synchronizer.got_hurt.is_connected(_on_got_hurt):
-		actor.synchronizer.got_hurt.connect(_on_got_hurt)
-	if not actor.synchronizer.died.is_connected(_on_actor_died):
-		actor.synchronizer.died.connect(_on_actor_died)
+	if not actor.stats.got_hurt.is_connected(_on_got_hurt):
+		actor.stats.got_hurt.connect(_on_got_hurt)
+	if not actor.stats.died.is_connected(_on_actor_died):
+		actor.stats.died.connect(_on_actor_died)
 	if start_combat:
 		in_combat = true
 		start_combat = false
 		reset_timer.start()
-		if not target.synchronizer.died.is_connected(_on_target_died):
-			target.synchronizer.died.connect(_on_target_died)
+		if not target.stats.died.is_connected(_on_target_died):
+			target.stats.died.connect(_on_target_died)
 		blackboard.set_value("reset_timer", reset_timer)
 		blackboard.set_value("aggro_target", target)
 		blackboard.set_value("leash_position", actor.global_position)
@@ -64,12 +64,12 @@ func _on_target_died():
 	_blackboard.set_value("is_resetting", true)
 
 
-func _on_got_hurt(from: String, _hp: int, _damage: int):
+func _on_got_hurt(from: String, _damage: int):
 	if in_combat:
 		reset_timer.start()
 	if target == null:
 		start_combat = true
-		target = get_node("/root/Root/World/JEntities/JPlayers/" + from)
+		target = J.world.players.get_node(from)
 
 
 func _reset(actor: Node):
@@ -78,10 +78,10 @@ func _reset(actor: Node):
 	if aggro_radius != null:
 		if aggro_radius.body_entered.is_connected(_on_body_entered):
 			aggro_radius.body_entered.disconnect(_on_body_entered)
-	if actor.synchronizer.got_hurt.is_connected(_on_got_hurt):
-		actor.synchronizer.got_hurt.disconnect(_on_got_hurt)
-	if actor.synchronizer.died.is_connected(_on_target_died):
-		actor.synchronizer.died.disconnect(_on_target_died)
+	if actor.stats.got_hurt.is_connected(_on_got_hurt):
+		actor.stats.got_hurt.disconnect(_on_got_hurt)
+	if actor.stats.died.is_connected(_on_target_died):
+		actor.stats.died.disconnect(_on_target_died)
 	in_combat = false
 	start_combat = false
 	target = null

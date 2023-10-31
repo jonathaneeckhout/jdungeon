@@ -1,16 +1,24 @@
-[gd_scene load_steps=21 format=3 uid="uid://dfq5lb87meq6q"]
+[gd_scene load_steps=29 format=3 uid="uid://dfq5lb87meq6q"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Sheep/Sheep.gd" id="1_6p7b5"]
 [ext_resource type="Texture2D" uid="uid://dvpbmkvp7ppqm" path="res://assets/images/enemies/sheep/sheep.png" id="2_57cp7"]
-[ext_resource type="PackedScene" uid="uid://8t6nwakq6im5" path="res://scenes/templates/JInterface/JInterface.tscn" id="3_jxmll"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_nxh3l"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_umoon"]
+[ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="5_2qlym"]
+[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="5_derlk"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="5_ho1ox"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="5_juh1b"]
+[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="5_r87bb"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="5_yme22"]
+[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_mmahp"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="7_aau1x"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="7_bkydl"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="7_hnfbx"]
 [ext_resource type="PackedScene" uid="uid://dbllgq1k86dyd" path="res://scenes/enemies/common/ai/sequences/death_sequence/DeathSequence.tscn" id="8_c8mlh"]
 [ext_resource type="PackedScene" uid="uid://dk8p2emk8wofb" path="res://scenes/enemies/common/ai/sequences/wander_sequence/WanderSequence.tscn" id="8_eh1yg"]
 [ext_resource type="PackedScene" uid="uid://b4h6plpm1hoii" path="res://scenes/enemies/common/ai/conditionals/is_in_combat/IsInCombat.tscn" id="9_6wbxk"]
 [ext_resource type="PackedScene" uid="uid://bho6r0fx8owhk" path="res://scenes/enemies/common/ai/sequences/idle_sequence/IdleSequence.tscn" id="9_51l4p"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/avoidance_rays/AvoidanceRays.tscn" id="11_nla65"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="11_nla65"]
 [ext_resource type="PackedScene" uid="uid://m6q3h1qhesne" path="res://scenes/enemies/common/ai/sequences/flee_sequence/FleeSequence.tscn" id="11_qdpx0"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_oa8ou"]
 
@@ -196,6 +204,37 @@ scale = Vector2(0.8, 0.8)
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_6p7b5")
+should_respawn = true
+
+[node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("2_nxh3l")]
+
+[node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_umoon")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_ho1ox")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+hp_max = 20
+hp = 20
+movement_speed = 50.0
+
+[node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("5_2qlym")]
+stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_mmahp")]
+stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("7_aau1x")]
+skeleton = NodePath("../Sprite2D")
+
+[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("5_r87bb")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+animation_player = NodePath("../AnimationPlayer")
+
+[node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("5_juh1b")]
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+
+[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("5_derlk")]
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.1, 0.1)
@@ -208,10 +247,6 @@ shape = SubResource("CapsuleShape2D_orhwg")
 libraries = {
 "": SubResource("AnimationLibrary_ynm2p")
 }
-
-[node name="JInterface" parent="." instance=ExtResource("3_jxmll")]
-offset_top = -15.0
-offset_bottom = 25.0
 
 [node name="AvoidanceRays" parent="." instance=ExtResource("11_nla65")]
 

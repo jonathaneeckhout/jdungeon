@@ -123,6 +123,7 @@ should_respawn = true
 
 [node name="Sheep7" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1176, 146)
+should_respawn = true
 
 [node name="MoldedDruvar" parent="Entities/Enemies" instance=ExtResource("7_4j64e")]
 position = Vector2(-3888, 232)
@@ -145,7 +146,7 @@ position = Vector2(-576, -640)
 position = Vector2(-1536, -64)
 
 [node name="Harbor" parent="Entities/Map/Areas" instance=ExtResource("9_70hw5")]
-position = Vector2(-1536, 3480)
+position = Vector2(-1536, 3519)
 
 [node name="PlayerRespawnLocations" type="Node2D" parent="."]
 

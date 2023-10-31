@@ -1,4 +1,4 @@
-extends JItem
+extends Item
 
 
 func _init():

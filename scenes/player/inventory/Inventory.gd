@@ -4,7 +4,7 @@ class_name Inventory
 
 const SIZE = Vector2(6, 6)
 
-@export var gold := 0:
+var gold := 0:
 	set(amount):
 		gold = amount
 		$VBoxContainer/GoldValue.text = str(amount)
@@ -13,10 +13,13 @@ var panels = []
 var mouse_above_this_panel: InventoryPanel
 var location_cache = {}
 
-@onready var player: JPlayerBody2D = $"../../../../"
+@onready var player: Player = $"../../../../"
 
 
 func _ready():
+	if J.is_server():
+		return
+
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 
@@ -33,6 +36,8 @@ func _ready():
 			panel.drag_panel_offset = (panel.grid_pos * $DragPanel.size) - $DragPanel.size / 2
 			panels[x][y] = panel
 			i += 1
+
+	register_signals.call_deferred()
 
 
 func _input(event):
@@ -62,13 +67,13 @@ func get_panel_at_pos(pos: Vector2) -> InventoryPanel:
 
 
 func swap_items(from: Panel, to: Panel):
-	var temp_item: JItem = to.item
+	var temp_item: Item = to.item
 
 	to.item = from.item
 	from.item = temp_item
 
 
-func place_item_at_free_slot(item: JItem) -> bool:
+func place_item_at_free_slot(item: Item) -> bool:
 	for y in range(SIZE.y):
 		for x in range(SIZE.x):
 			var pos = Vector2(x, y)
@@ -112,7 +117,7 @@ func _on_gold_removed(total: int, _amount: int):
 
 
 func _on_item_added(item_uuid: String, _item_class: String):
-	var item: JItem = player.inventory.get_item(item_uuid)
+	var item: Item = player.inventory.get_item(item_uuid)
 
 	if not item:
 		return

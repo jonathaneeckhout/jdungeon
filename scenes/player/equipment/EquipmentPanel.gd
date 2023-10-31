@@ -2,7 +2,7 @@ extends VBoxContainer
 
 class_name EquipmentPanel
 
-@export var item: JItem:
+@export var item: Item:
 	set(new_item):
 		item = new_item
 		if item:
@@ -19,10 +19,10 @@ var item_uuid: String
 
 var grid_pos: Vector2
 
-@onready var equipment = "../.."
+@onready var equipment: Equipment = $"../.."
 
 
 func _gui_input(event: InputEvent):
 	if event.is_action_pressed("j_right_click"):
 		if item:
-			J.rpcs.item.remove_equipment_item.rpc_id(1, item.uuid)
+			equipment.player.equipment.remove_equipment_item.rpc_id(1, item.uuid)
