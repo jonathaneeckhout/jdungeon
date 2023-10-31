@@ -8,6 +8,7 @@ const PHYSICS_LAYER_PLAYERS = 2
 const PHYSICS_LAYER_ENEMIES = 4
 const PHYSICS_LAYER_NPCS = 8
 const PHYSICS_LAYER_ITEMS = 16
+const PHYSICS_LAYER_NETWORKING = 32
 
 const ARRIVAL_DISTANCE = 8
 const DROP_RANGE = 64
@@ -26,7 +27,7 @@ var rpcs: Node
 var server: JServer
 var client: JClient
 
-var world: JWorld
+var world: World
 
 var player_scene: Resource
 var enemy_scenes: Dictionary = {}

@@ -2,7 +2,7 @@ extends Panel
 
 class_name InventoryPanel
 
-@export var item: JItem:
+@export var item: Item:
 	set(new_item):
 		item = new_item
 		if item:
@@ -39,11 +39,11 @@ func _gui_input(event: InputEvent):
 			inventory.swap_items(self, inventory.mouse_above_this_panel)
 		else:
 			if item:
-				J.rpcs.item.drop_inventory_item.rpc_id(1, item.uuid)
+				inventory.player.inventory.drop_inventory_item.rpc_id(1, item.uuid)
 	elif event.is_action_pressed("j_right_click"):
 		if not selected:
 			if item:
-				J.rpcs.item.use_inventory_item.rpc_id(1, item.uuid)
+				inventory.player.inventory.use_inventory_item.rpc_id(1, item.uuid)
 		else:
 			selected = false
 			drag_panel.hide()

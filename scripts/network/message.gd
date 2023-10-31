@@ -6,7 +6,7 @@ func _ready():
 
 
 func _on_message_sent(from: int, type: String, to: String, message: String):
-	var from_player: JPlayerBody2D = J.world.get_player_by_peer_id(from)
+	var from_player: Player = J.world.get_player_by_peer_id(from)
 
 	if from_player == null:
 		J.logger.info("Invalid player")
@@ -27,7 +27,7 @@ func _on_message_sent(from: int, type: String, to: String, message: String):
 				)
 		# Send the message to only the target player
 		"Whisper":
-			var to_player: JPlayerBody2D = J.world.get_player_by_username(to)
+			var to_player: Player = J.world.get_player_by_username(to)
 			if not to_player:
 				J.logger.info("Player=[%s] does not exist" % to)
 				return

@@ -2,13 +2,14 @@ class_name JClient
 extends Node
 
 signal connected(connected: bool)
+signal shop_opened(vendor_name: String)
 
 const CLOCK_SYNC_TIMER_TIME: float = 0.5
 
 var clock: float = 0.0
 var clock_sync_timer: Timer
 
-var player: JPlayerBody2D
+var player: CharacterBody2D
 
 
 func _ready():

@@ -1,5 +1,7 @@
 extends Panel
 
+class_name Equipment
+
 const SIZE = Vector2(2, 4)
 
 @export var gold := 0:
@@ -9,10 +11,13 @@ const SIZE = Vector2(2, 4)
 
 var panels = []
 
-@onready var player: JPlayerBody2D = $"../../../../"
+@onready var player: Player = $"../../../../"
 
 
 func _ready():
+	if J.is_server():
+		return
+
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 
@@ -29,6 +34,8 @@ func _ready():
 			panels[x][y] = panel
 			i += 1
 
+	register_signals.call_deferred()
+
 
 func _input(event):
 	if JUI.chat_active:
@@ -38,6 +45,7 @@ func _input(event):
 		if visible:
 			hide()
 		else:
+			player.equipment.sync_equipment.rpc_id(1)
 			show()
 
 
@@ -68,7 +76,7 @@ func _on_mouse_exited():
 
 
 func _on_item_added(item_uuid: String, _item_class: String):
-	var item: JItem = player.equipment.get_item(item_uuid)
+	var item: Item = player.equipment.get_item(item_uuid)
 	if item == null:
 		return
 
@@ -89,7 +97,7 @@ func _on_equipment_loaded():
 	clear_all_panels()
 
 	for slot in player.equipment.items:
-		var item: JItem = player.equipment.items[slot]
+		var item: Item = player.equipment.items[slot]
 		if item:
 			var panel = get_panel_at_slot(item.equipment_slot)
 			if panel:

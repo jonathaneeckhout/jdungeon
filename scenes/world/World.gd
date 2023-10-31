@@ -1,4 +1,4 @@
-extends JWorld
+extends World
 
 @export var camera_speed: int = 600
 
