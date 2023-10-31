@@ -27,6 +27,8 @@ const Messages: Dictionary = {
 	&"j_toggle_bag",
 	&"j_toggle_equipment",
 	&"j_toggle_stats",
+	&"j_ui_chat_toggle",
+	&"j_ui_toggle"
 ]
 @export var tempTextDuration: float = 2
 

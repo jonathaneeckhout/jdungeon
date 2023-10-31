@@ -4,3 +4,5 @@ j_right_click,Right click
 j_toggle_bag,Toggle bag
 j_toggle_equipment,Toggle equipment
 j_toggle_stats,Toggle stats screen
+j_ui_chat_toggle,Toggle chat visibility
+j_ui_toggle,Toggle GUI visibility
