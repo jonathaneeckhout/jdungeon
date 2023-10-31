@@ -60,9 +60,6 @@ func init_server() -> bool:
 	J.logger.info("Setting Engine's fps to 20")
 	Engine.set_physics_ticks_per_second(20)
 
-	J.logger.info("Loading local settings")
-	J.global.load_local_settings()
-
 	J.logger.info("Loading server's env variables")
 	if not J.global.load_server_env_variables():
 		J.logger.error("Could not load server's env variables")
