@@ -38,6 +38,20 @@ func load_local_settings():
 
 	#Set controls
 	InputRemapping.load_mappings()
+	
+	#Load translations
+	if not DirAccess.dir_exists_absolute("user://translations/"):
+		print_debug(DirAccess.make_dir_absolute("user://translations/"))
+
+	var foundTranslations: Array[String] = []
+	
+	for fileName in DirAccess.get_files_at("user://translations/"):
+		if fileName.get_extension() == "translation":
+			foundTranslations.append(fileName.get_basename())
+			TranslationServer.add_translation( load("user://translations/"+fileName) )
+	
+	if not foundTranslations.is_empty():
+		J.logger.info("Found {0} translation/s. {1}".format([foundTranslations.size(), str(foundTranslations)]))
 
 
 func load_common_env_variables() -> bool:
