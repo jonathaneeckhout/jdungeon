@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://32wm3d3andqy"]
+[gd_scene load_steps=14 format=3 uid="uid://32wm3d3andqy"]
 
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_lryup"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/options_menu.gd" id="2_pbfwl"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://scenes/ui/options_menu/fullscren_check.gd" id="5_y24x2"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/fps_limit_slider.gd" id="6_3j83h"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/vsync_check.gd" id="6_d4fxa"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/colourblindness_filter_option.gd" id="13_xah1x"]
 
 [node name="options_menu" type="Control"]
 editor_description = "Every section should be it's own ScrollContainer"
@@ -36,6 +37,7 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 48
 
 [node name="Game" type="ScrollContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Game"]
@@ -276,6 +278,29 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2_tjvqb")
+
+[node name="Accessibility" type="ScrollContainer" parent="TabContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Accessibility"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorblidnessFilter" type="HSplitContainer" parent="TabContainer/Accessibility/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Swaps colours on-screen to help people with colourblindness to distinguish them more easily."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Accessibility/VBoxContainer/ColorblidnessFilter"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Colourblindness Filter"
+
+[node name="HSlider" type="OptionButton" parent="TabContainer/Accessibility/VBoxContainer/ColorblidnessFilter"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("13_xah1x")
 
 [node name="QuitButton" type="Button" parent="."]
 layout_mode = 1
