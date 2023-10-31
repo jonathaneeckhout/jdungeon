@@ -339,6 +339,10 @@ func apply_boost(boost: Boost):
 
 	defense += boost.defense
 
+	for watcher in watcher_synchronizer.watchers:
+		var data: Dictionary = to_json(true)
+		sync_response.rpc_id(watcher.peer_id, data)
+
 
 func sync_int_change(stat_type: TYPE, value: int):
 	if not ready_done:
