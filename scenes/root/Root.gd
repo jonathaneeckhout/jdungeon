@@ -42,6 +42,7 @@ func register_enemies():
 
 func register_npcs():
 	J.register_npc_scene("MilkLady", "res://scenes/npcs/milklady/Milklady.tscn")
+	J.register_npc_scene("Turtur", "res://scenes/npcs/turtur/Turtur.tscn")
 
 
 func register_items():
