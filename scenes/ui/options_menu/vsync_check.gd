@@ -14,13 +14,13 @@ func _ready() -> void:
 		LocalSaveSystem.Sections.SETTINGS, "graphics_vsync_mode", 1
 	)
 	item_selected.connect(vsync_update)
-	vsync_update(setting)
+	display_update(setting)
 
-
-func vsync_update(id: int):
+func display_update(id: int):
 	text = str(VSyncSettings[id])
 	selected = id
 
+func vsync_update(id: int):
 	DisplayServer.window_set_vsync_mode(id)
-
 	LocalSaveSystem.set_data(LocalSaveSystem.Sections.SETTINGS, "graphics_vsync_mode", id)
+	display_update(id)

@@ -10,16 +10,19 @@ func _ready() -> void:
 		LocalSaveSystem.Sections.SETTINGS, "graphics_shadow_quality", 2
 	)
 	value_changed.connect(shadow_update)
-	shadow_update(value)
+	display_update(value)
 
+func display_update(val: float):
+	var quality: int = int(val)
+	textLabel.text = QualityList[quality]
 
 func shadow_update(newValue: float):
-	var quality: int = newValue
+	var quality: int = int(newValue)
 
-	textLabel.text = QualityList[quality]
 	set_shadow_quality(quality)
 
 	LocalSaveSystem.set_data(LocalSaveSystem.Sections.SETTINGS, "graphics_shadow_quality", newValue)
+	display_update(newValue)
 
 
 func set_shadow_quality(quality: int):

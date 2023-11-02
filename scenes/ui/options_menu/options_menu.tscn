@@ -1,10 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://32wm3d3andqy"]
+[gd_scene load_steps=14 format=3 uid="uid://32wm3d3andqy"]
 
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_lryup"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/options_menu.gd" id="2_pbfwl"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/input_remapping.gd" id="2_tjvqb"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/volume_slider.gd" id="3_f1tit"]
-[ext_resource type="Script" path="res://scenes/ui/options_menu/tooltip_delay_slider.gd" id="3_mfjog"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/language_menu.gd" id="4_7x2u8"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/shadow_quality_slider.gd" id="4_syp6t"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/global_illumination_check.gd" id="5_itcgf"]
@@ -44,30 +43,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="TooltipDelay" type="HSplitContainer" parent="TabContainer/Game/VBoxContainer"]
-layout_mode = 2
-dragger_visibility = 1
-
-[node name="Label" type="Label" parent="TabContainer/Game/VBoxContainer/TooltipDelay"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Tooltip Delay"
-
-[node name="HSlider" type="HSlider" parent="TabContainer/Game/VBoxContainer/TooltipDelay"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-max_value = 10.0
-step = 0.1
-script = ExtResource("3_mfjog")
-
-[node name="Label" type="Label" parent="TabContainer/Game/VBoxContainer/TooltipDelay/HSlider"]
-layout_mode = 1
-anchors_preset = -1
-offset_right = 1.0
-offset_bottom = 42.0
-grow_horizontal = 0
 
 [node name="Language" type="HSplitContainer" parent="TabContainer/Game/VBoxContainer"]
 layout_mode = 2

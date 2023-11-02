@@ -24,11 +24,13 @@ func _ready() -> void:
 		LocalSaveSystem.Sections.SETTINGS, "language_locale", localeDict[0]
 	)
 	get_popup().id_pressed.connect(on_id_pressed)
-	text = TranslationServer.get_language_name(currentLocale)
+	display_update(currentLocale)
 
+func display_update(locale: String):
+	text = TranslationServer.get_language_name(locale)
 
 func on_id_pressed(id: int):
 	currentLocale = localeDict[id]
-	text = TranslationServer.get_language_name(currentLocale)
 	TranslationServer.set_locale(currentLocale)
 	LocalSaveSystem.set_data(LocalSaveSystem.Sections.SETTINGS, "language_locale", currentLocale)
+	display_update(currentLocale)

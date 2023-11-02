@@ -6,8 +6,6 @@ func _ready() -> void:
 		LocalSaveSystem.Sections.SETTINGS, "graphics_fullscreen", false
 	)
 	toggled.connect(fullscreen_update)
-	fullscreen_update(button_pressed)
-
 
 func fullscreen_update(full: bool):
 	if full:

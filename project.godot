@@ -41,10 +41,6 @@ project/assembly_name="Jdungeon"
 
 enabled=PackedStringArray("res://addons/beehave/plugin.cfg")
 
-[gui]
-
-timers/tooltip_delay_sec=0.2
-
 [input]
 
 j_left_click={

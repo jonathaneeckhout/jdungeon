@@ -16,13 +16,14 @@ func _ready() -> void:
 		LocalSaveSystem.Sections.SETTINGS, "accessibility_colourblindness_filter", 0
 	)
 	item_selected.connect(filter_update)
-	filter_update(setting)
+	display_update(setting)
 
-
-func filter_update(id: int):
+func display_update(id: int):
 	text = str(FilterSettings[id])
 	selected = id
 
+func filter_update(id: int):
 	LocalSaveSystem.set_data(
 		LocalSaveSystem.Sections.SETTINGS, "accessibility_colourblindness_filter", id
 	)
+	display_update(id)

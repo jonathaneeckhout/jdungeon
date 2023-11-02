@@ -6,11 +6,9 @@ func _ready() -> void:
 		LocalSaveSystem.Sections.SETTINGS, "graphics_global_illumination_halved", false
 	)
 	toggled.connect(illumination_update)
-	illumination_update(button_pressed)
 
-
-func illumination_update(halve: bool):
-	ProjectSettings.set_setting("rendering/global_illumination/gi/use_half_resolution", halve)
+func illumination_update(halved: bool):
+	RenderingServer.gi_set_use_half_resolution(halved)
 	LocalSaveSystem.set_data(
-		LocalSaveSystem.Sections.SETTINGS, "graphics_global_illumination_halved", halve
+		LocalSaveSystem.Sections.SETTINGS, "graphics_global_illumination_halvedd", halved
 	)
