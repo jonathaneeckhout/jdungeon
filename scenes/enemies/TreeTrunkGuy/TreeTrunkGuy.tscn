@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://d4b7x1k03s5hr"]
+[gd_scene load_steps=31 format=3 uid="uid://d4b7x1k03s5hr"]
 
 [ext_resource type="Script" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.gd" id="1_j7ilt"]
 [ext_resource type="Texture2D" uid="uid://ddw7gwukhi221" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy.png" id="2_2joj6"]
@@ -8,15 +8,16 @@
 [ext_resource type="Texture2D" uid="uid://jyq083k5md5j" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy_backgroundhand.png" id="4_agvxr"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_ybnvc"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="5_5ijne"]
+[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="5_75v1y"]
 [ext_resource type="Texture2D" uid="uid://bysutqfdau0dj" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy_backgroundleg.png" id="5_fywxg"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="5_ghg40"]
-[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="5_rx0wa"]
 [ext_resource type="Texture2D" uid="uid://cxxrxuta8os57" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy_foregroundhand.png" id="6_37oon"]
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_npcmk"]
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="6_pi68j"]
 [ext_resource type="Texture2D" uid="uid://dht8y8635wy5o" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy_foregroundleg.png" id="7_7d51h"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="7_so3fl"]
 [ext_resource type="Texture2D" uid="uid://b6k68irc0gh3s" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy_torso.png" id="8_31yn2"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="8_vt6nj"]
 [ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="10_2fx0n"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="11_8dyih"]
 [ext_resource type="PackedScene" uid="uid://clyv1sf3bn5g0" path="res://scenes/enemies/common/ai/selectors/aggressive_mob/AggressiveMob.tscn" id="12_njkv6"]
@@ -797,15 +798,19 @@ attack_power_min = 10
 attack_power_max = 15
 movement_speed = 200.0
 
+[node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_75v1y")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
 [node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_pi68j")]
 stats = NodePath("../StatsSynchronizerComponent")
 
 [node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_npcmk")]
 stats = NodePath("../StatsSynchronizerComponent")
 
-[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("5_rx0wa")]
-watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "action_synchronizer") instance=ExtResource("8_vt6nj")]
 animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
 
 [node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("7_so3fl")]
 skeleton = NodePath("../Skeleton")
