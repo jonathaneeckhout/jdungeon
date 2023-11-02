@@ -8,7 +8,6 @@ const MAX_COLLIDING_TIME = 1.0
 
 @export var stats_component: StatsSynchronizerComponent
 @export var avoidance_rays_component: AvoidanceRaysComponent
-@export var animation_synchronizer: AnimationSynchronizerComponent
 @export var max_wander_distance: float = 256.0
 @export var min_idle_time: int = 3
 @export var max_idle_time: int = 10
@@ -72,14 +71,9 @@ func _physics_process(_delta: float):
 			else:
 				if !colliding_timer.is_stopped():
 					colliding_timer.stop()
-			if animation_synchronizer:
-				animation_synchronizer.send_new_loop_animation("Move")
 		elif idle_timer.is_stopped():
 			idle_timer.start(randi_range(min_idle_time, max_idle_time))
 			target_node.velocity = Vector2.ZERO
-
-			if animation_synchronizer:
-				animation_synchronizer.send_new_loop_animation("Idle")
 
 
 func find_random_spot(origin: Vector2, distance: float) -> Vector2:
