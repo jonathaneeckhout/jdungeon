@@ -14,7 +14,6 @@ var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
 @onready var position_synchronizer: PositionSynchronizerComponent = $PositionSynchronizerComponent
 @onready
 var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSynchronizerComponent
-@onready var animation_synchronizer: AnimationSynchronizerComponent = $AnimationSynchronizerComponent
 
 @onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
 @onready var inventory: InventorySynchronizerComponent = $InventorySynchronizerComponent
@@ -195,14 +194,10 @@ func _on_item_unequiped(_item_uuid: String):
 
 
 func _on_died():
-	if J.is_server():
-		animation_synchronizer.send_new_action_animation("Die")
-	elif peer_id == multiplayer.get_unique_id():
+	if not J.is_server() and peer_id == multiplayer.get_unique_id():
 		$Camera2D/UILayer/GUI/DeathPopup.show_popup()
 
 
 func _on_respawned():
-	if J.is_server():
-		animation_synchronizer.send_new_loop_animation("Idle")
-	elif peer_id == multiplayer.get_unique_id():
+	if not J.is_server() and peer_id == multiplayer.get_unique_id():
 		$Camera2D/UILayer/GUI/DeathPopup.hide()
