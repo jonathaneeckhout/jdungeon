@@ -3,9 +3,6 @@ extends Enemy
 signal destination_reached
 signal stuck
 
-
-
-
 @onready var action_synchronizer: ActionSynchronizerComponent = $ActionSynchronizerComponent
 @onready var avoidance_rays := $AvoidanceRays
 @onready var destination = self.global_position:
