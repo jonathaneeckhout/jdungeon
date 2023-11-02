@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://pp0i54sl5web"]
+[gd_scene load_steps=40 format=3 uid="uid://pp0i54sl5web"]
 
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="1_1etr8"]
 [ext_resource type="Script" path="res://scenes/enemies/ClamDog/ClamDog.gd" id="1_y6i23"]
@@ -10,10 +10,11 @@
 [ext_resource type="Texture2D" uid="uid://cddk2u0lmucsi" path="res://assets/images/enemies/mushroomdog/Body.PNG" id="4_pxtly"]
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="5_88wie"]
 [ext_resource type="Texture2D" uid="uid://c75dnvqjexi7o" path="res://assets/images/enemies/mushroomdog/UpperJaw.PNG" id="5_olw8o"]
+[ext_resource type="PackedScene" uid="uid://bw71a5ai2pfm6" path="res://scripts/components/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="6_4csfa"]
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_7btdw"]
 [ext_resource type="Texture2D" uid="uid://ds23e5n206b6q" path="res://assets/images/enemies/mushroomdog/LowerJaw.PNG" id="6_xj1kh"]
 [ext_resource type="Texture2D" uid="uid://dcneuyi1kwone" path="res://assets/images/enemies/mushroomdog/CloseBackLeg.PNG" id="7_i541a"]
-[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="7_t01l4"]
+[ext_resource type="PackedScene" uid="uid://bw315mdnj7nq8" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="8_i5vbg"]
 [ext_resource type="Texture2D" uid="uid://fuu374ma6fie" path="res://assets/images/enemies/mushroomdog/CloseFrontLeg.PNG" id="8_mkwb6"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="8_p56r6"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="9_3g1w6"]
@@ -928,12 +929,16 @@ movement_speed = 200.0
 [node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("5_88wie")]
 stats = NodePath("../StatsSynchronizerComponent")
 
+[node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("6_4csfa")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
 [node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_7btdw")]
 stats = NodePath("../StatsSynchronizerComponent")
 
-[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("7_t01l4")]
-watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "action_synchronizer") instance=ExtResource("8_i5vbg")]
 animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
 
 [node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("8_p56r6")]
 skeleton = NodePath("../Skeleton")

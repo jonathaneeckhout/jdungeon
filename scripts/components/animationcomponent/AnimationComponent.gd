@@ -61,6 +61,7 @@ func _physics_process(_delta):
 
 func _on_got_hurt(_from: String, _damage: int):
 	if animation_player.has_animation(hurt_animation):
+		animation_player.stop()
 		animation_player.play(hurt_animation)
 		wait_to_finish = true
 
@@ -69,6 +70,7 @@ func _on_died():
 	dead = true
 
 	if animation_player.has_animation(die_animation):
+		animation_player.stop()
 		animation_player.play(die_animation)
 
 
@@ -78,6 +80,7 @@ func _on_respawned():
 
 func _on_attacked(_target: String, _damage: int):
 	if animation_player.has_animation(attack_animation):
+		animation_player.stop()
 		animation_player.play(attack_animation)
 		wait_to_finish = true
 
