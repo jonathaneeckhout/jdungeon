@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dj1mpx8a8yeko"]
+[gd_scene load_steps=23 format=3 uid="uid://dj1mpx8a8yeko"]
 
 [ext_resource type="Script" path="res://scenes/npcs/milklady/Milklady.gd" id="1_i2k6g"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_444i3"]
@@ -9,10 +9,11 @@
 [ext_resource type="Texture2D" uid="uid://sqhyjw8sxa2g" path="res://assets/images/npcs/milklady/milklady_head.png" id="4_0w10x"]
 [ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://scripts/components/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="4_jq4vr"]
 [ext_resource type="Texture2D" uid="uid://dc103ysnnxwm6" path="res://assets/images/npcs/milklady/milklady_left_arm.png" id="5_1mf1y"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="6_7nn8c"]
 [ext_resource type="Texture2D" uid="uid://6ok6m1nqugg4" path="res://assets/images/npcs/milklady/milklady_left_foot.png" id="6_ba0nm"]
-[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="6_fddr0"]
 [ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://scripts/components/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="7_b43t0"]
 [ext_resource type="Texture2D" uid="uid://bvhajaa34ilol" path="res://assets/images/npcs/milklady/milklady_right_arm.png" id="7_f60ad"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="7_kfsbv"]
 [ext_resource type="Texture2D" uid="uid://dlyuyp8sjr4qj" path="res://assets/images/npcs/milklady/milklady_right_foot.png" id="8_xp8pl"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="9_3kap7"]
 [ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="11_y6h07"]
@@ -486,16 +487,18 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 movement_speed = 125.0
 
-[node name="WanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component", "avoidance_rays_component", "animation_synchronizer") instance=ExtResource("4_jq4vr")]
+[node name="WanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component", "avoidance_rays_component") instance=ExtResource("4_jq4vr")]
 stats_component = NodePath("../StatsSynchronizerComponent")
 avoidance_rays_component = NodePath("../AvoidanceRaysComponent")
-animation_synchronizer = NodePath("../AnimationSynchronizerComponent")
+
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("6_7nn8c")]
+skeleton = NodePath("../Skeleton")
 
 [node name="AvoidanceRaysComponent" parent="." instance=ExtResource("11_y6h07")]
 
-[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("6_fddr0")]
-watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats") instance=ExtResource("7_kfsbv")]
 animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
 
 [node name="ShopSynchronizerComponent" parent="." instance=ExtResource("7_b43t0")]
 
