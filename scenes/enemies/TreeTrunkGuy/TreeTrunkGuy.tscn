@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://d4b7x1k03s5hr"]
+[gd_scene load_steps=31 format=3 uid="uid://d4b7x1k03s5hr"]
 
 [ext_resource type="Script" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.gd" id="1_j7ilt"]
 [ext_resource type="Texture2D" uid="uid://ddw7gwukhi221" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy.png" id="2_2joj6"]
@@ -8,31 +8,24 @@
 [ext_resource type="Texture2D" uid="uid://jyq083k5md5j" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy_backgroundhand.png" id="4_agvxr"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_ybnvc"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="5_5ijne"]
+[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="5_75v1y"]
 [ext_resource type="Texture2D" uid="uid://bysutqfdau0dj" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy_backgroundleg.png" id="5_fywxg"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="5_ghg40"]
-[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="5_rx0wa"]
 [ext_resource type="Texture2D" uid="uid://cxxrxuta8os57" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy_foregroundhand.png" id="6_37oon"]
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_npcmk"]
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="6_pi68j"]
 [ext_resource type="Texture2D" uid="uid://dht8y8635wy5o" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy_foregroundleg.png" id="7_7d51h"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="7_so3fl"]
 [ext_resource type="Texture2D" uid="uid://b6k68irc0gh3s" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy_torso.png" id="8_31yn2"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="8_vt6nj"]
 [ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="10_2fx0n"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="11_8dyih"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="12_q5ghj"]
-[ext_resource type="PackedScene" uid="uid://dbllgq1k86dyd" path="res://scenes/enemies/common/ai/sequences/death_sequence/DeathSequence.tscn" id="13_rphmn"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="14_1oqp7"]
-[ext_resource type="PackedScene" uid="uid://b4h6plpm1hoii" path="res://scenes/enemies/common/ai/conditionals/is_in_combat/IsInCombat.tscn" id="15_4qoax"]
-[ext_resource type="PackedScene" uid="uid://c4ss75lmmvkoi" path="res://scenes/enemies/common/ai/sequences/attack_sequence/AttackSequence.tscn" id="16_va72r"]
-[ext_resource type="PackedScene" uid="uid://c32syir0x72av" path="res://scenes/enemies/common/ai/sequences/pursuit_sequence/PursuitSequence.tscn" id="17_2cn8w"]
-[ext_resource type="PackedScene" uid="uid://dk8p2emk8wofb" path="res://scenes/enemies/common/ai/sequences/wander_sequence/WanderSequence.tscn" id="17_i8kes"]
-[ext_resource type="PackedScene" uid="uid://bho6r0fx8owhk" path="res://scenes/enemies/common/ai/sequences/idle_sequence/IdleSequence.tscn" id="18_2p2tr"]
-[ext_resource type="PackedScene" uid="uid://ditk3sn70usrs" path="res://scenes/enemies/common/ai/sequences/leash_sequence/LeashSequence.tscn" id="18_qro3p"]
+[ext_resource type="PackedScene" uid="uid://clyv1sf3bn5g0" path="res://scenes/enemies/common/ai/selectors/aggressive_mob/AggressiveMob.tscn" id="12_njkv6"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="21_v4d8y"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6b05c"]
 radius = 24.0
-height = 112.0
+height = 95.0
 
 [sub_resource type="Animation" id="Animation_wkh27"]
 resource_name = "Die"
@@ -805,15 +798,19 @@ attack_power_min = 10
 attack_power_max = 15
 movement_speed = 200.0
 
+[node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_75v1y")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
 [node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_pi68j")]
 stats = NodePath("../StatsSynchronizerComponent")
 
 [node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_npcmk")]
 stats = NodePath("../StatsSynchronizerComponent")
 
-[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("5_rx0wa")]
-watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "action_synchronizer") instance=ExtResource("8_vt6nj")]
 animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
 
 [node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("7_so3fl")]
 skeleton = NodePath("../Skeleton")
@@ -915,10 +912,12 @@ libraries = {
 }
 
 [node name="AvoidanceRays" parent="." instance=ExtResource("10_2fx0n")]
+position = Vector2(0, -45)
+ray_magnitude = 75
 
 [node name="StuckTimer" type="Timer" parent="."]
 process_callback = 0
-wait_time = 0.5
+wait_time = 0.15
 one_shot = true
 
 [node name="AggroRadius" type="Area2D" parent="."]
@@ -936,34 +935,8 @@ enabled = false
 actor_node_path = NodePath("..")
 blackboard = NodePath("../Blackboard")
 
-[node name="WhatAmIDoingWithMyLife" type="Node" parent="BeehaveTree"]
-script = ExtResource("12_q5ghj")
-
-[node name="DeathSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife" instance=ExtResource("13_rphmn")]
-
-[node name="CombatSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
-script = ExtResource("14_1oqp7")
-
-[node name="IsInCombat" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" node_paths=PackedStringArray("aggro_radius") instance=ExtResource("15_4qoax")]
-aggro_radius = NodePath("../../../../AggroRadius")
-should_leash = true
-leash_distance = 450.0
-
-[node name="AggrodSelector" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence"]
-script = ExtResource("12_q5ghj")
-
-[node name="AttackSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence/AggrodSelector" instance=ExtResource("16_va72r")]
-
-[node name="PursuitSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence/AggrodSelector" instance=ExtResource("17_2cn8w")]
-
-[node name="LeashSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife" instance=ExtResource("18_qro3p")]
-
-[node name="WanderThenIdleSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
-script = ExtResource("14_1oqp7")
-
-[node name="WanderSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdleSequence" instance=ExtResource("17_i8kes")]
-
-[node name="IdleSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdleSequence" instance=ExtResource("18_2p2tr")]
+[node name="AggressiveMob" parent="BeehaveTree" node_paths=PackedStringArray("aggro_radius") instance=ExtResource("12_njkv6")]
+aggro_radius = NodePath("../../AggroRadius")
 
 [node name="Blackboard" type="Node" parent="."]
 script = ExtResource("21_v4d8y")

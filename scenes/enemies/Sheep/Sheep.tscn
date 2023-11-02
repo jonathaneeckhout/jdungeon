@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://dfq5lb87meq6q"]
+[gd_scene load_steps=23 format=3 uid="uid://dfq5lb87meq6q"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Sheep/Sheep.gd" id="1_6p7b5"]
 [ext_resource type="Texture2D" uid="uid://dvpbmkvp7ppqm" path="res://assets/images/enemies/sheep/sheep.png" id="2_57cp7"]
@@ -8,18 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="5_derlk"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="5_ho1ox"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="5_juh1b"]
-[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="5_r87bb"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="5_yme22"]
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_mmahp"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="7_aau1x"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="7_bkydl"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="7_hnfbx"]
-[ext_resource type="PackedScene" uid="uid://dbllgq1k86dyd" path="res://scenes/enemies/common/ai/sequences/death_sequence/DeathSequence.tscn" id="8_c8mlh"]
-[ext_resource type="PackedScene" uid="uid://dk8p2emk8wofb" path="res://scenes/enemies/common/ai/sequences/wander_sequence/WanderSequence.tscn" id="8_eh1yg"]
-[ext_resource type="PackedScene" uid="uid://b4h6plpm1hoii" path="res://scenes/enemies/common/ai/conditionals/is_in_combat/IsInCombat.tscn" id="9_6wbxk"]
-[ext_resource type="PackedScene" uid="uid://bho6r0fx8owhk" path="res://scenes/enemies/common/ai/sequences/idle_sequence/IdleSequence.tscn" id="9_51l4p"]
+[ext_resource type="PackedScene" uid="uid://ct1h0eeeyfurc" path="res://scenes/enemies/common/ai/selectors/passive_critter/PassiveCritter.tscn" id="7_lpvxr"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="8_wd6jv"]
 [ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="11_nla65"]
-[ext_resource type="PackedScene" uid="uid://m6q3h1qhesne" path="res://scenes/enemies/common/ai/sequences/flee_sequence/FleeSequence.tscn" id="11_qdpx0"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_oa8ou"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_orhwg"]
@@ -120,8 +114,47 @@ tracks/2/keys = {
 "values": [Vector2(0, -2.38419e-07), Vector2(1, 2), Vector2(2, -1), Vector2(-1, 2), Vector2(2, -2), Vector2(0, -2.38419e-07)]
 }
 
-[sub_resource type="Animation" id="Animation_8frmy"]
+[sub_resource type="Animation" id="Animation_uriyb"]
 resource_name = "Idle"
+length = 0.5
+loop_mode = 1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.1, 0.1)]
+}
 
 [sub_resource type="Animation" id="Animation_m0sor"]
 resource_name = "Move"
@@ -194,7 +227,7 @@ tracks/3/keys = {
 _data = {
 "Die": SubResource("Animation_itymv"),
 "Hurt": SubResource("Animation_7s7yl"),
-"Idle": SubResource("Animation_8frmy"),
+"Idle": SubResource("Animation_uriyb"),
 "Move": SubResource("Animation_m0sor"),
 "RESET": SubResource("Animation_mj6pj")
 }
@@ -204,7 +237,6 @@ scale = Vector2(0.8, 0.8)
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_6p7b5")
-should_respawn = true
 
 [node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("2_nxh3l")]
 
@@ -226,9 +258,9 @@ stats = NodePath("../StatsSynchronizerComponent")
 [node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("7_aau1x")]
 skeleton = NodePath("../Sprite2D")
 
-[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("5_r87bb")]
-watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats") instance=ExtResource("8_wd6jv")]
 animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
 
 [node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("5_juh1b")]
 stats_synchronizer = NodePath("../StatsSynchronizerComponent")
@@ -247,12 +279,13 @@ shape = SubResource("CapsuleShape2D_orhwg")
 libraries = {
 "": SubResource("AnimationLibrary_ynm2p")
 }
+blend_times = [&"Move", &"Idle", 0.5]
 
 [node name="AvoidanceRays" parent="." instance=ExtResource("11_nla65")]
 
 [node name="StuckTimer" type="Timer" parent="."]
 process_callback = 0
-wait_time = 0.5
+wait_time = 0.25
 one_shot = true
 
 [node name="Blackboard" type="Node" parent="."]
@@ -264,21 +297,4 @@ enabled = false
 actor_node_path = NodePath("..")
 blackboard = NodePath("../Blackboard")
 
-[node name="WhatAmIDoingWithMyLife" type="Node" parent="BeehaveTree"]
-script = ExtResource("7_hnfbx")
-
-[node name="DeathSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife" instance=ExtResource("8_c8mlh")]
-
-[node name="CombatSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
-script = ExtResource("7_bkydl")
-
-[node name="IsInCombat" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" instance=ExtResource("9_6wbxk")]
-
-[node name="FleeSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" instance=ExtResource("11_qdpx0")]
-
-[node name="WanderThenIdle" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
-script = ExtResource("7_bkydl")
-
-[node name="WanderSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdle" instance=ExtResource("8_eh1yg")]
-
-[node name="IdleSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdle" instance=ExtResource("9_51l4p")]
+[node name="FleeingCritter" parent="BeehaveTree" instance=ExtResource("7_lpvxr")]

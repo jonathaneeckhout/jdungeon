@@ -38,10 +38,12 @@ func register_enemies():
 	J.register_enemy_scene("Sheep", "res://scenes/enemies/Sheep/Sheep.tscn")
 	J.register_enemy_scene("TreeTrunkGuy", "res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn")
 	J.register_enemy_scene("MoldedDruvar", "res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn")
+	J.register_enemy_scene("ClamDog", "res://scenes/enemies/ClamDog/ClamDog.tscn")
 
 
 func register_npcs():
 	J.register_npc_scene("MilkLady", "res://scenes/npcs/milklady/Milklady.tscn")
+	J.register_npc_scene("Turtur", "res://scenes/npcs/turtur/Turtur.tscn")
 
 
 func register_items():
@@ -128,6 +130,9 @@ func _on_run_as_server_pressed():
 		J.logger.error("Failed to start server, quitting")
 		get_tree().quit()
 		return
+
+	if J.global.env_minimize_server_on_start:
+		get_tree().root.mode = Window.MODE_MINIMIZED
 
 
 func _on_run_as_client_pressed():

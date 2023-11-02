@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://drmaubupv57n1"]
+[gd_scene load_steps=30 format=3 uid="uid://drmaubupv57n1"]
 
 [ext_resource type="Script" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.gd" id="1_ba1y1"]
 [ext_resource type="Texture2D" uid="uid://dqwsc70v1poc8" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_backhand.png" id="1_fnuxl"]
@@ -9,24 +9,17 @@
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_q10uy"]
 [ext_resource type="Texture2D" uid="uid://dexspslu6tit4" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_trunk.png" id="4_uuhj7"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="5_305lq"]
+[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="5_aextl"]
 [ext_resource type="Texture2D" uid="uid://dfgac1m50tnbp" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_Head.png" id="5_af0rv"]
-[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="5_r0u52"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="5_y1ndl"]
 [ext_resource type="Texture2D" uid="uid://dgaxltrsj2mbj" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_tophand.png" id="6_ajo5s"]
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_lms8h"]
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="6_vd6gg"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="7_lx7n7"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="8_7r242"]
 [ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="9_whu8q"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="10_xhds1"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="11_hywmq"]
-[ext_resource type="PackedScene" uid="uid://dbllgq1k86dyd" path="res://scenes/enemies/common/ai/sequences/death_sequence/DeathSequence.tscn" id="12_8aom2"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="13_a7ko2"]
-[ext_resource type="PackedScene" uid="uid://b4h6plpm1hoii" path="res://scenes/enemies/common/ai/conditionals/is_in_combat/IsInCombat.tscn" id="14_0ay2y"]
-[ext_resource type="PackedScene" uid="uid://c4ss75lmmvkoi" path="res://scenes/enemies/common/ai/sequences/attack_sequence/AttackSequence.tscn" id="15_xroah"]
-[ext_resource type="PackedScene" uid="uid://c32syir0x72av" path="res://scenes/enemies/common/ai/sequences/pursuit_sequence/PursuitSequence.tscn" id="16_ro5io"]
-[ext_resource type="PackedScene" uid="uid://ditk3sn70usrs" path="res://scenes/enemies/common/ai/sequences/leash_sequence/LeashSequence.tscn" id="17_k4dru"]
-[ext_resource type="PackedScene" uid="uid://dk8p2emk8wofb" path="res://scenes/enemies/common/ai/sequences/wander_sequence/WanderSequence.tscn" id="18_3opgl"]
-[ext_resource type="PackedScene" uid="uid://bho6r0fx8owhk" path="res://scenes/enemies/common/ai/sequences/idle_sequence/IdleSequence.tscn" id="19_p33m3"]
+[ext_resource type="PackedScene" uid="uid://clyv1sf3bn5g0" path="res://scenes/enemies/common/ai/selectors/aggressive_mob/AggressiveMob.tscn" id="11_l62gi"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="20_vnsr5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_n3uon"]
@@ -804,15 +797,19 @@ attack_speed = 2.0
 defense = 8
 movement_speed = 75.0
 
+[node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_aextl")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
 [node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_vd6gg")]
 stats = NodePath("../StatsSynchronizerComponent")
 
 [node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_lms8h")]
 stats = NodePath("../StatsSynchronizerComponent")
 
-[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("5_r0u52")]
-watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "action_synchronizer") instance=ExtResource("8_7r242")]
 animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
 
 [node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("7_lx7n7")]
 skeleton = NodePath("../Skeleton")
@@ -903,34 +900,8 @@ script = ExtResource("10_xhds1")
 enabled = false
 actor_node_path = NodePath("..")
 
-[node name="WhatAmIDoingWithMyLife" type="Node" parent="BeehaveTree"]
-script = ExtResource("11_hywmq")
-
-[node name="DeathSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife" instance=ExtResource("12_8aom2")]
-
-[node name="CombatSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
-script = ExtResource("13_a7ko2")
-
-[node name="IsInCombat" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence" node_paths=PackedStringArray("aggro_radius") instance=ExtResource("14_0ay2y")]
-aggro_radius = NodePath("../../../../AggroRadius")
-should_leash = true
-leash_distance = 450.0
-
-[node name="AggrodSelector" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence"]
-script = ExtResource("11_hywmq")
-
-[node name="AttackSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence/AggrodSelector" instance=ExtResource("15_xroah")]
-
-[node name="PursuitSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/CombatSequence/AggrodSelector" instance=ExtResource("16_ro5io")]
-
-[node name="LeashSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife" instance=ExtResource("17_k4dru")]
-
-[node name="WanderThenIdleSequence" type="Node" parent="BeehaveTree/WhatAmIDoingWithMyLife"]
-script = ExtResource("13_a7ko2")
-
-[node name="WanderSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdleSequence" instance=ExtResource("18_3opgl")]
-
-[node name="IdleSequence" parent="BeehaveTree/WhatAmIDoingWithMyLife/WanderThenIdleSequence" instance=ExtResource("19_p33m3")]
+[node name="AggressiveMob" parent="BeehaveTree" node_paths=PackedStringArray("aggro_radius") instance=ExtResource("11_l62gi")]
+aggro_radius = NodePath("../../AggroRadius")
 
 [node name="Blackboard" type="Node" parent="."]
 script = ExtResource("20_vnsr5")

@@ -21,12 +21,12 @@ func tick(actor: Node, blackboard: Blackboard):
 				spawn_position.y * randf_range(0.85, 1.15)
 			)
 		else:
-			wander_destination = _random_point_within_radius(spawn_position, wander_radius)
+			wander_destination = _make_rand_vector(spawn_position, wander_radius)
 		blackboard.set_value("destination_global_position", wander_destination)
 	return SUCCESS
 
 
-func _random_point_within_radius(origin: Vector2, distance: float) -> Vector2:
+func _make_rand_vector(origin: Vector2, distance: float) -> Vector2:
 	return Vector2(
 		float(randi_range(origin.x - distance, origin.x + distance)),
 		float(randi_range(origin.y - distance, origin.y + distance))

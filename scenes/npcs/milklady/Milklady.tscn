@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dj1mpx8a8yeko"]
+[gd_scene load_steps=23 format=3 uid="uid://dj1mpx8a8yeko"]
 
 [ext_resource type="Script" path="res://scenes/npcs/milklady/Milklady.gd" id="1_i2k6g"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_444i3"]
@@ -9,11 +9,13 @@
 [ext_resource type="Texture2D" uid="uid://sqhyjw8sxa2g" path="res://assets/images/npcs/milklady/milklady_head.png" id="4_0w10x"]
 [ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://scripts/components/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="4_jq4vr"]
 [ext_resource type="Texture2D" uid="uid://dc103ysnnxwm6" path="res://assets/images/npcs/milklady/milklady_left_arm.png" id="5_1mf1y"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="6_7nn8c"]
 [ext_resource type="Texture2D" uid="uid://6ok6m1nqugg4" path="res://assets/images/npcs/milklady/milklady_left_foot.png" id="6_ba0nm"]
-[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="6_fddr0"]
 [ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://scripts/components/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="7_b43t0"]
 [ext_resource type="Texture2D" uid="uid://bvhajaa34ilol" path="res://assets/images/npcs/milklady/milklady_right_arm.png" id="7_f60ad"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="7_kfsbv"]
 [ext_resource type="Texture2D" uid="uid://dlyuyp8sjr4qj" path="res://assets/images/npcs/milklady/milklady_right_foot.png" id="8_xp8pl"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="9_3kap7"]
 [ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="11_y6h07"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6kb0l"]
@@ -485,18 +487,25 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 movement_speed = 125.0
 
-[node name="WanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component", "avoidance_rays_component", "animation_synchronizer") instance=ExtResource("4_jq4vr")]
+[node name="WanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component", "avoidance_rays_component") instance=ExtResource("4_jq4vr")]
 stats_component = NodePath("../StatsSynchronizerComponent")
 avoidance_rays_component = NodePath("../AvoidanceRaysComponent")
-animation_synchronizer = NodePath("../AnimationSynchronizerComponent")
+
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("6_7nn8c")]
+skeleton = NodePath("../Skeleton")
 
 [node name="AvoidanceRaysComponent" parent="." instance=ExtResource("11_y6h07")]
 
-[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("6_fddr0")]
-watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats") instance=ExtResource("7_kfsbv")]
 animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
 
 [node name="ShopSynchronizerComponent" parent="." instance=ExtResource("7_b43t0")]
+
+[node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("9_3kap7")]
+offset_top = -90.0
+offset_bottom = -50.0
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(8, -43)
@@ -512,31 +521,37 @@ texture = ExtResource("2_yblp5")
 
 [node name="MilkladyRightArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(-60, -410)
+scale = Vector2(1, 1)
 texture = ExtResource("7_f60ad")
 offset = Vector2(137, -61.5)
 
 [node name="MilkladyBody" type="Sprite2D" parent="Sprites"]
 position = Vector2(30, -200)
+scale = Vector2(1, 1)
 texture = ExtResource("3_cyqqs")
 offset = Vector2(47.0001, -271.5)
 
 [node name="MilkladyHead" type="Sprite2D" parent="Sprites"]
 position = Vector2(0, -430)
+scale = Vector2(1, 1)
 texture = ExtResource("4_0w10x")
 offset = Vector2(77.0001, -41.5)
 
 [node name="MilkladyRightFoot" type="Sprite2D" parent="Sprites"]
 position = Vector2(-30, -20)
+scale = Vector2(1, 1)
 texture = ExtResource("8_xp8pl")
 offset = Vector2(107, -451.5)
 
 [node name="MilkladyLeftFoot" type="Sprite2D" parent="Sprites"]
 position = Vector2(220, -20)
+scale = Vector2(1, 1)
 texture = ExtResource("6_ba0nm")
 offset = Vector2(-133, -451.5)
 
 [node name="MilkladyLeftArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(170, -390)
+scale = Vector2(1, 1)
 texture = ExtResource("5_1mf1y")
 offset = Vector2(-92.9999, -101.5)
 
