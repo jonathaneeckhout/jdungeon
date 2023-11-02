@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=15 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://scenes/world/World.gd" id="1_3w1ia"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="2_fjr74"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="5_0b0pa"]
 [ext_resource type="PackedScene" uid="uid://drmaubupv57n1" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn" id="7_4j64e"]
 [ext_resource type="PackedScene" uid="uid://bija15ujapx3h" path="res://scenes/terrain/areas/wakingforest/WakingForest.tscn" id="7_oodd1"]
+[ext_resource type="PackedScene" uid="uid://pp0i54sl5web" path="res://scenes/enemies/ClamDog/ClamDog.tscn" id="8_iuiyn"]
 [ext_resource type="PackedScene" uid="uid://cpw0d00b7prm0" path="res://scenes/terrain/areas/harbor/harbor.tscn" id="9_70hw5"]
 [ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="9_g1yks"]
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_7jhmb"]
@@ -36,6 +37,7 @@ visible = false
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Enemies" type="Node2D" parent="Entities"]
+position = Vector2(472, -128)
 
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-1894, 844)
@@ -120,6 +122,21 @@ position = Vector2(-1176, 146)
 
 [node name="MoldedDruvar" parent="Entities/Enemies" instance=ExtResource("7_4j64e")]
 position = Vector2(-3888, 232)
+
+[node name="ClamDog" parent="Entities/Enemies" instance=ExtResource("8_iuiyn")]
+position = Vector2(-3560, 3336)
+
+[node name="ClamDog2" parent="Entities/Enemies" instance=ExtResource("8_iuiyn")]
+position = Vector2(-2816, 3352)
+
+[node name="ClamDog3" parent="Entities/Enemies" instance=ExtResource("8_iuiyn")]
+position = Vector2(-3912, 3856)
+
+[node name="ClamDog4" parent="Entities/Enemies" instance=ExtResource("8_iuiyn")]
+position = Vector2(-5272, 4032)
+
+[node name="ClamDog5" parent="Entities/Enemies" instance=ExtResource("8_iuiyn")]
+position = Vector2(-6096, 4344)
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 
