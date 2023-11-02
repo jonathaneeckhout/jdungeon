@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://drmaubupv57n1"]
+[gd_scene load_steps=29 format=3 uid="uid://drmaubupv57n1"]
 
 [ext_resource type="Script" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.gd" id="1_ba1y1"]
 [ext_resource type="Texture2D" uid="uid://dqwsc70v1poc8" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_backhand.png" id="1_fnuxl"]

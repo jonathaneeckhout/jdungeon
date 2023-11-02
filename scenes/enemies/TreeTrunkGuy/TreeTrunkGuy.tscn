@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://d4b7x1k03s5hr"]
+[gd_scene load_steps=30 format=3 uid="uid://d4b7x1k03s5hr"]
 
 [ext_resource type="Script" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.gd" id="1_j7ilt"]
 [ext_resource type="Texture2D" uid="uid://ddw7gwukhi221" path="res://assets/images/enemies/treetrunkguy/Treetrunkguy.png" id="2_2joj6"]
