@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://dfq5lb87meq6q"]
+[gd_scene load_steps=23 format=3 uid="uid://dfq5lb87meq6q"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Sheep/Sheep.gd" id="1_6p7b5"]
 [ext_resource type="Texture2D" uid="uid://dvpbmkvp7ppqm" path="res://assets/images/enemies/sheep/sheep.png" id="2_57cp7"]
@@ -8,12 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="5_derlk"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="5_ho1ox"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="5_juh1b"]
-[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="5_r87bb"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="5_yme22"]
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_mmahp"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="7_aau1x"]
 [ext_resource type="PackedScene" uid="uid://ct1h0eeeyfurc" path="res://scenes/enemies/common/ai/selectors/passive_critter/PassiveCritter.tscn" id="7_lpvxr"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/avoidance_rays/AvoidanceRays.tscn" id="11_nla65"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="8_wd6jv"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="11_nla65"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_oa8ou"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_orhwg"]
@@ -237,7 +237,6 @@ scale = Vector2(0.8, 0.8)
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_6p7b5")
-should_respawn = true
 
 [node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("2_nxh3l")]
 
@@ -259,9 +258,9 @@ stats = NodePath("../StatsSynchronizerComponent")
 [node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("7_aau1x")]
 skeleton = NodePath("../Sprite2D")
 
-[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("5_r87bb")]
-watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats") instance=ExtResource("8_wd6jv")]
 animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
 
 [node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("5_juh1b")]
 stats_synchronizer = NodePath("../StatsSynchronizerComponent")
