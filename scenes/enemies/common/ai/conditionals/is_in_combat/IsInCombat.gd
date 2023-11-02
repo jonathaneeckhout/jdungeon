@@ -52,18 +52,6 @@ func tick(actor: Node, blackboard: Blackboard):
 	return FAILURE
 
 
-func _set_default_aggro_radius(actor: Node) -> void:
-	aggro_radius = Area2D.new()
-	var shape = CircleShape2D.new()
-	shape.radius = 200.0
-	var collision_shape = CollisionShape2D.new()
-	collision_shape.shape = shape
-	aggro_radius.add_child(collision_shape)
-	aggro_radius.collision_layer = 0
-	aggro_radius.collision_mask = 2
-	actor.add_child(aggro_radius)
-
-
 func _on_body_entered(body: Node2D):
 	if target == null and body.get("entity_type") == targetable_entity_type:
 		start_combat = true
