@@ -40,61 +40,61 @@ visible = false
 position = Vector2(472, -128)
 
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-1894, 844)
+position = Vector2(-2006, 948)
 
 [node name="TreeTrunkGuy2" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-2669, 42)
+position = Vector2(-2552, 107)
 
 [node name="TreeTrunkGuy3" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-3439, 870)
+position = Vector2(-3511, 1070)
 
 [node name="TreeTrunkGuy8" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-2713, 1314)
+position = Vector2(-2717, 1456)
 
 [node name="TreeTrunkGuy9" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-4428, 1212)
+position = Vector2(-4344, 1312)
 
 [node name="TreeTrunkGuy18" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-4590, 394)
+position = Vector2(-4545, 416)
 
 [node name="TreeTrunkGuy19" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-4098, -1332)
+position = Vector2(-4085, -1271)
 
 [node name="TreeTrunkGuy20" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-2870, -499)
+position = Vector2(-3124, -609)
 
 [node name="TreeTrunkGuy10" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-5580, 1135)
+position = Vector2(-5516, 1115)
 
 [node name="TreeTrunkGuy11" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-5160, 229)
+position = Vector2(-5244, 255)
 
 [node name="TreeTrunkGuy13" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-5644, -639)
 
 [node name="TreeTrunkGuy14" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-5015, -1210)
+position = Vector2(-4929, -1000)
 
 [node name="TreeTrunkGuy15" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-4900, -313)
+position = Vector2(-5050, -397)
 
 [node name="TreeTrunkGuy16" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-4382, -816)
+position = Vector2(-4537, -827)
 
 [node name="TreeTrunkGuy17" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-3405, -1229)
+position = Vector2(-3335, -1180)
 
 [node name="TreeTrunkGuy12" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-5173, 768)
+position = Vector2(-5229, 738)
 
 [node name="TreeTrunkGuy4" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-2178, -701)
+position = Vector2(-2074, -657)
 
 [node name="TreeTrunkGuy6" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-1882, -1198)
+position = Vector2(-1903, -1113)
 
 [node name="TreeTrunkGuy7" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
-position = Vector2(-2438, -1397)
+position = Vector2(-2364, -1316)
 
 [node name="Sheep6" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1099, -418)
