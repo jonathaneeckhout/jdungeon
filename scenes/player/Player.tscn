@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=39 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/images/player/base/Basecharacter.png" id="2_j04kt"]
@@ -13,9 +13,10 @@
 [ext_resource type="PackedScene" uid="uid://1dsekcllclva" path="res://scripts/components/playerbehaviorcomponent/PlayerBehaviorComponent.tscn" id="6_xf4id"]
 [ext_resource type="Texture2D" uid="uid://dhpyicp5pnbh7" path="res://assets/images/player/base/base_head.png" id="7_mfldg"]
 [ext_resource type="Texture2D" uid="uid://b38ld53gomnkq" path="res://assets/images/player/base/base_fronthand.png" id="8_1uo8h"]
-[ext_resource type="PackedScene" uid="uid://bo2y25xscje6x" path="res://scripts/components/animationsynchronizercomponent/AnimationSynchronizerComponent.tscn" id="8_gf6y5"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="9_5pqlh"]
+[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="9_s3vs1"]
 [ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://scripts/components/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="10_6gj4a"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="11_2wc1v"]
 [ext_resource type="PackedScene" uid="uid://cka62nlyw5gm5" path="res://scripts/components/equipmentsynchronizercomponent/EquipmentSynchronizerComponent.tscn" id="12_5ivre"]
 [ext_resource type="PackedScene" uid="uid://uord7b0pb5jt" path="res://scenes/player/inventory/Inventory.tscn" id="12_cqvu1"]
 [ext_resource type="PackedScene" uid="uid://dy1r3n0fpuneq" path="res://scenes/player/shop/Shop.tscn" id="12_macoo"]
@@ -905,17 +906,21 @@ attack_power_min = 1
 
 [node name="InputSynchronizerComponent" parent="." instance=ExtResource("3_07d0t")]
 
-[node name="PlayerBehaviorComponent" parent="." node_paths=PackedStringArray("input_synchronizer", "stats_component", "animation_synchronizer") instance=ExtResource("6_xf4id")]
+[node name="PlayerBehaviorComponent" parent="." node_paths=PackedStringArray("input_synchronizer", "stats_component", "action_synchronizer") instance=ExtResource("6_xf4id")]
 input_synchronizer = NodePath("../InputSynchronizerComponent")
 stats_component = NodePath("../StatsSynchronizerComponent")
-animation_synchronizer = NodePath("../AnimationSynchronizerComponent")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
 
-[node name="AnimationSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "animation_player") instance=ExtResource("8_gf6y5")]
+[node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("9_s3vs1")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
-animation_player = NodePath("../AnimationPlayer")
 
 [node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("9_5pqlh")]
 skeleton = NodePath("../Skeleton")
+
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "action_synchronizer") instance=ExtResource("11_2wc1v")]
+animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
 
 [node name="InventorySynchronizerComponent" parent="." instance=ExtResource("10_6gj4a")]
 

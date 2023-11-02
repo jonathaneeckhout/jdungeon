@@ -6,7 +6,7 @@ enum INTERACT_TYPE { ENEMY, NPC, ITEM }
 
 @export var input_synchronizer: InputSynchronizerComponent
 @export var stats_component: StatsSynchronizerComponent
-@export var animation_synchronizer: AnimationSynchronizerComponent
+@export var action_synchronizer: ActionSynchronizerComponent
 
 var target_node: Node
 
@@ -131,8 +131,6 @@ func behavior(_delta: float):
 			target_node.velocity = (
 				target_node.position.direction_to(move_target) * stats_component.movement_speed
 			)
-			if animation_synchronizer:
-				animation_synchronizer.send_new_loop_animation("Move")
 		else:
 			moving = false
 			target_node.velocity = Vector2.ZERO
@@ -152,8 +150,6 @@ func behavior(_delta: float):
 						target_node.position.direction_to(interact_target.position)
 						* stats_component.movement_speed
 					)
-					if animation_synchronizer:
-						animation_synchronizer.send_new_loop_animation("Move")
 				else:
 					target_node.velocity = Vector2.ZERO
 
@@ -167,8 +163,6 @@ func behavior(_delta: float):
 						target_node.position.direction_to(interact_target.position)
 						* stats_component.movement_speed
 					)
-					if animation_synchronizer:
-						animation_synchronizer.send_new_loop_animation("Move")
 				else:
 					target_node.velocity = Vector2.ZERO
 					interact_target.interact(target_node)
@@ -180,17 +174,11 @@ func behavior(_delta: float):
 						target_node.position.direction_to(interact_target.position)
 						* stats_component.movement_speed
 					)
-					if animation_synchronizer:
-						animation_synchronizer.send_new_loop_animation("Move")
 				else:
 					target_node.velocity = Vector2.ZERO
 					interact_target.loot(target_node)
 					interacting = false
 					interact_target = null
-
-	else:
-		if animation_synchronizer:
-			animation_synchronizer.send_new_loop_animation("Idle")
 
 
 func attack(target: CharacterBody2D):
@@ -198,9 +186,8 @@ func attack(target: CharacterBody2D):
 
 	if target.get("stats"):
 		target.stats.hurt(target_node.name, damage)
-
-	if animation_synchronizer:
-		animation_synchronizer.send_new_action_animation("Attack")
+		if action_synchronizer:
+			action_synchronizer.attack(target_node.name, damage)
 
 
 func _on_attack_area_enemy_entered(body: Node2D):
