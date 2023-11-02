@@ -3,12 +3,8 @@ extends Enemy
 signal destination_reached
 signal stuck
 
-@onready var animation_player = $AnimationPlayer
-@onready var animation_synchronizer: AnimationSynchronizerComponent = $AnimationSynchronizerComponent
-@onready var skeleton = $Skeleton
-@onready var original_scale = $Skeleton.scale
+@onready var action_synchronizer: ActionSynchronizerComponent = $ActionSynchronizerComponent
 @onready var avoidance_rays := $AvoidanceRays
-@onready var floating_text_scene = preload("res://scenes/templates/FloatingText/FloatingText.tscn")
 @onready var destination = self.global_position:
 	set(new_destination):
 		destination = new_destination
@@ -30,8 +26,6 @@ func _ready():
 	if J.is_server():
 		beehave_tree.enabled = true
 		stuck_timer.timeout.connect(_on_stuck_timer_timeout)
-		stats.got_hurt.connect(_on_got_hurt)
-		stats.died.connect(_on_died)
 
 		_add_loot()
 	else:
@@ -57,7 +51,6 @@ func _physics_process(_delta):
 				avoidance_rays.find_avoidant_velocity(stats.movement_speed) * movement_multiplier
 			)
 			move_and_slide()
-			animation_synchronizer.send_new_loop_animation("Move")
 			if get_slide_collision_count() > 0:
 				if stuck_timer.is_stopped():
 					stuck_timer.start()
@@ -67,7 +60,6 @@ func _physics_process(_delta):
 			if enroute_to_destination:
 				enroute_to_destination = false
 				velocity = Vector2.ZERO
-				animation_synchronizer.send_new_loop_animation("Idle")
 				destination_reached.emit()
 
 
@@ -76,19 +68,7 @@ func attack(target: CharacterBody2D):
 
 	if target.get("stats"):
 		target.stats.hurt(name, damage)
-
-	if animation_synchronizer:
-		# TODO: add attack animation
-		animation_synchronizer.send_new_action_animation("Attack")
-
-
-func _on_died():
-	animation_synchronizer.send_new_action_animation("Die")
-
-
-func _on_got_hurt(_from: String, _damage: int):
-	if not stats.is_dead:
-		animation_synchronizer.send_new_action_animation("Hurt")
+		action_synchronizer.attack(target.name, damage)
 
 
 func _on_stuck_timer_timeout():
