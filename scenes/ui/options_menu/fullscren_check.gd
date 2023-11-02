@@ -7,6 +7,7 @@ func _ready() -> void:
 	)
 	toggled.connect(fullscreen_update)
 
+
 func fullscreen_update(full: bool):
 	if full:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)

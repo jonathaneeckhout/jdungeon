@@ -12,9 +12,11 @@ func _ready() -> void:
 	value_changed.connect(shadow_update)
 	shadow_update(value)
 
+
 func display_update(val: float):
 	var quality: int = int(val)
 	textLabel.text = QualityList[quality]
+
 
 func shadow_update(newValue: float):
 	var quality: int = int(newValue)

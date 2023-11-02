@@ -16,9 +16,11 @@ func _ready() -> void:
 	item_selected.connect(vsync_update)
 	display_update(setting)
 
+
 func display_update(id: int):
 	text = str(VSyncSettings[id])
 	selected = id
+
 
 func vsync_update(id: int):
 	DisplayServer.window_set_vsync_mode(id)

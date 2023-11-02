@@ -26,8 +26,10 @@ func _ready() -> void:
 	get_popup().id_pressed.connect(on_id_pressed)
 	display_update(currentLocale)
 
+
 func display_update(locale: String):
 	text = TranslationServer.get_language_name(locale)
+
 
 func on_id_pressed(id: int):
 	currentLocale = localeDict[id]

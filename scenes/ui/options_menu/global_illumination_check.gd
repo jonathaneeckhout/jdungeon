@@ -7,6 +7,7 @@ func _ready() -> void:
 	)
 	toggled.connect(illumination_update)
 
+
 func illumination_update(halved: bool):
 	RenderingServer.gi_set_use_half_resolution(halved)
 	LocalSaveSystem.set_data(

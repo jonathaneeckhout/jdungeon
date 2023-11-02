@@ -11,7 +11,8 @@ func _ready() -> void:
 
 func display_update(val: float):
 	textLabel.text = str(val * 100) + "%"
-	
+
+
 func volume_update(newValue: float):
 	var volume: float = linear_to_db(newValue / max_value)
 

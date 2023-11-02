@@ -18,9 +18,11 @@ func _ready() -> void:
 	item_selected.connect(filter_update)
 	display_update(setting)
 
+
 func display_update(id: int):
 	text = str(FilterSettings[id])
 	selected = id
+
 
 func filter_update(id: int):
 	LocalSaveSystem.set_data(

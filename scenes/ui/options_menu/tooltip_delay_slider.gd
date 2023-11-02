@@ -8,8 +8,10 @@ func _ready() -> void:
 	value_changed.connect(delay_update)
 	display_update(value)
 
+
 func display_update(val: float):
 	textLabel.text = str(val)
+
 
 func delay_update(newValue: float):
 	ProjectSettings.set_setting("gui/timers/tooltip_delay_sec", value)
