@@ -1,9 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://32wm3d3andqy"]
+[gd_scene load_steps=14 format=3 uid="uid://32wm3d3andqy"]
 
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_lryup"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/options_menu.gd" id="2_pbfwl"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/input_remapping.gd" id="2_tjvqb"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/volume_slider.gd" id="3_f1tit"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/language_menu.gd" id="4_7x2u8"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/shadow_quality_slider.gd" id="4_syp6t"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/fullscreen_check.gd" id="5_b4bs5"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/global_illumination_check.gd" id="5_itcgf"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/local_data_folder.gd" id="5_og4gi"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/antialiasing_slider.gd" id="5_x71q0"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/fps_limit_slider.gd" id="6_3j83h"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/vsync_check.gd" id="6_d4fxa"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/colourblindness_filter_option.gd" id="13_xah1x"]
 
 [node name="options_menu" type="Control"]
 editor_description = "Every section should be it's own ScrollContainer"
@@ -27,14 +36,196 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 48
 
-[node name="Button Mapping" type="ScrollContainer" parent="TabContainer"]
+[node name="Game" type="ScrollContainer" parent="TabContainer"]
 layout_mode = 2
 
-[node name="InputRemapping" type="VBoxContainer" parent="TabContainer/Button Mapping"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Game"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("2_tjvqb")
+
+[node name="Language" type="HSplitContainer" parent="TabContainer/Game/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Does not take effect until a restart or change of scene.
+Disclaimer: There is no guarantee of official support of other languages. 
+You may add your own .translation file in the User Data/translations folder"
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Game/VBoxContainer/Language"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Language"
+
+[node name="LangMenu" type="MenuButton" parent="TabContainer/Game/VBoxContainer/Language"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_lryup")
+text = "Select..."
+script = ExtResource("4_7x2u8")
+
+[node name="LocalDataFolder" type="HSplitContainer" parent="TabContainer/Game/VBoxContainer"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Game/VBoxContainer/LocalDataFolder"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Open Local Data Folder"
+
+[node name="OpenFolder" type="Button" parent="TabContainer/Game/VBoxContainer/LocalDataFolder"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "OPEN"
+script = ExtResource("5_og4gi")
+
+[node name="Graphics" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Graphics"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Fullscreen" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Sets how high the FPS can go. Lower values can reduce power consumption and heat.
+While VSync is active, this value has no effect if it is above the monitor's refresh rate."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/Fullscreen"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Fullscreen"
+
+[node name="Check" type="CheckBox" parent="TabContainer/Graphics/VBoxContainer/Fullscreen"]
+layout_mode = 2
+size_flags_horizontal = 2
+script = ExtResource("5_b4bs5")
+
+[node name="Maximum FPS" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Sets how high the FPS can go. Lower values can reduce power consumption and heat.
+While VSync is active, this value has no effect if it is above the monitor's refresh rate."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/Maximum FPS"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "FPS Limit"
+
+[node name="HSlider2" type="HSlider" parent="TabContainer/Graphics/VBoxContainer/Maximum FPS"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 20.0
+max_value = 245.0
+step = 5.0
+value = 20.0
+rounded = true
+script = ExtResource("6_3j83h")
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/Maximum FPS/HSlider2"]
+layout_mode = 1
+anchors_preset = -1
+offset_right = 1.0
+offset_bottom = 42.0
+grow_horizontal = 0
+
+[node name="VSync" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Disabled: Display frames as fast as possible. 
+The most performant, but may cause tearing.
+
+Enabled: Limits FPS to the monitor's refresh rate. 
+Prevents tearing.
+
+Adaptive: Same as enabled. 
+But it will automatically disable VSync while the FPS are below the monitor's refresh rate.
+Minimizes the impact on performance. 
+(Not compatible with OpenGL3/Compatibility mode rendering, it acts like \"Enabled\" instead)
+ 
+Mailbox: Removes tearing with less of an impact on performance than \"Enabled\". 
+While having the same power consumption as \"Disabled\". 
+(Not compatible with OpenGL3/Compatibility mode rendering, it acts like \"Enabled\" instead)"
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/VSync"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VSync"
+
+[node name="HSlider2" type="OptionButton" parent="TabContainer/Graphics/VBoxContainer/VSync"]
+layout_mode = 2
+size_flags_horizontal = 3
+allow_reselect = true
+script = ExtResource("6_d4fxa")
+
+[node name="ShadowQuality" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Resolution and quality of shadows."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/ShadowQuality"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Shadow Quality"
+
+[node name="HSlider2" type="HSlider" parent="TabContainer/Graphics/VBoxContainer/ShadowQuality"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 5.0
+rounded = true
+script = ExtResource("4_syp6t")
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/ShadowQuality/HSlider2"]
+layout_mode = 1
+anchors_preset = -1
+offset_right = 1.0
+offset_bottom = 42.0
+grow_horizontal = 0
+
+[node name="HalfGlobalIllumination" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Renders certain global lights at half the resolution of the game. It has a big performance boost but it may cause visual oddities."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/HalfGlobalIllumination"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Halve Global Illumination Resolution"
+
+[node name="Check" type="CheckBox" parent="TabContainer/Graphics/VBoxContainer/HalfGlobalIllumination"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Enabled"
+script = ExtResource("5_itcgf")
+
+[node name="AntiAliasing" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Smooths edges."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/AntiAliasing"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Anti-aliasing (MSAA)"
+
+[node name="HSlider2" type="HSlider" parent="TabContainer/Graphics/VBoxContainer/AntiAliasing"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 3.0
+rounded = true
+script = ExtResource("5_x71q0")
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBoxContainer/AntiAliasing/HSlider2"]
+layout_mode = 1
+anchors_preset = -1
+offset_right = 1.0
+offset_bottom = 42.0
+grow_horizontal = 0
 
 [node name="Audio" type="ScrollContainer" parent="TabContainer"]
 visible = false
@@ -61,6 +252,46 @@ size_flags_vertical = 1
 max_value = 1.0
 step = 0.01
 script = ExtResource("3_f1tit")
+
+[node name="Label" type="Label" parent="TabContainer/Audio/VBoxContainer/VolumeControl/HSlider"]
+layout_mode = 1
+anchors_preset = -1
+grow_horizontal = 0
+text = "100%"
+
+[node name="Button Mapping" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="InputRemapping" type="VBoxContainer" parent="TabContainer/Button Mapping"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_tjvqb")
+
+[node name="Accessibility" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Accessibility"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorblidnessFilter" type="HSplitContainer" parent="TabContainer/Accessibility/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Swaps colours on-screen to help people with colourblindness to distinguish them more easily."
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="TabContainer/Accessibility/VBoxContainer/ColorblidnessFilter"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Colourblindness Filter"
+
+[node name="HSlider" type="OptionButton" parent="TabContainer/Accessibility/VBoxContainer/ColorblidnessFilter"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("13_xah1x")
 
 [node name="QuitButton" type="Button" parent="."]
 layout_mode = 1

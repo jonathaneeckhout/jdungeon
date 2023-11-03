@@ -31,14 +31,91 @@ func load_local_settings():
 		LocalSaveSystem.save_file()
 	LocalSaveSystem.load_file()
 
-	#Set the volume
+	#Load translations
+	if not DirAccess.dir_exists_absolute("user://translations/"):
+		print_debug(DirAccess.make_dir_absolute("user://translations/"))
+
+	var foundTranslations: Array[String] = []
+
+	for fileName in DirAccess.get_files_at("user://translations/"):
+		if fileName.get_extension() == "translation":
+			foundTranslations.append(fileName.get_basename())
+			TranslationServer.add_translation(load("user://translations/" + fileName))
+
+	if not foundTranslations.is_empty():
+		J.logger.info(
+			"Found {0} translation/s. {1}".format(
+				[foundTranslations.size(), str(foundTranslations)]
+			)
+		)
+
+	#Volume
 	var volume: float = linear_to_db(
-		LocalSaveSystem.get_data(LocalSaveSystem.Sections.SETTINGS, "volume", 1)
+		LocalSaveSystem.get_data(LocalSaveSystem.Sections.SETTINGS, "volume", 1 as float)
 	)
 	AudioServer.set_bus_volume_db(0, volume)
 
+	#Fullscreen
+	var fullScreen: bool = LocalSaveSystem.get_data(
+		LocalSaveSystem.Sections.SETTINGS, "graphics_fullscreen", false
+	)
+	if fullScreen:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+
+	#FPS
+	var fps: int = LocalSaveSystem.get_data(
+		LocalSaveSystem.Sections.SETTINGS, "graphics_fps_limit", 60 as int
+	)
+	Engine.max_fps = fps
+
+	#Shadow quality
+	var shadows: int = LocalSaveSystem.get_data(
+		LocalSaveSystem.Sections.SETTINGS, "graphics_shadow_quality", 2 as int
+	)
+	ProjectSettings.set_setting(
+		"rendering/lights_and_shadows/directional_shadow/size", 1024 * (shadows + 1)
+	)
+	ProjectSettings.set_setting(
+		"rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality",
+		1024 * (shadows + 1)
+	)
+	ProjectSettings.set_setting(
+		"rendering/lights_and_shadows/directional_shadow/soft_shadow_filter_quality", shadows
+	)
+	ProjectSettings.set_setting(
+		"rendering/lights_and_shadows/positional_shadow/soft_shadow_filter_quality", shadows
+	)
+	ProjectSettings.set_setting("rendering/2d/shadow_atlas/size", 512 * (shadows + 1))
+
+	#Half illumination resolution
+	var halfIllumination: bool = LocalSaveSystem.get_data(
+		LocalSaveSystem.Sections.SETTINGS, "graphics_global_illumination_halved", false
+	)
+	RenderingServer.gi_set_use_half_resolution(halfIllumination)
+
+	#Antialiasing
+	var antiAliasing: int = LocalSaveSystem.get_data(
+		LocalSaveSystem.Sections.SETTINGS, "graphics_antialiasing_msaa", 0 as int
+	)
+	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_2d", antiAliasing)
+	ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", antiAliasing)
+
+	#Language
+	var locale: String = LocalSaveSystem.get_data(
+		LocalSaveSystem.Sections.SETTINGS, "language_locale", "en"
+	)
+	TranslationServer.set_locale(locale)
+
+	#VSync
+	var vSync: int = LocalSaveSystem.get_data(
+		LocalSaveSystem.Sections.SETTINGS, "graphics_vsync_mode", 1 as int
+	)
+	DisplayServer.window_set_vsync_mode(vSync)
+
 	#Set controls
 	InputRemapping.load_mappings()
+
+	#The colorblindness filter does not need any specific setters, the filters read directly from the loaded SaveFile.ini
 
 
 func load_common_env_variables() -> bool:

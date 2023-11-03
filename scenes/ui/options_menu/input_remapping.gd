@@ -24,9 +24,7 @@ const Messages: Dictionary = {
 }
 
 @export var actionsAllowed: Array[StringName] = [
-	&"j_toggle_bag",
-	&"j_toggle_equipment",
-	&"j_toggle_stats",
+	&"j_toggle_bag", &"j_toggle_equipment", &"j_toggle_stats", &"j_ui_chat_toggle", &"j_ui_toggle"
 ]
 @export var tempTextDuration: float = 2
 
@@ -110,7 +108,7 @@ func add_remap_node(action: StringName, events: Array[InputEvent]):
 
 	for event in events:
 		var remapButton := Button.new()
-		remapButton.text = event.as_text()
+		remapButton.text = event.as_text().replace(" (Physical)", "")
 		eventContainer.add_child(remapButton)
 
 		remapButton.pressed.connect(on_remap_attempt.bind(action, event, remapButton))
