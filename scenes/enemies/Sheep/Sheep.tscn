@@ -248,6 +248,7 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 hp_max = 20
 hp = 20
 movement_speed = 50.0
+experience_worth = 10
 
 [node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("5_2qlym")]
 stats = NodePath("../StatsSynchronizerComponent")

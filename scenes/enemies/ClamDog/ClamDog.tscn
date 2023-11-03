@@ -917,6 +917,7 @@ hp = 75
 attack_power_min = 10
 attack_power_max = 15
 movement_speed = 200.0
+experience_worth = 40
 
 [node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("5_88wie")]
 stats = NodePath("../StatsSynchronizerComponent")

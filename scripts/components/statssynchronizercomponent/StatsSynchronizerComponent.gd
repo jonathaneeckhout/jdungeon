@@ -115,10 +115,10 @@ signal respawned
 			sync_int_change(TYPE.EXPERIENCE_NEEDED, val)
 
 @export var loot_range: float = 64
+@export var experience_worth: int = 0
 
 var target_node: Node
 var is_dead: bool = false
-var experience_worth: int = 0
 
 var server_buffer: Array[Dictionary] = []
 var ready_done: bool = false
@@ -189,7 +189,7 @@ func check_server_buffer():
 			server_buffer.remove_at(i)
 
 
-func hurt(from: String, damage: int) -> int:
+func hurt(from: Node, damage: int) -> int:
 	# # Reduce the damage according to the defense stat
 	var reduced_damage = max(0, damage - defense)
 
@@ -199,13 +199,15 @@ func hurt(from: String, damage: int) -> int:
 	# # Die if damage is bigger than remaining hp
 	else:
 		hp = 0
+		if experience_worth > 0 and from.get("stats"):
+			from.stats.add_experience(experience_worth)
 
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	for watcher in watcher_synchronizer.watchers:
-		_sync_hurt.rpc_id(watcher.peer_id, timestamp, from, reduced_damage)
+		_sync_hurt.rpc_id(watcher.peer_id, timestamp, from.name, reduced_damage)
 
-	got_hurt.emit(from, reduced_damage)
+	got_hurt.emit(from.name, reduced_damage)
 
 	return reduced_damage
 
@@ -233,6 +235,36 @@ func load_defaults():
 	attack_power_max = _default_attack_power_max
 	defense = _default_defense
 	movement_speed = _default_movement_speed
+
+
+func calculate_experience_needed(current_level: int):
+	# TODO: Replace placeholder function to calculate experience needed to level up
+	return BASE_EXPERIENCE + (BASE_EXPERIENCE * (pow(current_level, 2) - 1))
+
+
+func add_level(amount: int):
+	level += amount
+
+
+func add_experience(amount: int):
+	experience += amount
+
+	while experience >= experience_needed:
+		experience -= experience_needed
+		add_level(1)
+
+
+func apply_boost(boost: Boost):
+	hp_max += boost.hp_max
+	hp += boost.hp
+	attack_power_min += boost.attack_power_min
+	attack_power_max += boost.attack_power_max
+
+	defense += boost.defense
+
+	for watcher in watcher_synchronizer.watchers:
+		var data: Dictionary = to_json(true)
+		sync_response.rpc_id(watcher.peer_id, data)
 
 
 func to_json(full: bool = false) -> Dictionary:
@@ -312,36 +344,6 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 	loaded.emit()
 
 	return true
-
-
-func calculate_experience_needed(current_level: int):
-	# TODO: Replace placeholder function to calculate experience needed to level up
-	return BASE_EXPERIENCE + (BASE_EXPERIENCE * (pow(current_level, 2) - 1))
-
-
-func add_level(amount: int):
-	level += amount
-
-
-func add_experience(amount: int):
-	experience += amount
-
-	while experience >= experience_needed:
-		experience -= experience_needed
-		add_level(1)
-
-
-func apply_boost(boost: Boost):
-	hp_max += boost.hp_max
-	hp += boost.hp
-	attack_power_min += boost.attack_power_min
-	attack_power_max += boost.attack_power_max
-
-	defense += boost.defense
-
-	for watcher in watcher_synchronizer.watchers:
-		var data: Dictionary = to_json(true)
-		sync_response.rpc_id(watcher.peer_id, data)
 
 
 func sync_int_change(stat_type: TYPE, value: int):
