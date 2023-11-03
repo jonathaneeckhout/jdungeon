@@ -21,19 +21,6 @@ func _ready():
 		parse_cmd_arguments()
 
 
-func _input(event: InputEvent) -> void:
-	if get_meta("PRESSED", false):
-		return
-
-	if event.is_action_pressed("j_slot1"):
-		set_meta("PRESSED", true)
-		_on_run_as_server_pressed()
-
-	elif event.is_action_pressed("j_slot2"):
-		_on_run_as_client_pressed()
-		set_meta("PRESSED", true)
-
-
 func register_enemies():
 	J.register_enemy_scene("Sheep", "res://scenes/enemies/Sheep/Sheep.tscn")
 	J.register_enemy_scene("TreeTrunkGuy", "res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn")

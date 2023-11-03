@@ -1,6 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://6xcgrn54y7si"]
+[gd_scene load_steps=6 format=3 uid="uid://6xcgrn54y7si"]
 
 [ext_resource type="Script" path="res://scenes/root/Root.gd" id="1_2xin5"]
+
+[sub_resource type="InputEventAction" id="InputEventAction_ple52"]
+action = &"j_slot1"
+pressed = true
+
+[sub_resource type="Shortcut" id="Shortcut_jdnlo"]
+events = [SubResource("InputEventAction_ple52")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_js6rf"]
+action = &"j_slot2"
+pressed = true
+
+[sub_resource type="Shortcut" id="Shortcut_lgvw8"]
+events = [SubResource("InputEventAction_js6rf")]
 
 [node name="Root" type="Node"]
 script = ExtResource("1_2xin5")
@@ -30,8 +44,10 @@ grow_vertical = 2
 
 [node name="RunAsServerButton" type="Button" parent="SelectRunMode/VBoxContainer"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_jdnlo")
 text = "1 - Run as server"
 
 [node name="RunAsClientButton" type="Button" parent="SelectRunMode/VBoxContainer"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_lgvw8")
 text = "2 - Run as client"
