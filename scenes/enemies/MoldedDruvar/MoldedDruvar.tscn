@@ -796,6 +796,7 @@ attack_power_max = 50
 attack_speed = 2.0
 defense = 8
 movement_speed = 75.0
+experience_worth = 80
 
 [node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_aextl")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")

@@ -67,7 +67,7 @@ func attack(target: CharacterBody2D):
 	var damage = randi_range(stats.attack_power_min, stats.attack_power_max)
 
 	if target.get("stats"):
-		target.stats.hurt(name, damage)
+		target.stats.hurt(self, damage)
 		action_synchronizer.attack(target.name, damage)
 
 

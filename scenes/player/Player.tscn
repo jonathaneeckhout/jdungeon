@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=40 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/images/player/base/Basecharacter.png" id="2_j04kt"]
@@ -25,13 +25,13 @@
 [ext_resource type="PackedScene" uid="uid://dssmk0m8xsvxf" path="res://scenes/ui/game_menu/game_menu.tscn" id="13_musf7"]
 [ext_resource type="PackedScene" uid="uid://8hhnyrweana5" path="res://scripts/components/persistentplayerdatacomponent/PersistentPlayerDataComponent.tscn" id="13_n3v8n"]
 [ext_resource type="PackedScene" uid="uid://bqsdy2usb2e6d" path="res://scenes/player/equipment/Equipment.tscn" id="14_2fdu8"]
-[ext_resource type="StyleBox" uid="uid://pbfuprosr3en" path="res://assets/themes/ProgressBars.tres" id="14_3h4ha"]
 [ext_resource type="PackedScene" uid="uid://ccq2mcrkefjnb" path="res://scenes/player/deathpopup/DeathPopup.tscn" id="15_ho0h1"]
 [ext_resource type="PackedScene" uid="uid://dmf2tmcuq22vg" path="res://scenes/player/chatpanel/ChatPanel.tscn" id="16_xx8pu"]
 [ext_resource type="PackedScene" uid="uid://dirsk8pf0bxh5" path="res://scenes/player/statdisplay/StatDisplay.tscn" id="17_3wdg5"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="18_bmbbk"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="18_ot7di"]
 [ext_resource type="Script" path="res://scenes/player/player_gui.gd" id="23_h5xag"]
+[ext_resource type="PackedScene" uid="uid://npibcxiy8qqo" path="res://scenes/player/expbar/ExpBar.tscn" id="29_vmfl8"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lk3fd"]
 radius = 24.6666
@@ -1094,19 +1094,9 @@ gold = null
 visible = false
 layout_mode = 1
 
-[node name="ExpBar" type="ProgressBar" parent="Camera2D/UILayer/GUI"]
+[node name="ExpBar" parent="Camera2D/UILayer/GUI" node_paths=PackedStringArray("stats") instance=ExtResource("29_vmfl8")]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -320.0
-offset_top = -32.0
-offset_right = 320.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/fill = ExtResource("14_3h4ha")
+stats = NodePath("../../../../StatsSynchronizerComponent")
 
 [node name="DeathPopup" parent="Camera2D/UILayer/GUI" instance=ExtResource("15_ho0h1")]
 visible = false
