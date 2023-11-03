@@ -6,10 +6,10 @@
 [ext_resource type="Script" path="res://scenes/ui/options_menu/volume_slider.gd" id="3_f1tit"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/language_menu.gd" id="4_7x2u8"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/shadow_quality_slider.gd" id="4_syp6t"]
+[ext_resource type="Script" path="res://scenes/ui/options_menu/fullscreen_check.gd" id="5_b4bs5"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/global_illumination_check.gd" id="5_itcgf"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/local_data_folder.gd" id="5_og4gi"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/antialiasing_slider.gd" id="5_x71q0"]
-[ext_resource type="Script" path="res://scenes/ui/options_menu/fullscren_check.gd" id="5_y24x2"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/fps_limit_slider.gd" id="6_3j83h"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/vsync_check.gd" id="6_d4fxa"]
 [ext_resource type="Script" path="res://scenes/ui/options_menu/colourblindness_filter_option.gd" id="13_xah1x"]
@@ -101,7 +101,7 @@ text = "Fullscreen"
 [node name="Check" type="CheckBox" parent="TabContainer/Graphics/VBoxContainer/Fullscreen"]
 layout_mode = 2
 size_flags_horizontal = 2
-script = ExtResource("5_y24x2")
+script = ExtResource("5_b4bs5")
 
 [node name="Maximum FPS" type="HSplitContainer" parent="TabContainer/Graphics/VBoxContainer"]
 layout_mode = 2

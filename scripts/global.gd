@@ -61,8 +61,6 @@ func load_local_settings():
 	)
 	if fullScreen:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-	else:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 
 	#FPS
 	var fps: int = LocalSaveSystem.get_data(
