@@ -5,6 +5,8 @@ class_name StatsSynchronizerComponent
 enum TYPE {
 	HP_MAX,
 	HP,
+	ENERGY,
+	ENERGY_MAX,
 	ATTACK_POWER_MIN,
 	ATTACK_POWER_MAX,
 	ATTACK_SPEED,
@@ -49,6 +51,20 @@ signal respawned
 		stats_changed.emit(TYPE.HP)
 		if J.is_server():
 			sync_int_change(TYPE.HP, val)
+
+@export var energy_max: int:
+	set(val):
+		energy_max = val
+		stats_changed.emit(TYPE.ENERGY_MAX)
+		if J.is_server():
+			sync_int_change(TYPE.ENERGY_MAX, val)
+
+@export var energy: int:
+	set(val):
+		energy = val
+		stats_changed.emit(TYPE.ENERGY)
+		if J.is_server():
+			sync_int_change(TYPE.ENERGY, val)
 
 @export var attack_power_min: int = 0:
 	set(val):
@@ -121,9 +137,9 @@ var peer_id: int = 0
 var is_dead: bool = false
 
 var server_buffer: Array[Dictionary] = []
-var ready_done: bool = false
 
 var _default_hp_max: int = hp_max
+var _default_energy_max: int = energy_max
 var _default_attack_power_min: int = attack_power_min
 var _default_attack_power_max: int = attack_power_max
 var _default_defense: int = defense
@@ -142,16 +158,11 @@ func _ready():
 	if J.is_server():
 		set_physics_process(false)
 	else:
-		# This timer is needed to give the client some time to setup its multiplayer connection
-		delay_timer = Timer.new()
-		delay_timer.name = "DelayTimer"
-		delay_timer.wait_time = 0.1
-		delay_timer.autostart = true
-		delay_timer.one_shot = true
-		delay_timer.timeout.connect(_on_delay_timer_timeout)
-		add_child(delay_timer)
+		var syncCall: Callable = func():
+			sync_stats.rpc_id(1)
+		syncCall.call_deferred()
 
-	ready_done = true
+	is_node_ready()
 
 
 func _physics_process(_delta):
@@ -167,6 +178,10 @@ func check_server_buffer():
 					hp_max = entry["value"]
 				TYPE.HP:
 					hp = entry["value"]
+				TYPE.ENERGY_MAX:
+					energy_max = entry["value"]
+				TYPE.ENERGY:
+					energy = entry["value"]
 				TYPE.ATTACK_POWER_MIN:
 					attack_power_min = entry["value"]
 				TYPE.ATTACK_POWER_MAX:
@@ -240,6 +255,7 @@ func reset_hp():
 
 func load_defaults():
 	hp_max = _default_hp_max
+	energy_max = _default_energy_max
 	attack_power_min = _default_attack_power_min
 	attack_power_max = _default_attack_power_max
 	defense = _default_defense
@@ -281,11 +297,12 @@ func apply_boost(boost: Boost):
 
 
 func to_json(full: bool = false) -> Dictionary:
-	var data: Dictionary = {"hp": hp, "level": level, "experience": experience}
+	var data: Dictionary = {"hp": hp, "energy": energy, "level": level, "experience": experience}
 	if full:
 		data.merge(
 			{
 				"hp_max": hp_max,
+				"energy_max": energy_max,
 				"attack_power_min": attack_power_min,
 				"attack_power_max": attack_power_max,
 				"attack_speed": attack_speed,
@@ -301,6 +318,10 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 	if not "hp" in data:
 		J.logger.warn('Failed to load stats from data, missing "hp" key')
 		return false
+	
+	if not "energy" in data:
+		J.logger.warn('Failed to load stats from data, missing "energy" key')
+		return false
 
 	if not "level" in data:
 		J.logger.warn('Failed to load stats from data, missing "level" key')
@@ -313,6 +334,10 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 	if full:
 		if not "hp_max" in data:
 			J.logger.warn('Failed to load stats from data, missing "hp_max" key')
+			return false
+			
+		if not "energy_max" in data:
+			J.logger.warn('Failed to load stats from data, missing "energy_max" key')
 			return false
 
 		if not "attack_power_min" in data:
@@ -340,6 +365,7 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 			return false
 
 	hp = data["hp"]
+	energy = data["energy"]
 	level = data["level"]
 	experience = data["experience"]
 
@@ -360,7 +386,7 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 
 
 func sync_int_change(stat_type: TYPE, value: int):
-	if not ready_done:
+	if not is_node_ready():
 		return
 
 	var timestamp: float = Time.get_unix_time_from_system()
@@ -375,7 +401,7 @@ func sync_int_change(stat_type: TYPE, value: int):
 
 
 func sync_float_change(stat_type: TYPE, value: float):
-	if not ready_done:
+	if not is_node_ready():
 		return
 
 	var timestamp: float = Time.get_unix_time_from_system()
