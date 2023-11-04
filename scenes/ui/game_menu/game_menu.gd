@@ -5,9 +5,10 @@ const REPORT_BUG_MENU_SCENE: PackedScene = preload(
 	"res://scenes/ui/report_bug_menu/report_bug_menu.tscn"
 )
 
-@onready var options_button: Button = $Panel/VBoxContainer/MarginContainer2/OptionsMenu
-@onready var report_bug_button: Button = $Panel/VBoxContainer/MarginContainer3/ReportBugMenu
-@onready var quit_button: Button = $Panel/VBoxContainer/MarginContainer/QuitButton
+@onready var options_button: Button = $Panel/VBoxContainer/OptionsMarginContainer/OptionsMenu
+@onready var report_bug_button: Button = $Panel/VBoxContainer/ReportBugMarginContainer/ReportBugMenu
+@onready var quit_button: Button = $Panel/VBoxContainer/QuitButtonMarginContainer/QuitButton
+@onready var unstuck_button: Button = $Panel/VBoxContainer/UnstuckButtonMarginContainer/UnstuckButton
 
 @onready var panel: Control = $Panel
 
@@ -16,9 +17,10 @@ var subMenuReference: Node
 
 
 func _ready():
-	quit_button.pressed.connect(_on_quit_button_pressed)
 	options_button.pressed.connect(_on_options_button_pressed)
 	report_bug_button.pressed.connect(_on_report_bug_button_pressed)
+	unstuck_button.pressed.connect(_on_unstuck_button_pressed)
+	quit_button.pressed.connect(_on_quit_button_pressed)
 
 
 func _input(event):
@@ -90,8 +92,19 @@ func _on_report_bug_button_pressed():
 	add_child(reportBugInstance)
 
 
+func _on_unstuck_button_pressed():
+	JUI.confirmationbox("You will die and respawn, ok?", self, "Respawn?", unstuck)
+
+
 func _on_quit_button_pressed():
 	JUI.confirmationbox("Are you sure you want to quit the game?", self, "Quit Game?", quit_game)
+
+
+func unstuck():
+	if J.client.player.get("player_unstuck"):
+		J.client.player.player_unstuck.unstuck()
+		self.hide()
+		JUI.above_ui = false
 
 
 func quit_game():

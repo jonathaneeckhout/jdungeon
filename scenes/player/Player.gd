@@ -18,7 +18,7 @@ var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSy
 @onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
 @onready var inventory: InventorySynchronizerComponent = $InventorySynchronizerComponent
 @onready var equipment: EquipmentSynchronizerComponent = $EquipmentSynchronizerComponent
-
+@onready var player_unstuck: PlayerUnstuckComponent = $PlayerUnstuckComponent
 @onready var original_scale = $Skeleton.scale
 
 @onready var equipment_sprites = {
