@@ -22,6 +22,13 @@ enum TYPE {
 
 const BASE_EXPERIENCE: int = 100
 
+#Stats that are persistent
+const StatListPermanent: Array[StringName] = ["hp_max", "energy_max", "defense", "movement_speed", "attack_power"]
+#Stats that serve as a meter of sorts and change often from external factors
+const StatListCounter: Array[StringName] = ["hp", "energy", "experience", "level"]
+
+const StatListAll: Array[StringName] = StatListCounter + StatListPermanent
+
 signal loaded
 signal stats_changed(stat_type: TYPE)
 signal got_hurt(from: String, damage: int)
@@ -158,9 +165,18 @@ func _ready():
 	if J.is_server():
 		set_physics_process(false)
 	else:
-		var syncCall: Callable = func():
-			sync_stats.rpc_id(1)
-		syncCall.call_deferred()
+		#Wait until the connection is ready to synchronize stats
+		if not multiplayer.has_multiplayer_peer():
+			await multiplayer.connected_to_server
+			
+		#Wait an additional frame so others can get set.
+		await get_tree().process_frame
+		
+		#Some entities take a bit to get added to the tree, do not update them until then.
+		if not is_inside_tree():
+			await tree_entered
+		
+		sync_stats.rpc_id(1)
 
 	is_node_ready()
 
@@ -262,7 +278,49 @@ func load_defaults():
 	movement_speed = _default_movement_speed
 
 
-func calculate_experience_needed(current_level: int):
+func to_json(full: bool = false) -> Dictionary:
+	var data: Dictionary = {"hp": hp, "energy": energy, "level": level, "experience": experience}
+	for statName in StatListCounter:
+		data[statName] = get(statName)
+		
+	if full:
+		var dictForMerge: Dictionary = {}
+		#Fill the dict with the permanent stats
+		for statName in StatListPermanent:
+			dictForMerge[statName] = get(statName)
+		
+		data.merge(dictForMerge)
+	return data
+
+
+func from_json(data: Dictionary, full: bool = false) -> bool:
+	#Validation
+	for statName in StatListCounter:
+		if not statName in data:
+			J.logger.warn('Failed to load stats from data, missing "%s" key' % statName)
+			return false
+		
+	if full:
+		for statName in StatListPermanent:
+			if not statName in data:
+				J.logger.warn('Failed to load stats from data, missing "%s" key' % statName)
+				return false
+	
+	#Update
+	for statName in StatListCounter:
+		set(statName, data.get(statName))
+
+	experience_needed = calculate_experience_needed(level)
+
+	if full:
+		for statName in StatListPermanent:
+			set(statName, data.get(statName))
+
+	loaded.emit()
+	return true
+
+
+func calculate_experience_needed(current_level: int)->int:
 	# TODO: Replace placeholder function to calculate experience needed to level up
 	return BASE_EXPERIENCE + (BASE_EXPERIENCE * (pow(current_level, 2) - 1))
 
@@ -280,110 +338,15 @@ func add_experience(amount: int):
 
 
 func apply_boost(boost: Boost):
-	hp_max += boost.hp_max
-	hp += boost.hp
-	attack_power_min += boost.attack_power_min
-	attack_power_max += boost.attack_power_max
-
-	defense += boost.defense
-
-	var data: Dictionary = to_json(true)
-
-	if peer_id > 0:
-		sync_response.rpc_id(peer_id, data)
+	for statName in boost.statBoostDict:
+		assert(get(statName) != null, "This property does not exist as a stat.")
+		assert( typeof(boost.statBoostDict.get(statName)) == typeof(get(statName)), "The value of the boost is different from the stat it is meant to alter. This could cause unexpected behaviour." ) 
+		var newValue = get(statName) + boost.statBoostDict.get(statName) 
+		set(statName, newValue)
 
 	for watcher in watcher_synchronizer.watchers:
+		var data: Dictionary = to_json(true)
 		sync_response.rpc_id(watcher.peer_id, data)
-
-
-func to_json(full: bool = false) -> Dictionary:
-	var data: Dictionary = {"hp": hp, "energy": energy, "level": level, "experience": experience}
-	if full:
-		data.merge(
-			{
-				"hp_max": hp_max,
-				"energy_max": energy_max,
-				"attack_power_min": attack_power_min,
-				"attack_power_max": attack_power_max,
-				"attack_speed": attack_speed,
-				"attack_range": attack_range,
-				"defense": defense,
-				"movement_speed": movement_speed
-			}
-		)
-	return data
-
-
-func from_json(data: Dictionary, full: bool = false) -> bool:
-	if not "hp" in data:
-		J.logger.warn('Failed to load stats from data, missing "hp" key')
-		return false
-	
-	if not "energy" in data:
-		J.logger.warn('Failed to load stats from data, missing "energy" key')
-		return false
-
-	if not "level" in data:
-		J.logger.warn('Failed to load stats from data, missing "level" key')
-		return false
-
-	if not "experience" in data:
-		J.logger.warn('Failed to load stats from data, missing "experience" key')
-		return false
-
-	if full:
-		if not "hp_max" in data:
-			J.logger.warn('Failed to load stats from data, missing "hp_max" key')
-			return false
-			
-		if not "energy_max" in data:
-			J.logger.warn('Failed to load stats from data, missing "energy_max" key')
-			return false
-
-		if not "attack_power_min" in data:
-			J.logger.warn('Failed to load stats from data, missing "attack_power_min" key')
-			return false
-
-		if not "attack_power_max" in data:
-			J.logger.warn('Failed to load stats from data, missing "attack_power_max" key')
-			return false
-
-		if not "attack_speed" in data:
-			J.logger.warn('Failed to load stats from data, missing "attack_speed" key')
-			return false
-
-		if not "attack_range" in data:
-			J.logger.warn('Failed to load stats from data, missing "attack_range" key')
-			return false
-
-		if not "defense" in data:
-			J.logger.warn('Failed to load stats from data, missing "defense" key')
-			return false
-
-		if not "movement_speed" in data:
-			J.logger.warn('Failed to load stats from data, missing "movement_speed" key')
-			return false
-
-	hp = data["hp"]
-	energy = data["energy"]
-	level = data["level"]
-	experience = data["experience"]
-
-	experience_needed = calculate_experience_needed(level)
-
-	if full:
-		hp_max = data["hp_max"]
-		attack_power_min = data["attack_power_min"]
-		attack_power_max = data["attack_power_max"]
-		attack_speed = data["attack_speed"]
-		attack_range = data["attack_range"]
-		defense = data["defense"]
-		movement_speed = data["movement_speed"]
-
-	loaded.emit()
-
-	return true
-
 
 func sync_int_change(stat_type: TYPE, value: int):
 	if not is_node_ready():
@@ -413,11 +376,6 @@ func sync_float_change(stat_type: TYPE, value: float):
 		_sync_float_change.rpc_id(watcher.peer_id, timestamp, stat_type, value)
 
 	stats_changed.emit(stat_type)
-
-
-func _on_delay_timer_timeout():
-	sync_stats.rpc_id(1)
-
 
 @rpc("call_remote", "any_peer", "reliable") func sync_stats():
 	if not J.is_server():
