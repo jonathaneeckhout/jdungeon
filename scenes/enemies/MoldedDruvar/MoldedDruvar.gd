@@ -1,4 +1,4 @@
-extends Enemy
+extends EnemyBody
 
 signal destination_reached
 signal stuck

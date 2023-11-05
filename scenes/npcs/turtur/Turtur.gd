@@ -1,4 +1,4 @@
-extends NPC
+extends NPCBody
 
 @onready var shop: ShopSynchronizerComponent = $ShopSynchronizerComponent
 @onready var animation_player: AnimationPlayer = $AnimationPlayer

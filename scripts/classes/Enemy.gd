@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-class_name Enemy
+class_name EnemyBody
 
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ENEMY
 var enemy_class: String = ""

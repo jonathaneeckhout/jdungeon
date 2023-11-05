@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-class_name NPC
+class_name NPCBody
 
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.NPC
 var npc_class: String = ""

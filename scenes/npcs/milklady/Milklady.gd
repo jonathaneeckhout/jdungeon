@@ -1,4 +1,4 @@
-extends NPC
+extends NPCBody
 
 @onready var wander_behavior: WanderBehaviorComponent = $WanderBehaviorCopmonent
 @onready var avoidance_rays: AvoidanceRaysComponent = $AvoidanceRaysComponent
