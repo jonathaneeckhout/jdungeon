@@ -20,14 +20,17 @@ enum ControlType {TARGETABLE, INSTANT}
 @export var controlType: ControlType = ControlType.TARGETABLE
 
 
-func effect(targets: Array[Node]):
-	for target in targets:
-		_effect(target)
+func effect(position: Vector2, entities: Array[Node]):
+	for entity in entities:
+		_entity_effect(entity)
 
 
-func _target_filter(target: Node)->bool:
+func _target_filter(_target: Node)->bool:
 	return true
 
-func _effect(target: Node):
+func _entity_effect(_entity: Node):
 	pass
+
+func _effect(_where: Vector2, _entities: Array[Node]):
 	
+	pass

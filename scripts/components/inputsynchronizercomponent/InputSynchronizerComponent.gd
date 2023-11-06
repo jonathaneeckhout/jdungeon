@@ -24,16 +24,22 @@ const CursorGraphics: Dictionary = {
 var target_node: Node2D:
 	set(val):
 		target_node = val
-		target_node.draw.connect(draw_controller_cursor)
+		if not J.is_server():
+			target_node.draw.connect(draw_controller_cursor)
 
 ##If false, cursor_position_global is not updated with mouse movement.
 @export var use_mouse: bool = true
 
-
 var target_current: Node2D
 var cursor_position_global: Vector2
-var cursor_texture_current: Texture
+var cursor_texture_current: Texture:
+	get:
+		if cursor_texture_current == null:
+			return CursorGraphics.DEFAULT
+		else:
+			return cursor_texture_current
 
+#Privates
 var pointParams := PhysicsPointQueryParameters2D.new()
 var lastHoverTarget: Node2D
 
@@ -62,6 +68,14 @@ func _ready():
 
 		#Set the cursor back to default if this object is deleted for any reasons
 		tree_exiting.connect(set_cursor.bind(CursorGraphics.DEFAULT))
+
+func _physics_process(_delta: float) -> void:
+	#Updates what the cursor is pointing at
+	update_target(cursor_position_global, false)
+
+func _process(_delta: float) -> void:
+	#Updates cursor visuals
+	update_cursor()
 
 func draw_controller_cursor():
 	target_node.draw_texture(cursor_texture_current, cursor_position_global - target_node.global_position)
@@ -97,13 +111,7 @@ func _input(event: InputEvent):
 		
 
 
-func _physics_process(delta: float) -> void:
-	#Updates what the cursor is pointing at
-	update_target(cursor_position_global, false)
 
-func _process(_delta: float) -> void:
-	#Updates cursor visuals
-	update_cursor()
 	
 	
 func update_cursor():
@@ -138,20 +146,19 @@ func update_cursor():
 
 #Movement order and other non-targted actions
 func handle_primary_click(clickGlobalPos: Vector2):
-	primary_action.rpc_id(1, pointParams.position)
-	primary_action_activated.emit(pointParams.position)
+	primary_action.rpc_id(1, clickGlobalPos)
+	primary_action_activated.emit(clickGlobalPos)
 
 #Actions
 func handle_secondary_click(clickGlobalPos: Vector2):
 	#Ensure there is a target
 	if target_current:
 		#Ignore if it was self
-		secondary_action.rpc_id(1, target_current.get_name())
+		secondary_action.rpc_id(1, clickGlobalPos)
 		secondary_action_activated.emit(clickGlobalPos)
 	pass
 
 func handle_slot_change(slot: int):
-	
 	slot_chosen.emit(slot)
 	
 
