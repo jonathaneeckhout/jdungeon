@@ -1,0 +1,25 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://d1c4swsfr1hva"]
+
+[sub_resource type="GDScript" id="GDScript_qm44u"]
+script/source = "extends SkillComponentResource
+
+func _init() -> void:
+	skill_class = \"debug\"
+	displayed_name = \"DEBUGGINATOR\"
+
+func _effect(target_pos: Vector2, entities: Array[Node]):
+	print_debug(\"Used debug skill at \" + str(target_pos))
+	for entity in entities:
+		print_debug(entity.get_name() + \" got debugged!\")
+	pass
+"
+
+[resource]
+script = SubResource("GDScript_qm44u")
+skill_class = "debug"
+displayed_name = "Skidadle Skidoodle"
+energy_usage = 0
+cooldown = 0.0
+hitbox_shape = [Vector2(-5, 0), Vector2(0, 5), Vector2(5, 0), Vector2(0, -5)]
+hit_range = 25.0
+controlType = 0

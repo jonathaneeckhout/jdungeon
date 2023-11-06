@@ -1,5 +1,6 @@
 extends Node
 class_name SkillComponent
+## Takes care of handling skills, their effects, cooldowns and costs, as well as the drawing of hitboxes for player feedback.
 
 signal skill_successful_usage(skill: SkillComponentResource)
 signal skill_failed_usage(skill: SkillComponentResource)
@@ -13,8 +14,14 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 @export var user: CharacterBody2D:
 	set(val):
 		user = val
-		directSpace = user.get_world_2d().direct_space_state
-		user.draw.connect(draw_on_user)
+		var lateConnection: Callable = func():
+			directSpace = user.get_world_2d().direct_space_state
+			user.draw.connect(draw_on_user)
+		if user.is_inside_tree():
+			lateConnection.call()
+		else:
+			user.tree_entered.connect(lateConnection)
+		
 		
 @export var stats_component: StatsSynchronizerComponent
 @export var input_component: InputSynchronizerComponent
@@ -31,6 +38,11 @@ var directSpace: PhysicsDirectSpaceState2D
 var shapeParameters := PhysicsShapeQueryParameters2D.new()
 
 func _ready() -> void:
+	#TEMP
+	skills.append( J.skill_resources["debug"].duplicate() )
+	skill_current = skills[0]
+	#TEMP
+	
 	#Wait until the connection is ready to synchronize stats
 	if not multiplayer.has_multiplayer_peer():
 		await multiplayer.connected_to_server
@@ -68,7 +80,7 @@ func draw_hitbox(atPoint: Vector2 = input_component.cursor_position_global):
 		user.draw_circle(atPoint, shape.radius, colorUsed)
 		
 	elif shape is ConvexPolygonShape2D:
-		var polygon: PackedVector2Array
+		var polygon: PackedVector2Array = []
 		for point in shape.points:
 			polygon.append(point + atPoint)
 			
@@ -96,7 +108,7 @@ func use_at(globalPoint: Vector2):
 	
 	var targets: Array[Node] = get_targets(globalPoint)
 	handle_cooldown(skill_current, true)
-	skill_current.effect(targets)
+	skill_current.effect(globalPoint, targets)
 	skill_successful_usage.emit(skill_current)
 	
 	
@@ -176,5 +188,6 @@ func from_json(data: Dictionary)->bool:
 
 	sync_response.rpc_id(id, to_json())
 	
-func sync_response(skills: Dictionary):
-	from_json(skills)
+@rpc("call_remote", "authority", "reliable") func sync_response(skillDict: Dictionary):
+	from_json(skillDict)
+
