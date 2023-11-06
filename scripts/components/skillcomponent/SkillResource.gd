@@ -3,6 +3,8 @@ class_name SkillComponentResource
 
 enum ControlType {TARGETABLE, INSTANT}
 
+@export var skill_class: String
+
 @export var displayed_name: String = "Skidadle Skidoodle" #Failsafe name
 
 @export var energy_usage: int = 0

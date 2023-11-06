@@ -33,6 +33,7 @@ var player_scene: Resource
 var enemy_scenes: Dictionary = {}
 var npc_scenes: Dictionary = {}
 var item_scenes: Dictionary = {}
+var skill_resources: Dictionary = {}
 
 var uuid_util: Node
 
@@ -118,3 +119,7 @@ func register_npc_scene(npc_class: String, npc_scene_path: String):
 
 func register_item_scene(item_class: String, item_scene_path: String):
 	item_scenes[item_class] = load(item_scene_path)
+
+
+func register_skill_resource(skill_class: String, skill_res_path: String):
+	skill_resources[skill_class] = load(skill_res_path)
