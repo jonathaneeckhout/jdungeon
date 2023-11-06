@@ -30,6 +30,21 @@ var cooldownDict: Dictionary
 var directSpace: PhysicsDirectSpaceState2D
 var shapeParameters := PhysicsShapeQueryParameters2D.new()
 
+func _ready() -> void:
+	#Wait until the connection is ready to synchronize stats
+	if not multiplayer.has_multiplayer_peer():
+		await multiplayer.connected_to_server
+		
+	#Wait an additional frame so others can get set.
+	await get_tree().process_frame
+	
+	#Some entities take a bit to get added to the tree, do not update them until then.
+	if not is_inside_tree():
+		await tree_entered
+	
+	sync_skills.rpc_id(1)
+
+
 func draw_on_user():
 	if not skill_current:
 		return
@@ -37,7 +52,7 @@ func draw_on_user():
 	draw_hitbox()
 func draw_range():
 	user.draw_circle(Vector2.ZERO, skill_current.hit_range, COLOR_RANGE)
-func draw_hitbox(atPoint: Vector2 = input_component.get_global_mouse_position()):
+func draw_hitbox(atPoint: Vector2 = input_component.cursor_position_global):
 
 	var shape: Shape2D = get_collision_shape()
 	var colorUsed: Color
@@ -62,7 +77,7 @@ func draw_hitbox(atPoint: Vector2 = input_component.get_global_mouse_position())
 func skill_select_by_index(index: int):
 	#Array supports negative values to select from the end of the Array
 	if not abs(index) < abs(skills.size()):
-		J.logger.error("Skill index out of range.")
+		J.logger.error("Slot index out of range.") #TEMP
 		return
 		
 	skill_current = skills[index]
@@ -131,3 +146,35 @@ func is_skill_usable(skill: SkillComponentResource)->bool:
 		
 	return true
 	
+func to_json()->Dictionary:
+	var output: Dictionary = {}
+	var slotIdx: int = 0
+	for skill in skills:
+		output[slotIdx] = skill.skill_class
+		slotIdx += 1
+	return output
+
+func from_json(data: Dictionary)->bool:
+	for slotIdx in data:
+		
+		if not data[slotIdx] is String:
+			J.logger.warn('Failed to load skills from data, missing "skill_class" for slot {0}'.format([str(slotIdx)]))
+			return false
+			
+		skills[slotIdx] = J.skill_resources[data[slotIdx]].duplicate()
+	return true
+
+@rpc("call_remote", "any_peer", "reliable") func sync_skills():
+	if not J.is_server():
+		return
+
+	var id: int = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(id):
+		return
+
+	sync_response.rpc_id(id, to_json())
+	
+func sync_response(skills: Dictionary):
+	from_json(skills)

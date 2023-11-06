@@ -175,8 +175,6 @@ func _ready():
 		
 		sync_stats.rpc_id(1)
 
-	is_node_ready()
-
 
 func _physics_process(_delta):
 	check_server_buffer()
