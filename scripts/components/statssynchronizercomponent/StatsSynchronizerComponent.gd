@@ -137,10 +137,10 @@ signal respawned
 		if J.is_server():
 			sync_int_change(TYPE.EXPERIENCE_NEEDED, val)
 
+@export var loot_range: float = 64
 @export var experience_worth: int = 0
 
 var target_node: Node
-var peer_id: int = 0
 var is_dead: bool = false
 
 var server_buffer: Array[Dictionary] = []
@@ -157,9 +157,6 @@ var delay_timer: Timer
 
 func _ready():
 	target_node = get_parent()
-
-	if target_node.get("peer_id") != null:
-		peer_id = target_node.peer_id
 
 	# Physics only needed on client side
 	if J.is_server():
@@ -238,9 +235,6 @@ func hurt(from: Node, damage: int) -> int:
 
 	var timestamp: float = Time.get_unix_time_from_system()
 
-	if peer_id > 0:
-		_sync_hurt.rpc_id(peer_id, timestamp, from.name, reduced_damage)
-
 	for watcher in watcher_synchronizer.watchers:
 		_sync_hurt.rpc_id(watcher.peer_id, timestamp, from.name, reduced_damage)
 
@@ -253,9 +247,6 @@ func heal(from: String, healing: int) -> int:
 	hp = min(hp_max, hp + healing)
 
 	var timestamp: float = Time.get_unix_time_from_system()
-
-	if peer_id > 0:
-		_sync_heal.rpc_id(peer_id, timestamp, from, healing)
 
 	for watcher in watcher_synchronizer.watchers:
 		_sync_heal.rpc_id(watcher.peer_id, timestamp, from, healing)
@@ -276,6 +267,11 @@ func load_defaults():
 	attack_power_max = _default_attack_power_max
 	defense = _default_defense
 	movement_speed = _default_movement_speed
+	
+
+	for watcher in watcher_synchronizer.watchers:
+		var data: Dictionary = to_json(true)
+		sync_response.rpc_id(watcher.peer_id, data)
 
 
 func to_json(full: bool = false) -> Dictionary:
@@ -348,14 +344,12 @@ func apply_boost(boost: Boost):
 		var data: Dictionary = to_json(true)
 		sync_response.rpc_id(watcher.peer_id, data)
 
+
 func sync_int_change(stat_type: TYPE, value: int):
 	if not is_node_ready():
 		return
 
 	var timestamp: float = Time.get_unix_time_from_system()
-
-	if peer_id > 0:
-		_sync_int_change.rpc_id(peer_id, timestamp, stat_type, value)
 
 	for watcher in watcher_synchronizer.watchers:
 		_sync_int_change.rpc_id(watcher.peer_id, timestamp, stat_type, value)
@@ -368,9 +362,6 @@ func sync_float_change(stat_type: TYPE, value: float):
 		return
 
 	var timestamp: float = Time.get_unix_time_from_system()
-
-	if peer_id > 0:
-		_sync_float_change.rpc_id(peer_id, timestamp, stat_type, value)
 
 	for watcher in watcher_synchronizer.watchers:
 		_sync_float_change.rpc_id(watcher.peer_id, timestamp, stat_type, value)
