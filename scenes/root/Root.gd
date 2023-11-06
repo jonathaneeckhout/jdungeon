@@ -10,6 +10,7 @@ func _ready():
 	register_enemies()
 	register_npcs()
 	register_items()
+	register_skills()
 
 	J.global.load_common_env_variables()
 
@@ -83,6 +84,10 @@ func register_items():
 		"PlateLegs", "res://scenes/items/equipment/armour/platelegs/PlateLegs.tscn"
 	)
 
+func register_skills():
+	J.register_skill_resource(
+		"debug", "res://scripts/components/skillcomponent/Skills/debug.tres"
+	)
 
 func parse_cmd_arguments():
 	var args: PackedStringArray = OS.get_cmdline_args()
