@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=16 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://scenes/world/World.gd" id="1_3w1ia"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="2_fjr74"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://cpw0d00b7prm0" path="res://scenes/terrain/areas/harbor/harbor.tscn" id="9_70hw5"]
 [ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="9_g1yks"]
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_7jhmb"]
+[ext_resource type="PackedScene" uid="uid://bpf7k4svcf6v6" path="res://scenes/world/WorldMap.tscn" id="14_ye762"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_3w1ia")
@@ -37,7 +38,7 @@ visible = false
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Enemies" type="Node2D" parent="Entities"]
-position = Vector2(472, -128)
+position = Vector2(-4, 34)
 
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("3_fddk3")]
 position = Vector2(-2006, 948)
@@ -109,10 +110,10 @@ position = Vector2(-1177, 449)
 position = Vector2(-970, 458)
 
 [node name="Sheep11" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-1299, 694)
+position = Vector2(-1330, 389)
 
 [node name="Sheep12" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
-position = Vector2(-1424, -650)
+position = Vector2(-1367, -653)
 
 [node name="Sheep13" parent="Entities/Enemies" instance=ExtResource("4_uubdx")]
 position = Vector2(-1034, -776)
@@ -124,19 +125,19 @@ position = Vector2(-1176, 146)
 position = Vector2(-3888, 232)
 
 [node name="ClamDog" parent="Entities/Enemies" instance=ExtResource("8_iuiyn")]
-position = Vector2(-3560, 3336)
+position = Vector2(-1877, 3298)
 
 [node name="ClamDog2" parent="Entities/Enemies" instance=ExtResource("8_iuiyn")]
-position = Vector2(-2816, 3352)
+position = Vector2(-2733, 3015)
 
 [node name="ClamDog3" parent="Entities/Enemies" instance=ExtResource("8_iuiyn")]
-position = Vector2(-3912, 3856)
+position = Vector2(-2255, 3742)
 
 [node name="ClamDog4" parent="Entities/Enemies" instance=ExtResource("8_iuiyn")]
-position = Vector2(-5272, 4032)
+position = Vector2(-5685, 4153)
 
 [node name="ClamDog5" parent="Entities/Enemies" instance=ExtResource("8_iuiyn")]
-position = Vector2(-6096, 4344)
+position = Vector2(-2210, 4439)
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 
@@ -160,6 +161,9 @@ position = Vector2(-1536, -64)
 
 [node name="Harbor" parent="Entities/Map/Areas" instance=ExtResource("9_70hw5")]
 position = Vector2(-1536, 3519)
+
+[node name="Node2D" parent="Entities/Map/Areas" instance=ExtResource("14_ye762")]
+z_index = -2
 
 [node name="PlayerRespawnLocations" type="Node2D" parent="."]
 
