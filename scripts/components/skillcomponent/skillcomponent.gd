@@ -66,7 +66,12 @@ func draw_range():
 	user.draw_circle(Vector2.ZERO, skill_current.hit_range, COLOR_RANGE)
 func draw_hitbox(atPoint: Vector2 = input_component.cursor_position_global):
 
-	var shape: Shape2D = get_collision_shape()
+	var shape: Shape2D
+	if skill_current.hitbox_rotate_shape:
+		shape = get_collision_shape(user.global_position.angle_to_point(atPoint))
+	else:
+		shape = get_collision_shape(0.0)
+		
 	var colorUsed: Color
 	
 	#Color selection
@@ -106,14 +111,30 @@ func use_at(globalPoint: Vector2):
 		skill_failed_usage.emit(skill_current)
 		return
 	
-	var targets: Array[Node] = get_targets(globalPoint)
+	var skillUsageInfo := UseInfo.new()
+	skillUsageInfo.user = user
+	skillUsageInfo.targets = get_targets(globalPoint)
+	skillUsageInfo.position_target_global = globalPoint
+	
 	handle_cooldown(skill_current, true)
-	skill_current.effect(globalPoint, targets)
+	
+	skill_current.effect(skillUsageInfo)
 	skill_successful_usage.emit(skill_current)
 	
 	
 func get_targets(where: Vector2)->Array[Node]:
-	shapeParameters.shape = get_collision_shape()
+	if skill_current.hitbox_rotate_shape:
+		shapeParameters.shape = get_collision_shape(user.global_position.angle_to_point(where))
+	else:
+		shapeParameters.shape = get_collision_shape(0.0)
+	shapeParameters.collision_mask = get_collision_layer()
+	
+	if not skill_current.hitbox_hits_user:
+		shapeParameters.exclude = [user.get_rid()]
+		
+	
+		
+		pass
 	
 	var collisions: Array[Dictionary] = directSpace.intersect_shape(shapeParameters)
 	var targets: Array[Node] = []
@@ -123,7 +144,7 @@ func get_targets(where: Vector2)->Array[Node]:
 	targets.filter(skill_current._target_filter)
 	return targets
 	
-func get_collision_shape()->Shape2D:
+func get_collision_shape(userRotation: float)->Shape2D:
 	var shape: Shape2D
 	#Do not allow shapes with a size of 2
 	assert(skill_current.hitbox_shape.size() != 2)
@@ -136,9 +157,13 @@ func get_collision_shape()->Shape2D:
 	#Otherwise treat it as a polygon
 	else:
 		shape = ConvexPolygonShape2D.new()
-		shape.points = skill_current.hitbox_shape
+		for point in skill_current.hitbox_shape:
+			shape.points.append(point.rotated(userRotation))
 		
 	return shape
+
+func get_collision_layer()->int:
+	return skill_current.collision_mask
 
 func handle_cooldown(skill: SkillComponentResource, started: bool):
 	#Start the cooldown and set the skill as "cooling down"
@@ -176,6 +201,7 @@ func from_json(data: Dictionary)->bool:
 		skills[slotIdx] = J.skill_resources[data[slotIdx]].duplicate()
 	return true
 
+
 @rpc("call_remote", "any_peer", "reliable") func sync_skills():
 	if not J.is_server():
 		return
@@ -191,3 +217,102 @@ func from_json(data: Dictionary)->bool:
 @rpc("call_remote", "authority", "reliable") func sync_response(skillDict: Dictionary):
 	from_json(skillDict)
 
+class UseInfo extends Object:
+	var user: Node
+	var targets: Array[Node]
+	var position_target_global: Vector2
+		
+	func get_targets_filter_entities()->Array[Node]:
+		return targets.filter(
+			func(toFilter:Node):
+			return toFilter.get("entity_type") != null
+			)
+	
+	#This subclass has issues referencing J.ENTITY_TYPE, so it is casted as int
+	func get_targets_filter_entity_type(entityType: int)->Array[Node]:
+			return get_targets_filter_entities().filter(
+				func(toFilter:Node):
+				return toFilter.get("entity_type") == entityType
+			)
+		
+		
+	func get_position_local_from_user()->Vector2:
+		return position_target_global - user.global_position
+
+	func get_user_stats()->StatsSynchronizerComponent:
+		var stats = user.get("stats")
+		if stats is StatsSynchronizerComponent:
+			return stats
+		else:
+			return null
+	
+	func get_target_stats_by_index(index: int)->StatsSynchronizerComponent:
+		if abs(index) >= abs(targets.size()):
+			J.logger.error("SkillComponent.UseInfo, index out of range.")
+			return null
+		
+		var stats: StatsSynchronizerComponent = targets[index]
+		if stats is StatsSynchronizerComponent:
+			return stats
+		else:
+			J.logger.error('Target lacks a "stats" property: ' + targets[index].get_name())
+			return null
+
+	func get_target_stats_all()->Array[StatsSynchronizerComponent]:
+		var statArr: Array[StatsSynchronizerComponent] = []
+		for target in targets:
+			var stats: StatsSynchronizerComponent = target.get("stats")
+			if stats is StatsSynchronizerComponent:
+				statArr.append(stats)
+			else:
+				J.logger.error('Target lacks a "stats" property: ' + target.get_name())
+		return statArr
+
+	func get_target_names(target: Array[Node])->Array[String]:
+		var names: Array[String] = []
+		for entity in get_targets_filter_entities():
+			names.append(entity.get_name())
+		return names
+		
+	func to_json(usageInfo: UseInfo)->Dictionary:
+		return {"user": usageInfo.user.get_name(), "targets":usageInfo.get_target_names(usageInfo.targets), "position_global":usageInfo.position_target_global}
+
+	func from_json(data: Dictionary)->bool:
+		if not "user" in data:
+			J.logger.warn('Failed to load equipment from data, missing "user" key')
+			return false
+			
+		if not "targets" in data:
+			J.logger.warn('Failed to load equipment from data, missing "targets" key')
+			return false
+			
+		if not "position_global" in data:
+			J.logger.warn('Failed to load equipment from data, missing "position_global" key')
+			return false
+			
+		assert(data["user"] is String)
+		assert(data["targets"] is Array[String])
+		assert(data["position_global"] is Vector2)
+			
+		var foundUser: Node
+		if J.world.players.has_node(data["user"]):
+			foundUser = J.world.players.get_node(data["user"])
+		elif J.world.enemies.has_node(data["user"]):
+			foundUser = J.world.enemies.get_node(data["user"])
+		elif J.world.npcs.has_node(data["user"]):
+			foundUser = J.world.npcs.get_node(data["user"])
+		
+		var foundTargets: Array[Node]
+		for possibleTarget in data["targets"]:
+			if J.world.players.has_node(data["user"]):
+				foundTargets.append(J.world.players.get_node(data["user"]))
+			elif J.world.enemies.has_node(data["user"]):
+				foundTargets.append(J.world.enemies.get_node(data["user"]))
+			elif J.world.npcs.has_node(data["user"]):
+				foundTargets.append(J.world.npcs.get_node(data["user"]))
+		
+		user = foundUser
+		targets = foundTargets
+		position_target_global = data["position_global"]
+		return true
+			
