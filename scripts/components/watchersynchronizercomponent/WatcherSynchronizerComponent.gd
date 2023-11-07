@@ -16,10 +16,6 @@ func _ready():
 
 	target_node = get_parent()
 
-	# Sync yourself
-	if target_node.get("peer_id") != null:
-		watchers.append(target_node)
-
 	var cs_network_visible_circle = CircleShape2D.new()
 	cs_network_visible_circle.radius = network_visible_area_size
 

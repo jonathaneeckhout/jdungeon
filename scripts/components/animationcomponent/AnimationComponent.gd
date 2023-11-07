@@ -23,6 +23,11 @@ func _ready():
 	target_node = get_parent()
 
 	if J.is_server():
+		queue_free()
+		return
+
+	if target_node.get("peer_id") != null and target_node.peer_id == multiplayer.get_unique_id():
+		queue_free()
 		return
 
 	if target_node.get("velocity") == null:
@@ -78,7 +83,7 @@ func _on_respawned():
 	dead = false
 
 
-func _on_attacked(_target: String, _damage: int):
+func _on_attacked(_direction: Vector2):
 	if animation_player.has_animation(attack_animation):
 		animation_player.stop()
 		animation_player.play(attack_animation)

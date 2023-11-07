@@ -9,8 +9,6 @@ var username: String = ""
 var peer_id: int = 0
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
 
-@onready var input_synchronizer: InputSynchronizerComponent = $InputSynchronizerComponent
-@onready var player_behavior: PlayerBehaviorComponent = $PlayerBehaviorComponent
 @onready var position_synchronizer: PositionSynchronizerComponent = $PositionSynchronizerComponent
 @onready
 var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSynchronizerComponent
@@ -43,12 +41,8 @@ var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSy
 func _init():
 	collision_layer = J.PHYSICS_LAYER_PLAYERS
 
-	if J.is_server():
-		# The player cannot walk past NPCs and enemies. But other players cannot block their path.
-		collision_mask = J.PHYSICS_LAYER_WORLD + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS
-	else:
-		# Don't handle collision on client side
-		collision_mask = 0
+	# The player cannot walk past NPCs and enemies. But other players cannot block their path.
+	collision_mask = J.PHYSICS_LAYER_WORLD + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS
 
 
 func _ready():
@@ -71,9 +65,6 @@ func _ready():
 
 	# Client side code
 	else:
-		# Behavior is not handeld on client's side
-		player_behavior.queue_free()
-
 		$InterfaceComponent.display_name = username
 
 		# Your own player code
@@ -83,8 +74,6 @@ func _ready():
 		else:
 			# No input is handeld on other player's side
 			set_process_input(false)
-			# If no input is handled this node makes no sense to keep
-			input_synchronizer.queue_free()
 			# Remove the camera with ui on the other player's side
 			$Camera2D.queue_free()
 

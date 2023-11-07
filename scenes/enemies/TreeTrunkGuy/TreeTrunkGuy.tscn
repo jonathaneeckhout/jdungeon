@@ -813,8 +813,9 @@ animation_player = NodePath("../AnimationPlayer")
 stats = NodePath("../StatsSynchronizerComponent")
 action_synchronizer = NodePath("../ActionSynchronizerComponent")
 
-[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("7_so3fl")]
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton", "action_synchronizer") instance=ExtResource("7_so3fl")]
 skeleton = NodePath("../Skeleton")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
 
 [node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("5_5ijne")]
 offset_top = -110.0

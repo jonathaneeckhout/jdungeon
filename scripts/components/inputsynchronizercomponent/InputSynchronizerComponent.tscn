@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://c48o4jjb7nijf"]
-
-[ext_resource type="Script" path="res://scripts/components/inputsynchronizercomponent/InputSynchronizerComponent.gd" id="1_tw7sw"]
-
-[node name="InputSynchronizerComponent" type="Node2D"]
-script = ExtResource("1_tw7sw")
