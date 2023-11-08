@@ -9,6 +9,8 @@ enum ControlType {TARGETABLE, INSTANT}
 
 @export var energy_usage: int = 0
 
+@export var icon: Texture = load("res://icon.svg")
+
 @export var collision_mask: int = J.ENTITY_TYPE.ENEMY
 
 @export var cooldown: float = 0
