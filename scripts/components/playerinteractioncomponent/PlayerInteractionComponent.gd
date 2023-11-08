@@ -15,9 +15,9 @@ var attack_area: Area2D
 var loot_area: Area2D
 var interact_area: Area2D
 
-var enemies_in_attack_range: Array[Enemy] = []
+var enemies_in_attack_range: Array[EnemyBody] = []
 var items_in_loot_range: Array[Item] = []
-var npcs_in_interact_range: Array[NPC] = []
+var npcs_in_interact_range: Array[NPCBody] = []
 
 
 func _ready():
