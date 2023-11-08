@@ -47,6 +47,8 @@ func equip_item(item: Item) -> bool:
 		unequip_item(items[item.equipment_slot].uuid)
 
 	if _equip_item(item):
+		sync_equip_item.rpc_id(target_node.peer_id, item.uuid, item.item_class)
+
 		for watcher in watcher_synchronizer.watchers:
 			sync_equip_item.rpc_id(watcher.peer_id, item.uuid, item.item_class)
 
@@ -73,6 +75,8 @@ func _equip_item(item: Item) -> bool:
 func unequip_item(item_uuid: String) -> Item:
 	var item: Item = _unequip_item(item_uuid)
 	if item:
+		sync_unequip_item.rpc_id(target_node.peer_id, item.uuid)
+
 		for watcher in watcher_synchronizer.watchers:
 			sync_unequip_item.rpc_id(watcher.peer_id, item.uuid)
 

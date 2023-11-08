@@ -928,8 +928,9 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 [node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_7btdw")]
 stats = NodePath("../StatsSynchronizerComponent")
 
-[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("8_p56r6")]
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton", "action_synchronizer") instance=ExtResource("8_p56r6")]
 skeleton = NodePath("../Skeleton")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
 
 [node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "action_synchronizer") instance=ExtResource("9_km6so")]
 animation_player = NodePath("../AnimationPlayer")

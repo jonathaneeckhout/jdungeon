@@ -68,7 +68,7 @@ func attack(target: CharacterBody2D):
 
 	if target.get("stats"):
 		target.stats.hurt(self, damage)
-		action_synchronizer.attack(target.name, damage)
+		action_synchronizer.attack(position.direction_to(target.position))
 
 
 func _on_stuck_timer_timeout():
