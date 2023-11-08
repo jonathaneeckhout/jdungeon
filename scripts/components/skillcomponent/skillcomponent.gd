@@ -2,9 +2,14 @@ extends Node
 class_name SkillComponent
 ## Takes care of handling skills, their effects, cooldowns and costs, as well as the drawing of hitboxes for player feedback.
 
+#TODO:
+#Connect player input to skill usage
+#Prepare an UI element to check skills 
+
 signal skill_successful_usage(skill: SkillComponentResource)
 signal skill_failed_usage(skill: SkillComponentResource)
 signal skill_selected(skill: SkillComponentResource)
+signal skill_index_selected(index: int)
 
 const COLOR_HITBOX := Color.AQUA / 2
 const COLOR_HITBOX_UNUSABLE := Color.FIREBRICK / 2
@@ -30,6 +35,20 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 @export var skill_current: SkillComponentResource:
 	set(val):
 		skill_current = val
+		
+		#Stop here if it is a null value
+		if skill_current is SkillComponentResource:
+			return
+		
+		#Throw an error if this skill is not from this SkillComponent
+		if not skill_current in skills:
+			J.logger.error('This skill does not belong to this component')
+			return
+		
+		var skillIndex: int = skills.find(skill_current)
+		assert(skillIndex != -1, "Could not find this skill despite being in the array!")
+		
+		skill_index_selected.emit(skillIndex)
 		skill_selected.emit(skill_current)
 
 
@@ -43,6 +62,9 @@ func _ready() -> void:
 	skill_current = skills[0]
 	#TEMP
 	
+	if J.is_server():
+		return
+	
 	#Wait until the connection is ready to synchronize stats
 	if not multiplayer.has_multiplayer_peer():
 		await multiplayer.connected_to_server
@@ -55,6 +77,20 @@ func _ready() -> void:
 		await tree_entered
 	
 	sync_skills.rpc_id(1)
+
+#TEMP
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("j_slot1"):
+		skill_select_by_index(0)
+	elif event.is_action_pressed("j_slot2"):
+		skill_select_by_index(1)
+	elif event.is_action_pressed("j_slot3"):
+		skill_select_by_index(2)
+	elif event.is_action_pressed("j_slot4"):
+		skill_select_by_index(3)
+	elif event.is_action_pressed("j_slot5"):
+		skill_select_by_index(4)
+#TEMP
 
 
 func draw_on_user():
@@ -98,6 +134,8 @@ func skill_select_by_index(index: int):
 		return
 		
 	skill_current = skills[index]
+	
+	print_debug("Selected skill " + skill_current.displayed_name + " of class " + skill_current.skill_class)
 
 func skill_deselect():
 	skill_current = null
