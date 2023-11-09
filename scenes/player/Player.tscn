@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=44 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="Texture2D" uid="uid://fuk2rvw34m4d" path="res://assets/images/player/base/Basecharacter.png" id="2_j04kt"]
@@ -34,6 +34,8 @@
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="18_ot7di"]
 [ext_resource type="Script" path="res://scenes/player/player_gui.gd" id="23_h5xag"]
 [ext_resource type="PackedScene" uid="uid://npibcxiy8qqo" path="res://scenes/player/expbar/ExpBar.tscn" id="29_vmfl8"]
+[ext_resource type="PackedScene" uid="uid://dort400qb2f01" path="res://scripts/components/skillcomponent/SkillBar.tscn" id="35_rjqso"]
+[ext_resource type="PackedScene" uid="uid://bqsq7rd0h4l03" path="res://scripts/components/skillcomponent/SkillComponent.tscn" id="36_04ls8"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lk3fd"]
 radius = 24.6666
@@ -923,16 +925,22 @@ action_synchronizer = NodePath("../ActionSynchronizerComponent")
 [node name="PlayerInteractionComponent" parent="." node_paths=PackedStringArray("player_synchronizer") instance=ExtResource("10_76mfl")]
 player_synchronizer = NodePath("../PlayerSynchronizer")
 
-[node name="PlayerSynchronizer" parent="." node_paths=PackedStringArray("stats_component", "interaction_component", "action_synchronizer", "animation_player") instance=ExtResource("10_bajlk")]
+[node name="PlayerSynchronizer" parent="." node_paths=PackedStringArray("stats_component", "interaction_component", "action_synchronizer", "animation_player", "skill_component") instance=ExtResource("10_bajlk")]
 stats_component = NodePath("../StatsSynchronizerComponent")
 interaction_component = NodePath("../PlayerInteractionComponent")
 action_synchronizer = NodePath("../ActionSynchronizerComponent")
 animation_player = NodePath("../AnimationPlayer")
+skill_component = NodePath("../SkillComponent")
 
 [node name="InventorySynchronizerComponent" parent="." instance=ExtResource("10_6gj4a")]
 
 [node name="EquipmentSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("12_5ivre")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="SkillComponent" parent="." node_paths=PackedStringArray("user", "stats_component", "player_synchronizer") instance=ExtResource("36_04ls8")]
+user = NodePath("..")
+stats_component = NodePath("../StatsSynchronizerComponent")
+player_synchronizer = NodePath("../PlayerSynchronizer")
 
 [node name="PlayerRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("12_qxjy0")]
 stats = NodePath("../StatsSynchronizerComponent")
@@ -1120,3 +1128,11 @@ layout_mode = 1
 visible = false
 layout_mode = 1
 stats = NodePath("../../../../StatsSynchronizerComponent")
+
+[node name="SkillBar" parent="Camera2D/UILayer/GUI" instance=ExtResource("35_rjqso")]
+layout_mode = 1
+
+[node name="HBoxContainer" parent="Camera2D/UILayer/GUI/SkillBar" index="1" node_paths=PackedStringArray("skill_component")]
+skill_component = NodePath("../../../../../SkillComponent")
+
+[editable path="Camera2D/UILayer/GUI/SkillBar"]
