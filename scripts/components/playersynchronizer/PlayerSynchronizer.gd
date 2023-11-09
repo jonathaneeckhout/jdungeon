@@ -5,10 +5,14 @@ class_name PlayerSynchronizer
 signal interacted(target: Node2D)
 signal attacked(direction: Vector2)
 
+signal skill_slot_selected(skill_slot: int)
+signal skill_used(where: Vector2, skill_class: String)
+
 @export var stats_component: StatsSynchronizerComponent
 @export var interaction_component: PlayerInteractionComponent
 @export var action_synchronizer: ActionSynchronizerComponent
 @export var animation_player: AnimationPlayer
+@export var skill_component: SkillComponent
 
 var target_node: Node
 
@@ -62,6 +66,8 @@ func _ready():
 		stats_component.died.connect(_on_died)
 
 	interacted.connect(_on_interacted)
+	skill_used.connect(_on_skill_used)
+	skill_slot_selected.connect(_on_skill_slot_selected)
 
 	attack_timer = Timer.new()
 	attack_timer.name = "AttackTimer"
@@ -76,7 +82,20 @@ func _input(event: InputEvent):
 
 	if event.is_action_pressed("j_right_click"):
 		_handle_right_click(target_node.get_global_mouse_position())
-
+	
+	elif event.is_action_pressed("j_slot1"):
+		_handle_skill_selection(0)
+	elif event.is_action_pressed("j_slot2"):
+		_handle_skill_selection(1)
+	elif event.is_action_pressed("j_slot3"):
+		_handle_skill_selection(2)
+	elif event.is_action_pressed("j_slot4"):
+		_handle_skill_selection(3)
+	elif event.is_action_pressed("j_slot5"):
+		_handle_skill_selection(4)
+		
+	elif event.is_action_pressed("j_slot_deselect"):
+		_handle_skill_selection(-1)
 
 func _physics_process(delta):
 	if stats_component.is_dead:
@@ -98,7 +117,8 @@ func _physics_process(delta):
 			"j_move_left", "j_move_right", "j_move_up", "j_move_down"
 		)
 		input_buffer.append({"cf": current_frame, "dir": direction})
-
+		
+		
 		mouse_global_pos = target_node.get_global_mouse_position()
 
 		_sync_input.rpc_id(1, current_frame, direction, delta, mouse_global_pos)
@@ -128,13 +148,25 @@ func _handle_right_click(click_global_pos: Vector2):
 	#Fetch targets under the cursor
 	update_target(click_global_pos)
 
-	if current_target != null:
+	#Attempt to use a skill
+	if skill_component.get_skill_current_class() != "":
+		_sync_skill_use.rpc_id(1, click_global_pos, skill_component.get_skill_current_class())
+		skill_used.emit(click_global_pos, skill_component.get_skill_current_class())
+	
+	#Else, attempt to use the target
+	elif current_target != null:
 		_sync_interact.rpc_id(1, current_target.get_name())
 		interacted.emit(current_target)
+		
 	else:
 		_sync_interact.rpc_id(1, "")
 		interacted.emit(null)
 
+# Skill selection is client side
+func _handle_skill_selection(slotIdx :int):
+	_sync_skill_selection.rpc_id(1, slotIdx)
+	
+	skill_slot_selected.emit(slotIdx)
 
 func update_target(at_global_point: Vector2):
 	#Do not proceed if outside the tree
@@ -161,7 +193,6 @@ func update_target(at_global_point: Vector2):
 		if target != target_node:
 			current_target = target
 
-
 func update_animation():
 	if attack_timer.is_stopped():
 		if target_node.velocity.is_zero_approx():
@@ -170,7 +201,7 @@ func update_animation():
 			animation_player.play("Move")
 
 
-func _on_interacted(target: Node2D):
+func _on_interacted(target: Node2D):	
 	if target == null or target.entity_type == J.ENTITY_TYPE.ENEMY:
 		if attack_timer.is_stopped():
 			if J.is_server():
@@ -192,6 +223,11 @@ func _on_interacted(target: Node2D):
 
 			attack_timer.start(stats_component.attack_speed)
 
+func _on_skill_used(where: Vector2, skill_class: String):
+	skill_component.skill_use_at(where, skill_class)
+	
+func _on_skill_slot_selected(index: int):
+	skill_component.skill_select_by_index(index)
 
 func _on_died():
 	animation_player.play("Die")
@@ -208,7 +244,7 @@ func _on_died():
 	last_sync_position = p
 	last_sync_velocity = v
 
-
+#Movement and aiming
 @rpc("call_remote", "any_peer", "reliable")
 func _sync_input(c: int, d: Vector2, t: float, m: Vector2):
 	if c < current_frame:
@@ -229,6 +265,40 @@ func _sync_input(c: int, d: Vector2, t: float, m: Vector2):
 		input_buffer.append({"dir": d, "dt": t})
 
 
+@rpc("call_remote", "any_peer", "reliable") func _sync_skill_selection(index: int):
+	if not J.is_server():
+		return
+	
+	#Get the ID of whoever sent this
+	var id: int = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(id):
+		return
+
+	#Ensure that the owner of this component called it
+	if id == target_node.peer_id:
+		if index == -1:
+			skill_component.skill_deselect()
+		else:
+			skill_component.skill_select_by_index(index)
+
+@rpc("call_remote", "any_peer", "reliable") func _sync_skill_use(target_location: Vector2, skill_class: String):
+	if not J.is_server():
+		return
+
+	var id = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not J.server.is_user_logged_in(id):
+		return
+
+	if id == target_node.peer_id:
+		if skill_component.get_skill_current_class() == skill_class:
+			skill_used.emit( target_location, skill_class)
+		else:
+			J.logger.warn('Attempted to use {0} skill but skill {1} was selected, likely a syncrhonization issue.'.format([skill_class, skill_component.get_skill_current_class()]))
+
 @rpc("call_remote", "any_peer", "reliable") func _sync_interact(target_name: String):
 	if not J.is_server():
 		return
@@ -246,13 +316,20 @@ func _sync_input(c: int, d: Vector2, t: float, m: Vector2):
 		var target: Node2D = null
 
 		target = J.world.enemies.get_node_or_null(target_name)
+		
+		#If it is not an enemy, continue
 		if target == null:
 			target = J.world.npcs.get_node_or_null(target_name)
+			
+			#If it is not an NPC, continue
 			if target == null:
 				target = J.world.items.get_node_or_null(target_name)
+				
+				#If it is an item within range...
 				if target != null and interaction_component.items_in_loot_range.has(target):
 					target.loot(target_node)
 			else:
+				#The target is an NPC
 				if interaction_component.npcs_in_interact_range.has(target):
 					target.interact(target_node)
 
