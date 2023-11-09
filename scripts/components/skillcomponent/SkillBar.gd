@@ -24,7 +24,9 @@ func _on_skill_selected(index: int):
 		return
 	
 	#Deselect the current one and select the new one
-	display_selected.deselect()
+	if display_selected:
+		display_selected.deselect()
+		
 	display_selected = displaySelected
 	display_selected.select()
 		

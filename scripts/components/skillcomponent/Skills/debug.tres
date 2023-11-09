@@ -23,5 +23,7 @@ collision_mask = 1
 cooldown = 0.0
 damage = 0
 hitbox_shape = [Vector2(-5, 0), Vector2(0, 5), Vector2(5, 0), Vector2(0, -5)]
+hitbox_hits_user = false
+hitbox_rotate_shape = false
 hit_range = 25.0
 controlType = 0

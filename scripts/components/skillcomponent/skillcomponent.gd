@@ -29,20 +29,21 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 		
 		
 @export var stats_component: StatsSynchronizerComponent
-@export var input_component: InputSynchronizerComponent
+@export var player_synchronizer: PlayerSynchronizer
 
 @export var skills: Array[SkillComponentResource]
 @export var skill_current: SkillComponentResource:
 	set(val):
-		skill_current = val
-		
 		#Stop here if it is a null value
-		if skill_current is SkillComponentResource:
+		if val is SkillComponentResource:
+			skill_current = val.duplicate()
+		else: 
+			skill_current = null
 			return
 		
 		#Throw an error if this skill is not from this SkillComponent
 		if not skill_current in skills:
-			J.logger.error('This skill does not belong to this component')
+			J.logger.error('The skill of class {0} does not belong to this component'.format([skill_current.skill_class]))
 			return
 		
 		var skillIndex: int = skills.find(skill_current)
@@ -60,6 +61,8 @@ func _ready() -> void:
 	#TEMP
 	skills.append( J.skill_resources["debug"].duplicate() )
 	skill_current = skills[0]
+	assert(skills[0].skill_class == "debug")
+	assert(not skills.is_empty())
 	#TEMP
 	
 	if J.is_server():
@@ -94,17 +97,25 @@ func _input(event: InputEvent) -> void:
 
 
 func draw_on_user():
-	if not skill_current:
+	if not skill_current is SkillComponentResource:
 		return
+		
+	elif skill_current.hitbox_shape.size() <= 0:
+		return
+		
+	print_debug(skill_current)
+	print_debug(skill_current.hitbox_shape)
+	
 	draw_range()
 	draw_hitbox()
+	
 func draw_range():
 	user.draw_circle(Vector2.ZERO, skill_current.hit_range, COLOR_RANGE)
-func draw_hitbox(atPoint: Vector2 = input_component.cursor_position_global):
-
+	
+func draw_hitbox(localPoint: Vector2 = player_synchronizer.mouse_global_pos - user.global_position):
 	var shape: Shape2D
 	if skill_current.hitbox_rotate_shape:
-		shape = get_collision_shape(user.global_position.angle_to_point(atPoint))
+		shape = get_collision_shape(user.global_position.angle_to_point(localPoint))
 	else:
 		shape = get_collision_shape(0.0)
 		
@@ -118,12 +129,13 @@ func draw_hitbox(atPoint: Vector2 = input_component.cursor_position_global):
 	
 	#Drawing
 	if shape is CircleShape2D:
-		user.draw_circle(atPoint, shape.radius, colorUsed)
+		user.draw_circle(localPoint, shape.radius, colorUsed)
 		
 	elif shape is ConvexPolygonShape2D:
+		assert(shape.points.size() >= 3)
 		var polygon: PackedVector2Array = []
 		for point in shape.points:
-			polygon.append(point + atPoint)
+			polygon.append(point + localPoint)
 			
 		user.draw_colored_polygon(polygon, colorUsed)
 
@@ -140,7 +152,10 @@ func skill_select_by_index(index: int):
 func skill_deselect():
 	skill_current = null
 
-func use_at(globalPoint: Vector2):
+func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_class()):
+	
+	skill_current = J.skill_resources[skillClass].duplicate()
+	
 	if not is_skill_usable(skill_current):
 		skill_failed_usage.emit(skill_current)
 		return
@@ -191,13 +206,18 @@ func get_collision_shape(userRotation: float)->Shape2D:
 	if skill_current.hitbox_shape.size() == 1:
 		shape = CircleShape2D.new()
 		shape.radius = skill_current.hitbox_shape[0]
+		assert( shape.points.size() == 1 )
 		
 	#Otherwise treat it as a polygon
 	else:
 		shape = ConvexPolygonShape2D.new()
+		var newPoints: PackedVector2Array
 		for point in skill_current.hitbox_shape:
-			shape.points.append(point.rotated(userRotation))
+			newPoints.append(point.rotated(userRotation))
+		shape.points = newPoints
 		
+		assert( shape.points.size() >= 3 )
+	
 	return shape
 
 func get_collision_layer()->int:
@@ -211,6 +231,12 @@ func handle_cooldown(skill: SkillComponentResource, started: bool):
 	#Remove the skill from the "cooling down" list
 	else:
 		cooldownDict.erase(skill)
+	
+func get_skill_current_class()->String:
+	if skill_current is SkillComponentResource:
+		return skill_current.skill_class
+	else: 
+		return ""
 	
 func is_skill_usable(skill: SkillComponentResource)->bool:
 	if not stats_component.energy >= skill.energy_usage:
@@ -306,14 +332,14 @@ class UseInfo extends Object:
 				J.logger.error('Target lacks a "stats" property: ' + target.get_name())
 		return statArr
 
-	func get_target_names(target: Array[Node])->Array[String]:
+	func get_target_names()->Array[String]:
 		var names: Array[String] = []
 		for entity in get_targets_filter_entities():
 			names.append(entity.get_name())
 		return names
 		
 	func to_json(usageInfo: UseInfo)->Dictionary:
-		return {"user": usageInfo.user.get_name(), "targets":usageInfo.get_target_names(usageInfo.targets), "position_global":usageInfo.position_target_global}
+		return {"user": usageInfo.user.get_name(), "targets":usageInfo.get_target_names(), "position_global":usageInfo.position_target_global}
 
 	func from_json(data: Dictionary)->bool:
 		if not "user" in data:
@@ -340,7 +366,7 @@ class UseInfo extends Object:
 		elif J.world.npcs.has_node(data["user"]):
 			foundUser = J.world.npcs.get_node(data["user"])
 		
-		var foundTargets: Array[Node]
+		var foundTargets: Array[Node] = []
 		for possibleTarget in data["targets"]:
 			if J.world.players.has_node(data["user"]):
 				foundTargets.append(J.world.players.get_node(data["user"]))
