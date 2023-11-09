@@ -11,6 +11,7 @@ const EMPTY_ICON: Texture = preload("res://assets/images/enemies/flower/Flower.p
 
 func _ready() -> void:
 	skill_component.skill_index_selected.connect(_on_skill_selected)
+	skill_component.skills_changed.connect(update_icons)
 	update_displays()
 	
 
@@ -20,7 +21,7 @@ func _on_skill_selected(index: int):
 	
 	#Ensure that the index corresponds to the shown skill
 	if displaySelected.skill_class != skillSelected.skill_class:
-		J.logger.error('The selected skill and the button used do not have the same "skill_class".')
+		J.logger.error('The selected skill is {0} but the button has {1}.'.format([str(skillSelected.skill_class), display_selected.skill_class]))
 		return
 	
 	#Deselect the current one and select the new one

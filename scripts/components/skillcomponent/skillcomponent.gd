@@ -11,6 +11,8 @@ signal skill_failed_usage(skill: SkillComponentResource)
 signal skill_selected(skill: SkillComponentResource)
 signal skill_index_selected(index: int)
 
+signal skills_changed
+
 const COLOR_HITBOX := Color.AQUA / 2
 const COLOR_HITBOX_UNUSABLE := Color.FIREBRICK / 2
 const COLOR_RANGE := Color.GREEN_YELLOW / 2
@@ -41,13 +43,12 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 			skill_current = null
 			return
 		
-		#Throw an error if this skill is not from this SkillComponent
-		if not skill_current in skills:
+		#Throw an error if this skill is not present in this SkillComponent
+		if not skill_current.skill_class in get_skills_classes():
 			J.logger.error('The skill of class {0} does not belong to this component'.format([skill_current.skill_class]))
 			return
 		
 		var skillIndex: int = skills.find(skill_current)
-		assert(skillIndex != -1, "Could not find this skill despite being in the array!")
 		
 		skill_index_selected.emit(skillIndex)
 		skill_selected.emit(skill_current)
@@ -63,6 +64,8 @@ func _ready() -> void:
 	skill_current = skills[0]
 	assert(skills[0].skill_class == "debug")
 	assert(not skills.is_empty())
+	
+	skills_changed.emit()
 	#TEMP
 	
 	if J.is_server():
@@ -238,6 +241,12 @@ func get_skill_current_class()->String:
 	else: 
 		return ""
 	
+func get_skills_classes()->Array[String]:
+	var arr: Array[String] = []
+	for skill in skills:
+		arr.append(skill.skill_class)
+	return arr
+	
 func is_skill_usable(skill: SkillComponentResource)->bool:
 	if not stats_component.energy >= skill.energy_usage:
 		return false
@@ -256,6 +265,7 @@ func to_json()->Dictionary:
 	return output
 
 func from_json(data: Dictionary)->bool:
+	print_debug(data)
 	for slotIdx in data:
 		
 		if not data[slotIdx] is String:
@@ -263,6 +273,7 @@ func from_json(data: Dictionary)->bool:
 			return false
 			
 		skills[slotIdx] = J.skill_resources[data[slotIdx]].duplicate()
+		assert(skills[slotIdx] is SkillComponentResource)
 	return true
 
 
