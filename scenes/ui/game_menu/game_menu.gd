@@ -101,8 +101,8 @@ func _on_quit_button_pressed():
 
 
 func unstuck():
-	if J.client.player.get("player_unstuck"):
-		J.client.player.player_unstuck.unstuck()
+	if G.client_player.get("player_unstuck"):
+		G.client_player.player_unstuck.unstuck()
 		self.hide()
 		JUI.above_ui = false
 

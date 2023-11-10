@@ -52,7 +52,7 @@ Remove any code that has been used for debugging the code. The PR should contain
 
 ### Add meaningfull Logging
 
-Use the J.logger Node to write meaningfull logs. When running your code it should not bloat the logs but when a crash occurs the logs should indicate what happened.
+Use the GodotLogger Node to write meaningfull logs. When running your code it should not bloat the logs but when a crash occurs the logs should indicate what happened.
 
 ### Filenames should match the Rest of the Project
 

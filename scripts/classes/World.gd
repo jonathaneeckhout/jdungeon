@@ -43,17 +43,18 @@ func _ready():
 	items.y_sort_enabled = true
 	synced_entities.add_child(items)
 
-	if J.is_server():
-		J.rpcs.account.player_logged_in.connect(_on_player_logged_in)
+	if G.is_server():
+		G.account_rpc.player_logged_in.connect(_on_player_logged_in)
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 		enemy_respawns = Node2D.new()
 		enemy_respawns.name = "EnemyRespawns"
 		synced_entities.add_child(enemy_respawns)
 	else:
-		J.rpcs.player.player_added.connect(_on_client_player_added)
+		G.player_rpc.player_added.connect(_on_client_player_added)
+		G.player_rpc.get_player.rpc_id(1)
 
-	J.world = self
+	G.world = self
 
 	# Remove map from entities to make sure it takes part of the ysort mechanics
 	map_to_sync.get_parent().remove_child(map_to_sync)
@@ -69,7 +70,7 @@ func load_enemies():
 		enemy.name = str(enemy.get_instance_id())
 		enemy.get_parent().remove_child(enemy)
 
-		if J.is_server():
+		if G.is_server():
 			enemies.add_child(enemy)
 
 
@@ -78,7 +79,7 @@ func load_npcs():
 		npc.name = str(npc.get_instance_id())
 		npc.get_parent().remove_child(npc)
 
-		if J.is_server():
+		if G.is_server():
 			npcs.add_child(npc)
 
 
@@ -103,11 +104,28 @@ func get_player_by_username(username: String) -> Player:
 	return players.get_node_or_null(username)
 
 
+func get_entity_by_name(entity_name: String) -> Node:
+	var entity: Node = enemies.get_node_or_null(entity_name)
+	if entity != null:
+		return entity
+
+	entity = npcs.get_node_or_null(entity_name)
+	if entity != null:
+		return entity
+
+	entity = players.get_node_or_null(entity_name)
+	if entity != null:
+		return entity
+
+	entity = items.get_node_or_null(entity_name)
+	return entity
+
+
 func find_player_respawn_location(player_position: Vector2) -> Vector2:
 	var spots = player_respawn_locations.get_children()
 
 	if len(spots) == 0:
-		J.logger.warn("No player respawn spots found, returning current player's position")
+		GodotLogger.warn("No player respawn spots found, returning current player's position")
 		return player_position
 
 	var closest = spots[0].position
@@ -122,20 +140,26 @@ func find_player_respawn_location(player_position: Vector2) -> Vector2:
 	return closest
 
 
-func _on_player_logged_in(id: int, username: String):
-	J.logger.info("Adding player=[%s] with id=[%d]" % [username, id])
+func _on_player_logged_in(id: int, _username: String):
+	var user: G.User = G.get_user_by_id(id)
+	if user == null:
+		GodotLogger.warn("Could not find user with id=%d" % id)
+		return
+
+	GodotLogger.info("Adding player=[%s] with id=[%d]" % [user.username, id])
 
 	var player: Player = J.player_scene.instantiate()
-	player.name = username
-	player.username = username
+	player.name = user.username
+	player.username = user.username
 	player.peer_id = id
 
 	players.add_child(player)
 
+	# Reference the player to the user
+	user.player = player
+
 	# Add to this list for internal tracking
 	players_by_id[id] = player
-
-	J.rpcs.player.add_player.rpc_id(id, id, username, player.position)
 
 
 func _on_peer_disconnected(id):
@@ -147,7 +171,7 @@ func _on_peer_disconnected(id):
 			player.position = find_player_respawn_location(player.position)
 			player.stats.reset_hp()
 
-		J.logger.info("Removing player=[%s]" % player.name)
+		GodotLogger.info("Removing player=[%s]" % player.name)
 
 		# Disable physics which stops the sync
 		player.set_physics_process(false)
@@ -164,7 +188,7 @@ func _on_client_player_added(id: int, username: String, pos: Vector2):
 
 	player.position = pos
 
-	J.client.player = player
+	G.client_player = player
 
 	players.add_child(player)
 
@@ -182,6 +206,10 @@ func _on_client_player_added(id: int, username: String, pos: Vector2):
 
 
 func _on_client_other_player_added(username: String, pos: Vector2):
+	if players.has_node(username):
+		GodotLogger.info("Player=[%s] already exists, no need to add again" % username)
+		return
+
 	var player: Player = J.player_scene.instantiate()
 	player.name = username
 	player.username = username
@@ -196,6 +224,10 @@ func _on_client_other_player_removed(username: String):
 
 
 func _on_client_enemy_added(enemy_name: String, enemy_class: String, pos: Vector2):
+	if enemies.has_node(enemy_name):
+		GodotLogger.info("Enemy=[%s] already exists, no need to add again" % enemy_name)
+		return
+
 	var enemy: CharacterBody2D = J.enemy_scenes[enemy_class].instantiate()
 	enemy.name = enemy_name
 	enemy.position = pos
@@ -212,6 +244,10 @@ func _on_client_npc_added(
 	npc_class: String,
 	pos: Vector2,
 ):
+	if npcs.has_node(npc_name):
+		GodotLogger.info("NPC=[%s] already exists, no need to add again" % npc_name)
+		return
+
 	var npc: CharacterBody2D = J.npc_scenes[npc_class].instantiate()
 	npc.name = npc_name
 	npc.position = pos
@@ -225,6 +261,10 @@ func _on_client_npc_removed(npc_name: String):
 
 
 func _on_client_item_added(item_uuid: String, item_class: String, pos: Vector2):
+	if items.has_node(item_uuid):
+		GodotLogger.info("Item=[%s] already exists, no need to add again")
+		return
+
 	var item: Item = J.item_scenes[item_class].instantiate()
 	item.uuid = item_uuid
 	item.item_class = item_class

@@ -23,7 +23,7 @@ func _init():
 
 
 func _ready():
-	if J.is_server():
+	if G.is_server():
 		beehave_tree.enabled = true
 		stuck_timer.timeout.connect(_on_stuck_timer_timeout)
 
@@ -44,7 +44,7 @@ func _add_loot():
 
 
 func _physics_process(_delta):
-	if J.is_server():
+	if G.is_server():
 		if position.distance_to(destination) > J.ARRIVAL_DISTANCE:
 			velocity = position.direction_to(destination) * stats.movement_speed
 			velocity = (

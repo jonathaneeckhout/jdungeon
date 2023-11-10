@@ -4,12 +4,13 @@ class_name NPC
 
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.NPC
 var npc_class: String = ""
+var component_list: Dictionary = {}
 
 
 func _init():
 	collision_layer = J.PHYSICS_LAYER_NPCS
 
-	if J.is_server():
+	if G.is_server():
 		# NPCs cannot be stopped by any entity.
 		collision_mask = J.PHYSICS_LAYER_WORLD
 	else:

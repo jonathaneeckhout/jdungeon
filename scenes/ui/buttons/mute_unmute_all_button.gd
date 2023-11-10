@@ -8,7 +8,7 @@ extends TextureButton
 
 func _ready():
 	self.pressed.connect(_on_button_pressed)
-	if J.global.env_audio_mute:
+	if Global.env_audio_mute:
 		AudioServer.set_bus_mute(master_sound, true)
 	if not AudioServer.is_bus_mute(master_sound):
 		self.set_texture_normal(sound_on)

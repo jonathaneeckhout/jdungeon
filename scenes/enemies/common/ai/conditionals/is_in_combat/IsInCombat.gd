@@ -71,7 +71,7 @@ func _on_got_hurt(from: String, _damage: int):
 		reset_timer.start()
 	if target == null:
 		start_combat = true
-		target = J.world.players.get_node(from)
+		target = G.world.players.get_node(from)
 
 
 func _reset(actor: Node):

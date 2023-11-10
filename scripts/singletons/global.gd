@@ -3,6 +3,7 @@ extends Node
 var env_run_as_server: bool = false
 var env_run_as_client: bool = false
 var env_minimize_server_on_start: bool = false
+var env_no_tls: bool = false
 
 var env_server_address: String = ""
 var env_server_port: int = 0
@@ -24,6 +25,14 @@ var env_postgress_db: String = ""
 var server: Node
 var client: Node
 
+var env: GodotEnv
+
+
+func _ready():
+	env = GodotEnv.new()
+
+	load_common_env_variables()
+
 
 func load_local_settings():
 	#Load or create the file if it doesn't exist.
@@ -43,7 +52,7 @@ func load_local_settings():
 			TranslationServer.add_translation(load("user://translations/" + fileName))
 
 	if not foundTranslations.is_empty():
-		J.logger.info(
+		GodotLogger.info(
 			"Found {0} translation/s. {1}".format(
 				[foundTranslations.size(), str(foundTranslations)]
 			)
@@ -119,124 +128,127 @@ func load_local_settings():
 
 
 func load_common_env_variables() -> bool:
-	env_run_as_server = J.env.get_value("RUN_AS_SERVER") == "true"
-	env_run_as_client = J.env.get_value("RUN_AS_CLIENT") == "true"
-	env_minimize_server_on_start = J.env.get_value("MINIMIZE_SERVER_ON_START") == "true"
-	J.logger.info("MINIMIZE_SERVER_ON_START=[%s]" % str(env_minimize_server_on_start))
+	env_run_as_server = env.get_value("RUN_AS_SERVER") == "true"
+	env_run_as_client = env.get_value("RUN_AS_CLIENT") == "true"
+	env_minimize_server_on_start = env.get_value("MINIMIZE_SERVER_ON_START") == "true"
+	GodotLogger.info("MINIMIZE_SERVER_ON_START=[%s]" % str(env_minimize_server_on_start))
+	env_no_tls = env.get_value("NO_TLS") == "true"
+	GodotLogger.info("NO_TLS=[%s]" % str(env_no_tls))
+
 	return true
 
 
 func load_server_env_variables() -> bool:
-	env_debug = J.env.get_value("DEBUG") == "true"
+	env_debug = env.get_value("DEBUG") == "true"
 
-	J.logger.info("DEBUG=[%s]" % str(env_debug))
+	GodotLogger.info("DEBUG=[%s]" % str(env_debug))
 
-	var env_port_str = J.env.get_value("SERVER_PORT")
+	var env_port_str = env.get_value("SERVER_PORT")
 	if env_port_str == "":
-		J.logger.error("Could not load SERVER_PORT env varaible")
+		GodotLogger.error("Could not load SERVER_PORT env varaible")
 		return false
 
 	env_server_port = int(env_port_str)
 
-	J.logger.info("SERVER_PORT=[%d]" % env_server_port)
+	GodotLogger.info("SERVER_PORT=[%d]" % env_server_port)
 
-	var env_max_peers_str = J.env.get_value("SERVER_MAX_PEERS")
+	var env_max_peers_str = env.get_value("SERVER_MAX_PEERS")
 	if env_max_peers_str == "":
-		J.logger.error("Could not load SERVER_MAX_PEERS env varaible")
+		GodotLogger.error("Could not load SERVER_MAX_PEERS env varaible")
 		return false
 
 	env_server_max_peers = int(env_max_peers_str)
 
-	J.logger.info("SERVER_MAX_PEERS=[%d]" % env_server_max_peers)
+	GodotLogger.info("SERVER_MAX_PEERS=[%d]" % env_server_max_peers)
 
-	env_server_crt = J.env.get_value("SERVER_CRT")
+	env_server_crt = env.get_value("SERVER_CRT")
 	if env_server_crt == "":
-		J.logger.error("Could not load SERVER_CRT env varaible")
+		GodotLogger.error("Could not load SERVER_CRT env varaible")
 		return false
 
-	J.logger.info("SERVER_CRT=[%s]" % env_server_crt)
+	GodotLogger.info("SERVER_CRT=[%s]" % env_server_crt)
 
-	env_server_key = J.env.get_value("SERVER_KEY")
+	env_server_key = env.get_value("SERVER_KEY")
 	if env_server_key == "":
-		J.logger.error("Could not load SERVER_KEY env varaible")
+		GodotLogger.error("Could not load SERVER_KEY env varaible")
 		return false
 
-	J.logger.info("SERVER_KEY=[%s]" % env_server_key)
+	GodotLogger.info("SERVER_KEY=[%s]" % env_server_key)
 
-	env_server_database_backend = J.env.get_value("SERVER_DATABASE_BACKEND")
+	env_server_database_backend = env.get_value("SERVER_DATABASE_BACKEND")
 	if env_server_database_backend == "":
-		J.logger.error("Could not load SERVER_DATABASE_BACKEND env varaible")
+		GodotLogger.error("Could not load SERVER_DATABASE_BACKEND env varaible")
 		return false
 
-	J.logger.info("SERVER_DATABASE_BACKEND=[%s]" % env_server_database_backend)
+	GodotLogger.info("SERVER_DATABASE_BACKEND=[%s]" % env_server_database_backend)
 
 	match env_server_database_backend:
 		"json":
-			env_server_json_backend_file = J.env.get_value("SERVER_JSON_BACKEND_FILE")
+			env_server_json_backend_file = env.get_value("SERVER_JSON_BACKEND_FILE")
 			if env_server_json_backend_file == "":
-				J.logger.error("Could not load SERVER_JSON_BACKEND_FILE env varaible")
+				GodotLogger.error("Could not load SERVER_JSON_BACKEND_FILE env varaible")
 				return false
 
-			J.logger.info("SERVER_JSON_BACKEND_FILE=[%s]" % env_server_json_backend_file)
+			GodotLogger.info("SERVER_JSON_BACKEND_FILE=[%s]" % env_server_json_backend_file)
 
 		"postgres":
 			# REMINDER: DO NOT PRINT CREDENTIAL INFORMATION ABOUT THE DATABASE CONNECTION
 
-			env_postgres_address = J.env.get_value("POSTGRES_ADDRESS")
+			env_postgres_address = env.get_value("POSTGRES_ADDRESS")
 			if env_postgres_address == "":
-				J.logger.error("Could not load POSTGRES_ADDRESS env varaible")
+				GodotLogger.error("Could not load POSTGRES_ADDRESS env varaible")
 				return false
 
-			var env_postgres_port_str = J.env.get_value("POSTGRES_PORT")
+			var env_postgres_port_str = env.get_value("POSTGRES_PORT")
 			if env_postgres_port_str == "":
-				J.logger.error("Could not load POSTGRES_PORT env varaible")
+				GodotLogger.error("Could not load POSTGRES_PORT env varaible")
 				return false
 
 			env_postgres_port = int(env_postgres_port_str)
 
-			env_postgres_user = J.env.get_value("POSTGRES_USER")
+			env_postgres_user = env.get_value("POSTGRES_USER")
 			if env_postgres_user == "":
-				J.logger.error("Could not load POSTGRES_USER env varaible")
+				GodotLogger.error("Could not load POSTGRES_USER env varaible")
 				return false
 
-			env_postgress_password = J.env.get_value("POSTGRES_PASSWORD")
+			env_postgress_password = env.get_value("POSTGRES_PASSWORD")
 			if env_postgress_password == "":
-				J.logger.error("Could not load POSTGRES_PASSWORD env varaible")
+				GodotLogger.error("Could not load POSTGRES_PASSWORD env varaible")
 				return false
 
-			env_postgress_db = J.env.get_value("POSTGRES_DB")
+			env_postgress_db = env.get_value("POSTGRES_DB")
 			if env_postgress_db == "":
-				J.logger.error("Could not load POSTGRES_DB env varaible")
+				GodotLogger.error("Could not load POSTGRES_DB env varaible")
 				return false
 
 	return true
 
 
 func load_client_env_variables() -> bool:
-	env_debug = J.env.get_value("DEBUG") == "true"
+	env_debug = env.get_value("DEBUG") == "true"
 
-	J.logger.info("DEBUG=[%s]" % str(env_debug))
+	GodotLogger.info("DEBUG=[%s]" % str(env_debug))
 
-	env_server_address = J.env.get_value("SERVER_ADDRESS")
+	env_server_address = env.get_value("SERVER_ADDRESS")
 	if env_server_address == "":
-		J.logger.error("Could not load SERVER_ADDRESS env varaible")
+		GodotLogger.error("Could not load SERVER_ADDRESS env varaible")
 		return false
 
-	J.logger.info("SERVER_ADDRESS=[%s]" % env_server_address)
+	GodotLogger.info("SERVER_ADDRESS=[%s]" % env_server_address)
 
-	var env_port_str = J.env.get_value("SERVER_PORT")
+	var env_port_str = env.get_value("SERVER_PORT")
 	if env_port_str == "":
-		J.logger.error("Could not load SERVER_PORT env varaible")
+		GodotLogger.error("Could not load SERVER_PORT env varaible")
 		return false
 
 	env_server_port = int(env_port_str)
 
-	J.logger.info("SERVER_PORT=[%d]" % env_server_port)
+	GodotLogger.info("SERVER_PORT=[%d]" % env_server_port)
 
-	env_audio_mute = J.env.get_value("AUDIO_MUTE") == "true"
+	env_audio_mute = env.get_value("AUDIO_MUTE") == "true"
 
-	J.logger.info("AUDIO_MUTE=[%s]" % str(env_audio_mute))
+	GodotLogger.info("AUDIO_MUTE=[%s]" % str(env_audio_mute))
 
-	env_version_file = J.env.get_value("VERSION_FILE")
+	env_version_file = env.get_value("VERSION_FILE")
 
 	return true

@@ -1,26 +1,32 @@
 extends Node
 
+class_name Database
+
 var backend: Node
 
 
 func init() -> bool:
-	match J.global.env_server_database_backend:
+	match Global.env_server_database_backend:
 		"json":
-			J.logger.info("Loading json database backend")
-			backend = JJSONDatabaseBackend.new()
+			GodotLogger.info("Loading json database backend")
+			backend = JSONDatabaseBackend.new()
 			backend.name = "Backend"
 			add_child(backend)
 		"postgres":
-			J.logger.info("Loading postgres database backend")
+			GodotLogger.info("Loading postgres database backend")
 			backend = (
-				load("res://scripts/network/database/backends/JPostgresDatabaseBackend.cs").new()
+				load("res://scripts/network/database/backends/PostgresDatabaseBackend.cs").new()
 			)
 			backend.name = "Backend"
 			add_child(backend)
 
 	if not backend or not backend.Init():
-		J.logger.error("Failed to init database")
+		GodotLogger.error("Failed to init database")
 		return false
+
+	GodotLogger.info(
+		"Database backend=[%s] successfully loaded" % Global.env_server_database_backend
+	)
 
 	return true
 
@@ -28,7 +34,7 @@ func init() -> bool:
 func create_account(username: String, password: String) -> Dictionary:
 	var validation_result: Dictionary = is_account_valid(username, password)
 	if not validation_result["result"]:
-		J.logger.info("Invalid account for username=[%s]" % username)
+		GodotLogger.info("Invalid account for username=[%s]" % username)
 		return validation_result
 
 	return backend.CreateAccount(username, password)
@@ -47,22 +53,22 @@ func is_account_valid(username: String, password: String) -> Dictionary:
 
 	if username.length() < 4 or username.length() > 16:
 		error = "Username must be at least 4 characters long or maximum 16 characters long."
-		J.logger.warn(error)
+		GodotLogger.warn(error)
 		return {"result": false, "error": error}
 
 	if password.length() < 4 or password.length() > 32:
 		error = "Password must be at least 4 characters long or maximum 32 characters long."
-		J.logger.warn(error)
+		GodotLogger.warn(error)
 		return {"result": false, "error": error}
 
 	if not username_regex.search(username):
 		error = "Username can only contain letters and digits."
-		J.logger.warn(error)
+		GodotLogger.warn(error)
 		return {"result": false, "error": error}
 
 	if not password_regex.search(password):
 		error = "Password cannot contain white spaces."
-		J.logger.warn(error)
+		GodotLogger.warn(error)
 		return {"result": false, "error": error}
 
 	return {"result": true, "error": ""}
@@ -70,7 +76,7 @@ func is_account_valid(username: String, password: String) -> Dictionary:
 
 func authenticate_user(username: String, password: String) -> bool:
 	if username == "" or password == "":
-		J.logger.info("Invalid username or password")
+		GodotLogger.info("Invalid username or password")
 		return false
 
 	return backend.AuthenticateUser(username, password)

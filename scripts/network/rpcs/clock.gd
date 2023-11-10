@@ -1,5 +1,7 @@
 extends Node
 
+class_name ClockRPC
+
 const LATENCY_BUFFER_SIZE = 9
 const LATENCY_BUFFER_MID_POINT = int(LATENCY_BUFFER_SIZE / float(2))
 const LATENCY_MINIMUM_THRESHOLD = 20
@@ -9,14 +11,18 @@ var latency_buffer = []
 var delta_latency: float = 0.0
 
 
+func _ready():
+	# Disable physics process for the server
+	set_physics_process(not G.is_server())
+
+
 func _physics_process(delta):
-	if J.client:
-		J.client.clock += delta + delta_latency
-		delta_latency = 0
+	G.clock += delta + delta_latency
+	delta_latency = 0
 
 
 @rpc("call_remote", "any_peer", "reliable") func fetch_server_time(client_time: float):
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
@@ -26,11 +32,11 @@ func _physics_process(delta):
 @rpc("call_remote", "authority", "reliable")
 func return_server_time(server_time: float, client_time: float):
 	latency = (Time.get_unix_time_from_system() - client_time) / 2
-	J.client.clock = server_time + latency
+	G.clock = server_time + latency
 
 
 @rpc("call_remote", "any_peer", "reliable") func get_latency(client_time: float):
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()

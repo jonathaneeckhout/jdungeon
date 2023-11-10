@@ -15,7 +15,7 @@ var panels = []
 
 
 func _ready():
-	if J.is_server():
+	if G.is_server():
 		return
 
 	mouse_entered.connect(_on_mouse_entered)

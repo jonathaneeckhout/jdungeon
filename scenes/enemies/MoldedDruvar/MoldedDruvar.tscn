@@ -828,27 +828,21 @@ stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 scale = Vector2(0.06, 0.06)
 
 [node name="BackHand" type="Sprite2D" parent="Sprites"]
-scale = Vector2(1, 1)
 texture = ExtResource("1_fnuxl")
 
 [node name="BackLeg" type="Sprite2D" parent="Sprites"]
-scale = Vector2(1, 1)
 texture = ExtResource("2_xe2qq")
 
 [node name="TopLeg" type="Sprite2D" parent="Sprites"]
-scale = Vector2(1, 1)
 texture = ExtResource("3_x4duj")
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
-scale = Vector2(1, 1)
 texture = ExtResource("4_uuhj7")
 
 [node name="Head" type="Sprite2D" parent="Sprites"]
-scale = Vector2(1, 1)
 texture = ExtResource("5_af0rv")
 
 [node name="TopHand" type="Sprite2D" parent="Sprites"]
-scale = Vector2(1, 1)
 texture = ExtResource("6_ajo5s")
 
 [node name="Skeleton" type="Node2D" parent="."]
