@@ -9,9 +9,12 @@ var username: String = ""
 var peer_id: int = 0
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
 
+var component_list: Dictionary = {}
+
 @onready var position_synchronizer: PositionSynchronizerComponent = $PositionSynchronizerComponent
 @onready
 var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSynchronizerComponent
+@onready var player_synchronizer: PlayerSynchronizer = $PlayerSynchronizer
 
 @onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
 @onready var inventory: InventorySynchronizerComponent = $InventorySynchronizerComponent
@@ -55,7 +58,7 @@ func _ready():
 	equipment.item_added.connect(_on_item_equiped)
 	equipment.item_removed.connect(_on_item_unequiped)
 	# Server side code
-	if J.is_server():
+	if G.is_server():
 		# No input is handeld on server's side
 		set_process_input(false)
 		# Remove the camera with ui on the server's side
@@ -157,36 +160,36 @@ func update_boosts():
 
 
 func _on_stats_changed(stat_type: StatsSynchronizerComponent.TYPE):
-	if J.is_server() and stat_type == StatsSynchronizerComponent.TYPE.LEVEL:
+	if G.is_server() and stat_type == StatsSynchronizerComponent.TYPE.LEVEL:
 		update_boosts()
 
 
 func _on_equipment_loaded():
-	if J.is_server():
+	if G.is_server():
 		update_boosts()
 	else:
 		equipment_changed()
 
 
 func _on_item_equiped(_item_uuid: String, _item_class: String):
-	if J.is_server():
+	if G.is_server():
 		update_boosts()
 	else:
 		equipment_changed()
 
 
 func _on_item_unequiped(_item_uuid: String):
-	if J.is_server():
+	if G.is_server():
 		update_boosts()
 	else:
 		equipment_changed()
 
 
 func _on_died():
-	if not J.is_server() and peer_id == multiplayer.get_unique_id():
+	if not G.is_server() and peer_id == multiplayer.get_unique_id():
 		$Camera2D/UILayer/GUI/DeathPopup.show_popup()
 
 
 func _on_respawned():
-	if not J.is_server() and peer_id == multiplayer.get_unique_id():
+	if not G.is_server() and peer_id == multiplayer.get_unique_id():
 		$Camera2D/UILayer/GUI/DeathPopup.hide()

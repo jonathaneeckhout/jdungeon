@@ -16,92 +16,85 @@ const DROP_RANGE = 64
 const PERSISTENCY_INTERVAL = 60.0
 const PLAYER_RESPAWN_TIME = 10.0
 
-var mode: MODE = MODE.CLIENT
-
-var logger: Log
-var env: Node
-var global: Node
-var signals: Node
-var rpcs: Node
-
-var server: JServer
-var client: JClient
-
-var world: World
-
 var player_scene: Resource
 var enemy_scenes: Dictionary = {}
 var npc_scenes: Dictionary = {}
 var item_scenes: Dictionary = {}
 
-var uuid_util: Node
+var uuid_util: UuidUtil
 
 
 func _ready():
-	logger = load("res://addons/logger/logger.gd").new()
-	logger.name = "Logger"
-	add_child(logger)
+	J.register_player_scene("res://scenes/player/Player.tscn")
 
-	env = load("res://scripts/godotenv/scripts/env.gd").new()
-	env.name = "Env"
-	add_child(env)
-
-	global = load("res://scripts/global.gd").new()
-	global.name = "Global"
-	add_child(global)
-
-	rpcs = load("res://scripts/network/rpcs.gd").new()
-	rpcs.name = "RPCs"
-	add_child(rpcs)
-
-
-func init_server() -> bool:
-	mode = MODE.SERVER
-
-	J.logger.info("Setting Engine's fps to 20")
-	Engine.set_physics_ticks_per_second(20)
-
-	J.logger.info("Loading server's env variables")
-	if not J.global.load_server_env_variables():
-		J.logger.error("Could not load server's env variables")
-		return false
+	register_enemies()
+	register_npcs()
+	register_items()
 
 	uuid_util = load("res://scripts/uuid/uuid.gd").new()
 
-	server = load("res://scripts/network/server.gd").new()
-	server.name = "Server"
-	add_child(server)
 
-	if not server.init():
-		J.logger.error("Could not load init server")
-		return false
-
-	return true
+func register_enemies():
+	J.register_enemy_scene("Sheep", "res://scenes/enemies/Sheep/Sheep.tscn")
+	J.register_enemy_scene("TreeTrunkGuy", "res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn")
+	J.register_enemy_scene("MoldedDruvar", "res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn")
+	J.register_enemy_scene("ClamDog", "res://scenes/enemies/ClamDog/ClamDog.tscn")
 
 
-func init_client() -> bool:
-	mode = MODE.CLIENT
-
-	J.logger.info("Setting Engine's fps to 60")
-	Engine.set_physics_ticks_per_second(60)
-
-	J.logger.info("Loading local settings")
-	J.global.load_local_settings()
-
-	J.logger.info("Loading client's env variables")
-	if not J.global.load_client_env_variables():
-		J.logger.error("Could not load client's env variables")
-		return false
-
-	client = load("res://scripts/network/client.gd").new()
-	client.name = "Client"
-	add_child(client)
-
-	return true
+func register_npcs():
+	J.register_npc_scene("MilkLady", "res://scenes/npcs/milklady/Milklady.tscn")
+	J.register_npc_scene("Turtur", "res://scenes/npcs/turtur/Turtur.tscn")
 
 
-func is_server() -> bool:
-	return J.mode == J.MODE.SERVER
+func register_items():
+	J.register_item_scene("Gold", "res://scenes/items/varia/gold/Gold.tscn")
+
+	J.register_item_scene(
+		"HealthPotion", "res://scenes/items/consumables/healthpotion/HealthPotion.tscn"
+	)
+
+	J.register_item_scene("Axe", "res://scenes/items/equipment/weapons/axe/Axe.tscn")
+	J.register_item_scene("Sword", "res://scenes/items/equipment/weapons/sword/Sword.tscn")
+	J.register_item_scene("Club", "res://scenes/items/equipment/weapons/club/Club.tscn")
+
+	J.register_item_scene(
+		"LeatherHelm", "res://scenes/items/equipment/armour/leatherhelm/LeatherHelm.tscn"
+	)
+	J.register_item_scene(
+		"LeatherBody", "res://scenes/items/equipment/armour/leatherbody/LeatherBody.tscn"
+	)
+	J.register_item_scene(
+		"LeatherArms", "res://scenes/items/equipment/armour/leatherarms/LeatherArms.tscn"
+	)
+	J.register_item_scene(
+		"LeatherLegs", "res://scenes/items/equipment/armour/leatherlegs/LeatherLegs.tscn"
+	)
+
+	J.register_item_scene(
+		"ChainMailHelm", "res://scenes/items/equipment/armour/chainmailhelm/ChainMailHelm.tscn"
+	)
+	J.register_item_scene(
+		"ChainMailBody", "res://scenes/items/equipment/armour/chainmailbody/ChainMailBody.tscn"
+	)
+	J.register_item_scene(
+		"ChainMailArms", "res://scenes/items/equipment/armour/chainmailarms/ChainMailArms.tscn"
+	)
+	J.register_item_scene(
+		"ChainMailLegs", "res://scenes/items/equipment/armour/chainmaillegs/ChainMailLegs.tscn"
+	)
+
+	J.register_item_scene(
+		"PlateHelm", "res://scenes/items/equipment/armour/platehelm/PlateHelm.tscn"
+	)
+	J.register_item_scene(
+		"PlateBody", "res://scenes/items/equipment/armour/platebody/PlateBody.tscn"
+	)
+	J.register_item_scene(
+		"PlateArms", "res://scenes/items/equipment/armour/platearms/PlateArms.tscn"
+	)
+	J.register_item_scene(
+		"PlateLegs", "res://scenes/items/equipment/armour/platelegs/PlateLegs.tscn"
+	)
 
 
 func register_player_scene(player_scene_path: String):

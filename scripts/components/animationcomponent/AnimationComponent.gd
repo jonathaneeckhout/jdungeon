@@ -22,7 +22,7 @@ var dead = false
 func _ready():
 	target_node = get_parent()
 
-	if J.is_server():
+	if G.is_server():
 		queue_free()
 		return
 
@@ -31,7 +31,7 @@ func _ready():
 		return
 
 	if target_node.get("velocity") == null:
-		J.logger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the position variable")
 		return
 
 	stats.got_hurt.connect(_on_got_hurt)
@@ -65,6 +65,9 @@ func _physics_process(_delta):
 
 
 func _on_got_hurt(_from: String, _damage: int):
+	if dead:
+		return
+
 	if animation_player.has_animation(hurt_animation):
 		animation_player.stop()
 		animation_player.play(hurt_animation)
@@ -84,6 +87,9 @@ func _on_respawned():
 
 
 func _on_attacked(_direction: Vector2):
+	if dead:
+		return
+
 	if animation_player.has_animation(attack_animation):
 		animation_player.stop()
 		animation_player.play(attack_animation)

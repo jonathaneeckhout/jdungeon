@@ -11,7 +11,7 @@ var watchers: Array[Node2D] = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	target_node = get_parent()
@@ -42,7 +42,7 @@ func _on_area_network_visible_area_entered(area: Area2D):
 		return
 
 	if network_view_synchronizer.target_node.get("peer_id") == null:
-		J.logger.info("Body's target_node does not contain peer_id")
+		GodotLogger.info("Body's target_node does not contain peer_id")
 		return
 
 	if not watchers.has(network_view_synchronizer.target_node):

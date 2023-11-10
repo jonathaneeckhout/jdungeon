@@ -33,8 +33,6 @@ signal respawned
 	set(val):
 		hp_max = val
 		stats_changed.emit(TYPE.HP_MAX)
-		if J.is_server():
-			sync_int_change(TYPE.HP_MAX, val)
 
 @export var hp: int = hp_max:
 	set(val):
@@ -47,72 +45,52 @@ signal respawned
 				respawned.emit()
 			is_dead = false
 		stats_changed.emit(TYPE.HP)
-		if J.is_server():
-			sync_int_change(TYPE.HP, val)
 
 @export var attack_power_min: int = 0:
 	set(val):
 		attack_power_min = val
 		stats_changed.emit(TYPE.ATTACK_POWER_MIN)
-		if J.is_server():
-			sync_int_change(TYPE.ATTACK_POWER_MIN, val)
 
 @export var attack_power_max: int = 5:
 	set(val):
 		attack_power_max = val
 		stats_changed.emit(TYPE.ATTACK_POWER_MAX)
-		if J.is_server():
-			sync_int_change(TYPE.ATTACK_POWER_MAX, val)
 
 @export var attack_speed: float = 0.8:
 	set(val):
 		attack_speed = val
 		stats_changed.emit(TYPE.ATTACK_SPEED)
-		if J.is_server():
-			sync_float_change(TYPE.ATTACK_SPEED, val)
 
 @export var attack_range: float = 64.0:
 	set(val):
 		attack_range = val
 		stats_changed.emit(TYPE.ATTACK_RANGE)
-		if J.is_server():
-			sync_float_change(TYPE.ATTACK_RANGE, val)
 
 @export var defense: int = 0:
 	set(val):
 		defense = val
 		stats_changed.emit(TYPE.DEFENSE)
-		if J.is_server():
-			sync_int_change(TYPE.DEFENSE, val)
 
 @export var movement_speed: float = 300.0:
 	set(val):
 		movement_speed = val
 		stats_changed.emit(TYPE.MOVEMENT_SPEED)
-		if J.is_server():
-			sync_float_change(TYPE.MOVEMENT_SPEED, val)
 
 @export var level: int = 1:
 	set(val):
 		level = clamp(val, 0, 100)
 		experience_needed = calculate_experience_needed(level)
 		stats_changed.emit(TYPE.LEVEL)
-		if J.is_server():
-			sync_int_change(TYPE.LEVEL, val)
 
 @export var experience: int = 0:
 	set(val):
 		experience = val
 		stats_changed.emit(TYPE.EXPERIENCE)
-		if J.is_server():
-			sync_int_change(TYPE.EXPERIENCE, val)
 
 @export var experience_needed: int = BASE_EXPERIENCE:
 	set(val):
 		experience_needed = val
 		stats_changed.emit(TYPE.EXPERIENCE_NEEDED)
-		if J.is_server():
-			sync_int_change(TYPE.EXPERIENCE_NEEDED, val)
 
 @export var experience_worth: int = 0
 
@@ -135,11 +113,14 @@ var delay_timer: Timer
 func _ready():
 	target_node = get_parent()
 
+	if target_node.get("component_list") != null:
+		target_node.component_list["stats_synchronizer"] = self
+
 	if target_node.get("peer_id") != null:
 		peer_id = target_node.peer_id
 
 	# Physics only needed on client side
-	if J.is_server():
+	if G.is_server():
 		set_physics_process(false)
 	else:
 		# This timer is needed to give the client some time to setup its multiplayer connection
@@ -161,7 +142,7 @@ func _physics_process(_delta):
 func check_server_buffer():
 	for i in range(server_buffer.size() - 1, -1, -1):
 		var entry = server_buffer[i]
-		if entry["timestamp"] <= J.client.clock:
+		if entry["timestamp"] <= G.clock:
 			match entry["type"]:
 				TYPE.HP_MAX:
 					hp_max = entry["value"]
@@ -186,8 +167,10 @@ func check_server_buffer():
 				TYPE.EXPERIENCE_NEEDED:
 					experience_needed = entry["value"]
 				TYPE.HURT:
+					hp = entry["hp"]
 					got_hurt.emit(entry["from"], entry["damage"])
 				TYPE.HEAL:
+					hp = entry["hp"]
 					healed.emit(entry["from"], entry["healing"])
 			server_buffer.remove_at(i)
 
@@ -208,10 +191,14 @@ func hurt(from: Node, damage: int) -> int:
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		_sync_hurt.rpc_id(peer_id, timestamp, from.name, reduced_damage)
+		G.sync_rpc.statssynchronizer_sync_hurt.rpc_id(
+			peer_id, target_node.name, timestamp, from.name, hp, reduced_damage
+		)
 
 	for watcher in watcher_synchronizer.watchers:
-		_sync_hurt.rpc_id(watcher.peer_id, timestamp, from.name, reduced_damage)
+		G.sync_rpc.statssynchronizer_sync_hurt.rpc_id(
+			watcher.peer_id, target_node.name, timestamp, from.name, hp, reduced_damage
+		)
 
 	got_hurt.emit(from.name, reduced_damage)
 
@@ -224,10 +211,14 @@ func heal(from: String, healing: int) -> int:
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		_sync_heal.rpc_id(peer_id, timestamp, from, healing)
+		G.sync_rpc.statssynchronizer_sync_heal.rpc_id(
+			peer_id, target_node.name, timestamp, from, hp, healing
+		)
 
 	for watcher in watcher_synchronizer.watchers:
-		_sync_heal.rpc_id(watcher.peer_id, timestamp, from, healing)
+		G.sync_rpc.statssynchronizer_sync_heal.rpc_id(
+			watcher.peer_id, target_node.name, timestamp, from, hp, healing
+		)
 
 	healed.emit(from, healing)
 
@@ -236,6 +227,12 @@ func heal(from: String, healing: int) -> int:
 
 func reset_hp():
 	hp = hp_max
+	_sync_int_change(TYPE.HP, hp)
+
+
+func kill():
+	hp = 0
+	_sync_int_change(TYPE.HP, hp)
 
 
 func load_defaults():
@@ -274,10 +271,10 @@ func apply_boost(boost: Boost):
 	var data: Dictionary = to_json(true)
 
 	if peer_id > 0:
-		sync_response.rpc_id(peer_id, data)
+		G.sync_rpc.statssynchronizer_sync_response.rpc_id(peer_id, target_node.name, data)
 
 	for watcher in watcher_synchronizer.watchers:
-		sync_response.rpc_id(watcher.peer_id, data)
+		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
 
 
 func to_json(full: bool = false) -> Dictionary:
@@ -299,44 +296,44 @@ func to_json(full: bool = false) -> Dictionary:
 
 func from_json(data: Dictionary, full: bool = false) -> bool:
 	if not "hp" in data:
-		J.logger.warn('Failed to load stats from data, missing "hp" key')
+		GodotLogger.warn('Failed to load stats from data, missing "hp" key')
 		return false
 
 	if not "level" in data:
-		J.logger.warn('Failed to load stats from data, missing "level" key')
+		GodotLogger.warn('Failed to load stats from data, missing "level" key')
 		return false
 
 	if not "experience" in data:
-		J.logger.warn('Failed to load stats from data, missing "experience" key')
+		GodotLogger.warn('Failed to load stats from data, missing "experience" key')
 		return false
 
 	if full:
 		if not "hp_max" in data:
-			J.logger.warn('Failed to load stats from data, missing "hp_max" key')
+			GodotLogger.warn('Failed to load stats from data, missing "hp_max" key')
 			return false
 
 		if not "attack_power_min" in data:
-			J.logger.warn('Failed to load stats from data, missing "attack_power_min" key')
+			GodotLogger.warn('Failed to load stats from data, missing "attack_power_min" key')
 			return false
 
 		if not "attack_power_max" in data:
-			J.logger.warn('Failed to load stats from data, missing "attack_power_max" key')
+			GodotLogger.warn('Failed to load stats from data, missing "attack_power_max" key')
 			return false
 
 		if not "attack_speed" in data:
-			J.logger.warn('Failed to load stats from data, missing "attack_speed" key')
+			GodotLogger.warn('Failed to load stats from data, missing "attack_speed" key')
 			return false
 
 		if not "attack_range" in data:
-			J.logger.warn('Failed to load stats from data, missing "attack_range" key')
+			GodotLogger.warn('Failed to load stats from data, missing "attack_range" key')
 			return false
 
 		if not "defense" in data:
-			J.logger.warn('Failed to load stats from data, missing "defense" key')
+			GodotLogger.warn('Failed to load stats from data, missing "defense" key')
 			return false
 
 		if not "movement_speed" in data:
-			J.logger.warn('Failed to load stats from data, missing "movement_speed" key')
+			GodotLogger.warn('Failed to load stats from data, missing "movement_speed" key')
 			return false
 
 	hp = data["hp"]
@@ -359,76 +356,88 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 	return true
 
 
-func sync_int_change(stat_type: TYPE, value: int):
+func _sync_int_change(stat_type: TYPE, value: int):
 	if not ready_done:
 		return
 
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		_sync_int_change.rpc_id(peer_id, timestamp, stat_type, value)
+		G.sync_rpc.statssynchronizer_sync_int_change.rpc_id(
+			peer_id, target_node.name, timestamp, stat_type, value
+		)
 
 	for watcher in watcher_synchronizer.watchers:
-		_sync_int_change.rpc_id(watcher.peer_id, timestamp, stat_type, value)
+		G.sync_rpc.statssynchronizer_sync_int_change.rpc_id(
+			watcher.peer_id, target_node.name, timestamp, stat_type, value
+		)
 
-	stats_changed.emit(stat_type)
 
-
-func sync_float_change(stat_type: TYPE, value: float):
+func _sync_float_change(stat_type: TYPE, value: float):
 	if not ready_done:
 		return
 
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		_sync_float_change.rpc_id(peer_id, timestamp, stat_type, value)
-
+		G.sync_rpc.statssynchronizer_sync_float_change.rpc_id(
+			peer_id, target_node.name, timestamp, stat_type, value
+		)
 	for watcher in watcher_synchronizer.watchers:
-		_sync_float_change.rpc_id(watcher.peer_id, timestamp, stat_type, value)
-
-	stats_changed.emit(stat_type)
+		G.sync_rpc.statssynchronizer_sync_float_change.rpc_id(
+			watcher.peer_id, target_node.name, timestamp, stat_type, value
+		)
 
 
 func _on_delay_timer_timeout():
-	sync_stats.rpc_id(1)
+	G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
+	delay_timer.queue_free()
 
 
-@rpc("call_remote", "any_peer", "reliable") func sync_stats():
-	if not J.is_server():
+func sync_stats():
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
-	sync_response.rpc_id(id, to_json(true))
+	G.sync_rpc.statssynchronizer_sync_response.rpc_id(id, target_node.name, to_json(true))
 
 
-@rpc("call_remote", "authority", "reliable") func sync_response(data: Dictionary):
+func sync_response(data: Dictionary):
 	from_json(data, true)
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_int_change(timestamp: float, stat_type: TYPE, value: int):
+func sync_int_change(timestamp: float, stat_type: TYPE, value: int):
 	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_float_change(timestamp: float, stat_type: TYPE, value: float):
+func sync_float_change(timestamp: float, stat_type: TYPE, value: float):
 	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_hurt(timestamp: float, from: String, damage: int):
+func sync_hurt(timestamp: float, from: String, current_hp: int, damage: int):
 	server_buffer.append(
-		{"type": TYPE.HURT, "timestamp": timestamp, "from": from, "damage": damage}
+		{
+			"type": TYPE.HURT,
+			"timestamp": timestamp,
+			"from": from,
+			"hp": current_hp,
+			"damage": damage
+		}
 	)
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_heal(timestamp: float, from: String, healing: int):
+func sync_heal(timestamp: float, from: String, current_hp: int, healing: int):
 	server_buffer.append(
-		{"type": TYPE.HEAL, "timestamp": timestamp, "from": from, "healing": healing}
+		{
+			"type": TYPE.HEAL,
+			"timestamp": timestamp,
+			"from": from,
+			"hp": current_hp,
+			"healing": healing
+		}
 	)

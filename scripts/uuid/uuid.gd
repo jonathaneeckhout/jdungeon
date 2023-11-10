@@ -2,6 +2,8 @@
 # in a way that maximizes performance. Methods are inlined and loops are avoided.
 extends Node
 
+class_name UuidUtil
+
 const BYTE_MASK: int = 0b11111111
 
 

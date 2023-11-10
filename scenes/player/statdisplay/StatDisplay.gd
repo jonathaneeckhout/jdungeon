@@ -20,7 +20,7 @@ func _ready() -> void:
 		stats.stats_changed.connect(_on_stats_changed)
 		renew_values()
 	else:
-		J.logger.error("Stats is not assigned")
+		GodotLogger.error("Stats is not assigned")
 
 
 func _unhandled_input(event: InputEvent) -> void:

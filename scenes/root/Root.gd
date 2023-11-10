@@ -1,136 +1,146 @@
 extends Node
 
+const SERVER_FPS: int = 20
+const CLIENT_FPS: int = 60
+
+@onready var ui: CanvasLayer = $UI
+@onready var select_run_mode: Control = $UI/SelectRunMode
+@onready var run_as_server_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsServerButton
+@onready var run_as_client_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsClientButton
+
+var login_panel_scene: Resource = preload("res://scenes/ui/loginpanel/LoginPanel.tscn")
+var version_check_panel_scene: Resource = preload(
+	"res://scenes/ui/versioncheckpanel/VersionCheckPanel.tscn"
+)
+var disclaimer_panel_scene: Resource = preload(
+	"res://scenes/ui/disclaimerpanel/DisclaimerPanel.tscn"
+)
+var maps: Dictionary = {"World": preload("res://scenes/maps/world/World.tscn")}
+
 
 func _ready():
-	$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.connect(_on_run_as_server_pressed)
-	$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.connect(_on_run_as_client_pressed)
+	run_as_server_button.pressed.connect(_on_run_as_server_pressed)
+	run_as_client_button.pressed.connect(_on_run_as_client_pressed)
 
-	J.register_player_scene("res://scenes/player/Player.tscn")
-
-	register_enemies()
-	register_npcs()
-	register_items()
-
-	J.global.load_common_env_variables()
-
-	if J.global.env_run_as_server:
-		$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.emit()
-	elif J.global.env_run_as_client:
-		$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.emit()
+	if Global.env_run_as_server:
+		start_server("World")
+	elif Global.env_run_as_client:
+		start_client()
 	else:
 		parse_cmd_arguments()
-
-
-func register_enemies():
-	J.register_enemy_scene("Sheep", "res://scenes/enemies/Sheep/Sheep.tscn")
-	J.register_enemy_scene("TreeTrunkGuy", "res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn")
-	J.register_enemy_scene("MoldedDruvar", "res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn")
-	J.register_enemy_scene("ClamDog", "res://scenes/enemies/ClamDog/ClamDog.tscn")
-
-
-func register_npcs():
-	J.register_npc_scene("MilkLady", "res://scenes/npcs/milklady/Milklady.tscn")
-	J.register_npc_scene("Turtur", "res://scenes/npcs/turtur/Turtur.tscn")
-
-
-func register_items():
-	J.register_item_scene("Gold", "res://scenes/items/varia/gold/Gold.tscn")
-
-	J.register_item_scene(
-		"HealthPotion", "res://scenes/items/consumables/healthpotion/HealthPotion.tscn"
-	)
-
-	J.register_item_scene("Axe", "res://scenes/items/equipment/weapons/axe/Axe.tscn")
-	J.register_item_scene("Sword", "res://scenes/items/equipment/weapons/sword/Sword.tscn")
-	J.register_item_scene("Club", "res://scenes/items/equipment/weapons/club/Club.tscn")
-
-	J.register_item_scene(
-		"LeatherHelm", "res://scenes/items/equipment/armour/leatherhelm/LeatherHelm.tscn"
-	)
-	J.register_item_scene(
-		"LeatherBody", "res://scenes/items/equipment/armour/leatherbody/LeatherBody.tscn"
-	)
-	J.register_item_scene(
-		"LeatherArms", "res://scenes/items/equipment/armour/leatherarms/LeatherArms.tscn"
-	)
-	J.register_item_scene(
-		"LeatherLegs", "res://scenes/items/equipment/armour/leatherlegs/LeatherLegs.tscn"
-	)
-
-	J.register_item_scene(
-		"ChainMailHelm", "res://scenes/items/equipment/armour/chainmailhelm/ChainMailHelm.tscn"
-	)
-	J.register_item_scene(
-		"ChainMailBody", "res://scenes/items/equipment/armour/chainmailbody/ChainMailBody.tscn"
-	)
-	J.register_item_scene(
-		"ChainMailArms", "res://scenes/items/equipment/armour/chainmailarms/ChainMailArms.tscn"
-	)
-	J.register_item_scene(
-		"ChainMailLegs", "res://scenes/items/equipment/armour/chainmaillegs/ChainMailLegs.tscn"
-	)
-
-	J.register_item_scene(
-		"PlateHelm", "res://scenes/items/equipment/armour/platehelm/PlateHelm.tscn"
-	)
-	J.register_item_scene(
-		"PlateBody", "res://scenes/items/equipment/armour/platebody/PlateBody.tscn"
-	)
-	J.register_item_scene(
-		"PlateArms", "res://scenes/items/equipment/armour/platearms/PlateArms.tscn"
-	)
-	J.register_item_scene(
-		"PlateLegs", "res://scenes/items/equipment/armour/platelegs/PlateLegs.tscn"
-	)
 
 
 func parse_cmd_arguments():
 	var args: PackedStringArray = OS.get_cmdline_args()
 	if not args.is_empty():
-		J.logger.info("Found launch arguments. ", str(args))
+		GodotLogger.info("Found launch arguments. ", str(args))
 
 	for arg in args:
 		match arg:
-			"j_client":
-				$SelectRunMode/VBoxContainer/RunAsClientButton.pressed.emit()
+			"j_server":
+				start_server("World")
 				break
 
-			"j_server":
-				$SelectRunMode/VBoxContainer/RunAsServerButton.pressed.emit()
+			"j_client":
+				start_client()
 				break
+
+
+func start_server(map: String) -> bool:
+	GodotLogger.info("Running as server")
+
+	select_run_mode.queue_free()
+
+	GodotLogger.info("Setting server's engine fps to %d" % SERVER_FPS)
+	Engine.set_physics_ticks_per_second(SERVER_FPS)
+
+	GodotLogger.info("Loading server's env variables")
+	if not Global.load_server_env_variables():
+		GodotLogger.error("Could not load server's env variables")
+		return false
+
+	if not G.server_init(
+		Global.env_server_port,
+		Global.env_server_max_peers,
+		Global.env_server_crt,
+		Global.env_server_key
+	):
+		GodotLogger.error("Failed to start DTLS server")
+		return false
+
+	var world = maps[map].instantiate()
+	world.name = "World"
+	add_child(world)
+
+	GodotLogger.info("Server successfully started")
+	return true
+
+
+func start_client() -> bool:
+	GodotLogger.info("Running as client")
+	select_run_mode.queue_free()
+
+	GodotLogger.info("Setting client's engine fps to %d" % CLIENT_FPS)
+	Engine.set_physics_ticks_per_second(CLIENT_FPS)
+
+	GodotLogger.info("Loading local settings")
+	Global.load_local_settings()
+
+	GodotLogger.info("Loading client's env variables")
+	if not Global.load_client_env_variables():
+		GodotLogger.error("Could not load client's env variables")
+		return false
+
+	if not G.client_init():
+		GodotLogger.error("Failed to init client")
+		return false
+
+	if Global.env_debug:
+		var login_panel: LoginPanel = login_panel_scene.instantiate()
+		ui.add_child(login_panel)
+
+		await login_panel.logged_in
+
+		login_panel.queue_free()
+
+		var world = maps["World"].instantiate()
+		world.name = "World"
+		add_child(world)
+
+	else:
+		# Show the check version panel
+		var version_check_panel: VersionCheckPanel = version_check_panel_scene.instantiate()
+		ui.add_child(version_check_panel)
+
+		if await version_check_panel.check_version():
+			version_check_panel.queue_free()
+
+			var disclaimer_panel: DisclaimerPanel = disclaimer_panel_scene.instantiate()
+			ui.add_child(disclaimer_panel)
+
+			await disclaimer_panel.accepted
+
+			disclaimer_panel.queue_free()
+
+			var login_panel: LoginPanel = login_panel_scene.instantiate()
+			ui.add_child(login_panel)
+
+			await login_panel.logged_in
+
+			login_panel.queue_free()
+
+		else:
+			GodotLogger.error(
+				"Client's version does not match the Server's version. Not the running game."
+			)
+
+	GodotLogger.info("Client successfully started")
+	return true
 
 
 func _on_run_as_server_pressed():
-	J.logger.info("Running as server")
-	$SelectRunMode.queue_free()
-
-	if not J.init_server():
-		J.logger.error("Could not initialize the server, quitting")
-		get_tree().quit()
-		return
-
-	var world = load("res://scenes/world/World.tscn").instantiate()
-	world.name = "World"
-	self.add_child(world)
-
-	if not J.server.start():
-		J.logger.error("Failed to start server, quitting")
-		get_tree().quit()
-		return
-
-	if J.global.env_minimize_server_on_start:
-		get_tree().root.mode = Window.MODE_MINIMIZED
+	start_server("World")
 
 
 func _on_run_as_client_pressed():
-	J.logger.info("Running as client")
-	$SelectRunMode.queue_free()
-
-	if not J.init_client():
-		J.logger.error("Could not initialize the client, quitting")
-		get_tree().quit()
-		return
-
-	var world = load("res://scenes/world/World.tscn").instantiate()
-	world.name = "World"
-	self.add_child(world)
+	start_client()

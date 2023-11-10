@@ -18,10 +18,10 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("velocity") == null:
-		J.logger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the position variable")
 		return
 
-	if J.is_server():
+	if G.is_server():
 		_set_ray_targets()
 		_set_ray_angles()
 
@@ -42,7 +42,7 @@ func _set_ray_angles():
 
 
 func find_avoidant_velocity(velocity_multiplier: float) -> Vector2:
-	if J.is_server():
+	if G.is_server():
 		self.rotation = target_node.velocity.angle()
 		var avoidant_velocity: Vector2 = target_node.velocity
 		if _get_viable_ray():

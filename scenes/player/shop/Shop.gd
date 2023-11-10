@@ -13,7 +13,7 @@ var shop_synchronizer: ShopSynchronizerComponent
 
 
 func _ready():
-	if J.is_server():
+	if G.is_server():
 		return
 
 	mouse_entered.connect(_on_mouse_entered)
@@ -33,7 +33,7 @@ func _ready():
 			i += 1
 	$CloseButton.pressed.connect(_on_close_button_pressed)
 
-	J.client.shop_opened.connect(_on_shop_opened)
+	G.shop_opened.connect(_on_shop_opened)
 
 
 func _input(event):
@@ -93,17 +93,17 @@ func _on_mouse_exited():
 
 
 func _on_shop_opened(vendor_name: String):
-	var vendor: Node2D = J.world.npcs.get_node_or_null(vendor_name)
+	var vendor: Node2D = G.world.npcs.get_node_or_null(vendor_name)
 	if vendor == null:
-		J.logger.info("Can not find npc=[%s]" % vendor_name)
+		GodotLogger.info("Can not find npc=[%s]" % vendor_name)
 		return
 
 	if vendor.get("npc_class") == null:
-		J.logger.error("vendor does not have the npc_class variable")
+		GodotLogger.error("vendor does not have the npc_class variable")
 		return
 
 	if vendor.get("shop") == null:
-		J.logger.error("vendor does not have the shop variable")
+		GodotLogger.error("vendor does not have the shop variable")
 		return
 
 	shop_synchronizer = vendor.shop

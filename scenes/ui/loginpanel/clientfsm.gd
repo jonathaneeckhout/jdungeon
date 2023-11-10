@@ -1,13 +1,11 @@
 extends Node
 
+class_name ClientFSM
+
 enum STATES { INIT, CONNECT, DISCONNECTED, LOGIN, CREATE_ACCOUNT, RUNNING }
 
 var state: STATES = STATES.INIT
 var fsm_timer: Timer
-
-var connect_pressed: bool = false
-var server_address: String
-var server_port: int
 
 var login_pressed: bool = false
 var user: String
@@ -21,7 +19,9 @@ var new_password: String
 
 var back_create_account_pressed: bool = false
 
-@onready var login_panel := $"../UI/LoginPanel"
+var connected_to_server: bool = false
+
+@onready var login_panel: LoginPanel = $".."
 
 
 func _ready():
@@ -34,19 +34,18 @@ func _ready():
 	fsm_timer.timeout.connect(_on_fsm_timer_timeout)
 	add_child(fsm_timer)
 
-	login_panel.connect_pressed.connect(_on_connect_pressed)
 	login_panel.login_pressed.connect(_on_login_pressed)
 	login_panel.show_create_account_pressed.connect(_on_show_create_account_pressed)
 	login_panel.create_account_pressed.connect(_on_create_account_pressed)
 	login_panel.back_create_account_pressed.connect(_on_back_create_account_pressed)
+
+	G.client_connected.connect(_on_client_connected)
 
 
 func fsm():
 	match state:
 		STATES.INIT:
 			_handle_init()
-		STATES.CONNECT:
-			_handle_connect()
 		STATES.DISCONNECTED:
 			pass
 		STATES.LOGIN:
@@ -54,45 +53,53 @@ func fsm():
 		STATES.CREATE_ACCOUNT:
 			_handle_create_account()
 		STATES.RUNNING:
-			pass
+			_handle_state_running()
 
 
 func _handle_init():
-	state = STATES.CONNECT
-	fsm_timer.start()
-
-
-func _handle_connect():
-	if !connect_pressed:
-		return
-
-	connect_pressed = false
-
-	if !J.client.connect_to_server(server_address, server_port):
-		J.logger.warn(
-			"Could not connect to server=[%s] on port=[%d]" % [server_address, server_port]
-		)
-		JUI.alertbox("Error connecting to server", login_panel)
-		state = STATES.INIT
-		fsm_timer.start()
-		return
-
-	if !await J.client.connected:
-		J.logger.warn(
-			"Could not connect to server=[%s] on port=[%d]" % [server_address, server_port]
-		)
-		JUI.alertbox("Error connecting to server", login_panel)
-		state = STATES.INIT
-		fsm_timer.start()
-		return
-
-	J.logger.info("Connected to server=[%s] on port=[%d]" % [server_address, server_port])
-
 	state = STATES.LOGIN
 	fsm_timer.start()
 
 
+func _connect_to_server() -> bool:
+	if connected_to_server:
+		GodotLogger.info("Already connected to server, no need to connect again")
+		return true
+
+	if !G.client_connect(Global.env_server_address, Global.env_server_port):
+		GodotLogger.warn(
+			(
+				"Could not connect to server=[%s] on port=[%d]"
+				% [Global.env_server_address, Global.env_server_port]
+			)
+		)
+		JUI.alertbox("Error connecting to server", login_panel)
+		return false
+
+	if !await G.client_connected:
+		GodotLogger.warn(
+			(
+				"Could not connect to server=[%s] on port=[%d]"
+				% [Global.env_server_address, Global.env_server_port]
+			)
+		)
+		JUI.alertbox("Error connecting to server", login_panel)
+		return false
+
+	GodotLogger.info(
+		(
+			"Connected to server=[%s] on port=[%d]"
+			% [Global.env_server_address, Global.env_server_port]
+		)
+	)
+
+	connected_to_server = true
+
+	return true
+
+
 func _handle_login():
+	#TODO: handle connect for account creation
 	login_panel.show_login_container()
 
 	if show_create_account_pressed:
@@ -106,15 +113,17 @@ func _handle_login():
 
 	login_pressed = false
 
-	J.rpcs.account.authenticate.rpc_id(1, user, passwd)
+	if !await _connect_to_server():
+		state = STATES.INIT
+		fsm_timer.start()
+		return
 
-	var response = await J.rpcs.account.authenticated
+	G.account_rpc.authenticate.rpc_id(1, user, passwd)
+
+	var response = await G.account_rpc.authenticated
 	if response:
-		J.logger.info("Login Successful")
-		login_panel.hide()
-#		J.client.player.focus_camera()
+		GodotLogger.info("Login Successful")
 		state = STATES.RUNNING
-		login_panel.stop_login_background_audio()
 		fsm()
 	else:
 		JUI.alertbox("Login failed", login_panel)
@@ -140,9 +149,14 @@ func _handle_create_account():
 
 	create_account_pressed = false
 
-	J.rpcs.account.create_account.rpc_id(1, new_username, new_password)
+	if !await _connect_to_server():
+		state = STATES.INIT
+		fsm_timer.start()
+		return
 
-	var response = await J.rpcs.account.account_created
+	G.account_rpc.create_account.rpc_id(1, new_username, new_password)
+
+	var response = await G.account_rpc.account_created
 	if response["error"]:
 		JUI.alertbox(response["reason"], login_panel)
 	else:
@@ -151,14 +165,11 @@ func _handle_create_account():
 	fsm_timer.start()
 
 
+func _handle_state_running():
+	login_panel.logged_in.emit()
+
+
 func _on_fsm_timer_timeout():
-	fsm()
-
-
-func _on_connect_pressed(address: String, port: int):
-	connect_pressed = true
-	server_address = address
-	server_port = port
 	fsm()
 
 
@@ -184,3 +195,7 @@ func _on_create_account_pressed(username: String, password: String):
 func _on_back_create_account_pressed():
 	back_create_account_pressed = true
 	fsm()
+
+
+func _on_client_connected(connected: bool):
+	connected_to_server = connected

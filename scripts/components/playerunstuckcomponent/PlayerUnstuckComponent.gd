@@ -13,19 +13,19 @@ func _ready():
 
 
 func unstuck():
-	J.logger.info("Unstucking player")
+	GodotLogger.info("Unstucking player")
 	_unstuck.rpc_id(1)
 
 
 @rpc("call_remote", "any_peer", "reliable") func _unstuck():
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
 	if id == target_node.peer_id:
-		stats.hp = 0
+		stats.kill()
