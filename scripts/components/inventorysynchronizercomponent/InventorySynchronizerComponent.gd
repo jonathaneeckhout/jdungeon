@@ -21,16 +21,16 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("position") == null:
-		J.logger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the position variable")
 		return
 
 	if target_node.get("peer_id") == null:
-		J.logger.error("target_node does not have the peer_id variable")
+		GodotLogger.error("target_node does not have the peer_id variable")
 		return
 
 
 func add_item(item: Item) -> bool:
-	if not J.is_server():
+	if not G.is_server():
 		return false
 
 	if item.item_type == Item.ITEM_TYPE.CURRENCY:
@@ -50,7 +50,7 @@ func add_item(item: Item) -> bool:
 
 
 func remove_item(item_uuid: String):
-	if not J.is_server():
+	if not G.is_server():
 		return false
 
 	var item: Item = get_item(item_uuid)
@@ -69,7 +69,7 @@ func get_item(item_uuid: String) -> Item:
 
 
 func use_item(item_uuid: String):
-	if not J.is_server():
+	if not G.is_server():
 		return false
 
 	var item: Item = get_item(item_uuid)
@@ -81,7 +81,7 @@ func use_item(item_uuid: String):
 
 
 func add_gold(amount: int):
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	gold += amount
@@ -89,7 +89,7 @@ func add_gold(amount: int):
 
 
 func remove_gold(amount: int) -> bool:
-	if not J.is_server():
+	if not G.is_server():
 		return false
 
 	if amount <= gold:
@@ -115,26 +115,26 @@ func from_json(data: Dictionary) -> bool:
 
 		gold_added.emit(data["gold"], 0)
 	else:
-		J.logger.warn('Failed to load inventory from data, missing "gold" key')
+		GodotLogger.warn('Failed to load inventory from data, missing "gold" key')
 		return false
 
 	if "items" in data:
 		items = []
 	else:
-		J.logger.warn('Failed to load inventory from data, missing "gold" key')
+		GodotLogger.warn('Failed to load inventory from data, missing "gold" key')
 		return false
 
 	for item_data in data["items"]:
 		if not "uuid" in item_data:
-			J.logger.warn('Failed to load inventory from data, missing "uuid" key')
+			GodotLogger.warn('Failed to load inventory from data, missing "uuid" key')
 			return false
 
 		if not "item_class" in item_data:
-			J.logger.warn('Failed to load inventory from data, missing "item_class" key')
+			GodotLogger.warn('Failed to load inventory from data, missing "item_class" key')
 			return false
 
 		if not "amount" in item_data:
-			J.logger.warn('Failed to load inventory from data, missing "amount" key')
+			GodotLogger.warn('Failed to load inventory from data, missing "amount" key')
 			return false
 
 		var item: Item = J.item_scenes[item_data["item_class"]].instantiate()
@@ -149,13 +149,13 @@ func from_json(data: Dictionary) -> bool:
 
 
 @rpc("call_remote", "any_peer", "reliable") func sync_inventory():
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
 	if id == target_node.peer_id:
@@ -198,13 +198,13 @@ func sync_add_item(item_uuid: String, item_class: String, amount: int):
 
 
 @rpc("call_remote", "any_peer", "reliable") func use_inventory_item(item_uuid: String):
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
 	if target_node.peer_id != id:
@@ -214,13 +214,13 @@ func sync_add_item(item_uuid: String, item_class: String, amount: int):
 
 
 @rpc("call_remote", "any_peer", "reliable") func drop_inventory_item(item_uuid: String):
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
 	if target_node.peer_id != id:
@@ -237,5 +237,5 @@ func sync_add_item(item_uuid: String, item_class: String, amount: int):
 	item.position = target_node.position + Vector2(random_x, random_y)
 	item.collision_layer = J.PHYSICS_LAYER_ITEMS
 
-	J.world.items.add_child(item)
+	G.world.items.add_child(item)
 	item.start_expire_timer()

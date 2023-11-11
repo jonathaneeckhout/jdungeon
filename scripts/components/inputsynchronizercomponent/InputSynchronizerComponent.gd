@@ -47,7 +47,7 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("peer_id") == null:
-		J.logger.error("target_node does not have the peer_id variable")
+		GodotLogger.error("target_node does not have the peer_id variable")
 		return
 
 	if J.is_server():

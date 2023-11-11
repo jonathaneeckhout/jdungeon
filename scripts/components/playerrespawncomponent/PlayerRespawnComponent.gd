@@ -12,10 +12,10 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("position") == null:
-		J.logger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the position variable")
 		return
 
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	stats.died.connect(_on_died)
@@ -39,5 +39,5 @@ func _on_died():
 
 
 func _on_respawn_timer_timeout():
-	var respawn_location: Vector2 = J.world.find_player_respawn_location(target_node.position)
+	var respawn_location: Vector2 = G.world.find_player_respawn_location(target_node.position)
 	respawn(respawn_location)

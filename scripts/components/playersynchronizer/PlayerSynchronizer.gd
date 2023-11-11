@@ -34,21 +34,24 @@ var attack_timer: Timer
 func _ready():
 	target_node = get_parent()
 
+	if target_node.get("component_list") != null:
+		target_node.component_list["player_synchronizer"] = self
+
 	if target_node.get("peer_id") == null:
-		J.logger.error("target_node does not have the peer_id variable")
+		GodotLogger.error("target_node does not have the peer_id variable")
 		return
 
 	if target_node.get("position") == null:
-		J.logger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the position variable")
 		return
 
 	if target_node.get("velocity") == null:
-		J.logger.error("target_node does not have the velocity variable")
+		GodotLogger.error("target_node does not have the velocity variable")
 		return
 
 	is_local = target_node.peer_id == multiplayer.get_unique_id()
 
-	if J.is_server():
+	if G.is_server():
 		set_process_input(false)
 	else:
 		if not is_local:
@@ -101,13 +104,13 @@ func _physics_process(delta):
 	if stats_component.is_dead:
 		return
 
-	if J.is_server():
+	if G.is_server():
 		for input in input_buffer:
 			# The server runs on a slower tick rate than the client thus the speed needs to be lower to match the client's speed
 			step_physics(input["dir"], input["dt"] / delta)
 
 		input_buffer = []
-		_sync_pos.rpc_id(
+		G.sync_rpc.playersynchronizer_sync_pos.rpc_id(
 			target_node.peer_id, current_frame, target_node.position, target_node.velocity
 		)
 	elif is_local:
@@ -121,7 +124,9 @@ func _physics_process(delta):
 		
 		mouse_global_pos = target_node.get_global_mouse_position()
 
-		_sync_input.rpc_id(1, current_frame, direction, delta, mouse_global_pos)
+		G.sync_rpc.playersynchronizer_sync_input.rpc_id(
+			1, current_frame, direction, delta, mouse_global_pos
+		)
 
 		while input_buffer.size() > 0 and input_buffer[0]["cf"] <= last_sync_frame:
 			input_buffer.remove_at(0)
@@ -150,21 +155,21 @@ func _handle_right_click(click_global_pos: Vector2):
 
 	#Attempt to use a skill
 	if skill_component.get_skill_current_class() != "":
-		_sync_skill_use.rpc_id(1, click_global_pos, skill_component.get_skill_current_class())
+		sync_skill_use.rpc_id(1, click_global_pos, skill_component.get_skill_current_class())
 		skill_used.emit(click_global_pos, skill_component.get_skill_current_class())
 	
 	#Else, attempt to use the target
 	elif current_target != null:
-		_sync_interact.rpc_id(1, current_target.get_name())
+		G.sync_rpc.playersynchronizer_sync_interact.rpc_id(1, current_target.get_name())
 		interacted.emit(current_target)
 		
 	else:
-		_sync_interact.rpc_id(1, "")
+		G.sync_rpc.playersynchronizer_sync_interact.rpc_id(1, "")
 		interacted.emit(null)
 
 # Skill selection is client side
 func _handle_skill_selection(slotIdx :int):
-	_sync_skill_selection.rpc_id(1, slotIdx)
+	sync_skill_selection.rpc_id(1, slotIdx)
 	
 	skill_slot_selected.emit(slotIdx)
 
@@ -204,7 +209,7 @@ func update_animation():
 func _on_interacted(target: Node2D):	
 	if target == null or target.entity_type == J.ENTITY_TYPE.ENEMY:
 		if attack_timer.is_stopped():
-			if J.is_server():
+			if G.is_server():
 				for enemy in interaction_component.enemies_in_attack_range:
 					if enemy.stats.is_dead:
 						continue
@@ -233,7 +238,7 @@ func _on_died():
 	animation_player.play("Die")
 
 
-@rpc("call_remote", "authority", "unreliable") func _sync_pos(c: int, p: Vector2, v: Vector2):
+func sync_pos(c: int, p: Vector2, v: Vector2):
 	if not is_local:
 		return
 
@@ -245,27 +250,16 @@ func _on_died():
 	last_sync_velocity = v
 
 #Movement and aiming
-@rpc("call_remote", "any_peer", "reliable")
-func _sync_input(c: int, d: Vector2, t: float, m: Vector2):
+func sync_input(c: int, d: Vector2, t: float, m: Vector2):
 	if c < current_frame:
 		return
 
-	if not J.is_server():
-		return
-
-	var id = multiplayer.get_remote_sender_id()
-
-	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
-		return
-
-	if id == target_node.peer_id:
-		current_frame = c
-		mouse_global_pos = m
-		input_buffer.append({"dir": d, "dt": t})
+	current_frame = c
+	mouse_global_pos = m
+	input_buffer.append({"dir": d, "dt": t})
 
 
-@rpc("call_remote", "any_peer", "reliable") func _sync_skill_selection(index: int):
+func sync_skill_selection(index: int):
 	if not J.is_server():
 		return
 	
@@ -283,7 +277,7 @@ func _sync_input(c: int, d: Vector2, t: float, m: Vector2):
 		else:
 			skill_component.skill_select_by_index(index)
 
-@rpc("call_remote", "any_peer", "reliable") func _sync_skill_use(target_location: Vector2, skill_class: String):
+func sync_skill_use(target_location: Vector2, skill_class: String):
 	if not J.is_server():
 		return
 
@@ -297,16 +291,17 @@ func _sync_input(c: int, d: Vector2, t: float, m: Vector2):
 		if skill_component.get_skill_current_class() == skill_class:
 			skill_used.emit( target_location, skill_class)
 		else:
-			J.logger.warn('Attempted to use {0} skill but skill {1} was selected, likely a syncrhonization issue.'.format([skill_class, skill_component.get_skill_current_class()]))
+			GodotLogger.warn('Attempted to use {0} skill but skill {1} was selected, likely a syncrhonization issue.'.format([skill_class, skill_component.get_skill_current_class()]))
 
-@rpc("call_remote", "any_peer", "reliable") func _sync_interact(target_name: String):
-	if not J.is_server():
+
+func sync_interact(target_name: String):
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
 	if id == target_node.peer_id:
@@ -315,17 +310,11 @@ func _sync_input(c: int, d: Vector2, t: float, m: Vector2):
 
 		var target: Node2D = null
 
-		target = J.world.enemies.get_node_or_null(target_name)
-		
-		#If it is not an enemy, continue
+		target = G.world.enemies.get_node_or_null(target_name)
 		if target == null:
-			target = J.world.npcs.get_node_or_null(target_name)
-			
-			#If it is not an NPC, continue
+			target = G.world.npcs.get_node_or_null(target_name)
 			if target == null:
-				target = J.world.items.get_node_or_null(target_name)
-				
-				#If it is an item within range...
+				target = G.world.items.get_node_or_null(target_name)
 				if target != null and interaction_component.items_in_loot_range.has(target):
 					target.loot(target_node)
 			else:

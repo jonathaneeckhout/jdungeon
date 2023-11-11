@@ -1,6 +1,8 @@
 extends Control
 
-@export var login_panel: Control
+class_name DisclaimerPanel
+
+signal accepted
 
 
 # Called when the node enters the scene tree for the first time.
@@ -10,4 +12,4 @@ func _ready():
 
 func _on_accept():
 	self.hide()
-	login_panel.show()
+	accepted.emit()

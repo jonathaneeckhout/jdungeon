@@ -28,10 +28,10 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("peer_id") == null:
-		J.logger.error("target_node does not have the peer_id variable")
+		GodotLogger.error("target_node does not have the peer_id variable")
 		return
 
-	if not J.is_server():
+	if not G.is_server():
 		# This timer is needed to give the client some time to setup its multiplayer connection
 		delay_timer = Timer.new()
 		delay_timer.name = "DelayTimer"
@@ -61,7 +61,7 @@ func equip_item(item: Item) -> bool:
 
 func _equip_item(item: Item) -> bool:
 	if not items.has(item.equipment_slot):
-		J.logger.warn("Item has invalid equipment_slot=[%s]" % item.equipment_slot)
+		GodotLogger.warn("Item has invalid equipment_slot=[%s]" % item.equipment_slot)
 		return false
 
 	if items[item.equipment_slot] != null:
@@ -93,7 +93,7 @@ func _unequip_item(item_uuid: String) -> Item:
 		if target_node.get("inventory") != null:
 			target_node.inventory.add_item(item)
 		else:
-			J.logger.warn("Player does not have a inventory, item will be lost")
+			GodotLogger.warn("Player does not have a inventory, item will be lost")
 
 	return item
 
@@ -130,20 +130,20 @@ func to_json() -> Dictionary:
 func from_json(data: Dictionary) -> bool:
 	for slot in data:
 		if not slot in items:
-			J.logger.warn("Slot=[%s] does not exist in equipment items" % slot)
+			GodotLogger.warn("Slot=[%s] does not exist in equipment items" % slot)
 			return false
 
 		var item_data: Dictionary = data[slot]
 		if not "uuid" in item_data:
-			J.logger.warn('Failed to load equipment from data, missing "uuid" key')
+			GodotLogger.warn('Failed to load equipment from data, missing "uuid" key')
 			return false
 
 		if not "item_class" in item_data:
-			J.logger.warn('Failed to load equipment from data, missing "item_class" key')
+			GodotLogger.warn('Failed to load equipment from data, missing "item_class" key')
 			return false
 
 		if not "amount" in item_data:
-			J.logger.warn('Failed to load equipment from data, missing "amount" key')
+			GodotLogger.warn('Failed to load equipment from data, missing "amount" key')
 			return false
 
 		var item: Item = J.item_scenes[item_data["item_class"]].instantiate()
@@ -162,13 +162,13 @@ func _on_delay_timer_timeout():
 
 
 @rpc("call_remote", "any_peer", "reliable") func sync_equipment():
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	var id: int = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
 	sync_response.rpc_id(id, to_json())
@@ -195,13 +195,13 @@ func sync_equip_item(item_uuid: String, item_class: String):
 
 
 @rpc("call_remote", "any_peer", "reliable") func remove_equipment_item(item_uuid: String):
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
 	if target_node.peer_id != id:

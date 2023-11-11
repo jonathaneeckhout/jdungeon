@@ -6,7 +6,7 @@ extends Node2D
 
 
 func _ready():
-	if J.is_server():
+	if G.is_server():
 		return
 
 	stats_synchronizer.healed.connect(_on_healed)

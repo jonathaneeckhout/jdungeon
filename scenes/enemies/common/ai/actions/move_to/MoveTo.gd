@@ -7,7 +7,7 @@ var stuck = false
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	var destination_global_position: Vector2 = blackboard.get_value("destination_global_position")
 	if not destination_global_position:
-		J.logger.error(
+		GodotLogger.error(
 			"MoveTo Action used without setting 'destination_global_position' in the blackboard."
 		)
 		return FAILURE

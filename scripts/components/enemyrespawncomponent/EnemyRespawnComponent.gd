@@ -16,14 +16,14 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("position") == null:
-		J.logger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the position variable")
 		return
 
 	if target_node.get("enemy_class") == null:
-		J.logger.error("target_node does not have the enemy_class variable")
+		GodotLogger.error("target_node does not have the enemy_class variable")
 		return
 
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	spawn_position = target_node.position
@@ -43,6 +43,6 @@ func _on_died():
 
 func _on_despawn_timer_timeout():
 	if should_respawn:
-		J.world.queue_enemy_respawn(target_node.enemy_class, spawn_position, respawn_time)
+		G.world.queue_enemy_respawn(target_node.enemy_class, spawn_position, respawn_time)
 
 	target_node.queue_free()

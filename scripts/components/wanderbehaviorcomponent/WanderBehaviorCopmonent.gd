@@ -25,14 +25,14 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("position") == null:
-		J.logger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the position variable")
 		return
 	if target_node.get("velocity") == null:
-		J.logger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the position variable")
 		return
 
 	if not stats_component:
-		J.logger.error("Please connect a StatsComponent to this node")
+		GodotLogger.error("Please connect a StatsComponent to this node")
 		return
 
 	starting_postion = target_node.position
@@ -54,7 +54,7 @@ func _ready():
 
 
 func _physics_process(_delta: float):
-	if J.is_server():
+	if G.is_server():
 		if stats_component.is_dead:
 			target_node.velocity = Vector2.ZERO
 		elif target_node.position.distance_to(wander_target) > J.ARRIVAL_DISTANCE:

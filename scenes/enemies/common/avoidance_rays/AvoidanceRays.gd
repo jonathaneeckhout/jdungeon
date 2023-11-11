@@ -13,7 +13,7 @@ extends Node2D
 
 
 func _ready():
-	if J.is_server():
+	if G.is_server():
 		_set_ray_targets()
 		_set_ray_angles()
 	else:
@@ -36,7 +36,7 @@ func _set_ray_angles():
 
 
 func find_avoidant_velocity(velocity_multiplier: float) -> Vector2:
-	if J.is_server():
+	if G.is_server():
 		self.rotation = actor.velocity.angle()
 		var avoidant_velocity: Vector2 = actor.velocity
 		if _get_viable_ray():

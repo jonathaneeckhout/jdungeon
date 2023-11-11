@@ -14,10 +14,10 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("position") == null:
-		J.logger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the position variable")
 		return
 
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	stats.died.connect(_on_died)
@@ -36,7 +36,7 @@ func drop_loot():
 			var random_y = randi_range(-drop_range, drop_range)
 			item.position = target_node.position + Vector2(random_x, random_y)
 
-			J.world.items.add_child(item)
+			G.world.items.add_child(item)
 			item.start_expire_timer()
 
 

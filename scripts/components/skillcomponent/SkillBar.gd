@@ -21,7 +21,7 @@ func _on_skill_selected(index: int):
 	
 	#Ensure that the index corresponds to the shown skill
 	if displaySelected.skill_class != skillSelected.skill_class:
-		J.logger.error('The selected skill is {0} but the button has {1}.'.format([str(skillSelected.skill_class), display_selected.skill_class]))
+		GodotLogger.error('The selected skill is {0} but the button has {1}.'.format([str(skillSelected.skill_class), display_selected.skill_class]))
 		return
 	
 	#Deselect the current one and select the new one

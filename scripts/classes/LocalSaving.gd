@@ -17,7 +17,7 @@ static func save_file(path: String = DEFAULT_PATH):
 		savedData = ConfigFile.new()
 	var errCode: int = savedData.save(path)
 	if errCode != OK:
-		J.logger.error(
+		GodotLogger.error(
 			"Could not perform a local save. Error code {0} ({1})".format(
 				[errCode, error_string(errCode)]
 			)
@@ -31,7 +31,7 @@ static func load_file(path: String = DEFAULT_PATH):
 	var errCode: int = config.load(path)
 	savedData = config
 	if errCode != OK:
-		J.logger.error(
+		GodotLogger.error(
 			"Could not perform a local load. Error code {0} ({1})".format(
 				[errCode, error_string(errCode)]
 			)

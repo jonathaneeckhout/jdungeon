@@ -1,5 +1,7 @@
 extends Control
 
+class_name VersionCheckPanel
+
 signal request_response(response: bool)
 
 var version: String = ""
@@ -12,17 +14,17 @@ var version: String = ""
 func _ready():
 	exit_button.pressed.connect(_on_exit_button_pressed)
 
-	if J.global.env_debug:
-		J.logger.info("Not checking versions in debug configuration")
+	if Global.env_debug:
+		GodotLogger.info("Not checking versions in debug configuration")
 		return
 
-	if not FileAccess.file_exists(J.global.env_version_file):
-		J.logger.error("Version file=[%s] does not exist" % J.global.env_version_file)
+	if not FileAccess.file_exists(Global.env_version_file):
+		GodotLogger.error("Version file=[%s] does not exist" % Global.env_version_file)
 		return
 
-	var file = FileAccess.open(J.global.env_version_file, FileAccess.READ)
+	var file = FileAccess.open(Global.env_version_file, FileAccess.READ)
 	if file == null:
-		J.logger.warn("Could not open file=[%s] to read" % J.global.env_version_file)
+		GodotLogger.warn("Could not open file=[%s] to read" % Global.env_version_file)
 		return null
 
 	var string_data: String = file.get_as_text()
@@ -32,9 +34,9 @@ func _ready():
 	version = json_data.get("version", "")
 
 	if version != "":
-		J.logger.info("Current Version is %s" % version)
+		GodotLogger.info("Current Version is %s" % version)
 	else:
-		J.logger.error("Version file does not contain version information")
+		GodotLogger.error("Version file does not contain version information")
 
 	var client_tls_options: TLSOptions = TLSOptions.client()
 
@@ -45,18 +47,18 @@ func _ready():
 
 func check_version() -> bool:
 	if version == "":
-		J.logger.warn("No version detected on client side")
+		GodotLogger.warn("No version detected on client side")
 		return false
 
-	var request_url = "https://%s/version" % [J.global.env_server_address]
+	var request_url = "https://%s/version" % [Global.env_server_address]
 	var headers = ["Content-Type: application/json"]
 
 	var error = http_request.request(request_url, headers, HTTPClient.METHOD_GET)
 	if error != OK:
-		J.logger.error("An error occurred in the HTTP request.")
+		GodotLogger.error("An error occurred in the HTTP request.")
 		return false
 
-	J.logger.info("Sending out get request to %s" % [request_url])
+	GodotLogger.info("Sending out get request to %s" % [request_url])
 
 	var response = await request_response
 	if response:
@@ -74,12 +76,12 @@ func _on_exit_button_pressed():
 
 func _http_request_completed(result, response_code, _headers, body):
 	if result != HTTPRequest.RESULT_SUCCESS:
-		J.logger.warn("HTTPRequest failed")
+		GodotLogger.warn("HTTPRequest failed")
 		request_response.emit(false)
 		return
 
 	if response_code != 200:
-		J.logger.warn("Http response error=[%d]" % response_code)
+		GodotLogger.warn("Http response error=[%d]" % response_code)
 		request_response.emit(false)
 		return
 
@@ -88,13 +90,13 @@ func _http_request_completed(result, response_code, _headers, body):
 	var response = json.get_data()
 
 	if !"error" in response or response["error"] or !"version" in response:
-		J.logger.warn("Error or invalid response format")
+		GodotLogger.warn("Error or invalid response format")
 		request_response.emit(false)
 		return
 
 	var matches: bool = response["version"] == version
 
-	J.logger.info(
+	GodotLogger.info(
 		(
 			"Current client's version %s the server's version" % "matches"
 			if matches

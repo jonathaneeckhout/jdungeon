@@ -25,7 +25,7 @@ func _ready():
 
 	_init_attack_area()
 
-	if J.is_server():
+	if G.is_server():
 		_init_loot_area()
 		_init_npc_interact_area()
 	elif target_node.peer_id != multiplayer.get_unique_id():
@@ -103,7 +103,7 @@ func _init_npc_interact_area():
 
 func _on_attack_area_enemy_entered(body: Node2D):
 	if not body.get("enemy_class"):
-		J.logger.warn("Body is not an Enemy")
+		GodotLogger.warn("Body is not an Enemy")
 		return
 
 	if not enemies_in_attack_range.has(body):
@@ -117,7 +117,7 @@ func _on_attack_area_enemy_exited(body: Node2D):
 
 func _on_loot_area_entered(body: Node2D):
 	if not body.get("item_class"):
-		J.logger.warn("Body is not an Item")
+		GodotLogger.warn("Body is not an Item")
 		return
 
 	if not items_in_loot_range.has(body):
@@ -131,7 +131,7 @@ func _on_loot_area_exited(body: Node2D):
 
 func _on_interact_area_npc_entered(body: Node2D):
 	if not body.get("npc_class"):
-		J.logger.warn("Body is not an NPC")
+		GodotLogger.warn("Body is not an NPC")
 		return
 
 	if not npcs_in_interact_range.has(body):

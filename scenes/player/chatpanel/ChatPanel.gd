@@ -20,7 +20,7 @@ var delay_timer: Timer
 func _ready():
 	input_field.text_submitted.connect(_on_text_submitted)
 	change_group("Global")
-	J.rpcs.player.message_received.connect(_on_message_received)
+	G.player_rpc.message_received.connect(_on_message_received)
 
 	$VBoxContainer/SelectButtons/ChatButton.pressed.connect(_on_chat_button_pressed)
 	$VBoxContainer/SelectButtons/LogsButton.pressed.connect(_on_logs_button_pressed)
@@ -106,11 +106,11 @@ func _on_text_submitted(text: String):
 	if text != "":
 		match current_group:
 			"Global":
-				J.rpcs.player.send_message.rpc_id(1, "Global", "", text)
+				G.player_rpc.send_message.rpc_id(1, "Global", "", text)
 			"Local":
-				J.rpcs.player.send_message.rpc_id(1, "Local", "", text)
+				G.player_rpc.send_message.rpc_id(1, "Local", "", text)
 			"Whisper":
-				J.rpcs.player.send_message.rpc_id(1, "Whisper", wisper_target, text)
+				G.player_rpc.send_message.rpc_id(1, "Whisper", wisper_target, text)
 			_:
 				append_chat_line_escaped(username, text, GROUPS[current_group]["color"])
 

@@ -264,6 +264,8 @@ animation_player = NodePath("../AnimationPlayer")
 stats = NodePath("../StatsSynchronizerComponent")
 
 [node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("5_juh1b")]
+offset_top = -30.0
+offset_bottom = 10.0
 stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("5_derlk")]

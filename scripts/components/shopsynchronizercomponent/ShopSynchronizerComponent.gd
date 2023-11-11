@@ -15,16 +15,18 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("npc_class") == null:
-		J.logger.error("target_node does not have the npc_class variable")
+		GodotLogger.error("target_node does not have the npc_class variable")
 		return
 
-	if J.is_server():
+	if G.is_server():
 		shop_item_bought.connect(_on_shop_item_bought)
 
 
 func add_item(item_class: String, price: int) -> bool:
 	if inventory.size() >= size:
-		J.logger.warn("Can not add more items to %s's shop, shop is full" % target_node.npc_class)
+		GodotLogger.warn(
+			"Can not add more items to %s's shop, shop is full" % target_node.npc_class
+		)
 		return false
 
 	var item = {
@@ -50,7 +52,7 @@ func to_json() -> Dictionary:
 
 func from_json(data: Dictionary) -> bool:
 	if not "inventory" in data:
-		J.logger.warn('Failed to load equipment from data, missing "inventory" key')
+		GodotLogger.warn('Failed to load equipment from data, missing "inventory" key')
 		return false
 
 	# Clear the current inventory
@@ -58,15 +60,15 @@ func from_json(data: Dictionary) -> bool:
 
 	for item_data in data["inventory"]:
 		if not "uuid" in item_data:
-			J.logger.warn('Failed to load equipment from data, missing "uuid" key')
+			GodotLogger.warn('Failed to load equipment from data, missing "uuid" key')
 			return false
 
 		if not "item_class" in item_data:
-			J.logger.warn('Failed to load equipment from data, missing "item_class" key')
+			GodotLogger.warn('Failed to load equipment from data, missing "item_class" key')
 			return false
 
 		if not "price" in item_data:
-			J.logger.warn('Failed to load equipment from data, missing "price" key')
+			GodotLogger.warn('Failed to load equipment from data, missing "price" key')
 			return false
 
 		inventory.append(item_data)
@@ -79,7 +81,7 @@ func open_shop(peer_id: int):
 
 
 func _on_shop_item_bought(player_id: int, item_uuid: String):
-	var player = J.world.get_player_by_peer_id(player_id)
+	var player = G.world.get_player_by_peer_id(player_id)
 	if player == null:
 		return
 
@@ -88,7 +90,7 @@ func _on_shop_item_bought(player_id: int, item_uuid: String):
 		return
 
 	if player.get("inventory") == null:
-		J.logger.error("player does not have the inventory variable")
+		GodotLogger.error("player does not have the inventory variable")
 		return
 
 	if player.inventory.remove_gold(shop_item["price"]):
@@ -103,17 +105,17 @@ func _on_shop_item_bought(player_id: int, item_uuid: String):
 @rpc("call_remote", "authority", "reliable") func sync_shop(shop: Dictionary):
 	from_json(shop)
 
-	J.client.shop_opened.emit(target_node.name)
+	G.shop_opened.emit(target_node.name)
 
 
 @rpc("call_remote", "any_peer", "reliable") func buy_shop_item(item_uuid: String):
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
 	shop_item_bought.emit(id, item_uuid)

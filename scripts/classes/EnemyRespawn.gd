@@ -22,6 +22,6 @@ func _on_respawn_timer_timeout():
 	enemy.name = str(enemy.get_instance_id())
 	enemy.position = respawn_position
 
-	J.world.enemies.add_child(enemy)
+	G.world.enemies.add_child(enemy)
 
 	queue_free()

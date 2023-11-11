@@ -16,27 +16,36 @@ var last_sync_timestamp: float = 0.0
 func _ready():
 	target_node = get_parent()
 
+	if target_node.get("component_list") != null:
+		target_node.component_list["position_synchronizer"] = self
+
 	if target_node.get("position") == null:
-		J.logger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the position variable")
 		return
 
 	if target_node.get("velocity") == null:
-		J.logger.error("target_node does not have the velocity variable")
+		GodotLogger.error("target_node does not have the velocity variable")
 		return
 
 
 func _physics_process(_delta):
 	var timestamp: float = Time.get_unix_time_from_system()
 
-	if J.is_server():
+	if G.is_server():
 		for watcher in watcher_synchronizer.watchers:
-			sync.rpc_id(watcher.peer_id, timestamp, target_node.position, target_node.velocity)
+			G.sync_rpc.positionsynchronizer_sync.rpc_id(
+				watcher.peer_id,
+				target_node.name,
+				timestamp,
+				target_node.position,
+				target_node.velocity
+			)
 	else:
 		calculate_position()
 
 
 func calculate_position():
-	var render_time = J.client.clock - INTERPOLATION_OFFSET
+	var render_time = G.clock - INTERPOLATION_OFFSET
 
 	while (
 		server_buffer.size() > 2 and render_time > server_buffer[INTERPOLATION_INDEX]["timestamp"]
@@ -96,7 +105,6 @@ func extrapolate(extrapolation_factor: float, parameter: String) -> Vector2:
 	)
 
 
-@rpc("call_remote", "authority", "unreliable")
 func sync(timestamp: float, pos: Vector2, vec: Vector2):
 	# Ignore older syncs
 	if timestamp < last_sync_timestamp:

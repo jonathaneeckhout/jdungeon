@@ -16,6 +16,7 @@ enum ITEM_TYPE { EQUIPMENT, CONSUMABLE, CURRENCY }
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ITEM
 var item_type: ITEM_TYPE = ITEM_TYPE.EQUIPMENT
 var item_class: String = ""
+var component_list: Dictionary = {}
 
 var expire_timer: Timer
 
@@ -42,7 +43,7 @@ func _init():
 
 
 func _ready():
-	if J.is_server():
+	if G.is_server():
 		expire_timer = Timer.new()
 		expire_timer.one_shot = true
 
@@ -62,7 +63,7 @@ func loot(player: Player) -> bool:
 		# Just to be safe, stop the expire timer
 		expire_timer.stop()
 		# Remove yourself from the world items
-		J.world.items.remove_child(self)
+		G.world.items.remove_child(self)
 
 		return true
 
@@ -79,10 +80,10 @@ func use(player: Player) -> bool:
 			if player.equipment and player.equipment.equip_item(self):
 				return true
 			else:
-				J.logger.info("%s could not equip item %s" % [player.name, item_class])
+				GodotLogger.info("%s could not equip item %s" % [player.name, item_class])
 				return false
 		_:
-			J.logger.info("%s could not use item %s" % [player.name, item_class])
+			GodotLogger.info("%s could not use item %s" % [player.name, item_class])
 			return false
 
 	return false

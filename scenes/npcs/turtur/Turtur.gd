@@ -11,7 +11,7 @@ func _init():
 
 func _ready():
 	# Server side
-	if J.is_server():
+	if G.is_server():
 		shop.add_item("Axe", 10000)
 		shop.add_item("Sword", 5000)
 		shop.add_item("Club", 300)
@@ -40,7 +40,7 @@ func _ready():
 
 func interact(player: Player):
 	if player.get("peer_id") == null:
-		J.logger.error("player node does not have the peer_id variable")
+		GodotLogger.error("player node does not have the peer_id variable")
 		return
 
 	shop.open_shop(player.peer_id)

@@ -6,15 +6,14 @@ namespace DotNetSix;
 
 using BCrypt.Net;
 
-public partial class JPostgresDatabaseBackend : Node
+public partial class PostgresDatabaseBackend : Node
 {
 	private NpgsqlDataSource dataSource;
 	private string database = "";
 
 	public bool Init()
 	{
-		var j = GetNode<Node>("/root/J");
-		var global = (Node)j.Get("global");
+		var global = GetNode<Node>("/root/Global");
 		string address = (string)global.Get("env_postgres_address");
 		int port = (int)global.Get("env_postgres_port");
 		string user = (string)global.Get("env_postgres_user");

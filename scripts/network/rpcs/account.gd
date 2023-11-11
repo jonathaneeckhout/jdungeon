@@ -1,18 +1,20 @@
 extends Node
 
+class_name AccountRPC
+
 signal account_created(response: Dictionary)
 signal authenticated(response: bool)
 
 signal player_logged_in(id: int, username: String)
 
 @rpc("call_remote", "any_peer", "reliable") func create_account(username, password):
-	if not J.is_server():
+	if not G.is_server():
 		return
 
-	J.logger.info("Creating account for user=[%s]" % username)
+	GodotLogger.info("Creating account for user=[%s]" % username)
 	var id: int = multiplayer.get_remote_sender_id()
 
-	var create_account_result: Dictionary = J.server.database.create_account(username, password)
+	var create_account_result: Dictionary = G.database.create_account(username, password)
 	if create_account_result["result"]:
 		create_account_response.rpc_id(id, false, "Account created")
 	else:
@@ -25,19 +27,20 @@ func create_account_response(error: bool, reason: String = ""):
 
 
 @rpc("call_remote", "any_peer", "reliable") func authenticate(username, password):
-	if not J.is_server():
+	if not G.is_server():
 		return
 
-	J.logger.info("Authenticating user=[%s]" % username)
+	GodotLogger.info("Authenticating user=[%s]" % username)
 	var id = multiplayer.get_remote_sender_id()
 
-	var res = J.server.database.authenticate_user(username, password)
+	var res = G.database.authenticate_user(username, password)
 
-	J.server.users[id]["logged_in"] = res
+	var user: G.User = G.users[id]
+	user.logged_in = res
 
 	if res:
-		J.logger.info("Player=[%s] successfully logged in" % username)
-		J.server.users[id]["username"] = username
+		GodotLogger.info("Player=[%s] successfully logged in" % username)
+		user.username = username
 		player_logged_in.emit(id, username)
 
 	authentication_response.rpc_id(id, res)

@@ -45,7 +45,7 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 		
 		#Throw an error if this skill is not present in this SkillComponent
 		if not skill_current.skill_class in get_skills_classes():
-			J.logger.error('The skill of class {0} does not belong to this component'.format([skill_current.skill_class]))
+			GodotLogger.error('The skill of class {0} does not belong to this component'.format([skill_current.skill_class]))
 			return
 		
 		var skillIndex: int = skills.find(skill_current)
@@ -145,7 +145,7 @@ func draw_hitbox(localPoint: Vector2 = player_synchronizer.mouse_global_pos - us
 func skill_select_by_index(index: int):
 	#Array supports negative values to select from the end of the Array
 	if not abs(index) < abs(skills.size()):
-		J.logger.error("Slot index out of range.") #TEMP
+		GodotLogger.error("Slot index out of range.") #TEMP
 		return
 		
 	skill_current = skills[index]
@@ -269,7 +269,7 @@ func from_json(data: Dictionary)->bool:
 	for slotIdx in data:
 		
 		if not data[slotIdx] is String:
-			J.logger.warn('Failed to load skills from data, missing "skill_class" for slot {0}'.format([str(slotIdx)]))
+			GodotLogger.warn('Failed to load skills from data, missing "skill_class" for slot {0}'.format([str(slotIdx)]))
 			return false
 			
 		skills[slotIdx] = J.skill_resources[data[slotIdx]].duplicate()
@@ -323,14 +323,14 @@ class UseInfo extends Object:
 	
 	func get_target_stats_by_index(index: int)->StatsSynchronizerComponent:
 		if abs(index) >= abs(targets.size()):
-			J.logger.error("SkillComponent.UseInfo, index out of range.")
+			GodotLogger.error("SkillComponent.UseInfo, index out of range.")
 			return null
 		
 		var stats: StatsSynchronizerComponent = targets[index]
 		if stats is StatsSynchronizerComponent:
 			return stats
 		else:
-			J.logger.error('Target lacks a "stats" property: ' + targets[index].get_name())
+			GodotLogger.error('Target lacks a "stats" property: ' + targets[index].get_name())
 			return null
 
 	func get_target_stats_all()->Array[StatsSynchronizerComponent]:
@@ -340,7 +340,7 @@ class UseInfo extends Object:
 			if stats is StatsSynchronizerComponent:
 				statArr.append(stats)
 			else:
-				J.logger.error('Target lacks a "stats" property: ' + target.get_name())
+				GodotLogger.error('Target lacks a "stats" property: ' + target.get_name())
 		return statArr
 
 	func get_target_names()->Array[String]:
@@ -354,15 +354,15 @@ class UseInfo extends Object:
 
 	func from_json(data: Dictionary)->bool:
 		if not "user" in data:
-			J.logger.warn('Failed to load equipment from data, missing "user" key')
+			GodotLogger.warn('Failed to load equipment from data, missing "user" key')
 			return false
 			
 		if not "targets" in data:
-			J.logger.warn('Failed to load equipment from data, missing "targets" key')
+			GodotLogger.warn('Failed to load equipment from data, missing "targets" key')
 			return false
 			
 		if not "position_global" in data:
-			J.logger.warn('Failed to load equipment from data, missing "position_global" key')
+			GodotLogger.warn('Failed to load equipment from data, missing "position_global" key')
 			return false
 			
 		assert(data["user"] is String)
