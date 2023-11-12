@@ -59,15 +59,11 @@ signal respawned
 	set(val):
 		energy_max = val
 		stats_changed.emit(TYPE.ENERGY_MAX)
-		if J.is_server():
-			sync_int_change(TYPE.ENERGY_MAX, val)
 
 @export var energy: int:
 	set(val):
 		energy = val
 		stats_changed.emit(TYPE.ENERGY)
-		if J.is_server():
-			sync_int_change(TYPE.ENERGY, val)
 
 @export var attack_power_min: int = 0:
 	set(val):
@@ -122,6 +118,7 @@ var peer_id: int = 0
 var is_dead: bool = false
 
 var server_buffer: Array[Dictionary] = []
+var is_connection_ready: bool = false
 
 var _default_hp_max: int = hp_max
 var _default_energy_max: int = energy_max
@@ -129,8 +126,6 @@ var _default_attack_power_min: int = attack_power_min
 var _default_attack_power_max: int = attack_power_max
 var _default_defense: int = defense
 var _default_movement_speed: float = movement_speed
-
-var delay_timer: Timer
 
 
 func _ready():
@@ -157,7 +152,12 @@ func _ready():
 		if not is_inside_tree():
 			await tree_entered
 		
-		sync_stats.rpc_id(1)
+		G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
+		
+		is_connection_ready = true
+			
+		
+		
 
 
 func _physics_process(_delta):
@@ -256,12 +256,12 @@ func heal(from: String, healing: int) -> int:
 
 func reset_hp():
 	hp = hp_max
-	_sync_int_change(TYPE.HP, hp)
+	sync_int_change(TYPE.HP, hp)
 
 
 func kill():
 	hp = 0
-	_sync_int_change(TYPE.HP, hp)
+	sync_int_change(TYPE.HP, hp)
 
 
 func load_defaults():
@@ -301,7 +301,7 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 				GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
 				return false
 	
-	#Update
+	#Actually load the data
 	for statName in StatListCounter:
 		set(statName, data.get(statName))
 
@@ -333,7 +333,7 @@ func add_experience(amount: int):
 func apply_boost(boost: Boost):
 	for statName in boost.statBoostDict:
 		assert(get(statName) != null, "This property does not exist as a stat.")
-		assert( typeof(boost.statBoostDict.get(statName)) == typeof(get(statName)), "The value of the boost is different from the stat it is meant to alter. This could cause unexpected behaviour." ) 
+		assert( typeof(boost.get_stat_boost(statName)) == typeof(get(statName)), "The value of the boost is different from the stat it is meant to alter. This could cause unexpected behaviour." ) 
 		var newValue = get(statName) + boost.statBoostDict.get(statName) 
 		set(statName, newValue)
 
@@ -347,7 +347,7 @@ func apply_boost(boost: Boost):
 
 
 func sync_int_change(stat_type: TYPE, value: int):
-	if not is_node_ready():
+	if not is_connection_ready:
 		return
 
 	var timestamp: float = Time.get_unix_time_from_system()
@@ -364,7 +364,7 @@ func sync_int_change(stat_type: TYPE, value: int):
 
 
 func sync_float_change(stat_type: TYPE, value: float):
-	if not is_node_ready():
+	if not is_connection_ready:
 		return
 
 	var timestamp: float = Time.get_unix_time_from_system()
@@ -380,9 +380,6 @@ func sync_float_change(stat_type: TYPE, value: float):
 			watcher.peer_id, target_node.name, timestamp, stat_type, value
 		)
 		
-func _on_delay_timer_timeout():
-	G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
-	delay_timer.queue_free()
 
 func sync_stats():
 	if not G.is_server():

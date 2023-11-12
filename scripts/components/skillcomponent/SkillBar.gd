@@ -16,6 +16,9 @@ func _ready() -> void:
 	
 
 func _on_skill_selected(index: int):
+	if index == -1:
+		return
+	
 	var displaySelected: SkillDisplay = displays[index]
 	var skillSelected: SkillComponentResource = skill_component.skills[index]
 	

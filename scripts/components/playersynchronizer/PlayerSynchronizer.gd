@@ -4,8 +4,6 @@ class_name PlayerSynchronizer
 
 signal interacted(target: Node2D)
 signal attacked(direction: Vector2)
-
-signal skill_slot_selected(skill_slot: int)
 signal skill_used(where: Vector2, skill_class: String)
 
 @export var stats_component: StatsSynchronizerComponent
@@ -70,7 +68,6 @@ func _ready():
 
 	interacted.connect(_on_interacted)
 	skill_used.connect(_on_skill_used)
-	skill_slot_selected.connect(_on_skill_slot_selected)
 
 	attack_timer = Timer.new()
 	attack_timer.name = "AttackTimer"
@@ -85,20 +82,6 @@ func _input(event: InputEvent):
 
 	if event.is_action_pressed("j_right_click"):
 		_handle_right_click(target_node.get_global_mouse_position())
-	
-	elif event.is_action_pressed("j_slot1"):
-		_handle_skill_selection(0)
-	elif event.is_action_pressed("j_slot2"):
-		_handle_skill_selection(1)
-	elif event.is_action_pressed("j_slot3"):
-		_handle_skill_selection(2)
-	elif event.is_action_pressed("j_slot4"):
-		_handle_skill_selection(3)
-	elif event.is_action_pressed("j_slot5"):
-		_handle_skill_selection(4)
-		
-	elif event.is_action_pressed("j_slot_deselect"):
-		_handle_skill_selection(-1)
 
 func _physics_process(delta):
 	if stats_component.is_dead:
@@ -155,23 +138,19 @@ func _handle_right_click(click_global_pos: Vector2):
 
 	#Attempt to use a skill
 	if skill_component.get_skill_current_class() != "":
-		sync_skill_use.rpc_id(1, click_global_pos, skill_component.get_skill_current_class())
+		G.sync_rpc.playersynchronizer_sync_skill_use.rpc_id(1, click_global_pos, skill_component.get_skill_current_class())
 		skill_used.emit(click_global_pos, skill_component.get_skill_current_class())
 	
-	#Else, attempt to use the target
+	#Else, attempt to act on the target
 	elif current_target != null:
 		G.sync_rpc.playersynchronizer_sync_interact.rpc_id(1, current_target.get_name())
 		interacted.emit(current_target)
 		
+	#An interaction was attempted, but there was no target
 	else:
 		G.sync_rpc.playersynchronizer_sync_interact.rpc_id(1, "")
 		interacted.emit(null)
 
-# Skill selection is client side
-func _handle_skill_selection(slotIdx :int):
-	sync_skill_selection.rpc_id(1, slotIdx)
-	
-	skill_slot_selected.emit(slotIdx)
 
 func update_target(at_global_point: Vector2):
 	#Do not proceed if outside the tree
@@ -228,11 +207,9 @@ func _on_interacted(target: Node2D):
 
 			attack_timer.start(stats_component.attack_speed)
 
-func _on_skill_used(where: Vector2, skill_class: String):
-	skill_component.skill_use_at(where, skill_class)
-	
-func _on_skill_slot_selected(index: int):
-	skill_component.skill_select_by_index(index)
+func _on_skill_used(where: Vector2, skillClass: String):
+	skill_component.skill_use_at(where, skillClass)
+
 
 func _on_died():
 	animation_player.play("Die")
@@ -258,40 +235,21 @@ func sync_input(c: int, d: Vector2, t: float, m: Vector2):
 	mouse_global_pos = m
 	input_buffer.append({"dir": d, "dt": t})
 
-
-func sync_skill_selection(index: int):
-	if not J.is_server():
-		return
-	
-	#Get the ID of whoever sent this
-	var id: int = multiplayer.get_remote_sender_id()
-
-	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
-		return
-
-	#Ensure that the owner of this component called it
-	if id == target_node.peer_id:
-		if index == -1:
-			skill_component.skill_deselect()
-		else:
-			skill_component.skill_select_by_index(index)
-
 func sync_skill_use(target_location: Vector2, skill_class: String):
-	if not J.is_server():
+	if not G.is_server():
 		return
 
 	var id = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
 	if id == target_node.peer_id:
-		if skill_component.get_skill_current_class() == skill_class:
+		if skill_component.is_skill_present(skill_class):
 			skill_used.emit( target_location, skill_class)
 		else:
-			GodotLogger.warn('Attempted to use {0} skill but skill {1} was selected, likely a syncrhonization issue.'.format([skill_class, skill_component.get_skill_current_class()]))
+			GodotLogger.warn('This skill_component does not own a skill of class "{0)"'.format([skill_class]))
 
 
 func sync_interact(target_name: String):

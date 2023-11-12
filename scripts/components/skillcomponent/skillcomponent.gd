@@ -2,10 +2,13 @@ extends Node
 class_name SkillComponent
 ## Takes care of handling skills, their effects, cooldowns and costs, as well as the drawing of hitboxes for player feedback.
 
+
+
 #TODO:
 #Connect player input to skill usage
 #Prepare an UI element to check skills 
 
+#All of these signals are meant for local use, they should not affect any networking related stuff.
 signal skill_successful_usage(skill: SkillComponentResource)
 signal skill_failed_usage(skill: SkillComponentResource)
 signal skill_selected(skill: SkillComponentResource)
@@ -41,6 +44,8 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 			skill_current = val.duplicate()
 		else: 
 			skill_current = null
+			skill_index_selected.emit(-1)
+			skill_selected.emit(null)
 			return
 		
 		#Throw an error if this skill is not present in this SkillComponent
@@ -67,8 +72,11 @@ func _ready() -> void:
 	
 	skills_changed.emit()
 	#TEMP
-	
-	if J.is_server():
+
+	if user.get("component_list") != null:
+		user.component_list["skill_component"] = self
+
+	if G.is_server():
 		return
 	
 	#Wait until the connection is ready to synchronize stats
@@ -82,11 +90,15 @@ func _ready() -> void:
 	if not is_inside_tree():
 		await tree_entered
 	
-	sync_skills.rpc_id(1)
+	G.sync_rpc.skillcomponent_sync_skills.rpc_id(1, user.get_name())
 
-#TEMP
+#Skill selection is local
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("j_slot1"):
+	
+	if event.is_action_pressed("j_slot_deselect"):
+		skill_select_by_index(-1)
+		
+	elif event.is_action_pressed("j_slot1"):
 		skill_select_by_index(0)
 	elif event.is_action_pressed("j_slot2"):
 		skill_select_by_index(1)
@@ -96,7 +108,6 @@ func _input(event: InputEvent) -> void:
 		skill_select_by_index(3)
 	elif event.is_action_pressed("j_slot5"):
 		skill_select_by_index(4)
-#TEMP
 
 
 func draw_on_user():
@@ -143,14 +154,27 @@ func draw_hitbox(localPoint: Vector2 = player_synchronizer.mouse_global_pos - us
 		user.draw_colored_polygon(polygon, colorUsed)
 
 func skill_select_by_index(index: int):
-	#Array supports negative values to select from the end of the Array
-	if not abs(index) < abs(skills.size()):
-		GodotLogger.error("Slot index out of range.") #TEMP
-		return
-		
-	skill_current = skills[index]
 	
-	print_debug("Selected skill " + skill_current.displayed_name + " of class " + skill_current.skill_class)
+	#The index can range from -1 to size()-1
+	if not (index >= -1 and index < skills.size()):
+		GodotLogger.error("Slot index {0} is out of range.".format([str(index)])) #TEMP
+	
+	#If -1, it is a deselection attempt.
+	if index == -1: 
+		skill_deselect()
+		return
+	
+	#Otherwise, change the skill properly
+	skill_current = skills[index]
+
+#Can only find skills inside this component, fails otherwise.
+func skill_select_by_class(skillClass: String):
+	for skill in skills:
+		if skill.skill_class == skillClass:
+			skill_current = skill
+			return
+		
+	GodotLogger.warn('Could not find "{0}" skill in this component'.format([skillClass]))
 
 func skill_deselect():
 	skill_current = null
@@ -158,21 +182,25 @@ func skill_deselect():
 func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_class()):
 	
 	skill_current = J.skill_resources[skillClass].duplicate()
+	print_debug("Using skill "+ skillClass)
 	
 	if not is_skill_usable(skill_current):
 		skill_failed_usage.emit(skill_current)
 		return
 	
 	if user.global_position.distance_to(globalPoint) > skill_current.hit_range:
+		print_debug("User is at {0} but the point was {1} leading to a distance of {2}".format([str(user.global_position), str(globalPoint), str(user.global_position.distance_to(globalPoint))]))
 		skill_failed_usage.emit(skill_current)
 		return
+	
+	print_debug("It is usable and within range.")
 	
 	var skillUsageInfo := UseInfo.new()
 	skillUsageInfo.user = user
 	skillUsageInfo.targets = get_targets(globalPoint)
 	skillUsageInfo.position_target_global = globalPoint
 	
-	handle_cooldown(skill_current, true)
+	set_cooldown_state(skill_current, true)
 	
 	skill_current.effect(skillUsageInfo)
 	skill_successful_usage.emit(skill_current)
@@ -214,7 +242,7 @@ func get_collision_shape(userRotation: float)->Shape2D:
 	#Otherwise treat it as a polygon
 	else:
 		shape = ConvexPolygonShape2D.new()
-		var newPoints: PackedVector2Array
+		var newPoints: PackedVector2Array = []
 		for point in skill_current.hitbox_shape:
 			newPoints.append(point.rotated(userRotation))
 		shape.points = newPoints
@@ -226,26 +254,32 @@ func get_collision_shape(userRotation: float)->Shape2D:
 func get_collision_layer()->int:
 	return skill_current.collision_mask
 
-func handle_cooldown(skill: SkillComponentResource, started: bool):
+func set_cooldown_state(skill: SkillComponentResource, cooling: bool):
 	#Start the cooldown and set the skill as "cooling down"
-	if started:
-		cooldownDict[skill] = true
-		get_tree().create_timer(skill.cooldown).timeout.connect(handle_cooldown.bind(false))
+	if cooling:
+		cooldownDict[skill.skill_class] = true
+		get_tree().create_timer(skill.cooldown).timeout.connect(set_cooldown_state.bind(skill.skill_class, false))
 	#Remove the skill from the "cooling down" list
 	else:
-		cooldownDict.erase(skill)
+		cooldownDict.erase(skill.skill_class)
 	
 func get_skill_current_class()->String:
 	if skill_current is SkillComponentResource:
 		return skill_current.skill_class
 	else: 
 		return ""
-	
+
 func get_skills_classes()->Array[String]:
 	var arr: Array[String] = []
 	for skill in skills:
 		arr.append(skill.skill_class)
 	return arr
+	
+func is_skill_present(skillClass: String)->bool:
+	for skill in skills:
+		if skill.skill_class == skillClass:
+			return true
+	return false
 	
 func is_skill_usable(skill: SkillComponentResource)->bool:
 	if not stats_component.energy >= skill.energy_usage:
@@ -265,7 +299,6 @@ func to_json()->Dictionary:
 	return output
 
 func from_json(data: Dictionary)->bool:
-	print_debug(data)
 	for slotIdx in data:
 		
 		if not data[slotIdx] is String:
@@ -277,19 +310,19 @@ func from_json(data: Dictionary)->bool:
 	return true
 
 
-@rpc("call_remote", "any_peer", "reliable") func sync_skills():
-	if not J.is_server():
+func sync_skills():
+	if not G.is_server():
 		return
 
 	var id: int = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
-	if not J.server.is_user_logged_in(id):
+	if not G.is_user_logged_in(id):
 		return
 
-	sync_response.rpc_id(id, to_json())
+	G.sync_rpc.skillcomponent_sync_response.rpc_id(id, user.get_name(), to_json())
 	
-@rpc("call_remote", "authority", "reliable") func sync_response(skillDict: Dictionary):
+func sync_response(skillDict: Dictionary):
 	from_json(skillDict)
 
 class UseInfo extends Object:

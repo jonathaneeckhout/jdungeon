@@ -27,7 +27,7 @@ enum ControlType {TARGETABLE, INSTANT}
 @export var hitbox_rotate_shape: bool
 
 #Skills cannot be used past this range
-@export var hit_range: float = 25
+@export var hit_range: float = 100
 
 
 
