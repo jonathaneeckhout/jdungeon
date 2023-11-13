@@ -108,35 +108,10 @@ func client_init() -> bool:
 
 
 func client_connect(address: String, port: int) -> bool:
-	var client: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-
-	var error: int = client.create_client(address, port)
-	if error != OK:
-		GodotLogger.warn(
-			"Failed to create client. Error code {0} ({1})".format([error, error_string(error)])
-		)
-		return false
-
-	if client.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
+	var client: ENetMultiplayerPeer = dtls_networking.client_connect(address, port)
+	if client == null:
 		GodotLogger.warn("Failed to connect to server")
 		return false
-
-	if not Global.env_no_tls:
-		var client_tls_options: TLSOptions
-
-		if Global.env_debug:
-			client_tls_options = TLSOptions.client_unsafe()
-		else:
-			client_tls_options = TLSOptions.client()
-
-		error = client.host.dtls_client_setup(address, client_tls_options)
-		if error != OK:
-			GodotLogger.warn(
-				"Failed to connect via DTLS. Error code {0} ({1})".format(
-					[error, error_string(error)]
-				)
-			)
-			return false
 
 	multiplayer.multiplayer_peer = client
 

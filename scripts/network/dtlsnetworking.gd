@@ -70,6 +70,40 @@ func server_get_tls_options(cert_path: String, key_path: String) -> TLSOptions:
 	return TLSOptions.server(key, cert)
 
 
+func client_connect(address: String, port: int) -> ENetMultiplayerPeer:
+	var client: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+
+	var error: int = client.create_client(address, port)
+	if error != OK:
+		GodotLogger.warn(
+			"Failed to create client. Error code {0} ({1})".format([error, error_string(error)])
+		)
+		return null
+
+	if client.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
+		GodotLogger.warn("Failed to connect to server")
+		return null
+
+	if not Global.env_no_tls:
+		var client_tls_options: TLSOptions
+
+		if Global.env_debug:
+			client_tls_options = TLSOptions.client_unsafe()
+		else:
+			client_tls_options = TLSOptions.client()
+
+		error = client.host.dtls_client_setup(address, client_tls_options)
+		if error != OK:
+			GodotLogger.warn(
+				"Failed to connect via DTLS. Error code {0} ({1})".format(
+					[error, error_string(error)]
+				)
+			)
+			return null
+
+	return client
+
+
 func add_database(target: Node) -> Database:
 	var database = Database.new()
 	database.name = "Database"
