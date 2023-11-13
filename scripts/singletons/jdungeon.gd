@@ -102,6 +102,9 @@ func register_skills():
 	J.register_skill_resource(
 		"debug", "res://scripts/components/skillcomponent/Skills/debug.tres"
 	)
+	J.register_skill_resource(
+		"HealSelf", "res://scripts/components/skillcomponent/Skills/HealSelf.tres"
+	)
 
 func register_player_scene(player_scene_path: String):
 	player_scene = load(player_scene_path)

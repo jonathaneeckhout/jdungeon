@@ -1,8 +1,6 @@
 extends Resource
 class_name SkillComponentResource
 
-enum ControlType {TARGETABLE, INSTANT}
-
 @export var skill_class: String
 
 @export var displayed_name: String = "Skidadle Skidoodle" #Failsafe name
@@ -11,9 +9,12 @@ enum ControlType {TARGETABLE, INSTANT}
 
 @export var icon: Texture = load("res://icon.svg")
 
-@export var collision_mask: int = J.ENTITY_TYPE.ENEMY
+@export_flags_2d_physics var collision_mask: int = J.ENTITY_TYPE.ENEMY
 
 @export var cooldown: float = 0
+
+#The ability is meant to be casted when selected instead of being possible to target it. Using the user as target location.
+@export var cast_on_select: bool
 
 @export var damage: int = 0
 
@@ -29,14 +30,20 @@ enum ControlType {TARGETABLE, INSTANT}
 #Skills cannot be used past this range
 @export var hit_range: float = 100
 
+#Time remaining on it's cooldown.
+var cooldown_time_left: float:
+	get:
+		if cooldownTimerHolder is SceneTreeTimer:
+			return cooldownTimerHolder.time_left
+		else:
+			return 0
 
-
-@export var controlType: ControlType = ControlType.TARGETABLE
-
+var cooldownTimerHolder: SceneTreeTimer
 
 func effect(information: SkillComponent.UseInfo):
-	for stats in information.get_target_stats_all():
-		stats.hurt(information.user, damage)
+	if damage > 0:
+		for stats in information.get_target_stats_all():
+			stats.hurt(information.user, damage)
 	
 	_effect(information)
 

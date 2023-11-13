@@ -68,6 +68,12 @@ func _ready():
 
 	interacted.connect(_on_interacted)
 	skill_used.connect(_on_skill_used)
+	
+	#When an instant cast ability is selected, it emulates using it at the player's position
+	skill_component.skill_cast_on_select_selected.connect(
+		func(skill: SkillComponentResource):
+			_handle_right_click(target_node.global_position)
+	)
 
 	attack_timer = Timer.new()
 	attack_timer.name = "AttackTimer"
@@ -139,7 +145,7 @@ func _handle_right_click(click_global_pos: Vector2):
 	#Attempt to use a skill
 	if skill_component.get_skill_current_class() != "":
 		G.sync_rpc.playersynchronizer_sync_skill_use.rpc_id(1, click_global_pos, skill_component.get_skill_current_class())
-		skill_used.emit(click_global_pos, skill_component.get_skill_current_class())
+#		skill_used.emit(click_global_pos, skill_component.get_skill_current_class())
 	
 	#Else, attempt to act on the target
 	elif current_target != null:

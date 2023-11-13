@@ -10,30 +10,9 @@ var display_selected: SkillDisplay
 const EMPTY_ICON: Texture = preload("res://assets/images/enemies/flower/Flower.png")
 
 func _ready() -> void:
-	skill_component.skill_index_selected.connect(_on_skill_selected)
 	skill_component.skills_changed.connect(update_icons)
 	update_displays()
-	
-
-func _on_skill_selected(index: int):
-	if index == -1:
-		return
-	
-	var displaySelected: SkillDisplay = displays[index]
-	var skillSelected: SkillComponentResource = skill_component.skills[index]
-	
-	#Ensure that the index corresponds to the shown skill
-	if displaySelected.skill_class != skillSelected.skill_class:
-		GodotLogger.error('The selected skill is {0} but the button has {1}.'.format([str(skillSelected.skill_class), display_selected.skill_class]))
-		return
-	
-	#Deselect the current one and select the new one
-	if display_selected:
-		display_selected.deselect()
-		
-	display_selected = displaySelected
-	display_selected.select()
-		
+			
 
 #Only creates/removes the amount of displays, it's not necessary if the amount has not changed.
 func update_displays():
@@ -45,8 +24,12 @@ func update_displays():
 	#Add new ones
 	for index in max_skills:
 		var display := SkillDisplay.new()
+		
 		display.texture = EMPTY_ICON
-		display.index = index
+		display.skill_component = skill_component
+		#If a skill is selected, tell the displays
+		skill_component.skill_selected.connect(display._on_skill_selected)
+		
 		displays.append(display)
 		add_child(display)
 		
@@ -63,6 +46,12 @@ func update_icons():
 		if index < skillList.size() and skillList[index] is SkillComponentResource:
 			currentDisplay.texture = skillList[index].icon
 			currentDisplay.skill_class = skillList[index].skill_class
+			skill_component.skill_cooldown_started.connect(
+				currentDisplay._on_skill_cooldown_change.bind(skillList[index], true)
+				)
+			skill_component.skill_cooldown_ended.connect(
+				currentDisplay._on_skill_cooldown_change.bind(skillList[index], false)
+				)
 		else:
 			currentDisplay.texture = EMPTY_ICON
 	
@@ -71,21 +60,58 @@ func get_skills()->Array[SkillComponentResource]:
 	return skill_component.skills
 
 class SkillDisplay extends TextureRect:
+		
+	#Used to reference certain methods
+	var skill_component: SkillComponent
+		
+	var skill_class: String	
 	
+
 	@onready var currentTween := create_tween()
-	var skill_class: String
-	var index: int
+	var cooldownText := Label.new()
+	var selectionTexture := TextureRect.new()
 	
 	func _ready():
 		currentTween.tween_property(self, "modulate", Color.WHITE * 0.6, 1)
 		currentTween.tween_property(self, "modulate", Color.WHITE, 1)
+		currentTween.set_loops()
 		expand_mode = TextureRect.EXPAND_FIT_WIDTH
 		
+		cooldownText.set_anchors_preset(Control.PRESET_FULL_RECT)
+		cooldownText.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		cooldownText.hide()
+		add_child(cooldownText)
+		
+		selectionTexture.set_anchors_preset(Control.PRESET_FULL_RECT)
+		selectionTexture.texture = load("res://assets/images/varia/logo/Logo_NoBG.png")
+		selectionTexture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		selectionTexture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		selectionTexture.hide()
+		add_child(selectionTexture)
+	
+	#Only runs while a skill is in cooldown	
+	func _process(delta: float) -> void:
+		cooldownText.text = str(skill_component.cooldown_get_time_left(skill_class))
 	
 	func select():
 		currentTween.play()
-
+		selectionTexture.show()
+		
 	func deselect():
 		currentTween.stop()
 		modulate = Color.WHITE
+		selectionTexture.hide()
+		
+	func _on_skill_selected(skill: SkillComponentResource):
+		if skill.skill_class == skill_class:
+			select()
+		else:
+			deselect()
+	
+	
+	#If not "started", it means it ended.
+	func _on_skill_cooldown_change(skill: SkillComponentResource, started: bool):
+		if skill.skill_class == skill_class:
+			cooldownText.visible = started
+			set_process(started)
 		

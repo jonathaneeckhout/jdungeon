@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dort400qb2f01"]
+[gd_scene load_steps=4 format=3 uid="uid://dort400qb2f01"]
 
 [ext_resource type="Script" path="res://scripts/components/skillcomponent/SkillBar.gd" id="1_i8r4u"]
 [ext_resource type="Texture2D" uid="uid://dxm404u3fvmdx" path="res://icon.svg" id="2_sm17a"]
+[ext_resource type="Texture2D" uid="uid://bdlud0d8wi5y5" path="res://assets/images/varia/logo/Logo_NoBG.png" id="3_8cidu"]
 
 [node name="SkillBar" type="Control"]
 layout_mode = 3
@@ -34,6 +35,24 @@ script = ExtResource("1_i8r4u")
 layout_mode = 2
 texture = ExtResource("2_sm17a")
 expand_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_8cidu")
+expand_mode = 1
 
 [node name="TextureRect2" type="TextureRect" parent="HBoxContainer"]
 layout_mode = 2

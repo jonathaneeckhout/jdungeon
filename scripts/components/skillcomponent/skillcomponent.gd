@@ -2,8 +2,6 @@ extends Node
 class_name SkillComponent
 ## Takes care of handling skills, their effects, cooldowns and costs, as well as the drawing of hitboxes for player feedback.
 
-
-
 #TODO:
 #Connect player input to skill usage
 #Prepare an UI element to check skills 
@@ -11,8 +9,14 @@ class_name SkillComponent
 #All of these signals are meant for local use, they should not affect any networking related stuff.
 signal skill_successful_usage(skill: SkillComponentResource)
 signal skill_failed_usage(skill: SkillComponentResource)
+
 signal skill_selected(skill: SkillComponentResource)
 signal skill_index_selected(index: int)
+
+signal skill_cooldown_started(skill: SkillComponentResource)
+signal skill_cooldown_ended(skill: SkillComponentResource)
+
+signal skill_cast_on_select_selected(skill: SkillComponentResource)
 
 signal skills_changed
 
@@ -59,18 +63,15 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 		skill_selected.emit(skill_current)
 
 
-var cooldownDict: Dictionary
+var cooldownTimerDict: Dictionary
 var directSpace: PhysicsDirectSpaceState2D
 var shapeParameters := PhysicsShapeQueryParameters2D.new()
 
 func _ready() -> void:
 	#TEMP
-	skills.append( J.skill_resources["debug"].duplicate() )
-	skill_current = skills[0]
-	assert(skills[0].skill_class == "debug")
-	assert(not skills.is_empty())
-	
-	skills_changed.emit()
+	add_skill("debug")
+	add_skill("HealSelf")
+	assert(skills[0] is SkillComponentResource)
 	#TEMP
 
 	if user.get("component_list") != null:
@@ -91,6 +92,9 @@ func _ready() -> void:
 		await tree_entered
 	
 	G.sync_rpc.skillcomponent_sync_skills.rpc_id(1, user.get_name())
+	
+	skills_changed.connect(sync_skills)
+	
 
 #Skill selection is local
 func _input(event: InputEvent) -> void:
@@ -153,11 +157,26 @@ func draw_hitbox(localPoint: Vector2 = player_synchronizer.mouse_global_pos - us
 			
 		user.draw_colored_polygon(polygon, colorUsed)
 
-func skill_select_by_index(index: int):
+func add_skill(skillClass: String):
+	var skillFound: SkillComponentResource = J.skill_resources.get(skillClass, null)
 	
+	if skillFound is SkillComponentResource:
+		skills.append(skillFound.duplicate())
+		skills_changed.emit()
+	
+func remove_skill(skillClass: String):
+	for skill in skills:
+		if skill.skill_class == skillClass:
+			skills.erase(skill)
+			skills_changed.emit()
+			return
+			
+
+func skill_select_by_index(index: int):
 	#The index can range from -1 to size()-1
 	if not (index >= -1 and index < skills.size()):
 		GodotLogger.error("Slot index {0} is out of range.".format([str(index)])) #TEMP
+		return
 	
 	#If -1, it is a deselection attempt.
 	if index == -1: 
@@ -166,12 +185,21 @@ func skill_select_by_index(index: int):
 	
 	#Otherwise, change the skill properly
 	skill_current = skills[index]
+	
+	#This must be separate from the skill_current setter to avoid infinite loops
+	if skill_current.cast_on_select:
+		skill_cast_on_select_selected.emit(skill_current)
 
 #Can only find skills inside this component, fails otherwise.
 func skill_select_by_class(skillClass: String):
 	for skill in skills:
 		if skill.skill_class == skillClass:
 			skill_current = skill
+			
+			#This must be separate from the skill_current setter to avoid infinite loops
+			if skill_current.cast_on_select:
+				skill_cast_on_select_selected.emit(skill_current)
+				
 			return
 		
 	GodotLogger.warn('Could not find "{0}" skill in this component'.format([skillClass]))
@@ -180,30 +208,30 @@ func skill_deselect():
 	skill_current = null
 
 func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_class()):
+	var skillUsed: SkillComponentResource = J.skill_resources[skillClass].duplicate()	
+	skill_current = skillUsed
+	print_stack()
 	
-	skill_current = J.skill_resources[skillClass].duplicate()
-	print_debug("Using skill "+ skillClass)
-	
-	if not is_skill_usable(skill_current):
-		skill_failed_usage.emit(skill_current)
+	if not is_skill_usable(skillUsed):
+		skill_failed_usage.emit(skillUsed)
 		return
 	
-	if user.global_position.distance_to(globalPoint) > skill_current.hit_range:
-		print_debug("User is at {0} but the point was {1} leading to a distance of {2}".format([str(user.global_position), str(globalPoint), str(user.global_position.distance_to(globalPoint))]))
-		skill_failed_usage.emit(skill_current)
+	if user.global_position.distance_to(globalPoint) > skillUsed.hit_range:
+		skill_failed_usage.emit(skillUsed)
 		return
-	
-	print_debug("It is usable and within range.")
 	
 	var skillUsageInfo := UseInfo.new()
 	skillUsageInfo.user = user
 	skillUsageInfo.targets = get_targets(globalPoint)
 	skillUsageInfo.position_target_global = globalPoint
 	
-	set_cooldown_state(skill_current, true)
+	cooldown_change_state(skillUsed, true)
 	
-	skill_current.effect(skillUsageInfo)
-	skill_successful_usage.emit(skill_current)
+	skillUsed.effect(skillUsageInfo)
+	skill_successful_usage.emit(skillUsed)
+	
+	if skillUsed.cast_on_select:
+		skill_current = null
 	
 	
 func get_targets(where: Vector2)->Array[Node]:
@@ -236,8 +264,7 @@ func get_collision_shape(userRotation: float)->Shape2D:
 	#If it is only 1 point, treat it as a circle
 	if skill_current.hitbox_shape.size() == 1:
 		shape = CircleShape2D.new()
-		shape.radius = skill_current.hitbox_shape[0]
-		assert( shape.points.size() == 1 )
+		shape.radius = skill_current.hitbox_shape[0].length()
 		
 	#Otherwise treat it as a polygon
 	else:
@@ -254,14 +281,32 @@ func get_collision_shape(userRotation: float)->Shape2D:
 func get_collision_layer()->int:
 	return skill_current.collision_mask
 
-func set_cooldown_state(skill: SkillComponentResource, cooling: bool):
-	#Start the cooldown and set the skill as "cooling down"
-	if cooling:
-		cooldownDict[skill.skill_class] = true
-		get_tree().create_timer(skill.cooldown).timeout.connect(set_cooldown_state.bind(skill.skill_class, false))
-	#Remove the skill from the "cooling down" list
+func cooldown_get_time_left(skillClass: String)->float:
+	var timer: Timer = cooldownTimerDict.get(skillClass, Timer.new())
+	return timer.time_left
+		
+#Allows changing cooldowns mid-way
+func cooldown_set_time_left(skillClass: String, time: float):
+	var timer: Timer = cooldownTimerDict.get(skillClass, Timer.new())
+	timer.wait_time = time
+
+#The main way of starting and ending cooldowns
+func cooldown_change_state(skill: SkillComponentResource, start: bool):
+	#Start the cooldown and store the timer
+	
+	if start:
+		var timer := Timer.new()
+		cooldownTimerDict[skill.skill_class] = timer
+		
+		timer.start(skill.cooldown)
+		timer.timeout.connect(cooldown_change_state.bind(skill.skill_class, false))
+		
+		skill_cooldown_started.emit(skill)
+	#Remove the skill from the "start down" list
 	else:
-		cooldownDict.erase(skill.skill_class)
+		cooldownTimerDict.erase(skill.skill_class)
+		skill_cooldown_ended.emit(skill)
+	
 	
 func get_skill_current_class()->String:
 	if skill_current is SkillComponentResource:
@@ -285,7 +330,7 @@ func is_skill_usable(skill: SkillComponentResource)->bool:
 	if not stats_component.energy >= skill.energy_usage:
 		return false
 	
-	if cooldownDict.has(skill):
+	if cooldownTimerDict.has(skill):
 		return false
 		
 	return true
