@@ -323,10 +323,12 @@ func is_skill_present(skillClass: String)->bool:
 	return false
 	
 func is_skill_usable(skill: SkillComponentResource)->bool:
-	if not stats_component.energy >= skill.energy_usage:
+	if stats_component.energy < skill.energy_usage:
+		print_debug("Not enough energy.")
 		return false
 	
-	if cooldownTimerDict.has(skill):
+	if cooldown_get_time_left(skill.skill_class) != 0:
+		print_debug("Can't use while on cooldown.")
 		return false
 		
 	return true

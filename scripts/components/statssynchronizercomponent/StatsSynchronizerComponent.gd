@@ -60,7 +60,7 @@ signal respawned
 		energy_max = val
 		stats_changed.emit(TYPE.ENERGY_MAX)
 
-@export var energy: int:
+@export var energy: int = energy_max:
 	set(val):
 		energy = val
 		stats_changed.emit(TYPE.ENERGY)
@@ -258,6 +258,9 @@ func reset_hp():
 	hp = hp_max
 	sync_int_change(TYPE.HP, hp)
 
+func reset_energy():
+	energy = energy_max
+	sync_int_change(TYPE.ENERGY, energy)
 
 func kill():
 	hp = 0
