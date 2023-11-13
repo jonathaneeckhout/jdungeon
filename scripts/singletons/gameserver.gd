@@ -18,7 +18,6 @@ var database: Database
 var message_handler: MessageHandler
 
 var clock_rpc: ClockRPC
-var account_rpc: AccountRPC
 var player_rpc: PlayerRPC
 var sync_rpc: SyncRPC
 
@@ -36,11 +35,6 @@ func init_common() -> bool:
 	# This short name is done to optimization the network traffic
 	clock_rpc.name = "C"
 	add_child(clock_rpc)
-
-	account_rpc = AccountRPC.new()
-	# This short name is done to optimization the network traffic
-	account_rpc.name = "A"
-	add_child(account_rpc)
 
 	player_rpc = PlayerRPC.new()
 	# This short name is done to optimization the network traffic

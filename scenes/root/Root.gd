@@ -64,6 +64,9 @@ func start_gateway() -> bool:
 		GodotLogger.error("Could not load gateway's env variables")
 		return false
 
+	if Global.env_minimize_on_start:
+		get_tree().root.mode = Window.MODE_MINIMIZED
+
 	if not Gateway.server_init(
 		Global.env_gateway_port,
 		Global.env_gateway_max_peers,
@@ -89,6 +92,9 @@ func start_server(map: String) -> bool:
 	if not Global.load_server_env_variables():
 		GodotLogger.error("Could not load server's env variables")
 		return false
+
+	if Global.env_minimize_on_start:
+		get_tree().root.mode = Window.MODE_MINIMIZED
 
 	if not G.server_init(
 		Global.env_server_port,
@@ -122,7 +128,7 @@ func start_client() -> bool:
 		GodotLogger.error("Could not load client's env variables")
 		return false
 
-	if not G.client_init():
+	if not Gateway.client_init():
 		GodotLogger.error("Failed to init client")
 		return false
 
@@ -134,9 +140,9 @@ func start_client() -> bool:
 
 		login_panel.queue_free()
 
-		var world = maps["World"].instantiate()
-		world.name = "World"
-		add_child(world)
+		# var world = maps["World"].instantiate()
+		# world.name = "World"
+		# add_child(world)
 
 	else:
 		# Show the check version panel

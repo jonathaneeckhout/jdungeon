@@ -7,7 +7,7 @@ var env_version_file: String = ""
 var env_run_as_gateway: bool = false
 var env_run_as_server: bool = false
 var env_run_as_client: bool = false
-var env_minimize_server_on_start: bool = false
+var env_minimize_on_start: bool = false
 var env_no_tls: bool = false
 
 var env_gateway_address: String = ""
@@ -143,8 +143,8 @@ func load_common_env_variables() -> bool:
 	env_run_as_server = env.get_value("RUN_AS_SERVER") == "true"
 	env_run_as_client = env.get_value("RUN_AS_CLIENT") == "true"
 
-	env_minimize_server_on_start = env.get_value("MINIMIZE_SERVER_ON_START") == "true"
-	GodotLogger.info("MINIMIZE_SERVER_ON_START=[%s]" % str(env_minimize_server_on_start))
+	env_minimize_on_start = env.get_value("MINIMIZE_ON_START") == "true"
+	GodotLogger.info("MINIMIZE_ON_START=[%s]" % str(env_minimize_on_start))
 
 	env_no_tls = env.get_value("NO_TLS") == "true"
 	GodotLogger.info("NO_TLS=[%s]" % str(env_no_tls))

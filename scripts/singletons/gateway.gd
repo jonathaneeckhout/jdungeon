@@ -11,8 +11,15 @@ var users: Dictionary = {}
 var database: Database
 var message_handler: MessageHandler
 
+var account_rpc: AccountRPC
+
 
 func init_common() -> bool:
+	account_rpc = AccountRPC.new()
+	# This short name is done to optimization the network traffic
+	account_rpc.name = "A"
+	add_child(account_rpc)
+
 	return true
 
 
