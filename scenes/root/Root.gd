@@ -24,7 +24,9 @@ func _ready():
 	run_as_server_button.pressed.connect(_on_run_as_server_pressed)
 	run_as_client_button.pressed.connect(_on_run_as_client_pressed)
 
-	if Global.env_run_as_server:
+	if Global.env_run_as_gateway:
+		start_gateway()
+	elif Global.env_run_as_server:
 		start_server("World")
 	elif Global.env_run_as_client:
 		start_client()
@@ -39,6 +41,10 @@ func parse_cmd_arguments():
 
 	for arg in args:
 		match arg:
+			"j_gateway":
+				start_gateway()
+				break
+
 			"j_server":
 				start_server("World")
 				break
