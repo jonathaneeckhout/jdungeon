@@ -14,13 +14,14 @@ var dtls_networking: DTLSNetworking
 var database: Database
 var message_handler: MessageHandler
 
-var account_rpc: AccountRPC
+var server_rpc: ServerRPC
 
 
 func _ready():
 	dtls_networking = DTLSNetworking.new()
 
 	multiplayer_api = MultiplayerAPI.create_default_interface()
+	get_tree().set_multiplayer(multiplayer_api, "/root/S")
 
 
 func _process(_delta):
@@ -29,6 +30,10 @@ func _process(_delta):
 
 
 func init_common() -> bool:
+	server_rpc = ServerRPC.new()
+	# This short name is done to optimization the network traffic
+	server_rpc.name = "S"
+	add_child(server_rpc)
 	return true
 
 
@@ -61,7 +66,7 @@ func server_init(port: int, max_clients: int, cert_path: String, key_path: Strin
 	return true
 
 
-func client_init() -> bool:
+func client_init(address: String, port: int) -> bool:
 	mode = MODE.CLIENT
 
 	if not init_common():
@@ -72,10 +77,6 @@ func client_init() -> bool:
 	multiplayer_api.connection_failed.connect(_on_client_connection_failed)
 	multiplayer_api.server_disconnected.connect(_on_client_disconnected)
 
-	return true
-
-
-func client_connect(address: String, port: int) -> bool:
 	var client: ENetMultiplayerPeer = dtls_networking.client_connect(address, port)
 	if client == null:
 		GodotLogger.warn("Failed to connect to server")
@@ -92,32 +93,34 @@ func is_server() -> bool:
 	return mode == MODE.SERVER
 
 
-func is_user_logged_in(id: int) -> bool:
-	return servers[id].logged_in
+func get_server_by_id(id: int) -> Server:
+	return servers.get(id)
 
 
 func _on_server_peer_connected(id: int):
-	GodotLogger.info("Peer connected %d" % id)
+	GodotLogger.info("Server peer connected %d" % id)
 	servers[id] = Server.new()
 
 
 func _on_server_peer_disconnected(id: int):
-	GodotLogger.info("Peer disconnected %d" % id)
+	GodotLogger.info("Server peer disconnected %d" % id)
 	servers.erase(id)
 
 
 func _on_client_connection_succeeded():
-	GodotLogger.info("Connection succeeded")
+	GodotLogger.info("Gateway server's connection succeeded")
 	client_connected.emit(true)
+
+	server_rpc.register_server.rpc_id(1, "World", Global.env_server_address, Global.env_server_port)
 
 
 func _on_client_connection_failed():
-	GodotLogger.warn("Connection failed")
+	GodotLogger.warn("Gateway server's connection failed")
 	client_connected.emit(false)
 
 
 func _on_client_disconnected():
-	GodotLogger.info("Server disconnected")
+	GodotLogger.info("Gateway server's server disconnected")
 	client_connected.emit(false)
 
 

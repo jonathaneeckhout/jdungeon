@@ -105,6 +105,10 @@ func start_server(map: String) -> bool:
 	if Global.env_minimize_on_start:
 		get_tree().root.mode = Window.MODE_MINIMIZED
 
+	if not S.client_init(Global.env_gateway_address, Global.env_gateway_server_port):
+		GodotLogger.error("Failed to connect to gateway")
+		return false
+
 	if not G.server_init(
 		Global.env_server_port,
 		Global.env_server_max_peers,
@@ -114,9 +118,9 @@ func start_server(map: String) -> bool:
 		GodotLogger.error("Failed to start DTLS server")
 		return false
 
-	var world = maps[map].instantiate()
-	world.name = "World"
-	add_child(world)
+	# var world = maps[map].instantiate()
+	# world.name = "World"
+	# add_child(world)
 
 	GodotLogger.info("Server successfully started")
 	return true

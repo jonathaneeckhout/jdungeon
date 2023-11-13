@@ -276,6 +276,29 @@ func load_gateway_env_variables() -> bool:
 
 
 func load_server_env_variables() -> bool:
+	env_gateway_address = env.get_value("GATEWAY_ADDRESS")
+	if env_gateway_address == "":
+		GodotLogger.error("Could not load GATEWAY_ADDRESS env varaible")
+		return false
+
+	GodotLogger.info("GATEWAY_ADDRESS=[%s]" % env_gateway_address)
+
+	var env_gateway_port_str = env.get_value("GATEWAY_SERVER_PORT")
+	if env_gateway_port_str == "":
+		GodotLogger.error("Could not load GATEWAY_SERVER_PORT env varaible")
+		return false
+
+	env_gateway_server_port = int(env_gateway_port_str)
+
+	GodotLogger.info("GATEWAY_SERVER_PORT=[%d]" % env_gateway_server_port)
+
+	env_server_address = env.get_value("SERVER_ADDRESS")
+	if env_server_address == "":
+		GodotLogger.error("Could not load SERVER_ADDRESS env varaible")
+		return false
+
+	GodotLogger.info("SERVER_ADDRESS=[%s]" % env_server_address)
+
 	var env_port_str = env.get_value("SERVER_PORT")
 	if env_port_str == "":
 		GodotLogger.error("Could not load SERVER_PORT env varaible")
