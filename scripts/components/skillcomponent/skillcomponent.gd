@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 class_name SkillComponent
 ## Takes care of handling skills, their effects, cooldowns and costs, as well as the drawing of hitboxes for player feedback.
 
@@ -25,16 +25,7 @@ const COLOR_HITBOX_UNUSABLE := Color.FIREBRICK / 2
 const COLOR_RANGE := Color.GREEN_YELLOW / 2
 
 
-@export var user: CharacterBody2D:
-	set(val):
-		user = val
-		var lateConnection: Callable = func():
-			directSpace = user.get_world_2d().direct_space_state
-			user.draw.connect(draw_on_user)
-		if user.is_inside_tree():
-			lateConnection.call()
-		else:
-			user.tree_entered.connect(lateConnection)
+@export var user: CharacterBody2D
 		
 		
 @export var stats_component: StatsSynchronizerComponent
@@ -71,6 +62,7 @@ func _ready() -> void:
 	#TEMP
 	add_skill("debug")
 	add_skill("HealSelf")
+	add_skill("Combustion")
 	assert(skills[0] is SkillComponentResource)
 	#TEMP
 
@@ -95,6 +87,9 @@ func _ready() -> void:
 	
 	skills_changed.connect(sync_skills)
 	
+	#Setup user
+	directSpace = user.get_world_2d().direct_space_state
+	
 
 #Skill selection is local
 func _input(event: InputEvent) -> void:
@@ -113,22 +108,21 @@ func _input(event: InputEvent) -> void:
 	elif event.is_action_pressed("j_slot5"):
 		skill_select_by_index(4)
 
+func _process(delta: float) -> void:
+	queue_redraw()
+	
 
-func draw_on_user():
+func _draw():
 	if not skill_current is SkillComponentResource:
 		return
 		
-	elif skill_current.hitbox_shape.size() <= 0:
-		return
-		
-	print_debug(skill_current)
-	print_debug(skill_current.hitbox_shape)
+	assert(skill_current.hitbox_shape.size() > 0)
 	
 	draw_range()
 	draw_hitbox()
 	
 func draw_range():
-	user.draw_circle(Vector2.ZERO, skill_current.hit_range, COLOR_RANGE)
+	draw_circle(Vector2.ZERO, skill_current.hit_range, COLOR_RANGE)
 	
 func draw_hitbox(localPoint: Vector2 = player_synchronizer.mouse_global_pos - user.global_position):
 	var shape: Shape2D
@@ -147,15 +141,17 @@ func draw_hitbox(localPoint: Vector2 = player_synchronizer.mouse_global_pos - us
 	
 	#Drawing
 	if shape is CircleShape2D:
-		user.draw_circle(localPoint, shape.radius, colorUsed)
+		draw_circle(localPoint, shape.radius, colorUsed)
 		
 	elif shape is ConvexPolygonShape2D:
 		assert(shape.points.size() >= 3)
 		var polygon: PackedVector2Array = []
+		
+		#Shift polygon points towards the mouse's position
 		for point in shape.points:
 			polygon.append(point + localPoint)
 			
-		user.draw_colored_polygon(polygon, colorUsed)
+		draw_colored_polygon(polygon, colorUsed)
 
 func add_skill(skillClass: String):
 	var skillFound: SkillComponentResource = J.skill_resources.get(skillClass, null)

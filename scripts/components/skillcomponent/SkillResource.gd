@@ -13,7 +13,7 @@ class_name SkillComponentResource
 
 @export var cooldown: float = 0
 
-#The ability is meant to be casted when selected instead of being possible to target it. Using the user as target location.
+#Instantly uses the ability upon selection using the user's position as a target.
 @export var cast_on_select: bool
 
 @export var damage: int = 0
