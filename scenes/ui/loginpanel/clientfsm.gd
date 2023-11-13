@@ -39,7 +39,7 @@ func _ready():
 	login_panel.create_account_pressed.connect(_on_create_account_pressed)
 	login_panel.back_create_account_pressed.connect(_on_back_create_account_pressed)
 
-	Gateway.client_connected.connect(_on_client_connected)
+	C.client_connected.connect(_on_client_connected)
 
 
 func fsm():
@@ -66,21 +66,21 @@ func _connect_to_gateway() -> bool:
 		GodotLogger.info("Already connected to gateway, no need to connect again")
 		return true
 
-	if !Gateway.client_connect(Global.env_gateway_address, Global.env_gateway_port):
+	if !C.client_connect(Global.env_gateway_address, Global.env_gateway_client_port):
 		GodotLogger.warn(
 			(
 				"Could not connect to gateway=[%s] on port=[%d]"
-				% [Global.env_gateway_address, Global.env_gateway_port]
+				% [Global.env_gateway_address, Global.env_gateway_client_port]
 			)
 		)
 		JUI.alertbox("Error connecting to gateway", login_panel)
 		return false
 
-	if !await Gateway.client_connected:
+	if !await C.client_connected:
 		GodotLogger.warn(
 			(
 				"Could not connect to gateway=[%s] on port=[%d]"
-				% [Global.env_gateway_address, Global.env_gateway_port]
+				% [Global.env_gateway_address, Global.env_gateway_client_port]
 			)
 		)
 		JUI.alertbox("Error connecting to gateway", login_panel)
@@ -89,7 +89,7 @@ func _connect_to_gateway() -> bool:
 	GodotLogger.info(
 		(
 			"Connected to gateway=[%s] on port=[%d]"
-			% [Global.env_gateway_address, Global.env_gateway_port]
+			% [Global.env_gateway_address, Global.env_gateway_client_port]
 		)
 	)
 
@@ -118,9 +118,9 @@ func _handle_login():
 		fsm_timer.start()
 		return
 
-	Gateway.account_rpc.authenticate.rpc_id(1, user, passwd)
+	C.account_rpc.authenticate.rpc_id(1, user, passwd)
 
-	var response = await Gateway.account_rpc.authenticated
+	var response = await C.account_rpc.authenticated
 	if response:
 		GodotLogger.info("Login Successful")
 		state = STATES.RUNNING
@@ -154,9 +154,9 @@ func _handle_create_account():
 		fsm_timer.start()
 		return
 
-	Gateway.account_rpc.create_account.rpc_id(1, new_username, new_password)
+	C.account_rpc.create_account.rpc_id(1, new_username, new_password)
 
-	var response = await Gateway.account_rpc.account_created
+	var response = await C.account_rpc.account_created
 	if response["error"]:
 		JUI.alertbox(response["reason"], login_panel)
 	else:
