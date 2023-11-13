@@ -5,6 +5,7 @@ const CLIENT_FPS: int = 60
 
 @onready var ui: CanvasLayer = $UI
 @onready var select_run_mode: Control = $UI/SelectRunMode
+@onready var run_as_gateway_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsGatewayButton
 @onready var run_as_server_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsServerButton
 @onready var run_as_client_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsClientButton
 
@@ -19,6 +20,7 @@ var maps: Dictionary = {"World": preload("res://scenes/maps/world/World.tscn")}
 
 
 func _ready():
+	run_as_gateway_button.pressed.connect(_on_run_as_gateway_pressed)
 	run_as_server_button.pressed.connect(_on_run_as_server_pressed)
 	run_as_client_button.pressed.connect(_on_run_as_client_pressed)
 
@@ -44,6 +46,29 @@ func parse_cmd_arguments():
 			"j_client":
 				start_client()
 				break
+
+
+func start_gateway() -> bool:
+	GodotLogger.info("Running as Gateway")
+
+	select_run_mode.queue_free()
+
+	GodotLogger.info("Loading gateway's env variables")
+	if not Global.load_gateway_env_variables():
+		GodotLogger.error("Could not load gateway's env variables")
+		return false
+
+	if not Gateway.server_init(
+		Global.env_gateway_port,
+		Global.env_gateway_max_peers,
+		Global.env_gateway_crt,
+		Global.env_gateway_key
+	):
+		GodotLogger.error("Failed to start DTLS gateway")
+		return false
+
+	GodotLogger.info("Gateway successfully started")
+	return true
 
 
 func start_server(map: String) -> bool:
@@ -136,6 +161,10 @@ func start_client() -> bool:
 
 	GodotLogger.info("Client successfully started")
 	return true
+
+
+func _on_run_as_gateway_pressed():
+	start_gateway()
 
 
 func _on_run_as_server_pressed():
