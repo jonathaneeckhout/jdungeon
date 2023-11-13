@@ -11,10 +11,16 @@ var env_minimize_on_start: bool = false
 var env_no_tls: bool = false
 
 var env_gateway_address: String = ""
+
 var env_gateway_client_port: int = 0
 var env_gateway_client_max_peers: int = 0
 var env_gateway_client_crt: String = ""
 var env_gateway_client_key: String = ""
+
+var env_gateway_server_port: int = 0
+var env_gateway_server_max_peers: int = 0
+var env_gateway_server_crt: String = ""
+var env_gateway_server_key: String = ""
 
 var env_server_address: String = ""
 var env_server_port: int = 0
@@ -202,21 +208,21 @@ func load_database_env_variables() -> bool:
 
 
 func load_gateway_env_variables() -> bool:
-	var env_port_str = env.get_value("GATEWAY_CLIENT_PORT")
-	if env_port_str == "":
+	var env_client_port_str = env.get_value("GATEWAY_CLIENT_PORT")
+	if env_client_port_str == "":
 		GodotLogger.error("Could not load GATEWAY_CLIENT_PORT env varaible")
 		return false
 
-	env_gateway_client_port = int(env_port_str)
+	env_gateway_client_port = int(env_client_port_str)
 
 	GodotLogger.info("GATEWAY_CLIENT_PORT=[%d]" % env_gateway_client_port)
 
-	var env_max_peers_str = env.get_value("GATEWAY_CLIENT_MAX_PEERS")
-	if env_max_peers_str == "":
+	var env_client_max_peers_str = env.get_value("GATEWAY_CLIENT_MAX_PEERS")
+	if env_client_max_peers_str == "":
 		GodotLogger.error("Could not load GATEWAY_CLIENT_MAX_PEERS env varaible")
 		return false
 
-	env_gateway_client_max_peers = int(env_max_peers_str)
+	env_gateway_client_max_peers = int(env_client_max_peers_str)
 
 	GodotLogger.info("GATEWAY_CLIENT_MAX_PEERS=[%d]" % env_gateway_client_max_peers)
 
@@ -233,6 +239,38 @@ func load_gateway_env_variables() -> bool:
 		return false
 
 	GodotLogger.info("GATEWAY_CLIENT_KEY=[%s]" % env_gateway_client_key)
+
+	var env_server_port_str = env.get_value("GATEWAY_SERVER_PORT")
+	if env_server_port_str == "":
+		GodotLogger.error("Could not load GATEWAY_SERVER_PORT env varaible")
+		return false
+
+	env_gateway_server_port = int(env_server_port_str)
+
+	GodotLogger.info("GATEWAY_SERVER_PORT=[%d]" % env_gateway_server_port)
+
+	var env_server_max_peers_str = env.get_value("GATEWAY_SERVER_MAX_PEERS")
+	if env_server_max_peers_str == "":
+		GodotLogger.error("Could not load GATEWAY_SERVER_MAX_PEERS env varaible")
+		return false
+
+	env_gateway_server_max_peers = int(env_server_max_peers_str)
+
+	GodotLogger.info("GATEWAY_SERVER_MAX_PEERS=[%d]" % env_gateway_server_max_peers)
+
+	env_gateway_server_crt = env.get_value("GATEWAY_SERVER_CRT")
+	if env_gateway_server_crt == "":
+		GodotLogger.error("Could not load GATEWAY_SERVER_CRT env varaible")
+		return false
+
+	GodotLogger.info("GATEWAY_SERVER_CRT=[%s]" % env_gateway_server_crt)
+
+	env_gateway_server_key = env.get_value("GATEWAY_SERVER_KEY")
+	if env_gateway_server_key == "":
+		GodotLogger.error("Could not load GATEWAY_SERVER_KEY env varaible")
+		return false
+
+	GodotLogger.info("GATEWAY_SERVER_KEY=[%s]" % env_gateway_server_key)
 
 	return load_database_env_variables()
 

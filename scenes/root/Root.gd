@@ -67,13 +67,22 @@ func start_gateway() -> bool:
 	if Global.env_minimize_on_start:
 		get_tree().root.mode = Window.MODE_MINIMIZED
 
+	if not S.server_init(
+		Global.env_gateway_server_port,
+		Global.env_gateway_server_max_peers,
+		Global.env_gateway_server_crt,
+		Global.env_gateway_server_key
+	):
+		GodotLogger.error("Failed to start gateway client DTLS server")
+		return false
+
 	if not C.server_init(
 		Global.env_gateway_client_port,
 		Global.env_gateway_client_max_peers,
 		Global.env_gateway_client_crt,
 		Global.env_gateway_client_key
 	):
-		GodotLogger.error("Failed to start DTLS gateway")
+		GodotLogger.error("Failed to start gateway client DTLS server")
 		return false
 
 	GodotLogger.info("Gateway successfully started")
