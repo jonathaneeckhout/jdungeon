@@ -70,10 +70,7 @@ func _ready():
 	skill_used.connect(_on_skill_used)
 	
 	#When an instant cast ability is selected, it emulates using it at the player's position
-	skill_component.skill_cast_on_select_selected.connect(
-		func(skill: SkillComponentResource):
-			_handle_right_click(target_node.global_position)
-	)
+	skill_component.skill_cast_on_select_selected.connect(_on_skill_instant_used)
 
 	attack_timer = Timer.new()
 	attack_timer.name = "AttackTimer"
@@ -216,6 +213,9 @@ func _on_interacted(target: Node2D):
 func _on_skill_used(where: Vector2, skillClass: String):
 	skill_component.skill_use_at(where, skillClass)
 
+#Intermediary
+func _on_skill_instant_used(_skill: SkillComponentResource):
+	_handle_right_click(target_node.global_position)
 
 func _on_died():
 	animation_player.play("Die")

@@ -1,6 +1,9 @@
 extends HBoxContainer
 
-@export var skill_component: SkillComponent
+@export var skill_component: SkillComponent:
+	set(val):
+		skill_component = val
+		update_displays()
 
 @export var max_skills: int = 5
 
@@ -27,12 +30,11 @@ func update_displays():
 		
 		display.texture = EMPTY_ICON
 		display.skill_component = skill_component
+		
 		#If a skill is selected, tell the displays
 		skill_component.skill_selected.connect(display._on_skill_selected)
-		
-		var nullSkill := func(variant, display: SkillDisplay):
-			display._on_skill_selected(null)
-		skill_component.skill_cast_on_select_selected.connect(nullSkill.bind(display))
+		skill_component.skill_cast_on_select_selected.connect(display._on_skill_cast_on_select_selected)
+		skill_component.skill_cooldown_updated.connect(display._on_skill_cooldown_updated)
 		
 		
 		displays.append(display)
@@ -51,13 +53,9 @@ func update_icons():
 		if index < skillList.size() and skillList[index] is SkillComponentResource:
 			currentDisplay.texture = skillList[index].icon
 			currentDisplay.skill_class = skillList[index].skill_class
+			currentDisplay.skill_component = skill_component
+			assert(skill_component.skill_cooldown_updated.is_connected(currentDisplay._on_skill_cooldown_updated))
 			
-			skill_component.skill_cooldown_started.connect(
-				currentDisplay._on_skill_cooldown_change.bind(true)
-				)
-			skill_component.skill_cooldown_ended.connect(
-				currentDisplay._on_skill_cooldown_change.bind(false)
-				)
 		else:
 			currentDisplay.texture = EMPTY_ICON
 	
@@ -69,18 +67,15 @@ class SkillDisplay extends TextureRect:
 		
 	#Used to reference certain methods
 	var skill_component: SkillComponent
-		
-	var skill_class: String	
-	
+	var skill_class: String:
+		set(val):
+			skill_class = val
+			set_process(skill_class != "")
 
-	@onready var currentTween := create_tween()
 	var cooldownText := Label.new()
 	var selectionTexture := TextureRect.new()
 	
 	func _ready():
-		currentTween.tween_property(self, "modulate", Color.WHITE * 0.6, 1)
-		currentTween.tween_property(self, "modulate", Color.WHITE, 1)
-		currentTween.set_loops()
 		expand_mode = TextureRect.EXPAND_FIT_WIDTH
 		
 		selectionTexture.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -99,24 +94,23 @@ class SkillDisplay extends TextureRect:
 		cooldownText.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		cooldownText.hide()
 		add_child(cooldownText)
-	
-	#Only runs while a skill is in cooldown	
-	func _process(delta: float) -> void:
-		cooldownText.text = str(skill_component.cooldown_get_time_left(skill_class))
+		
+		skill_class = skill_class
+		assert(skill_component.skill_cooldown_updated.is_connected(_on_skill_cooldown_updated))
 	
 	func select():
-		currentTween.play()
 		selectionTexture.show()
 		
 	func deselect():
-		currentTween.stop()
-		modulate = Color.WHITE
 		selectionTexture.hide()
+		
+	func _on_skill_cast_on_select_selected(_skill: SkillComponentResource):
+		_on_skill_selected(null)
+		
 		
 	func _on_skill_selected(skill: SkillComponentResource):
 		#Null deactivates all displays
 		if skill == null:
-			print_debug("Deselected due to null")
 			deselect()
 		#If it is the skill from this display, activate
 		elif skill.skill_class == skill_class:
@@ -126,10 +120,13 @@ class SkillDisplay extends TextureRect:
 			deselect()
 
 	
-	
-	#If not "started", it means it ended.
-	func _on_skill_cooldown_change(skillClass: String, started: bool):
+	func _on_skill_cooldown_updated(skillClass: String, time: float):
+		print_debug("Cooldown update")
 		if skillClass == skill_class:
-			cooldownText.visible = started
-			set_process(started)
-		
+			cooldownText.text = str(time)
+			
+			if time <= 0:
+				cooldownText.hide()
+			else:
+				cooldownText.show()
+	

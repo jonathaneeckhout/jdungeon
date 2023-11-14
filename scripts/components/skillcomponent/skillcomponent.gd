@@ -13,8 +13,7 @@ signal skill_failed_usage(skill: SkillComponentResource)
 signal skill_selected(skill: SkillComponentResource)
 signal skill_index_selected(index: int)
 
-signal skill_cooldown_started(skill: String)
-signal skill_cooldown_ended(skill: String)
+signal skill_cooldown_updated(skill: String, time: float)
 
 signal skill_cast_on_select_selected(skill: SkillComponentResource)
 
@@ -59,16 +58,22 @@ var directSpace: PhysicsDirectSpaceState2D
 var shapeParameters := PhysicsShapeQueryParameters2D.new()
 
 func _ready() -> void:
-	#TEMP
-	add_skill("debug")
+	#TEMP until classes are added
 	add_skill("HealSelf")
-	add_skill("Combustion")
 	assert(skills[0] is SkillComponentResource)
-	#TEMP
+	#TEMP ends
 
 	if user.get("component_list") != null:
 		user.component_list["skill_component"] = self
-
+	
+	#Cooldown timer
+	var cooldownTimer := Timer.new()
+	cooldownTimer.timeout.connect(cooldown_process)
+	add_child(cooldownTimer)
+	cooldownTimer.start(0.1)
+	
+	skills_changed.connect(sync_skills)
+	
 	if G.is_server():
 		return
 	
@@ -85,12 +90,12 @@ func _ready() -> void:
 	
 	G.sync_rpc.skillcomponent_sync_skills.rpc_id(1, user.get_name())
 	
-	skills_changed.connect(sync_skills)
-	
 	#Setup user
 	while directSpace == null:
 		directSpace = user.get_world_2d().direct_space_state
 		await get_tree().process_frame
+	
+
 	
 	assert(directSpace is PhysicsDirectSpaceState2D)
 	
@@ -115,11 +120,11 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	queue_redraw()
 	
-	
-func _physics_process(delta: float) -> void:
+#Progresses the cooldown by 0.1 at a time.
+func cooldown_process():
 	for skillClass in cooldownDict:
 		assert(cooldownDict.get(skillClass) is float)
-		var newCooldown: float = move_toward(cooldown_get_time_left(skillClass), 0, delta)
+		var newCooldown: float = move_toward(cooldown_get_time_left(skillClass), 0, 0.1)
 		cooldown_set_time_left(skillClass, newCooldown)
 		
 		
@@ -217,7 +222,6 @@ func skill_deselect():
 func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_class()):
 	var skillUsed: SkillComponentResource = J.skill_resources[skillClass].duplicate()	
 	skill_current = skillUsed
-	print_stack()
 	
 	if not is_skill_usable(skillUsed):
 		skill_failed_usage.emit(skillUsed)
@@ -290,19 +294,14 @@ func get_collision_layer()->int:
 	return skill_current.collision_mask
 
 func cooldown_get_time_left(skillClass: String)->float:
+	assert(skillClass != "")
 	return cooldownDict.get(skillClass, 0 as float)
 		
 #Sets cooldowns for skills per class
 func cooldown_set_time_left(skillClass: String, time: float):
-	if time <= 0:
-		cooldownDict.erase(skillClass)
-		skill_cooldown_ended.emit(skillClass)
+	cooldownDict[skillClass] = time
+	skill_cooldown_updated.emit(skillClass, time)
 		
-	else:
-		cooldownDict[skillClass] = time
-		skill_cooldown_started.emit(skillClass)
-		
-	
 	
 func get_skill_current_class()->String:
 	if skill_current is SkillComponentResource:
@@ -324,11 +323,9 @@ func is_skill_present(skillClass: String)->bool:
 	
 func is_skill_usable(skill: SkillComponentResource)->bool:
 	if stats_component.energy < skill.energy_usage:
-		print_debug("Not enough energy.")
 		return false
 	
 	if cooldown_get_time_left(skill.skill_class) != 0:
-		print_debug("Can't use while on cooldown.")
 		return false
 		
 	return true
