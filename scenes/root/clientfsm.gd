@@ -102,7 +102,7 @@ func _connect_to_server(address: String, port: int) -> bool:
 		JUI.alertbox("Error connecting to server", login_panel)
 		return false
 
-	if !await C.client_connected:
+	if !await G.client_connected:
 		GodotLogger.warn("Could not connect to server=[%s] on port=[%d]" % [address, port])
 		JUI.alertbox("Error connecting to server", login_panel)
 		return false
@@ -134,23 +134,31 @@ func _handle_login():
 		return
 
 	# Authenticate the user
+	GodotLogger.info("Authenticating to gateway server")
 	C.client_rpc.authenticate.rpc_id(1, user, passwd)
 
 	# Wait for the response
 	var response = await C.client_rpc.authenticated
 	if not response:
-		JUI.alertbox("Login failed", login_panel)
+		JUI.alertbox("Login to gateway server failed", login_panel)
 		return
 
 	GodotLogger.info("Login to gateway server successful")
 
 	# Fetch the server information
+	GodotLogger.info("Fetch server information")
 	C.client_rpc.get_server.rpc_id(1)
 
 	var server_info: Dictionary = await C.client_rpc.server_info_received
 	if server_info["error"]:
+		GodotLogger.info("Failed to fetch server information")
 		JUI.alertbox("Server error, please try again", login_panel)
 		return
+
+	# Disconnect the client from the gateway server
+	GodotLogger.info("Disconnect from gateway server")
+	C.client_disconnect()
+	connected_to_gateway = false
 
 	GodotLogger.info(
 		(
@@ -158,25 +166,25 @@ func _handle_login():
 			% [server_info["name"], server_info["address"], server_info["port"]]
 		)
 	)
-
-	# Disconnect the client from the gateway server
-	C.client_disconnect()
-	connected_to_gateway = false
-
 	# Connect to the gateway server
 	if !await _connect_to_server(server_info["address"], server_info["port"]):
-		state = STATES.INIT
-		fsm_timer.start()
 		return
 
-	# if response:
+	GodotLogger.info("Authenticating to gateway server=[%s]" % server_info["name"])
+	G.player_rpc.authenticate.rpc_id(1, user, server_info["cookie"])
 
-	# 	state = STATES.RUNNING
-	# 	fsm()
-	# else:
-	# 	JUI.alertbox("Login failed", login_panel)
+	response = await G.player_rpc.authenticated
+	if not response:
+		JUI.alertbox("Authentication with server failed", login_panel)
+		return
 
-	# fsm_timer.start()
+	GodotLogger.info("Login to game server=[%s] successful" % server_info["name"])
+
+	if response:
+		state = STATES.RUNNING
+		fsm()
+
+	fsm_timer.start()
 
 
 func _handle_authenticate():

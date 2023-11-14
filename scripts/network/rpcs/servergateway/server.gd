@@ -37,4 +37,4 @@ func register_server(server_name: String, address: String, port: int):
 
 
 @rpc("call_remote", "authority", "reliable") func register_user(username: String, cookie: String):
-	GodotLogger.info("Registering user=[%s]" % username)
+	S.register_user(username, cookie)

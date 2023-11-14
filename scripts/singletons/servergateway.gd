@@ -2,6 +2,9 @@ extends Node
 
 enum MODE { SERVER, CLIENT }
 
+const COOKIE_TIMER_INTERVAL: float = 10.0
+const COOKIE_VALID_TIME: float = 60.0
+
 signal client_connected(connected: bool)
 
 var multiplayer_api: MultiplayerAPI
@@ -9,6 +12,7 @@ var multiplayer_api: MultiplayerAPI
 var mode: MODE = MODE.CLIENT
 
 var servers: Dictionary = {}
+var users: Dictionary = {}
 
 var dtls_networking: DTLSNetworking
 var database: Database
@@ -84,6 +88,14 @@ func client_init(address: String, port: int) -> bool:
 
 	multiplayer_api.multiplayer_peer = client
 
+	var check_cookie_timer: Timer = Timer.new()
+	check_cookie_timer.name = "CheckCookieTimer"
+	check_cookie_timer.autostart = true
+	check_cookie_timer.one_shot = false
+	check_cookie_timer.wait_time = COOKIE_TIMER_INTERVAL
+	check_cookie_timer.timeout.connect(_on_check_cookie_timer_timeout)
+	add_child(check_cookie_timer)
+
 	GodotLogger.info("Started gateway client")
 
 	return true
@@ -104,6 +116,29 @@ func get_server_by_name(server_name: String) -> Server:
 			return server
 
 	return null
+
+
+func register_user(username: String, cookie: String):
+	GodotLogger.info("Registering user=[%s]" % username)
+	var user = S.User.new()
+	user.username = username
+	user.cookie = cookie
+	S.users[username] = user
+
+
+func authenticate_user(username: String, cookie: String) -> bool:
+	GodotLogger.info("Authenticating user=[%s]" % username)
+
+	var user: User = get_user_by_username(username)
+	if user == null:
+		GodotLogger.info("User=[%s] not found" % username)
+		return false
+
+	return user.cookie == cookie
+
+
+func get_user_by_username(username: String) -> User:
+	return users.get(username)
 
 
 func _on_server_peer_connected(id: int):
@@ -133,6 +168,20 @@ func _on_client_disconnected():
 	client_connected.emit(false)
 
 
+func _on_check_cookie_timer_timeout():
+	var to_be_deleted: Array[String] = []
+	var current_time: float = Time.get_unix_time_from_system()
+
+	for username in users:
+		var user: User = users[username]
+		if (current_time - user.registered_time) > COOKIE_VALID_TIME:
+			to_be_deleted.append(username)
+
+	for username in to_be_deleted:
+		GodotLogger.info("User=[%s] cookie expired, removing from list" % username)
+		users.erase(username)
+
+
 class Server:
 	extends Object
 	var name: String = ""
@@ -141,3 +190,11 @@ class Server:
 	var port: int = 0
 	var logged_in: bool = false
 	var connected_time: float = Time.get_unix_time_from_system()
+
+
+class User:
+	extends Object
+	var username: String = ""
+	var cookie: String = ""
+	# Used to check how long the cookie is valid
+	var registered_time: float = Time.get_unix_time_from_system()

@@ -66,14 +66,19 @@ func client_init() -> bool:
 		GodotLogger.error("Failed to init client gateway server's common part")
 		return false
 
-	multiplayer.connected_to_server.connect(_on_client_connection_succeeded)
-	multiplayer.connection_failed.connect(_on_client_connection_failed)
-	multiplayer.server_disconnected.connect(_on_client_disconnected)
-
 	return true
 
 
 func client_connect(address: String, port: int) -> bool:
+	if not multiplayer.connected_to_server.is_connected(_on_client_connection_succeeded):
+		multiplayer.connected_to_server.connect(_on_client_connection_succeeded)
+
+	if not multiplayer.connection_failed.is_connected(_on_client_connection_failed):
+		multiplayer.connection_failed.connect(_on_client_connection_failed)
+
+	if not multiplayer.server_disconnected.is_connected(_on_client_disconnected):
+		multiplayer.server_disconnected.connect(_on_client_disconnected)
+
 	client = dtls_networking.client_connect(address, port)
 	if client == null:
 		GodotLogger.warn("Failed to connect to server")
@@ -87,7 +92,21 @@ func client_connect(address: String, port: int) -> bool:
 
 
 func client_disconnect():
+	client_cleanup()
 	client.close()
+
+
+func client_cleanup():
+	multiplayer.multiplayer_peer = null
+
+	if multiplayer.connected_to_server.is_connected(_on_client_connection_succeeded):
+		multiplayer.connected_to_server.disconnect(_on_client_connection_succeeded)
+
+	if multiplayer.connection_failed.is_connected(_on_client_connection_failed):
+		multiplayer.connection_failed.disconnect(_on_client_connection_failed)
+
+	if multiplayer.server_disconnected.is_connected(_on_client_disconnected):
+		multiplayer.server_disconnected.disconnect(_on_client_disconnected)
 
 
 func is_server() -> bool:
@@ -121,10 +140,14 @@ func _on_client_connection_failed():
 	GodotLogger.warn("Connection failed")
 	client_connected.emit(false)
 
+	client_cleanup()
+
 
 func _on_client_disconnected():
 	GodotLogger.info("Server disconnected")
 	client_connected.emit(false)
+
+	client_cleanup()
 
 
 class User:

@@ -35,16 +35,23 @@ func create_account_response(error: bool, reason: String = ""):
 	var id = multiplayer.get_remote_sender_id()
 
 	var res = C.database.authenticate_user(username, password)
+	if not res:
+		authentication_response.rpc_id(id, false)
+		return
 
-	var user: C.User = C.users[id]
+	var user: C.User = C.get_user_by_id(id)
+	if user == null:
+		GodotLogger.warn("Could not find user with id=%d" % id)
+		authentication_response.rpc_id(id, false)
+		return
+
+	GodotLogger.info("Player=[%s] successfully logged in" % username)
+	user.username = username
 	user.logged_in = res
 
-	if res:
-		GodotLogger.info("Player=[%s] successfully logged in" % username)
-		user.username = username
-		player_logged_in.emit(id, username)
+	player_logged_in.emit(id, username)
 
-	authentication_response.rpc_id(id, res)
+	authentication_response.rpc_id(id, true)
 
 
 @rpc("call_remote", "authority", "reliable") func authentication_response(response: bool):

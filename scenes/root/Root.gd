@@ -118,9 +118,9 @@ func start_server(map: String) -> bool:
 		GodotLogger.error("Failed to start DTLS server")
 		return false
 
-	# var world = maps[map].instantiate()
-	# world.name = "World"
-	# add_child(world)
+	var world = maps[map].instantiate()
+	world.name = "World"
+	add_child(world)
 
 	GodotLogger.info("Server successfully started")
 	return true
@@ -142,7 +142,11 @@ func start_client() -> bool:
 		return false
 
 	if not C.client_init():
-		GodotLogger.error("Failed to init client")
+		GodotLogger.error("Failed to init gateway client")
+		return false
+
+	if not G.client_init():
+		GodotLogger.error("Failed to init gameserver client")
 		return false
 
 	if Global.env_debug:
@@ -154,13 +158,13 @@ func start_client() -> bool:
 		client_fsm.login_panel = login_panel
 		add_child(client_fsm)
 
-		# await login_panel.logged_in
+		await login_panel.logged_in
 
-		# login_panel.queue_free()
+		login_panel.queue_free()
 
-		# var world = maps["World"].instantiate()
-		# world.name = "World"
-		# add_child(world)
+		var world = maps["World"].instantiate()
+		world.name = "World"
+		add_child(world)
 
 	else:
 		# Show the check version panel

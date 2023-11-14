@@ -22,6 +22,8 @@ var clock_rpc: ClockRPC
 var player_rpc: PlayerRPC
 var sync_rpc: SyncRPC
 
+var client: ENetMultiplayerPeer
+
 var clock: float = 0.0
 var clock_sync_timer: Timer
 
@@ -94,10 +96,6 @@ func client_init() -> bool:
 		GodotLogger.error("Failed to init gameserver's common part")
 		return false
 
-	multiplayer.connected_to_server.connect(_on_client_connection_succeeded)
-	multiplayer.connection_failed.connect(_on_client_connection_failed)
-	multiplayer.server_disconnected.connect(_on_client_disconnected)
-
 	clock_sync_timer = Timer.new()
 	clock_sync_timer.name = "ClockSyncTimer"
 	clock_sync_timer.wait_time = CLOCK_SYNC_TIME
@@ -108,7 +106,16 @@ func client_init() -> bool:
 
 
 func client_connect(address: String, port: int) -> bool:
-	var client: ENetMultiplayerPeer = dtls_networking.client_connect(address, port)
+	if not multiplayer.connected_to_server.is_connected(_on_client_connection_succeeded):
+		multiplayer.connected_to_server.connect(_on_client_connection_succeeded)
+
+	if not multiplayer.connection_failed.is_connected(_on_client_connection_failed):
+		multiplayer.connection_failed.connect(_on_client_connection_failed)
+
+	if not multiplayer.server_disconnected.is_connected(_on_client_disconnected):
+		multiplayer.server_disconnected.connect(_on_client_disconnected)
+
+	client = dtls_networking.client_connect(address, port)
 	if client == null:
 		GodotLogger.warn("Failed to connect to server")
 		return false
@@ -118,6 +125,25 @@ func client_connect(address: String, port: int) -> bool:
 	GodotLogger.info("Started client")
 
 	return true
+
+
+func client_disconnect():
+	client_cleanup()
+
+	client.close()
+
+
+func client_cleanup():
+	multiplayer.multiplayer_peer = null
+
+	if multiplayer.connected_to_server.is_connected(_on_client_connection_succeeded):
+		multiplayer.connected_to_server.disconnect(_on_client_connection_succeeded)
+
+	if multiplayer.connection_failed.is_connected(_on_client_connection_failed):
+		multiplayer.connection_failed.disconnect(_on_client_connection_failed)
+
+	if multiplayer.server_disconnected.is_connected(_on_client_disconnected):
+		multiplayer.server_disconnected.disconnect(_on_client_disconnected)
 
 
 func is_server() -> bool:
@@ -162,12 +188,16 @@ func _on_client_connection_failed():
 	GodotLogger.warn("Connection failed")
 	client_connected.emit(false)
 
+	client_cleanup()
+
 
 func _on_client_disconnected():
 	GodotLogger.info("Server disconnected")
 	client_connected.emit(false)
 
 	stop_sync_clock()
+
+	client_cleanup()
 
 
 func _on_clock_sync_timer_timeout():
