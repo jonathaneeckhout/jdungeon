@@ -149,9 +149,14 @@ func start_client() -> bool:
 		var login_panel: LoginPanel = login_panel_scene.instantiate()
 		ui.add_child(login_panel)
 
-		await login_panel.logged_in
+		var client_fsm: ClientFSM = ClientFSM.new()
+		client_fsm.name = "ClientFSM"
+		client_fsm.login_panel = login_panel
+		add_child(client_fsm)
 
-		login_panel.queue_free()
+		# await login_panel.logged_in
+
+		# login_panel.queue_free()
 
 		# var world = maps["World"].instantiate()
 		# world.name = "World"

@@ -12,7 +12,9 @@ var dtls_networking: DTLSNetworking
 var database: Database
 var message_handler: MessageHandler
 
-var account_rpc: AccountRPC
+var client_rpc: ClientRPC
+
+var client: ENetMultiplayerPeer
 
 
 func _ready():
@@ -20,10 +22,10 @@ func _ready():
 
 
 func init_common() -> bool:
-	account_rpc = AccountRPC.new()
+	client_rpc = ClientRPC.new()
 	# This short name is done to optimization the network traffic
-	account_rpc.name = "A"
-	add_child(account_rpc)
+	client_rpc.name = "C"
+	add_child(client_rpc)
 
 	return true
 
@@ -72,7 +74,7 @@ func client_init() -> bool:
 
 
 func client_connect(address: String, port: int) -> bool:
-	var client: ENetMultiplayerPeer = dtls_networking.client_connect(address, port)
+	client = dtls_networking.client_connect(address, port)
 	if client == null:
 		GodotLogger.warn("Failed to connect to server")
 		return false
@@ -82,6 +84,10 @@ func client_connect(address: String, port: int) -> bool:
 	GodotLogger.info("Started gateway client")
 
 	return true
+
+
+func client_disconnect():
+	client.close()
 
 
 func is_server() -> bool:

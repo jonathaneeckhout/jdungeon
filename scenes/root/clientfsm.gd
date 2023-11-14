@@ -2,7 +2,9 @@ extends Node
 
 class_name ClientFSM
 
-enum STATES { INIT, CONNECT, DISCONNECTED, LOGIN, CREATE_ACCOUNT, RUNNING }
+enum STATES { INIT, LOGIN, CREATE_ACCOUNT, RUNNING }
+
+@export var login_panel: LoginPanel
 
 var state: STATES = STATES.INIT
 var fsm_timer: Timer
@@ -20,8 +22,6 @@ var new_password: String
 var back_create_account_pressed: bool = false
 
 var connected_to_gateway: bool = false
-
-@onready var login_panel: LoginPanel = $".."
 
 
 func _ready():
@@ -46,8 +46,6 @@ func fsm():
 	match state:
 		STATES.INIT:
 			_handle_init()
-		STATES.DISCONNECTED:
-			pass
 		STATES.LOGIN:
 			_handle_login()
 		STATES.CREATE_ACCOUNT:
@@ -98,6 +96,22 @@ func _connect_to_gateway() -> bool:
 	return true
 
 
+func _connect_to_server(address: String, port: int) -> bool:
+	if !G.client_connect(address, port):
+		GodotLogger.warn("Could not connect to server=[%s] on port=[%d]" % [address, port])
+		JUI.alertbox("Error connecting to server", login_panel)
+		return false
+
+	if !await C.client_connected:
+		GodotLogger.warn("Could not connect to server=[%s] on port=[%d]" % [address, port])
+		JUI.alertbox("Error connecting to server", login_panel)
+		return false
+
+	GodotLogger.info("Connected to server=[%s] on port=[%d]" % [address, port])
+
+	return true
+
+
 func _handle_login():
 	#TODO: handle connect for account creation
 	login_panel.show_login_container()
@@ -113,22 +127,56 @@ func _handle_login():
 
 	login_pressed = false
 
+	# Connect to the gateway server
 	if !await _connect_to_gateway():
 		state = STATES.INIT
 		fsm_timer.start()
 		return
 
-	C.account_rpc.authenticate.rpc_id(1, user, passwd)
+	# Authenticate the user
+	C.client_rpc.authenticate.rpc_id(1, user, passwd)
 
-	var response = await C.account_rpc.authenticated
-	if response:
-		GodotLogger.info("Login Successful")
-		state = STATES.RUNNING
-		fsm()
-	else:
+	# Wait for the response
+	var response = await C.client_rpc.authenticated
+	if not response:
 		JUI.alertbox("Login failed", login_panel)
+		return
 
-	fsm_timer.start()
+	GodotLogger.info("Login to gateway server successful")
+
+	# Fetch the server information
+	C.client_rpc.get_server.rpc_id(1)
+
+	var server_info: Dictionary = await C.client_rpc.server_info_received
+	if server_info["error"]:
+		JUI.alertbox("Server error, please try again", login_panel)
+		return
+
+	GodotLogger.info(
+		(
+			"Connecting client to world=[%s] with address=[%s] on port=[%d]"
+			% [server_info["name"], server_info["address"], server_info["port"]]
+		)
+	)
+
+	# Disconnect the client from the gateway server
+	C.client_disconnect()
+	connected_to_gateway = false
+
+	# Connect to the gateway server
+	if !await _connect_to_server(server_info["address"], server_info["port"]):
+		state = STATES.INIT
+		fsm_timer.start()
+		return
+
+	# if response:
+
+	# 	state = STATES.RUNNING
+	# 	fsm()
+	# else:
+	# 	JUI.alertbox("Login failed", login_panel)
+
+	# fsm_timer.start()
 
 
 func _handle_authenticate():
@@ -154,9 +202,9 @@ func _handle_create_account():
 		fsm_timer.start()
 		return
 
-	C.account_rpc.create_account.rpc_id(1, new_username, new_password)
+	C.client_rpc.create_account.rpc_id(1, new_username, new_password)
 
-	var response = await C.account_rpc.account_created
+	var response = await C.client_rpc.account_created
 	if response["error"]:
 		JUI.alertbox(response["reason"], login_panel)
 	else:

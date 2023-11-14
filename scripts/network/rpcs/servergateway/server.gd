@@ -18,11 +18,15 @@ func register_server(server_name: String, address: String, port: int):
 		return
 
 	server.name = server_name
+	server.peer_id = id
 	server.address = address
 	server.port = port
 
 	GodotLogger.info(
-		"Server=[%s] with address=[%s] running on port=[%d] registrated" % [server_name, address, port]
+		(
+			"Server=[%s] with address=[%s] running on port=[%d] registered"
+			% [server_name, address, port]
+		)
 	)
 
 	register_response.rpc_id(id, true)
@@ -30,3 +34,7 @@ func register_server(server_name: String, address: String, port: int):
 
 @rpc("call_remote", "authority", "reliable") func register_response(response: bool):
 	server_registered.emit(response)
+
+
+@rpc("call_remote", "authority", "reliable") func register_user(username: String, cookie: String):
+	GodotLogger.info("Registering user=[%s]" % username)

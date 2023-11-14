@@ -44,7 +44,7 @@ func _ready():
 	synced_entities.add_child(items)
 
 	if G.is_server():
-		G.account_rpc.player_logged_in.connect(_on_player_logged_in)
+		G.client_rpc.player_logged_in.connect(_on_player_logged_in)
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 		enemy_respawns = Node2D.new()

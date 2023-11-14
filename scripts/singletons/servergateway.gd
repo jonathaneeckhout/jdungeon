@@ -97,6 +97,15 @@ func get_server_by_id(id: int) -> Server:
 	return servers.get(id)
 
 
+func get_server_by_name(server_name: String) -> Server:
+	for id in servers:
+		var server = servers[id]
+		if server.name == server_name:
+			return server
+
+	return null
+
+
 func _on_server_peer_connected(id: int):
 	GodotLogger.info("Server peer connected %d" % id)
 	servers[id] = Server.new()
@@ -128,6 +137,7 @@ class Server:
 	extends Object
 	var name: String = ""
 	var address: String = ""
+	var peer_id: int = 0
 	var port: int = 0
 	var logged_in: bool = false
 	var connected_time: float = Time.get_unix_time_from_system()

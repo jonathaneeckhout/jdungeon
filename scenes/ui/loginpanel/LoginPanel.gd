@@ -52,10 +52,6 @@ func _ready():
 	for button in buttons:
 		button.pressed.connect(_on_button_pressed)
 
-	var client_fsm: ClientFSM = ClientFSM.new()
-	client_fsm.name = "ClientFSM"
-	add_child(client_fsm)
-
 	login_container.show()
 
 
