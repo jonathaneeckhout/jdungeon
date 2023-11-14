@@ -43,19 +43,20 @@ func _check_server_buffer():
 					skill_used.emit(entry["target_position"], entry["skill_class"])
 			server_buffer.remove_at(i)
 
+
 func skill_use(target_global_pos: Vector2, skill_class: String):
 	var timestamp: float = Time.get_unix_time_from_system()
-	
+
 	if peer_id > 0:
 		G.sync_rpc.actionsynchronizer_sync_skill_use.rpc_id(
 			peer_id, target_node.name, timestamp, target_global_pos, skill_class
 		)
-		
+
 	for watcher in watcher_synchronizer.watchers:
 		G.sync_rpc.actionsynchronizer_sync_skill_use.rpc_id(
 			watcher.peer_id, target_node.name, timestamp, target_global_pos, skill_class
 		)
-		
+
 	skill_used.emit(target_global_pos, skill_class)
 
 
@@ -81,5 +82,10 @@ func sync_attack(t: float, d: Vector2):
 
 func sync_skill_use(timestamp: float, target_global_pos: Vector2, skill_class: String):
 	server_buffer.append(
-		{"type": TYPE.SKILL_USE, "timestamp": timestamp, "target_global_position": target_global_pos, "skill_class": skill_class}
+		{
+			"type": TYPE.SKILL_USE,
+			"timestamp": timestamp,
+			"target_global_position": target_global_pos,
+			"skill_class": skill_class
+		}
 	)

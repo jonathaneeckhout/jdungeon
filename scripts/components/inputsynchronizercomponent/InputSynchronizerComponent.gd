@@ -43,6 +43,7 @@ var cursor_texture_current: Texture:
 var pointParams := PhysicsPointQueryParameters2D.new()
 var lastHoverTarget: Node2D
 
+
 func _ready():
 	target_node = get_parent()
 
@@ -69,16 +70,22 @@ func _ready():
 		#Set the cursor back to default if this object is deleted for any reasons
 		tree_exiting.connect(set_cursor.bind(CursorGraphics.DEFAULT))
 
+
 func _physics_process(_delta: float) -> void:
 	#Updates what the cursor is pointing at
 	update_target(cursor_position_global, false)
+
 
 func _process(_delta: float) -> void:
 	#Updates cursor visuals
 	update_cursor()
 
+
 func draw_controller_cursor():
-	target_node.draw_texture(cursor_texture_current, cursor_position_global - target_node.global_position)
+	target_node.draw_texture(
+		cursor_texture_current, cursor_position_global - target_node.global_position
+	)
+
 
 func _input(event: InputEvent):
 	use_mouse = not (event is InputEventJoypadButton or event is InputEventJoypadMotion)
@@ -86,18 +93,20 @@ func _input(event: InputEvent):
 	# Don't do anything when above ui
 	if JUI.above_ui:
 		return
-	
+
 	if use_mouse:
-		cursor_position_global  = get_global_mouse_position()
+		cursor_position_global = get_global_mouse_position()
 	else:
-		var aimVector2: Vector2 = Input.get_vector("j_aim_left","j_aim_right","j_aim_up","j_aim_down")
+		var aimVector2: Vector2 = Input.get_vector(
+			"j_aim_left", "j_aim_right", "j_aim_up", "j_aim_down"
+		)
 		cursor_position_global = target_node.global_position + aimVector2
-	
+
 	if event.is_action_pressed("j_left_click"):
 		handle_primary_click(cursor_position_global)
 	elif event.is_action_pressed("j_right_click"):
 		handle_secondary_click(cursor_position_global)
-	
+
 	elif event.is_action_pressed("j_slot1"):
 		handle_slot_change(1)
 	elif event.is_action_pressed("j_slot2"):
@@ -108,12 +117,8 @@ func _input(event: InputEvent):
 		handle_slot_change(4)
 	elif event.is_action_pressed("j_slot5"):
 		handle_slot_change(5)
-		
 
 
-
-	
-	
 func update_cursor():
 	#If it isn't touching something, set it to default
 	if target_current == null:
@@ -141,13 +146,15 @@ func update_cursor():
 	if use_mouse:
 		#Set the cursor
 		set_cursor(cursor_texture_current)
-		
+
 	lastHoverTarget = target_current
+
 
 #Movement order and other non-targted actions
 func handle_primary_click(clickGlobalPos: Vector2):
 	primary_action.rpc_id(1, clickGlobalPos)
 	primary_action_activated.emit(clickGlobalPos)
+
 
 #Actions
 func handle_secondary_click(clickGlobalPos: Vector2):
@@ -158,9 +165,10 @@ func handle_secondary_click(clickGlobalPos: Vector2):
 		secondary_action_activated.emit(clickGlobalPos)
 	pass
 
+
 func handle_slot_change(slot: int):
 	slot_chosen.emit(slot)
-	
+
 
 #Updates currentTarget based on a given point.
 func update_target(atGlobalPoint: Vector2, includeUser: bool = false):
@@ -177,11 +185,11 @@ func update_target(atGlobalPoint: Vector2, includeUser: bool = false):
 
 	#Set the target position
 	pointParams.position = atGlobalPoint
-	
+
 	#Unless specified, do not check for the user of this component.
 	if not includeUser and target_node is CollisionObject2D:
-		pointParams.exclude.append( target_node.get_rid() )
-	
+		pointParams.exclude.append(target_node.get_rid())
+
 	#Update collisions from point
 	var collisions: Array[Dictionary] = directSpace.intersect_point(pointParams)
 
@@ -222,14 +230,15 @@ func set_cursor(graphic: Texture):
 	if id == target_node.peer_id:
 		secondary_action_activated.emit(pos)
 
+
 @rpc("call_remote", "any_peer", "reliable") func slot_choice(slot: int):
 	if not J.is_server():
 		return
-	
+
 	var id: int = multiplayer.get_remote_sender_id()
-	
+
 	if not J.server.is_user_logged_in(id):
 		return
-		
+
 	if id == target_node.peer_id:
 		slot_chosen.emit(slot)

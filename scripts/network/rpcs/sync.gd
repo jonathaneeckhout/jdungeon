@@ -51,7 +51,9 @@ func playersynchronizer_sync_input(c: int, d: Vector2, t: float, m: Vector2):
 	if user.player.component_list.has("player_synchronizer"):
 		user.player.component_list["player_synchronizer"].sync_interact(t)
 
-@rpc("call_remote", "any_peer", "reliable") func playersynchronizer_sync_skill_use(p: Vector2, s: String):
+
+@rpc("call_remote", "any_peer", "reliable")
+func playersynchronizer_sync_skill_use(p: Vector2, s: String):
 	if not G.is_server():
 		return
 
@@ -70,6 +72,7 @@ func playersynchronizer_sync_input(c: int, d: Vector2, t: float, m: Vector2):
 	if user.player.component_list.has("player_synchronizer"):
 		user.player.component_list["player_synchronizer"].sync_skill_use(p, s)
 
+
 @rpc("call_remote", "authority", "unreliable")
 func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
 	var entity: Node = G.world.get_entity_by_name(n)
@@ -82,6 +85,7 @@ func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
 
 	if entity.component_list.has("position_synchronizer"):
 		entity.component_list["position_synchronizer"].sync(t, p, v)
+
 
 @rpc("call_remote", "any_peer", "reliable") func skillcomponent_sync_skills(n: String):
 	if not G.is_server():
@@ -100,10 +104,11 @@ func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
 
 	if entity.get("component_list") == null:
 		return
-		
+
 	if entity.component_list.has("skill_component"):
 		entity.component_list["skill_component"].sync_skills()
-		
+
+
 @rpc("call_remote", "authority", "reliable")
 func skillcomponent_sync_response(n: String, d: Dictionary):
 	var entity: Node = G.world.get_entity_by_name(n)
@@ -116,6 +121,7 @@ func skillcomponent_sync_response(n: String, d: Dictionary):
 
 	if entity.component_list.has("skill_component"):
 		entity.component_list["skill_component"].sync_response(d)
+
 
 @rpc("call_remote", "any_peer", "reliable") func statssynchronizer_sync_stats(n: String):
 	if not G.is_server():
@@ -355,6 +361,7 @@ func actionsynchronizer_sync_attack(n: String, t: float, d: Vector2):
 
 	if entity.component_list.has("action_synchronizer"):
 		entity.component_list["action_synchronizer"].sync_attack(t, d)
+
 
 @rpc("call_remote", "authority", "reliable")
 func actionsynchronizer_sync_skill_use(n: String, t: float, p: Vector2, s: String):

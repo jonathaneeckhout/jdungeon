@@ -68,7 +68,7 @@ func _ready():
 
 	interacted.connect(_on_interacted)
 	skill_used.connect(_on_skill_used)
-	
+
 	#When an instant cast ability is selected, it emulates using it at the player's position
 	skill_component.skill_cast_on_select_selected.connect(_on_skill_instant_used)
 
@@ -85,6 +85,7 @@ func _input(event: InputEvent):
 
 	if event.is_action_pressed("j_right_click"):
 		_handle_right_click(target_node.get_global_mouse_position())
+
 
 func _physics_process(delta):
 	if stats_component.is_dead:
@@ -106,8 +107,7 @@ func _physics_process(delta):
 			"j_move_left", "j_move_right", "j_move_up", "j_move_down"
 		)
 		input_buffer.append({"cf": current_frame, "dir": direction})
-		
-		
+
 		mouse_global_pos = target_node.get_global_mouse_position()
 
 		G.sync_rpc.playersynchronizer_sync_input.rpc_id(
@@ -141,14 +141,16 @@ func _handle_right_click(click_global_pos: Vector2):
 
 	#Attempt to use a skill
 	if skill_component.get_skill_current_class() != "":
-		G.sync_rpc.playersynchronizer_sync_skill_use.rpc_id(1, click_global_pos, skill_component.get_skill_current_class())
+		G.sync_rpc.playersynchronizer_sync_skill_use.rpc_id(
+			1, click_global_pos, skill_component.get_skill_current_class()
+		)
 #		skill_used.emit(click_global_pos, skill_component.get_skill_current_class())
-	
+
 	#Else, attempt to act on the target
 	elif current_target != null:
 		G.sync_rpc.playersynchronizer_sync_interact.rpc_id(1, current_target.get_name())
 		interacted.emit(current_target)
-		
+
 	#An interaction was attempted, but there was no target
 	else:
 		G.sync_rpc.playersynchronizer_sync_interact.rpc_id(1, "")
@@ -180,6 +182,7 @@ func update_target(at_global_point: Vector2):
 		if target != target_node:
 			current_target = target
 
+
 func update_animation():
 	if attack_timer.is_stopped():
 		if target_node.velocity.is_zero_approx():
@@ -188,7 +191,7 @@ func update_animation():
 			animation_player.play("Move")
 
 
-func _on_interacted(target: Node2D):	
+func _on_interacted(target: Node2D):
 	if target == null or target.entity_type == J.ENTITY_TYPE.ENEMY:
 		if attack_timer.is_stopped():
 			if G.is_server():
@@ -210,12 +213,15 @@ func _on_interacted(target: Node2D):
 
 			attack_timer.start(stats_component.attack_speed)
 
+
 func _on_skill_used(where: Vector2, skillClass: String):
 	skill_component.skill_use_at(where, skillClass)
+
 
 #Intermediary
 func _on_skill_instant_used(_skill: SkillComponentResource):
 	_handle_right_click(target_node.global_position)
+
 
 func _on_died():
 	animation_player.play("Die")
@@ -232,6 +238,7 @@ func sync_pos(c: int, p: Vector2, v: Vector2):
 	last_sync_position = p
 	last_sync_velocity = v
 
+
 #Movement and aiming
 func sync_input(c: int, d: Vector2, t: float, m: Vector2):
 	if c < current_frame:
@@ -240,6 +247,7 @@ func sync_input(c: int, d: Vector2, t: float, m: Vector2):
 	current_frame = c
 	mouse_global_pos = m
 	input_buffer.append({"dir": d, "dt": t})
+
 
 func sync_skill_use(target_location: Vector2, skill_class: String):
 	if not G.is_server():
@@ -253,9 +261,11 @@ func sync_skill_use(target_location: Vector2, skill_class: String):
 
 	if id == target_node.peer_id:
 		if skill_component.is_skill_present(skill_class):
-			skill_used.emit( target_location, skill_class)
+			skill_used.emit(target_location, skill_class)
 		else:
-			GodotLogger.warn('This skill_component does not own a skill of class "{0)"'.format([skill_class]))
+			GodotLogger.warn(
+				'This skill_component does not own a skill of class "{0)"'.format([skill_class])
+			)
 
 
 func sync_interact(target_name: String):
