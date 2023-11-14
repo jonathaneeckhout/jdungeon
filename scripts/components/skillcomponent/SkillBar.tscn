@@ -36,14 +36,6 @@ layout_mode = 2
 texture = ExtResource("2_sm17a")
 expand_mode = 2
 
-[node name="Label" type="Label" parent="HBoxContainer/TextureRect"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer/TextureRect"]
 layout_mode = 1
 anchors_preset = 15
@@ -53,6 +45,20 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_8cidu")
 expand_mode = 1
+
+[node name="Label" type="Label" parent="HBoxContainer/TextureRect"]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 36
+text = "ASS"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TextureRect2" type="TextureRect" parent="HBoxContainer"]
 layout_mode = 2

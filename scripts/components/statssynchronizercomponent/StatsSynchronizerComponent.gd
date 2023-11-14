@@ -55,7 +55,7 @@ signal respawned
 			is_dead = false
 		stats_changed.emit(TYPE.HP)
 
-@export var energy_max: int:
+@export var energy_max: int = 100:
 	set(val):
 		energy_max = val
 		stats_changed.emit(TYPE.ENERGY_MAX)

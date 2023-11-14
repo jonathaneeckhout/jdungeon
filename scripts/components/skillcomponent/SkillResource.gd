@@ -30,16 +30,6 @@ class_name SkillComponentResource
 #Skills cannot be used past this range
 @export var hit_range: float = 100
 
-#Time remaining on it's cooldown.
-var cooldown_time_left: float:
-	get:
-		if cooldownTimerHolder is SceneTreeTimer:
-			return cooldownTimerHolder.time_left
-		else:
-			return 0
-
-var cooldownTimerHolder: SceneTreeTimer
-
 func effect(information: SkillComponent.UseInfo):
 	if damage > 0:
 		for stats in information.get_target_stats_all():

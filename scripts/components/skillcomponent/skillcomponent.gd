@@ -13,8 +13,8 @@ signal skill_failed_usage(skill: SkillComponentResource)
 signal skill_selected(skill: SkillComponentResource)
 signal skill_index_selected(index: int)
 
-signal skill_cooldown_started(skill: SkillComponentResource)
-signal skill_cooldown_ended(skill: SkillComponentResource)
+signal skill_cooldown_started(skill: String)
+signal skill_cooldown_ended(skill: String)
 
 signal skill_cast_on_select_selected(skill: SkillComponentResource)
 
@@ -54,7 +54,7 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 		skill_selected.emit(skill_current)
 
 
-var cooldownTimerDict: Dictionary
+var cooldownDict: Dictionary
 var directSpace: PhysicsDirectSpaceState2D
 var shapeParameters := PhysicsShapeQueryParameters2D.new()
 
@@ -88,7 +88,11 @@ func _ready() -> void:
 	skills_changed.connect(sync_skills)
 	
 	#Setup user
-	directSpace = user.get_world_2d().direct_space_state
+	while directSpace == null:
+		directSpace = user.get_world_2d().direct_space_state
+		await get_tree().process_frame
+	
+	assert(directSpace is PhysicsDirectSpaceState2D)
 	
 
 #Skill selection is local
@@ -111,7 +115,14 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	queue_redraw()
 	
-
+	
+func _physics_process(delta: float) -> void:
+	for skillClass in cooldownDict:
+		assert(cooldownDict.get(skillClass) is float)
+		var newCooldown: float = move_toward(cooldown_get_time_left(skillClass), 0, delta)
+		cooldown_set_time_left(skillClass, newCooldown)
+		
+		
 func _draw():
 	if not skill_current is SkillComponentResource:
 		return
@@ -131,9 +142,9 @@ func draw_hitbox(localPoint: Vector2 = player_synchronizer.mouse_global_pos - us
 	else:
 		shape = get_collision_shape(0.0)
 		
-	var colorUsed: Color
 	
 	#Color selection
+	var colorUsed: Color
 	if is_skill_usable(skill_current):
 		colorUsed = COLOR_HITBOX
 	else:
@@ -221,29 +232,29 @@ func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_c
 	skillUsageInfo.targets = get_targets(globalPoint)
 	skillUsageInfo.position_target_global = globalPoint
 	
-	cooldown_change_state(skillUsed, true)
+	cooldown_set_time_left(skillUsed.skill_class, skillUsed.cooldown)
 	
 	skillUsed.effect(skillUsageInfo)
 	skill_successful_usage.emit(skillUsed)
 	
 	if skillUsed.cast_on_select:
-		skill_current = null
+		skill_deselect()
 	
 	
 func get_targets(where: Vector2)->Array[Node]:
 	if skill_current.hitbox_rotate_shape:
 		shapeParameters.shape = get_collision_shape(user.global_position.angle_to_point(where))
+		
 	else:
 		shapeParameters.shape = get_collision_shape(0.0)
+		
+	shapeParameters.collide_with_areas = true
 	shapeParameters.collision_mask = get_collision_layer()
 	
 	if not skill_current.hitbox_hits_user:
 		shapeParameters.exclude = [user.get_rid()]
-		
-	
-		
-		pass
-	
+
+	directSpace = user.get_world_2d().direct_space_state
 	var collisions: Array[Dictionary] = directSpace.intersect_shape(shapeParameters)
 	var targets: Array[Node] = []
 	for coll in collisions:
@@ -275,33 +286,22 @@ func get_collision_shape(userRotation: float)->Shape2D:
 	return shape
 
 func get_collision_layer()->int:
+	assert(skill_current.collision_mask != 0)
 	return skill_current.collision_mask
 
 func cooldown_get_time_left(skillClass: String)->float:
-	var timer: Timer = cooldownTimerDict.get(skillClass, Timer.new())
-	return timer.time_left
+	return cooldownDict.get(skillClass, 0 as float)
 		
-#Allows changing cooldowns mid-way
+#Sets cooldowns for skills per class
 func cooldown_set_time_left(skillClass: String, time: float):
-	var timer: Timer = cooldownTimerDict.get(skillClass, Timer.new())
-	timer.wait_time = time
-
-#The main way of starting and ending cooldowns
-func cooldown_change_state(skill: SkillComponentResource, start: bool):
-	#Start the cooldown and store the timer
-	
-	if start:
-		var timer := Timer.new()
-		cooldownTimerDict[skill.skill_class] = timer
+	if time <= 0:
+		cooldownDict.erase(skillClass)
+		skill_cooldown_ended.emit(skillClass)
 		
-		timer.start(skill.cooldown)
-		timer.timeout.connect(cooldown_change_state.bind(skill.skill_class, false))
-		
-		skill_cooldown_started.emit(skill)
-	#Remove the skill from the "start down" list
 	else:
-		cooldownTimerDict.erase(skill.skill_class)
-		skill_cooldown_ended.emit(skill)
+		cooldownDict[skillClass] = time
+		skill_cooldown_started.emit(skillClass)
+		
 	
 	
 func get_skill_current_class()->String:
