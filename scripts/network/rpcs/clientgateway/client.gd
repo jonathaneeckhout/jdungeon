@@ -73,17 +73,14 @@ func create_account_response(error: bool, reason: String = ""):
 		GodotLogger.warn("Could not find user with id=%d" % id)
 		return
 
+	# Take the default starter server
+	var server_name: String = Global.env_starter_server
+
 	var data: Dictionary = C.database.load_player_data(user.username)
-	if data.is_empty():
-		GodotLogger.info("User=[%s] does not have peristent data" % user.username)
-	else:
-		# print(data)
-		pass
+	if not data.is_empty() and data.has("server") and data["server"] != "":
+		server_name = data["server"]
 
-	# Send coockie to server
-	var cookie: String = J.uuid_util.v4()
-
-	var server_name: String = "World"
+	GodotLogger.info("Adding player to server=[%s]" % server_name)
 
 	var server: S.Server = S.get_server_by_name(server_name)
 	if server == null:
@@ -91,11 +88,13 @@ func create_account_response(error: bool, reason: String = ""):
 		get_server_response.rpc_id(id, true, "World", "", 0, "")
 		return
 
+	# Create an unique cookie
+	var cookie: String = J.uuid_util.v4()
+
 	# Register the user on the server side
 	GodotLogger.info("Registering user=[%s] on server=[%s]" % [user.username, server.name])
 	S.server_rpc.register_user.rpc_id(server.peer_id, user.username, cookie)
 
-	# Todo: fetch this from database
 	GodotLogger.info("Sending server=[%s] data to user=[%s]" % [server.name, user.username])
 	get_server_response.rpc_id(id, false, server.name, server.address, server.port, cookie)
 

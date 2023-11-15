@@ -3,6 +3,7 @@ extends Node
 var env_debug: bool = false
 var env_audio_mute: bool = false
 var env_version_file: String = ""
+var env_starter_server: String = ""
 
 var env_run_as_gateway: bool = false
 var env_run_as_server: bool = false
@@ -271,6 +272,11 @@ func load_gateway_env_variables() -> bool:
 		return false
 
 	GodotLogger.info("GATEWAY_SERVER_KEY=[%s]" % env_gateway_server_key)
+
+	env_starter_server = env.get_value("STARTER_SERVER")
+	if env_starter_server == "":
+		GodotLogger.error("Could not load STARTER_SERVER env varaible")
+		return false
 
 	return load_database_env_variables()
 

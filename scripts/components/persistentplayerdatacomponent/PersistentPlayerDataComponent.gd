@@ -19,6 +19,10 @@ func _ready():
 		GodotLogger.error("target_node does not have the position variable")
 		return
 
+	if target_node.get("server") == null:
+		GodotLogger.error("target_node does not have the server variable")
+		return
+
 	if target_node.get("position") == null:
 		GodotLogger.error("target_node does not have the position variable")
 		return
@@ -46,7 +50,11 @@ func load_persistent_data() -> bool:
 		GodotLogger.info("Player=[%s] does not have peristent data" % target_node.username)
 		return true
 
-	# This function's minimal requirement is that the postion key is available in the data
+	# This function's minimal requirement is that the world and postion key is available in the data
+	if not "server" in data:
+		GodotLogger.warn('Invalid format of data, missing "server" key')
+		return false
+
 	if not "position" in data:
 		GodotLogger.warn('Invalid format of data, missing "position" key')
 		return false
@@ -58,6 +66,8 @@ func load_persistent_data() -> bool:
 	if not "y" in data["position"]:
 		GodotLogger.warn('Invalid format of data, missing "y" key')
 		return false
+
+	target_node.server = data["server"]
 
 	target_node.position = Vector2(data["position"]["x"], data["position"]["y"])
 
@@ -77,7 +87,10 @@ func load_persistent_data() -> bool:
 
 
 func store_persistent_data() -> bool:
-	var data: Dictionary = {"position": {"x": target_node.position.x, "y": target_node.position.y}}
+	var data: Dictionary = {
+		"server": target_node.server,
+		"position": {"x": target_node.position.x, "y": target_node.position.y}
+	}
 
 	if stats:
 		data["stats"] = stats.to_json()

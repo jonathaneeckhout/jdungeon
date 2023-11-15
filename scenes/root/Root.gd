@@ -119,7 +119,7 @@ func start_server(map: String) -> bool:
 		return false
 
 	var world = maps[map].instantiate()
-	world.name = "World"
+	world.name = map
 	add_child(world)
 
 	GodotLogger.info("Server successfully started")

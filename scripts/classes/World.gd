@@ -151,6 +151,7 @@ func _on_player_logged_in(id: int, _username: String):
 	var player: Player = J.player_scene.instantiate()
 	player.name = user.username
 	player.username = user.username
+	player.server = name
 	player.peer_id = id
 
 	players.add_child(player)
