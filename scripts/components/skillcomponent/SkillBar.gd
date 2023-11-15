@@ -1,9 +1,6 @@
 extends HBoxContainer
 
-@export var skill_component: SkillComponent:
-	set(val):
-		skill_component = val
-		update_displays()
+@export var skill_component: SkillComponent
 
 @export var max_skills: int = 5
 
@@ -120,15 +117,16 @@ class SkillDisplay:
 		#Null deactivates all displays
 		if skill == null:
 			deselect()
+			
 		#If it is the skill from this display, activate
 		elif skill.skill_class == skill_class:
 			select()
+			
 		#If it isn't, deactivate
 		else:
 			deselect()
 
 	func _on_skill_cooldown_updated(skillClass: String, time: float):
-		print_debug("Cooldown update")
 		if skillClass == skill_class:
 			cooldownText.text = str(time)
 

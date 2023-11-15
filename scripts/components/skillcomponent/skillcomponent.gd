@@ -127,6 +127,8 @@ func cooldown_process():
 		assert(cooldownDict.get(skillClass) is float)
 		var newCooldown: float = move_toward(cooldown_get_time_left(skillClass), 0, 0.1)
 		cooldown_set_time_left(skillClass, newCooldown)
+	while cooldownDict.values().has(0 as float):
+		cooldownDict.erase(cooldownDict.find_key(0 as float))
 
 
 func _draw():
@@ -237,16 +239,17 @@ func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_c
 	if user.global_position.distance_to(globalPoint) > skillUsed.hit_range:
 		skill_failed_usage.emit(skillUsed)
 		return
-
-	var skillUsageInfo := UseInfo.new()
-	skillUsageInfo.user = user
-	skillUsageInfo.targets = get_targets(globalPoint)
-	skillUsageInfo.position_target_global = globalPoint
-
-	cooldown_set_time_left(skillUsed.skill_class, skillUsed.cooldown)
-
-	skillUsed.effect(skillUsageInfo)
+	
+	if G.is_server():
+		var skillUsageInfo := UseInfo.new()
+		skillUsageInfo.user = user
+		skillUsageInfo.targets = get_targets(globalPoint)
+		skillUsageInfo.position_target_global = globalPoint
+		
+		skillUsed.effect(skillUsageInfo)
+		
 	skill_successful_usage.emit(skillUsed)
+	cooldown_set_time_left(skillUsed.skill_class, skillUsed.cooldown)
 
 	if skillUsed.cast_on_select:
 		skill_deselect()
@@ -277,7 +280,7 @@ func get_targets(where: Vector2) -> Array[Node]:
 
 func get_collision_shape(userRotation: float) -> Shape2D:
 	var shape: Shape2D
-	#Do not allow shapes with a size of 2
+	#Do not allow shapes with a size of 2, as it would denote a line, which is not yet supported
 	assert(skill_current.hitbox_shape.size() != 2)
 
 	#If it is only 1 point, treat it as a circle

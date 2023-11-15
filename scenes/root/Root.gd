@@ -17,6 +17,7 @@ var disclaimer_panel_scene: Resource = preload(
 )
 var maps: Dictionary = {"World": preload("res://scenes/maps/world/World.tscn")}
 
+
 func _ready():
 	run_as_server_button.pressed.connect(_on_run_as_server_pressed)
 	run_as_client_button.pressed.connect(_on_run_as_client_pressed)
@@ -27,6 +28,7 @@ func _ready():
 		start_client()
 	else:
 		parse_cmd_arguments()
+
 
 func parse_cmd_arguments():
 	var args: PackedStringArray = OS.get_cmdline_args()

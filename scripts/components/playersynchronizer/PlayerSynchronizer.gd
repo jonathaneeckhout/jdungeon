@@ -144,7 +144,7 @@ func _handle_right_click(click_global_pos: Vector2):
 		G.sync_rpc.playersynchronizer_sync_skill_use.rpc_id(
 			1, click_global_pos, skill_component.get_skill_current_class()
 		)
-#		skill_used.emit(click_global_pos, skill_component.get_skill_current_class())
+		skill_used.emit(click_global_pos, skill_component.get_skill_current_class())
 
 	#Else, attempt to act on the target
 	elif current_target != null:
