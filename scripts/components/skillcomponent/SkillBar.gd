@@ -117,11 +117,11 @@ class SkillDisplay:
 		#Null deactivates all displays
 		if skill == null:
 			deselect()
-			
+
 		#If it is the skill from this display, activate
 		elif skill.skill_class == skill_class:
 			select()
-			
+
 		#If it isn't, deactivate
 		else:
 			deselect()

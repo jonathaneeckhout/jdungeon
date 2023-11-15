@@ -239,15 +239,15 @@ func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_c
 	if user.global_position.distance_to(globalPoint) > skillUsed.hit_range:
 		skill_failed_usage.emit(skillUsed)
 		return
-	
+
 	if G.is_server():
 		var skillUsageInfo := UseInfo.new()
 		skillUsageInfo.user = user
 		skillUsageInfo.targets = get_targets(globalPoint)
 		skillUsageInfo.position_target_global = globalPoint
-		
+
 		skillUsed.effect(skillUsageInfo)
-		
+
 	skill_successful_usage.emit(skillUsed)
 	cooldown_set_time_left(skillUsed.skill_class, skillUsed.cooldown)
 
