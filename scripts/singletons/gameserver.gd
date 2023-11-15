@@ -22,7 +22,7 @@ var clock_rpc: ClockRPC
 var player_rpc: PlayerRPC
 var sync_rpc: SyncRPC
 
-var client: ENetMultiplayerPeer
+var client: ENetMultiplayerPeer = null
 
 var clock: float = 0.0
 var clock_sync_timer: Timer
@@ -130,7 +130,9 @@ func client_connect(address: String, port: int) -> bool:
 func client_disconnect():
 	client_cleanup()
 
-	client.close()
+	if client != null:
+		client.close()
+		client = null
 
 
 func client_cleanup():

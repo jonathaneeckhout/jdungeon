@@ -18,6 +18,8 @@ var disclaimer_panel_scene: Resource = preload(
 )
 var maps: Dictionary = {"World": preload("res://scenes/maps/world/World.tscn")}
 
+var world: World = null
+
 
 func _ready():
 	run_as_gateway_button.pressed.connect(_on_run_as_gateway_pressed)
@@ -118,7 +120,7 @@ func start_server(map: String) -> bool:
 		GodotLogger.error("Failed to start DTLS server")
 		return false
 
-	var world = maps[map].instantiate()
+	world = maps[map].instantiate()
 	world.name = map
 	add_child(world)
 
@@ -158,13 +160,11 @@ func start_client() -> bool:
 		client_fsm.login_panel = login_panel
 		add_child(client_fsm)
 
-		await login_panel.logged_in
+		client_fsm.server_loaded.connect(_on_client_server_loaded)
+
+		await client_fsm.logged_in
 
 		login_panel.queue_free()
-
-		var world = maps["World"].instantiate()
-		world.name = "World"
-		add_child(world)
 
 	else:
 		# Show the check version panel
@@ -207,3 +207,12 @@ func _on_run_as_server_pressed():
 
 func _on_run_as_client_pressed():
 	start_client()
+
+
+func _on_client_server_loaded(server_name: String):
+	if world != null:
+		world.queue_free()
+
+	world = maps[server_name].instantiate()
+	world.name = server_name
+	add_child(world)

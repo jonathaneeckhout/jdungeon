@@ -6,6 +6,7 @@ class_name World
 @export var enemies_to_sync: Node2D
 @export var npcs_to_sync: Node2D
 @export var player_respawn_locations: Node2D
+@export var portals_to_sync: Node2D
 
 var players: Node2D
 var enemies: Node2D

@@ -4,6 +4,9 @@ class_name ClientFSM
 
 enum STATES { INIT, LOGIN, CREATE_ACCOUNT, RUNNING }
 
+signal logged_in
+signal server_loaded(server_name: String)
+
 @export var login_panel: LoginPanel
 
 var state: STATES = STATES.INIT
@@ -166,7 +169,11 @@ func _handle_login():
 			% [server_info["name"], server_info["address"], server_info["port"]]
 		)
 	)
-	# Connect to the gateway server
+
+	# Disconnect from previous game server
+	G.client_disconnect()
+
+	# Connect to the gameserver
 	if !await _connect_to_server(server_info["address"], server_info["port"]):
 		return
 
@@ -179,6 +186,8 @@ func _handle_login():
 		return
 
 	GodotLogger.info("Login to game server=[%s] successful" % server_info["name"])
+
+	server_loaded.emit(server_info["name"])
 
 	if response:
 		state = STATES.RUNNING
@@ -222,7 +231,7 @@ func _handle_create_account():
 
 
 func _handle_state_running():
-	login_panel.logged_in.emit()
+	logged_in.emit()
 
 
 func _on_fsm_timer_timeout():

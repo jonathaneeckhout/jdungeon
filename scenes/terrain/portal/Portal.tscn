@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cj48j2lhcde1a"]
+
+[ext_resource type="Texture2D" uid="uid://dbqwnl1j2cusc" path="res://assets/images/tileset/terrain_atlas_edited.png" id="1_22gts"]
+[ext_resource type="Script" path="res://scenes/terrain/portal/Portal.gd" id="1_bxy1m"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4phin"]
+radius = 40.0
+
+[node name="Portal" type="Node2D"]
+script = ExtResource("1_bxy1m")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_22gts")
+region_enabled = true
+region_rect = Rect2(544, 224, 96, 96)
+
+[node name="PortalArea2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PortalArea2D"]
+shape = SubResource("CircleShape2D_4phin")

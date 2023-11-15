@@ -6,7 +6,6 @@ signal login_pressed(username: String, password: String)
 signal create_account_pressed(username: String, password: String)
 signal show_create_account_pressed
 signal back_create_account_pressed
-signal logged_in
 
 #LoginContainer
 @onready var login_container := $Panel/LoginContainer
