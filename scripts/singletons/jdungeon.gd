@@ -20,6 +20,7 @@ var player_scene: Resource
 var enemy_scenes: Dictionary = {}
 var npc_scenes: Dictionary = {}
 var item_scenes: Dictionary = {}
+var map_scenes: Dictionary = {}
 
 var uuid_util: UuidUtil
 
@@ -30,6 +31,7 @@ func _ready():
 	register_enemies()
 	register_npcs()
 	register_items()
+	register_maps()
 
 	uuid_util = load("res://scripts/uuid/uuid.gd").new()
 
@@ -97,6 +99,10 @@ func register_items():
 	)
 
 
+func register_maps():
+	J.register_map_scene("World", "res://scenes/maps/world/World.tscn")
+
+
 func register_player_scene(player_scene_path: String):
 	player_scene = load(player_scene_path)
 
@@ -111,3 +117,7 @@ func register_npc_scene(npc_class: String, npc_scene_path: String):
 
 func register_item_scene(item_class: String, item_scene_path: String):
 	item_scenes[item_class] = load(item_scene_path)
+
+
+func register_map_scene(map_name: String, map_scene_path: String):
+	map_scenes[map_name] = load(map_scene_path)

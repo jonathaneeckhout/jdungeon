@@ -10,7 +10,7 @@ signal server_loaded(server_name: String)
 @export var login_panel: LoginPanel
 
 var state: STATES = STATES.INIT
-var fsm_timer: Timer
+# var fsm_timer: Timer
 
 var login_pressed: bool = false
 var user: String
@@ -25,24 +25,18 @@ var new_password: String
 var back_create_account_pressed: bool = false
 
 var connected_to_gateway: bool = false
+var world: World = null
 
 
 func _ready():
-	# Add a short timer to deffer the fsm() calls
-	fsm_timer = Timer.new()
-	fsm_timer.name = "FSMTimer"
-	fsm_timer.wait_time = 0.01
-	fsm_timer.autostart = false
-	fsm_timer.one_shot = true
-	fsm_timer.timeout.connect(_on_fsm_timer_timeout)
-	add_child(fsm_timer)
-
 	login_panel.login_pressed.connect(_on_login_pressed)
 	login_panel.show_create_account_pressed.connect(_on_show_create_account_pressed)
 	login_panel.create_account_pressed.connect(_on_create_account_pressed)
 	login_panel.back_create_account_pressed.connect(_on_back_create_account_pressed)
 
 	C.client_connected.connect(_on_client_connected)
+
+	server_loaded.connect(_on_client_server_loaded)
 
 
 func fsm():
@@ -58,8 +52,9 @@ func fsm():
 
 
 func _handle_init():
+	login_panel.show()
 	state = STATES.LOGIN
-	fsm_timer.start()
+	fsm.call_deferred()
 
 
 func _connect_to_gateway() -> bool:
@@ -122,7 +117,7 @@ func _handle_login():
 	if show_create_account_pressed:
 		show_create_account_pressed = false
 		state = STATES.CREATE_ACCOUNT
-		fsm_timer.start()
+		fsm.call_deferred()
 		return
 
 	if !login_pressed:
@@ -133,7 +128,7 @@ func _handle_login():
 	# Connect to the gateway server
 	if !await _connect_to_gateway():
 		state = STATES.INIT
-		fsm_timer.start()
+		fsm.call_deferred()
 		return
 
 	# Authenticate the user
@@ -193,7 +188,7 @@ func _handle_login():
 		state = STATES.RUNNING
 		fsm()
 
-	fsm_timer.start()
+	fsm.call_deferred()
 
 
 func _handle_authenticate():
@@ -206,7 +201,7 @@ func _handle_create_account():
 	if back_create_account_pressed:
 		back_create_account_pressed = false
 		state = STATES.LOGIN
-		fsm_timer.start()
+		fsm.call_deferred()
 		return
 
 	if !create_account_pressed:
@@ -216,7 +211,7 @@ func _handle_create_account():
 
 	if !await _connect_to_gateway():
 		state = STATES.INIT
-		fsm_timer.start()
+		fsm.call_deferred()
 		return
 
 	C.client_rpc.create_account.rpc_id(1, new_username, new_password)
@@ -227,11 +222,13 @@ func _handle_create_account():
 	else:
 		JUI.alertbox("Account created", login_panel)
 
-	fsm_timer.start()
+	fsm.call_deferred()
 
 
 func _handle_state_running():
 	logged_in.emit()
+
+	login_panel.hide()
 
 
 func _on_fsm_timer_timeout():
@@ -264,3 +261,12 @@ func _on_back_create_account_pressed():
 
 func _on_client_connected(connected: bool):
 	connected_to_gateway = connected
+
+
+func _on_client_server_loaded(server_name: String):
+	if world != null:
+		world.queue_free()
+
+	world = J.map_scenes[server_name].instantiate()
+	world.name = server_name
+	get_parent().add_child(world)
