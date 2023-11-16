@@ -10,7 +10,6 @@ signal server_loaded(server_name: String)
 @export var login_panel: LoginPanel
 
 var state: STATES = STATES.INIT
-# var fsm_timer: Timer
 
 var login_pressed: bool = false
 var user: String
@@ -229,10 +228,6 @@ func _handle_state_running():
 	logged_in.emit()
 
 	login_panel.hide()
-
-
-func _on_fsm_timer_timeout():
-	fsm()
 
 
 func _on_login_pressed(username: String, password: String):

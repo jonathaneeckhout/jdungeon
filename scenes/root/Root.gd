@@ -117,9 +117,10 @@ func start_server(map: String) -> bool:
 		GodotLogger.error("Failed to start DTLS server")
 		return false
 
-	var world: World = J.map_scenes[map].instantiate()
-	world.name = map
-	add_child(world)
+	var server_fsm: ServerFSM = ServerFSM.new()
+	server_fsm.name = "ServerFSM"
+	server_fsm.map_name = map
+	add_child(server_fsm)
 
 	GodotLogger.info("Server successfully started")
 	return true
@@ -148,20 +149,7 @@ func start_client() -> bool:
 		GodotLogger.error("Failed to init gameserver client")
 		return false
 
-	if Global.env_debug:
-		var login_panel: LoginPanel = login_panel_scene.instantiate()
-		ui.add_child(login_panel)
-
-		var client_fsm: ClientFSM = ClientFSM.new()
-		client_fsm.name = "ClientFSM"
-		client_fsm.login_panel = login_panel
-		add_child(client_fsm)
-
-		await client_fsm.logged_in
-
-		login_panel.queue_free()
-
-	else:
+	if not Global.env_debug:
 		# Show the check version panel
 		var version_check_panel: VersionCheckPanel = version_check_panel_scene.instantiate()
 		ui.add_child(version_check_panel)
@@ -175,18 +163,19 @@ func start_client() -> bool:
 			await disclaimer_panel.accepted
 
 			disclaimer_panel.queue_free()
-
-			var login_panel: LoginPanel = login_panel_scene.instantiate()
-			ui.add_child(login_panel)
-
-			await login_panel.logged_in
-
-			login_panel.queue_free()
-
 		else:
 			GodotLogger.error(
 				"Client's version does not match the Server's version. Not the running game."
 			)
+			return false
+
+	var login_panel: LoginPanel = login_panel_scene.instantiate()
+	ui.add_child(login_panel)
+
+	var client_fsm: ClientFSM = ClientFSM.new()
+	client_fsm.name = "ClientFSM"
+	client_fsm.login_panel = login_panel
+	add_child(client_fsm)
 
 	GodotLogger.info("Client successfully started")
 	return true

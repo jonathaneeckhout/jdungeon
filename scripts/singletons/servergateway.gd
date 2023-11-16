@@ -5,7 +5,7 @@ enum MODE { SERVER, CLIENT }
 const COOKIE_TIMER_INTERVAL: float = 10.0
 const COOKIE_VALID_TIME: float = 60.0
 
-signal client_connected(connected: bool)
+signal server_connected(connected: bool)
 
 var multiplayer_api: MultiplayerAPI
 
@@ -153,19 +153,17 @@ func _on_server_peer_disconnected(id: int):
 
 func _on_client_connection_succeeded():
 	GodotLogger.info("Gateway server's connection succeeded")
-	client_connected.emit(true)
-
-	server_rpc.register_server.rpc_id(1, "World", Global.env_server_address, Global.env_server_port)
+	server_connected.emit(true)
 
 
 func _on_client_connection_failed():
 	GodotLogger.warn("Gateway server's connection failed")
-	client_connected.emit(false)
+	server_connected.emit(false)
 
 
 func _on_client_disconnected():
 	GodotLogger.info("Gateway server's server disconnected")
-	client_connected.emit(false)
+	server_connected.emit(false)
 
 
 func _on_check_cookie_timer_timeout():
