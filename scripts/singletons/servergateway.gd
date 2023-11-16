@@ -186,6 +186,7 @@ class Server:
 	var address: String = ""
 	var peer_id: int = 0
 	var port: int = 0
+	var portals_info: Dictionary = {}
 	var logged_in: bool = false
 	var connected_time: float = Time.get_unix_time_from_system()
 

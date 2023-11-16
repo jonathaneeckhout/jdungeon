@@ -51,6 +51,7 @@ func _ready():
 		enemy_respawns = Node2D.new()
 		enemy_respawns.name = "EnemyRespawns"
 		synced_entities.add_child(enemy_respawns)
+
 	else:
 		G.player_rpc.player_added.connect(_on_client_player_added)
 		G.player_rpc.get_player.rpc_id(1)
@@ -61,6 +62,10 @@ func _ready():
 	map_to_sync.get_parent().remove_child(map_to_sync)
 	synced_entities.add_child(map_to_sync)
 	map_to_sync.name = "Map"
+
+	portals_to_sync.get_parent().remove_child(portals_to_sync)
+	synced_entities.add_child(portals_to_sync)
+	portals_to_sync.name = "Portals"
 
 	load_enemies()
 	load_npcs()
@@ -82,6 +87,16 @@ func load_npcs():
 
 		if G.is_server():
 			npcs.add_child(npc)
+
+
+func get_portal_information() -> Dictionary:
+	var portals_info = {}
+	for portal in portals_to_sync.get_children():
+		portals_info[portal.name] = {
+			"destination_server": portal.destination_server,
+			"destination_portal": portal.destination_portal
+		}
+	return portals_info
 
 
 func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn_time: float):

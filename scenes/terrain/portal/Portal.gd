@@ -22,3 +22,4 @@ func _on_body_entered(body: Node2D):
 		return
 
 	GodotLogger.info("Player=[%s] entered portal=[%s]" % [body.name, name])
+	S.server_rpc.enter_portal.rpc_id(1, body.username, destination_server, destination_portal)
