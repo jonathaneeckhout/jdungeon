@@ -4,7 +4,7 @@ class_name ServerRPC
 
 signal server_registered(response: bool)
 signal user_portalled(
-	respone: bool, server_name: String, address: String, port: int, cookie: String
+	respone: bool, username: String, server_name: String, address: String, port: int, cookie: String
 )
 
 @rpc("call_remote", "any_peer", "reliable")
@@ -55,13 +55,13 @@ func enter_portal(username: String, server_name: String, portal_name: String):
 	var server: S.Server = S.get_server_by_name(server_name)
 	if server == null:
 		GodotLogger.warn("Failed to get server with name=[%s]" % server_name)
-		portal_response.rpc_id(id, false, "", "", 0, "")
+		portal_response.rpc_id(id, false, "", "", "", 0, "")
 		return
 
 	# Check if the server has the portal
 	if not server.portals_info.has(portal_name):
 		GodotLogger.warn("Server=[%s] does not have portal=[%s]" % [server_name, portal_name])
-		portal_response.rpc_id(id, false, "", "", 0, "")
+		portal_response.rpc_id(id, false, "", "", "", 0, "")
 		return
 
 	# Create an unique cookie
@@ -72,10 +72,15 @@ func enter_portal(username: String, server_name: String, portal_name: String):
 	register_user.rpc_id(server.peer_id, username, cookie)
 
 	# Sending back the information the the server so that a client can switch to the new server
-	portal_response.rpc_id(id, true, server.name, server.address, server.port, cookie)
+	portal_response.rpc_id(id, true, username, server.name, server.address, server.port, cookie)
 
 
 @rpc("call_remote", "authority", "reliable") func portal_response(
-	response: bool, server_name: String, address: String, port: int, cookie: String
+	response: bool,
+	username: String,
+	server_name: String,
+	address: String,
+	port: int,
+	cookie: String
 ):
-	user_portalled.emit(response, server_name, address, port, cookie)
+	user_portalled.emit(response, username, server_name, address, port, cookie)

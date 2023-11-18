@@ -48,6 +48,8 @@ func _ready():
 		G.player_rpc.player_logged_in.connect(_on_player_logged_in)
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
+		S.server_rpc.user_portalled.connect(_on_user_portalled)
+
 		enemy_respawns = Node2D.new()
 		enemy_respawns.name = "EnemyRespawns"
 		synced_entities.add_child(enemy_respawns)
@@ -294,3 +296,9 @@ func _on_client_item_added(item_uuid: String, item_class: String, pos: Vector2):
 func _on_client_item_removed(item_uuid: String):
 	if items.has_node(item_uuid):
 		items.get_node(item_uuid).queue_free()
+
+
+func _on_user_portalled(
+	respone: bool, username: String, server_name: String, address: String, port: int, cookie: String
+):
+	GodotLogger.info("User=[%s] portalled" % username)
