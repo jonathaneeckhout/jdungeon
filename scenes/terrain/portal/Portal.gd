@@ -6,6 +6,7 @@ class_name Portal
 @export var destination_portal: String = ""
 
 @onready var portal_area: Area2D = $PortalArea2D
+@onready var portal_location: Marker2D = $PortalLocation
 
 
 # Called when the node enters the scene tree for the first time.
@@ -23,3 +24,7 @@ func _on_body_entered(body: Node2D):
 
 	GodotLogger.info("Player=[%s] entered portal=[%s]" % [body.name, name])
 	S.server_rpc.enter_portal.rpc_id(1, body.username, destination_server, destination_portal)
+
+
+func get_portal_location() -> Vector2:
+	return position + portal_location.position

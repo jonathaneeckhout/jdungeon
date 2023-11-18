@@ -10,6 +10,7 @@ signal other_player_added(username: String, pos: Vector2, loop_animation: String
 signal other_player_removed(username: String)
 signal message_sent(from: int, type: String, to: String, message: String)
 signal message_received(type: String, from: String, message: String)
+signal player_portalled(server_name: String, address: String, port: int, cookie: String)
 
 @rpc("call_remote", "any_peer", "reliable") func authenticate(username: String, cookie: String):
 	if not G.is_server():
@@ -94,3 +95,8 @@ func send_message(type: String, to: String, message: String):
 @rpc("call_remote", "authority", "reliable")
 func receive_message(type: String, from: String, message: String):
 	message_received.emit(type, from, message)
+
+
+@rpc("call_remote", "authority", "reliable")
+func portal_player(server_name: String, address: String, port: int, cookie: String):
+	player_portalled.emit(server_name, address, port, cookie)

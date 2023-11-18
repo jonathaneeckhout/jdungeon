@@ -95,6 +95,7 @@ func get_portal_information() -> Dictionary:
 	var portals_info = {}
 	for portal in portals_to_sync.get_children():
 		portals_info[portal.name] = {
+			"position": portal.get_portal_location(),
 			"destination_server": portal.destination_server,
 			"destination_portal": portal.destination_portal
 		}
@@ -299,6 +300,34 @@ func _on_client_item_removed(item_uuid: String):
 
 
 func _on_user_portalled(
-	respone: bool, username: String, server_name: String, address: String, port: int, cookie: String
+	response: bool,
+	username: String,
+	server_name: String,
+	portal_position: Vector2,
+	address: String,
+	port: int,
+	cookie: String
 ):
+	if not response:
+		GodotLogger.info("User=[%s] failed to portal" % username)
+		return
+
 	GodotLogger.info("User=[%s] portalled" % username)
+
+	var player: Player = get_player_by_username(username)
+	if player == null:
+		GodotLogger.warn("Could not find player with username=[%s]" % username)
+		return
+
+	# Disable the physics of the player
+	player.set_physics_process(false)
+
+	# Set the player's values to the new server and portal's location.
+	# Once disconnected the persistent storage will store this value.
+
+	player.server = server_name
+	player.position = portal_position
+
+	G.player_rpc.portal_player.rpc_id(player.peer_id, server_name, address, port, cookie)
+
+	G.server.disconnect_peer(player.peer_id)

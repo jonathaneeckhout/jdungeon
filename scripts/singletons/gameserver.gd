@@ -22,6 +22,7 @@ var clock_rpc: ClockRPC
 var player_rpc: PlayerRPC
 var sync_rpc: SyncRPC
 
+var server: ENetMultiplayerPeer = null
 var client: ENetMultiplayerPeer = null
 
 var clock: float = 0.0
@@ -72,9 +73,7 @@ func server_init(port: int, max_clients: int, cert_path: String, key_path: Strin
 	message_handler.name = "MessageHandler"
 	add_child(message_handler)
 
-	var server: ENetMultiplayerPeer = dtls_networking.server_init(
-		port, max_clients, cert_path, key_path
-	)
+	server = dtls_networking.server_init(port, max_clients, cert_path, key_path)
 	if server == null:
 		GodotLogger.error("Failed create server")
 		return false
