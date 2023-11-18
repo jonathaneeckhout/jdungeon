@@ -73,7 +73,7 @@ scale = Vector2(0.15, 0.15)
 sprite_frames = SubResource("SpriteFrames_dqe1o")
 animation = &"Idle"
 autoplay = "Idle"
-frame_progress = 0.237909
+frame_progress = 0.0397978
 
 [node name="PortalLocation" type="Marker2D" parent="."]
 position = Vector2(0, 96)

@@ -324,10 +324,15 @@ func _on_user_portalled(
 
 	# Set the player's values to the new server and portal's location.
 	# Once disconnected the persistent storage will store this value.
-
 	player.server = server_name
 	player.position = portal_position
 
 	G.player_rpc.portal_player.rpc_id(player.peer_id, server_name, address, port, cookie)
 
-	G.server.disconnect_peer(player.peer_id)
+	# Give the player some time to disconnect
+	await get_tree().create_timer(1).timeout
+
+	# If the client didn't disconnect by now, force it
+	if is_instance_valid(player) and G.users.has(player.peer_id):
+		GodotLogger.info("Disconnecting portalled player=[%s]" % player.username)
+		G.server.disconnect_peer(player.peer_id)

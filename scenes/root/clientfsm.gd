@@ -24,6 +24,8 @@ var new_password: String
 var back_create_account_pressed: bool = false
 
 var connected_to_gateway: bool = false
+var portalled: bool = false
+
 var world: World = null
 
 
@@ -33,7 +35,9 @@ func _ready():
 	login_panel.create_account_pressed.connect(_on_create_account_pressed)
 	login_panel.back_create_account_pressed.connect(_on_back_create_account_pressed)
 
-	C.client_connected.connect(_on_client_connected)
+	C.client_connected.connect(_on_gateway_connected)
+	G.client_connected.connect(_on_gameserver_connected)
+	G.player_rpc.player_portalled.connect(_on_player_portalled)
 
 	server_loaded.connect(_on_client_server_loaded)
 
@@ -254,7 +258,7 @@ func _on_back_create_account_pressed():
 	fsm()
 
 
-func _on_client_connected(connected: bool):
+func _on_gateway_connected(connected: bool):
 	connected_to_gateway = connected
 
 
@@ -265,3 +269,50 @@ func _on_client_server_loaded(server_name: String):
 	world = J.map_scenes[server_name].instantiate()
 	world.name = server_name
 	get_parent().add_child(world)
+
+
+func _on_gameserver_connected(connected: bool):
+	# Not interested in connected state
+	if connected:
+		return
+
+	if not portalled:
+		world.set_physics_process(false)
+		world.queue_free()
+		world = null
+
+		state = STATES.INIT
+		fsm.call_deferred()
+		return
+	else:
+		portalled = false
+
+
+func _on_player_portalled(server_name: String, address: String, port: int, cookie: String):
+	portalled = true
+
+	# Server should have done this, but just to be sure
+	G.client_disconnect()
+
+	# Remove the world
+	world.set_physics_process(false)
+	world.queue_free()
+	world = null
+
+	# Connect to the gameserver
+	if !await _connect_to_server(address, port):
+		return
+
+	GodotLogger.info("Authenticating to gateway server=[%s]" % server_name)
+	G.player_rpc.authenticate.rpc_id(1, user, cookie)
+
+	var response = await G.player_rpc.authenticated
+	if not response:
+		JUI.alertbox("Authentication with server failed", login_panel)
+		state = STATES.INIT
+		fsm.call_deferred()
+		return
+
+	GodotLogger.info("Login to game server=[%s] successful" % server_name)
+
+	server_loaded.emit(server_name)
