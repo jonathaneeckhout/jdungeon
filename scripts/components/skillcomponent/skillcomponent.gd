@@ -117,7 +117,7 @@ func _input(event: InputEvent) -> void:
 		skill_select_by_index(4)
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	queue_redraw()
 
 
@@ -193,7 +193,7 @@ func remove_skill(skillClass: String):
 func skill_select_by_index(index: int):
 	#The index can range from -1 to size()-1
 	if not (index >= -1 and index < skills.size()):
-		GodotLogger.error("Slot index {0} is out of range.".format([str(index)]))  #TEMP
+		#A wrong value does nothing.
 		return
 
 	#If -1, it is a deselection attempt.

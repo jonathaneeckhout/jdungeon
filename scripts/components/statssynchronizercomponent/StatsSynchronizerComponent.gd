@@ -24,10 +24,17 @@ const BASE_EXPERIENCE: int = 100
 
 #Stats that are persistent
 const StatListPermanent: Array[StringName] = [
-	"hp_max", "energy_max", "defense", "movement_speed", "attack_power"
+	"hp_max",
+	"attack_power_min", 
+	"attack_power_max",
+	"attack_speed",
+	"attack_range",
+	"defense", 
+	"movement_speed", 
+	"energy_max", 
 ]
 #Stats that serve as a meter of sorts and change often from external factors
-const StatListCounter: Array[StringName] = ["hp", "energy", "experience", "level"]
+const StatListCounter: Array[StringName] = ["hp", "energy", "level", "experience"]
 
 const StatListAll: Array[StringName] = StatListCounter + StatListPermanent
 
@@ -255,17 +262,17 @@ func heal(from: String, healing: int) -> int:
 
 func reset_hp():
 	hp = hp_max
-	sync_int_change(TYPE.HP, hp)
+	_sync_int_change(TYPE.HP, hp)
 
 
 func reset_energy():
 	energy = energy_max
-	sync_int_change(TYPE.ENERGY, energy)
+	_sync_int_change(TYPE.ENERGY, energy)
 
 
 func kill():
 	hp = 0
-	sync_int_change(TYPE.HP, hp)
+	_sync_int_change(TYPE.HP, hp)
 
 
 func load_defaults():
@@ -276,52 +283,14 @@ func load_defaults():
 	defense = _default_defense
 	movement_speed = _default_movement_speed
 
-
-func to_json(full: bool = false) -> Dictionary:
-	var data: Dictionary = {"hp": hp, "energy": energy, "level": level, "experience": experience}
-	for statName in StatListCounter:
-		data[statName] = get(statName)
-
-	if full:
-		var dictForMerge: Dictionary = {}
-		#Fill the dict with the permanent stats
-		for statName in StatListPermanent:
-			dictForMerge[statName] = get(statName)
-
-		data.merge(dictForMerge)
-	return data
-
-
-func from_json(data: Dictionary, full: bool = false) -> bool:
-	#Validation
-	for statName in StatListCounter:
-		if not statName in data:
-			GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
-			return false
-
-	if full:
-		for statName in StatListPermanent:
-			if not statName in data:
-				GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
-				return false
-
-	#Actually load the data
-	for statName in StatListCounter:
-		self.set(statName, data.get(statName))
-
-	experience_needed = calculate_experience_needed(level)
-
-	if full:
-		for statName in StatListPermanent:
-			self.set(statName, data.get(statName))
-
-	loaded.emit()
-	return true
-
-
 func calculate_experience_needed(current_level: int) -> int:
 	# TODO: Replace placeholder function to calculate experience needed to level up
 	return BASE_EXPERIENCE + (BASE_EXPERIENCE * (pow(current_level, 2) - 1))
+
+
+
+
+
 
 
 func add_level(amount: int):
@@ -355,7 +324,53 @@ func apply_boost(boost: Boost):
 		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
 
 
-func sync_int_change(stat_type: TYPE, value: int):
+func to_json(full: bool = false) -> Dictionary:
+	var data: Dictionary = {"hp": hp, "energy": energy, "level": level, "experience": experience}
+	for statName in StatListCounter:
+		data[statName] = get(statName)
+	assert(data.size() == StatListCounter.size())
+
+	if full:
+		var dictForMerge: Dictionary = {}
+		#Fill the dict with the permanent stats
+		for statName in StatListPermanent:
+			dictForMerge[statName] = get(statName)
+		
+		assert(dictForMerge.size() == StatListPermanent.size())
+		data.merge(dictForMerge)
+		assert(data.size() == StatListCounter.size() + StatListPermanent.size())
+		
+	return data
+
+
+func from_json(data: Dictionary, full: bool = false) -> bool:
+	#Validation
+	for statName in StatListCounter:
+		if not statName in data:
+			GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
+			return false
+
+	if full:
+		for statName in StatListPermanent:
+			if not statName in data:
+				GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
+				return false
+
+	#Actually load the data
+	for statName in StatListCounter:
+		self.set(statName, data.get(statName))
+
+	experience_needed = calculate_experience_needed(level)
+
+	if full:
+		for statName in StatListPermanent:
+			self.set(statName, data.get(statName))
+
+	loaded.emit()
+	return true
+
+
+func _sync_int_change(stat_type: TYPE, value: int):
 	if not is_connection_ready:
 		return
 
@@ -372,7 +387,7 @@ func sync_int_change(stat_type: TYPE, value: int):
 		)
 
 
-func sync_float_change(stat_type: TYPE, value: float):
+func _sync_float_change(stat_type: TYPE, value: float):
 	if not is_connection_ready:
 		return
 
@@ -387,7 +402,6 @@ func sync_float_change(stat_type: TYPE, value: float):
 		G.sync_rpc.statssynchronizer_sync_float_change.rpc_id(
 			watcher.peer_id, target_node.name, timestamp, stat_type, value
 		)
-
 
 func sync_stats():
 	if not G.is_server():
@@ -405,6 +419,13 @@ func sync_stats():
 func sync_response(data: Dictionary):
 	from_json(data, true)
 
+
+func sync_int_change(timestamp: float, stat_type: TYPE, value: int):
+	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
+
+
+func sync_float_change(timestamp: float, stat_type: TYPE, value: float):
+	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
 
 func sync_hurt(timestamp: float, from: String, current_hp: int, damage: int):
 	server_buffer.append(
