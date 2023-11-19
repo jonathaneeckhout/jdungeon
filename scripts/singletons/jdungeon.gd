@@ -21,6 +21,7 @@ var enemy_scenes: Dictionary = {}
 var npc_scenes: Dictionary = {}
 var item_scenes: Dictionary = {}
 var skill_resources: Dictionary = {}
+var map_scenes: Dictionary = {}
 
 var uuid_util: UuidUtil
 
@@ -32,6 +33,7 @@ func _ready():
 	register_npcs()
 	register_items()
 	register_skills()
+	register_maps()
 
 	uuid_util = load("res://scripts/uuid/uuid.gd").new()
 
@@ -108,6 +110,8 @@ func register_skills():
 		"Combustion", "res://scripts/components/skillcomponent/Skills/Combustion.tres"
 	)
 
+func register_maps():
+	J.register_map_scene("World", "res://scenes/maps/world/World.tscn")
 
 func register_player_scene(player_scene_path: String):
 	player_scene = load(player_scene_path)
@@ -128,3 +132,6 @@ func register_item_scene(item_class: String, item_scene_path: String):
 func register_skill_resource(skill_class: String, skill_res_path: String):
 	skill_resources[skill_class] = load(skill_res_path)
 	assert(skill_class == skill_resources[skill_class].skill_class)
+
+func register_map_scene(map_name: String, map_scene_path: String):
+	map_scenes[map_name] = load(map_scene_path)
