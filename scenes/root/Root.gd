@@ -104,7 +104,7 @@ func start_server(map: String) -> bool:
 	if Global.env_minimize_on_start:
 		get_tree().root.mode = Window.MODE_MINIMIZED
 
-	if not S.client_init(Global.env_gateway_address, Global.env_gateway_server_port):
+	if not S.client_init():
 		GodotLogger.error("Failed to connect to gateway")
 		return false
 
