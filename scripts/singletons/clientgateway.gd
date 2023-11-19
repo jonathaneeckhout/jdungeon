@@ -3,12 +3,6 @@ extends Node
 enum MODE { SERVER, CLIENT }
 
 signal client_connected(connected: bool)
-# TODO: place this signal in another file
-signal shop_opened(vendor_name: String)
-
-const SERVER_FPS: int = 20
-const CLIENT_FPS: int = 60
-const CLOCK_SYNC_TIME: float = 0.5
 
 var mode: MODE = MODE.CLIENT
 
@@ -18,20 +12,9 @@ var dtls_networking: DTLSNetworking
 var database: Database
 var message_handler: MessageHandler
 
-var clock_rpc: ClockRPC
-var player_rpc: PlayerRPC
-var sync_rpc: SyncRPC
+var client_rpc: ClientRPC
 
-var server: ENetMultiplayerPeer = null
-var client: ENetMultiplayerPeer = null
-
-var clock: float = 0.0
-var clock_sync_timer: Timer
-
-# The current world
-var world: World = null
-
-var client_player: Player = null
+var client: ENetMultiplayerPeer
 
 
 func _ready():
@@ -39,20 +22,10 @@ func _ready():
 
 
 func init_common() -> bool:
-	clock_rpc = ClockRPC.new()
+	client_rpc = ClientRPC.new()
 	# This short name is done to optimization the network traffic
-	clock_rpc.name = "C"
-	add_child(clock_rpc)
-
-	player_rpc = PlayerRPC.new()
-	# This short name is done to optimization the network traffic
-	player_rpc.name = "P"
-	add_child(player_rpc)
-
-	sync_rpc = SyncRPC.new()
-	# This short name is done to optimization the network traffic
-	sync_rpc.name = "S"
-	add_child(sync_rpc)
+	client_rpc.name = "C"
+	add_child(client_rpc)
 
 	return true
 
@@ -61,7 +34,7 @@ func server_init(port: int, max_clients: int, cert_path: String, key_path: Strin
 	mode = MODE.SERVER
 
 	if not init_common():
-		GodotLogger.error("Failed to init gameserver's common part")
+		GodotLogger.error("Failed to init client gateway's common part")
 		return false
 
 	database = dtls_networking.add_database(self)
@@ -69,11 +42,9 @@ func server_init(port: int, max_clients: int, cert_path: String, key_path: Strin
 		GodotLogger.error("Failed add database")
 		return false
 
-	message_handler = MessageHandler.new()
-	message_handler.name = "MessageHandler"
-	add_child(message_handler)
-
-	server = dtls_networking.server_init(port, max_clients, cert_path, key_path)
+	var server: ENetMultiplayerPeer = dtls_networking.server_init(
+		port, max_clients, cert_path, key_path
+	)
 	if server == null:
 		GodotLogger.error("Failed create server")
 		return false
@@ -83,7 +54,7 @@ func server_init(port: int, max_clients: int, cert_path: String, key_path: Strin
 	multiplayer.peer_connected.connect(_on_server_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_server_peer_disconnected)
 
-	GodotLogger.info("Started server")
+	GodotLogger.info("Started client gateway server")
 
 	return true
 
@@ -92,14 +63,8 @@ func client_init() -> bool:
 	mode = MODE.CLIENT
 
 	if not init_common():
-		GodotLogger.error("Failed to init gameserver's common part")
+		GodotLogger.error("Failed to init client gateway server's common part")
 		return false
-
-	clock_sync_timer = Timer.new()
-	clock_sync_timer.name = "ClockSyncTimer"
-	clock_sync_timer.wait_time = CLOCK_SYNC_TIME
-	clock_sync_timer.timeout.connect(_on_clock_sync_timer_timeout)
-	add_child(clock_sync_timer)
 
 	return true
 
@@ -121,17 +86,14 @@ func client_connect(address: String, port: int) -> bool:
 
 	multiplayer.multiplayer_peer = client
 
-	GodotLogger.info("Started client")
+	GodotLogger.info("Started gateway client")
 
 	return true
 
 
 func client_disconnect():
 	client_cleanup()
-
-	if client != null:
-		client.close()
-		client = null
+	client.close()
 
 
 func client_cleanup():
@@ -159,15 +121,6 @@ func get_user_by_id(id: int) -> User:
 	return users.get(id)
 
 
-func start_sync_clock():
-	clock_rpc.fetch_server_time.rpc_id(1, Time.get_unix_time_from_system())
-	clock_sync_timer.start()
-
-
-func stop_sync_clock():
-	clock_sync_timer.stop()
-
-
 func _on_server_peer_connected(id: int):
 	GodotLogger.info("Peer connected %d" % id)
 	users[id] = User.new()
@@ -182,8 +135,6 @@ func _on_client_connection_succeeded():
 	GodotLogger.info("Connection succeeded")
 	client_connected.emit(true)
 
-	start_sync_clock()
-
 
 func _on_client_connection_failed():
 	GodotLogger.warn("Connection failed")
@@ -196,14 +147,7 @@ func _on_client_disconnected():
 	GodotLogger.info("Server disconnected")
 	client_connected.emit(false)
 
-	stop_sync_clock()
-
 	client_cleanup()
-
-
-func _on_clock_sync_timer_timeout():
-	if multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-		clock_rpc.get_latency.rpc_id(1, Time.get_unix_time_from_system())
 
 
 class User:
@@ -211,4 +155,3 @@ class User:
 	var username: String = ""
 	var logged_in: bool = false
 	var connected_time: float = Time.get_unix_time_from_system()
-	var player: Player = null

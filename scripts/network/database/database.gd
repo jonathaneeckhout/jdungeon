@@ -6,7 +6,7 @@ var backend: Node
 
 
 func init() -> bool:
-	match Global.env_server_database_backend:
+	match Global.env_database_backend:
 		"json":
 			GodotLogger.info("Loading json database backend")
 			backend = JSONDatabaseBackend.new()
@@ -24,9 +24,7 @@ func init() -> bool:
 		GodotLogger.error("Failed to init database")
 		return false
 
-	GodotLogger.info(
-		"Database backend=[%s] successfully loaded" % Global.env_server_database_backend
-	)
+	GodotLogger.info("Database backend=[%s] successfully loaded" % Global.env_database_backend)
 
 	return true
 

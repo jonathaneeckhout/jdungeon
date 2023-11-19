@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=13 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://scenes/maps/world/World.gd" id="1_fsi10"]
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="5_2l8ik"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://pp0i54sl5web" path="res://scenes/enemies/ClamDog/ClamDog.tscn" id="8_w2dtf"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="9_e850n"]
 [ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="10_bxiih"]
+[ext_resource type="PackedScene" uid="uid://cj48j2lhcde1a" path="res://scenes/terrain/portal/Portal.tscn" id="11_nqcmx"]
 [ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="11_nyeba"]
 [ext_resource type="PackedScene" uid="uid://bija15ujapx3h" path="res://scenes/terrain/areas/wakingforest/WakingForest.tscn" id="12_e6xjj"]
 [ext_resource type="PackedScene" uid="uid://cpw0d00b7prm0" path="res://scenes/terrain/areas/harbor/harbor.tscn" id="13_xrvt2"]
@@ -14,6 +15,7 @@
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_fsi10")
+camera_speed = null
 
 [node name="Entities" type="Node2D" parent="."]
 
@@ -146,6 +148,18 @@ position = Vector2(-1536, 3519)
 
 [node name="PlayerRespawnLocation" parent="PlayerRespawnLocations" instance=ExtResource("14_qs20i")]
 position = Vector2(-32, -48)
+
+[node name="Portals" type="Node2D" parent="."]
+
+[node name="BaseCampPortal" parent="Portals" instance=ExtResource("11_nqcmx")]
+position = Vector2(-1280, -568)
+destination_server = "World"
+destination_portal = "CoastPortal"
+
+[node name="CoastPortal" parent="Portals" instance=ExtResource("11_nqcmx")]
+position = Vector2(-5472, 3312)
+destination_server = "World"
+destination_portal = "BaseCampPortal"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 visible = false
