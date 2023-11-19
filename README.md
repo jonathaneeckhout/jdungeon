@@ -48,12 +48,19 @@ Centuries ago the world was whole. The kingdoms were diverse, numerous, and frui
   - Synchronization of entities deaths
   - Synchronization of equipment
   - Synchronization of bag
+  - Portal from one chunk to another
 - AI
   - Wander behavior
+  - Attack and flee behavior
 - Content
   - World map
 - UI
   - Game menu to quit the game
+  - Rebind keys menu
+  - Configure settings menu
+  - Unstuck menu
+  - Report bug menu
+  - A check if the current version of your client matches the version of the deployed client (only for deployed instances)
 
 ## Feature Roadmap
 Have a look at the current open tickets of what features are on the roadmap: https://github.com/jonathaneeckhout/jdungeon/issues 
@@ -79,13 +86,13 @@ You can however modify the content to your needs.
 ```bash
 cp .env.example .env
 ```
-### Step 4: Set you Godot editor to run 2 instances
-By default Godot will only run 1 instance of the game. As this is a multiplayer game you will always need 1 server instance and 1 or more client instances. 
-You can achieve this by going to the "Debug" menu on the top left corner in the Godot editor and click on the "Run Multiple Instances" menu and select the "Run 2 Instances" or more option.
+### Step 4: Set you Godot editor to run 3 instances
+By default Godot will only run 1 instance of the game. For this game you will need to at least run 1 client instance, 1 gateway instance and 1 server instance.
+You can achieve this by going to the "Debug" menu on the top left corner in the Godot editor and click on the "Run Multiple Instances" menu and select the "Run 3 Instances" or more option.
 
 ### Step 5: Run the project
 Now you can run the project.
-Select in 1 instance the server option and the others the client option.
+Select in 1 instance the gateway server option, next a server option and the other the client option.
 Make sure to first create your account before trying to login.
 Enjoy!
 

@@ -10,6 +10,7 @@ func _ready():
 	enemies_to_sync = $Entities/Enemies
 	npcs_to_sync = $Entities/NPCs
 	player_respawn_locations = $PlayerRespawnLocations
+	portals_to_sync = $Portals
 
 	super()
 

@@ -6,6 +6,7 @@ class_name World
 @export var enemies_to_sync: Node2D
 @export var npcs_to_sync: Node2D
 @export var player_respawn_locations: Node2D
+@export var portals_to_sync: Node2D
 
 var players: Node2D
 var enemies: Node2D
@@ -44,12 +45,15 @@ func _ready():
 	synced_entities.add_child(items)
 
 	if G.is_server():
-		G.account_rpc.player_logged_in.connect(_on_player_logged_in)
+		G.player_rpc.player_logged_in.connect(_on_player_logged_in)
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+
+		S.server_rpc.user_portalled.connect(_on_user_portalled)
 
 		enemy_respawns = Node2D.new()
 		enemy_respawns.name = "EnemyRespawns"
 		synced_entities.add_child(enemy_respawns)
+
 	else:
 		G.player_rpc.player_added.connect(_on_client_player_added)
 		G.player_rpc.get_player.rpc_id(1)
@@ -60,6 +64,10 @@ func _ready():
 	map_to_sync.get_parent().remove_child(map_to_sync)
 	synced_entities.add_child(map_to_sync)
 	map_to_sync.name = "Map"
+
+	portals_to_sync.get_parent().remove_child(portals_to_sync)
+	synced_entities.add_child(portals_to_sync)
+	portals_to_sync.name = "Portals"
 
 	load_enemies()
 	load_npcs()
@@ -81,6 +89,17 @@ func load_npcs():
 
 		if G.is_server():
 			npcs.add_child(npc)
+
+
+func get_portal_information() -> Dictionary:
+	var portals_info = {}
+	for portal in portals_to_sync.get_children():
+		portals_info[portal.name] = {
+			"position": portal.get_portal_location(),
+			"destination_server": portal.destination_server,
+			"destination_portal": portal.destination_portal
+		}
+	return portals_info
 
 
 func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn_time: float):
@@ -151,6 +170,7 @@ func _on_player_logged_in(id: int, _username: String):
 	var player: Player = J.player_scene.instantiate()
 	player.name = user.username
 	player.username = user.username
+	player.server = name
 	player.peer_id = id
 
 	players.add_child(player)
@@ -278,3 +298,42 @@ func _on_client_item_added(item_uuid: String, item_class: String, pos: Vector2):
 func _on_client_item_removed(item_uuid: String):
 	if items.has_node(item_uuid):
 		items.get_node(item_uuid).queue_free()
+
+
+func _on_user_portalled(
+	response: bool,
+	username: String,
+	server_name: String,
+	portal_position: Vector2,
+	address: String,
+	port: int,
+	cookie: String
+):
+	if not response:
+		GodotLogger.info("User=[%s] failed to portal" % username)
+		return
+
+	GodotLogger.info("User=[%s] portalled" % username)
+
+	var player: Player = get_player_by_username(username)
+	if player == null:
+		GodotLogger.warn("Could not find player with username=[%s]" % username)
+		return
+
+	# Disable the physics of the player
+	player.set_physics_process(false)
+
+	# Set the player's values to the new server and portal's location.
+	# Once disconnected the persistent storage will store this value.
+	player.server = server_name
+	player.position = portal_position
+
+	G.player_rpc.portal_player.rpc_id(player.peer_id, server_name, address, port, cookie)
+
+	# Give the player some time to disconnect
+	await get_tree().create_timer(1).timeout
+
+	# If the client didn't disconnect by now, force it
+	if is_instance_valid(player) and G.users.has(player.peer_id):
+		GodotLogger.info("Disconnecting portalled player=[%s]" % player.username)
+		G.server.disconnect_peer(player.peer_id)

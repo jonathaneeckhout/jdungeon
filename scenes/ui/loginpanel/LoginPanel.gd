@@ -6,7 +6,6 @@ signal login_pressed(username: String, password: String)
 signal create_account_pressed(username: String, password: String)
 signal show_create_account_pressed
 signal back_create_account_pressed
-signal logged_in
 
 #LoginContainer
 @onready var login_container := $Panel/LoginContainer
@@ -51,10 +50,6 @@ func _ready():
 	var buttons: Array = get_tree().get_nodes_in_group("ui_button")
 	for button in buttons:
 		button.pressed.connect(_on_button_pressed)
-
-	var client_fsm: ClientFSM = ClientFSM.new()
-	client_fsm.name = "ClientFSM"
-	add_child(client_fsm)
 
 	login_container.show()
 

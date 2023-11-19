@@ -5,6 +5,7 @@ const CLIENT_FPS: int = 60
 
 @onready var ui: CanvasLayer = $UI
 @onready var select_run_mode: Control = $UI/SelectRunMode
+@onready var run_as_gateway_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsGatewayButton
 @onready var run_as_server_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsServerButton
 @onready var run_as_client_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsClientButton
 
@@ -15,14 +16,16 @@ var version_check_panel_scene: Resource = preload(
 var disclaimer_panel_scene: Resource = preload(
 	"res://scenes/ui/disclaimerpanel/DisclaimerPanel.tscn"
 )
-var maps: Dictionary = {"World": preload("res://scenes/maps/world/World.tscn")}
 
 
 func _ready():
+	run_as_gateway_button.pressed.connect(_on_run_as_gateway_pressed)
 	run_as_server_button.pressed.connect(_on_run_as_server_pressed)
 	run_as_client_button.pressed.connect(_on_run_as_client_pressed)
 
-	if Global.env_run_as_server:
+	if Global.env_run_as_gateway:
+		start_gateway()
+	elif Global.env_run_as_server:
 		start_server("World")
 	elif Global.env_run_as_client:
 		start_client()
@@ -37,6 +40,10 @@ func parse_cmd_arguments():
 
 	for arg in args:
 		match arg:
+			"j_gateway":
+				start_gateway()
+				break
+
 			"j_server":
 				start_server("World")
 				break
@@ -44,6 +51,41 @@ func parse_cmd_arguments():
 			"j_client":
 				start_client()
 				break
+
+
+func start_gateway() -> bool:
+	GodotLogger.info("Running as Gateway")
+
+	select_run_mode.queue_free()
+
+	GodotLogger.info("Loading gateway's env variables")
+	if not Global.load_gateway_env_variables():
+		GodotLogger.error("Could not load gateway's env variables")
+		return false
+
+	if Global.env_minimize_on_start:
+		get_tree().root.mode = Window.MODE_MINIMIZED
+
+	if not S.server_init(
+		Global.env_gateway_server_port,
+		Global.env_gateway_server_max_peers,
+		Global.env_gateway_server_crt,
+		Global.env_gateway_server_key
+	):
+		GodotLogger.error("Failed to start gateway client DTLS server")
+		return false
+
+	if not C.server_init(
+		Global.env_gateway_client_port,
+		Global.env_gateway_client_max_peers,
+		Global.env_gateway_client_crt,
+		Global.env_gateway_client_key
+	):
+		GodotLogger.error("Failed to start gateway client DTLS server")
+		return false
+
+	GodotLogger.info("Gateway successfully started")
+	return true
 
 
 func start_server(map: String) -> bool:
@@ -59,6 +101,13 @@ func start_server(map: String) -> bool:
 		GodotLogger.error("Could not load server's env variables")
 		return false
 
+	if Global.env_minimize_on_start:
+		get_tree().root.mode = Window.MODE_MINIMIZED
+
+	if not S.client_init():
+		GodotLogger.error("Failed to connect to gateway")
+		return false
+
 	if not G.server_init(
 		Global.env_server_port,
 		Global.env_server_max_peers,
@@ -68,9 +117,10 @@ func start_server(map: String) -> bool:
 		GodotLogger.error("Failed to start DTLS server")
 		return false
 
-	var world = maps[map].instantiate()
-	world.name = "World"
-	add_child(world)
+	var server_fsm: ServerFSM = ServerFSM.new()
+	server_fsm.name = "ServerFSM"
+	server_fsm.map_name = map
+	add_child(server_fsm)
 
 	GodotLogger.info("Server successfully started")
 	return true
@@ -91,23 +141,15 @@ func start_client() -> bool:
 		GodotLogger.error("Could not load client's env variables")
 		return false
 
-	if not G.client_init():
-		GodotLogger.error("Failed to init client")
+	if not C.client_init():
+		GodotLogger.error("Failed to init gateway client")
 		return false
 
-	if Global.env_debug:
-		var login_panel: LoginPanel = login_panel_scene.instantiate()
-		ui.add_child(login_panel)
+	if not G.client_init():
+		GodotLogger.error("Failed to init gameserver client")
+		return false
 
-		await login_panel.logged_in
-
-		login_panel.queue_free()
-
-		var world = maps["World"].instantiate()
-		world.name = "World"
-		add_child(world)
-
-	else:
+	if not Global.env_debug:
 		# Show the check version panel
 		var version_check_panel: VersionCheckPanel = version_check_panel_scene.instantiate()
 		ui.add_child(version_check_panel)
@@ -121,21 +163,26 @@ func start_client() -> bool:
 			await disclaimer_panel.accepted
 
 			disclaimer_panel.queue_free()
-
-			var login_panel: LoginPanel = login_panel_scene.instantiate()
-			ui.add_child(login_panel)
-
-			await login_panel.logged_in
-
-			login_panel.queue_free()
-
 		else:
 			GodotLogger.error(
 				"Client's version does not match the Server's version. Not the running game."
 			)
+			return false
+
+	var login_panel: LoginPanel = login_panel_scene.instantiate()
+	ui.add_child(login_panel)
+
+	var client_fsm: ClientFSM = ClientFSM.new()
+	client_fsm.name = "ClientFSM"
+	client_fsm.login_panel = login_panel
+	add_child(client_fsm)
 
 	GodotLogger.info("Client successfully started")
 	return true
+
+
+func _on_run_as_gateway_pressed():
+	start_gateway()
 
 
 func _on_run_as_server_pressed():

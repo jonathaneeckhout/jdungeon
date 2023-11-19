@@ -6,6 +6,7 @@ const PLAYER_HP_GAIN_PER_LEVEL: int = 8
 const PLAYER_ATTACK_POWER_GAIN_PER_LEVEL: float = 0.2
 
 var username: String = ""
+var server: String = ""
 var peer_id: int = 0
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
 

@@ -5,7 +5,7 @@ class_name JSONDatabaseBackend
 
 # Upercase function name to match csharp style
 func Init() -> bool:
-	return create_file_if_not_exists(Global.env_server_json_backend_file, {})
+	return create_file_if_not_exists(Global.env_json_backend_file, {})
 
 
 func create_file_if_not_exists(path: String, json_data: Dictionary) -> bool:
@@ -43,11 +43,11 @@ func read_json_from_file(path: String) -> Variant:
 
 
 func CreateAccount(username: String, password: String) -> Dictionary:
-	var users_json: Variant = read_json_from_file(Global.env_server_json_backend_file)
+	var users_json: Variant = read_json_from_file(Global.env_json_backend_file)
 	var error: String = ""
 
 	if users_json == null:
-		GodotLogger.warn("Could not json parse content of %s" % Global.env_server_json_backend_file)
+		GodotLogger.warn("Could not json parse content of %s" % Global.env_json_backend_file)
 		return {"result": false, "error": "Oops something went wrong"}
 
 	if username in users_json:
@@ -57,7 +57,7 @@ func CreateAccount(username: String, password: String) -> Dictionary:
 
 	users_json[username] = {"password": password}
 
-	if not write_json_to_file(Global.env_server_json_backend_file, users_json):
+	if not write_json_to_file(Global.env_json_backend_file, users_json):
 		GodotLogger.warn("Could not store new user")
 		return {"result": false, "error": "Oops something went wrong"}
 
@@ -67,9 +67,9 @@ func CreateAccount(username: String, password: String) -> Dictionary:
 
 
 func AuthenticateUser(username: String, password: String) -> bool:
-	var users_json = read_json_from_file(Global.env_server_json_backend_file)
+	var users_json = read_json_from_file(Global.env_json_backend_file)
 	if users_json == null:
-		GodotLogger.warn("Could not json parse content of %s" % Global.env_server_json_backend_file)
+		GodotLogger.warn("Could not json parse content of %s" % Global.env_json_backend_file)
 		return false
 
 	return (
@@ -80,9 +80,9 @@ func AuthenticateUser(username: String, password: String) -> bool:
 
 
 func StorePlayerData(username: String, data: Dictionary) -> bool:
-	var users_json = read_json_from_file(Global.env_server_json_backend_file)
+	var users_json = read_json_from_file(Global.env_json_backend_file)
 	if users_json == null:
-		GodotLogger.warn("Could not json parse content of %s" % Global.env_server_json_backend_file)
+		GodotLogger.warn("Could not json parse content of %s" % Global.env_json_backend_file)
 		return false
 
 	if not username in users_json:
@@ -91,7 +91,7 @@ func StorePlayerData(username: String, data: Dictionary) -> bool:
 
 	users_json[username]["data"] = data
 
-	if not write_json_to_file(Global.env_server_json_backend_file, users_json):
+	if not write_json_to_file(Global.env_json_backend_file, users_json):
 		GodotLogger.warn("Could not store player=[]'s data" % username)
 		return false
 
@@ -99,9 +99,9 @@ func StorePlayerData(username: String, data: Dictionary) -> bool:
 
 
 func LoadPlayerData(username: String) -> Dictionary:
-	var users_json = read_json_from_file(Global.env_server_json_backend_file)
+	var users_json = read_json_from_file(Global.env_json_backend_file)
 	if users_json == null:
-		GodotLogger.warn("Could not json parse content of %s" % Global.env_server_json_backend_file)
+		GodotLogger.warn("Could not json parse content of %s" % Global.env_json_backend_file)
 		return {}
 
 	if not username in users_json:
