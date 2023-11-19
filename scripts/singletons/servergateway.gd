@@ -20,6 +20,8 @@ var message_handler: MessageHandler
 
 var server_rpc: ServerRPC
 
+var client: ENetMultiplayerPeer = null
+
 
 func _ready():
 	dtls_networking = DTLSNetworking.new()
@@ -70,23 +72,12 @@ func server_init(port: int, max_clients: int, cert_path: String, key_path: Strin
 	return true
 
 
-func client_init(address: String, port: int) -> bool:
+func client_init() -> bool:
 	mode = MODE.CLIENT
 
 	if not init_common():
 		GodotLogger.error("Failed to init gateway server's common part")
 		return false
-
-	multiplayer_api.connected_to_server.connect(_on_client_connection_succeeded)
-	multiplayer_api.connection_failed.connect(_on_client_connection_failed)
-	multiplayer_api.server_disconnected.connect(_on_client_disconnected)
-
-	var client: ENetMultiplayerPeer = dtls_networking.client_connect(address, port)
-	if client == null:
-		GodotLogger.warn("Failed to connect to server")
-		return false
-
-	multiplayer_api.multiplayer_peer = client
 
 	var check_cookie_timer: Timer = Timer.new()
 	check_cookie_timer.name = "CheckCookieTimer"
@@ -95,6 +86,26 @@ func client_init(address: String, port: int) -> bool:
 	check_cookie_timer.wait_time = COOKIE_TIMER_INTERVAL
 	check_cookie_timer.timeout.connect(_on_check_cookie_timer_timeout)
 	add_child(check_cookie_timer)
+
+	return true
+
+
+func client_connect(address: String, port: int) -> bool:
+	if not multiplayer_api.connected_to_server.is_connected(_on_client_connection_succeeded):
+		multiplayer_api.connected_to_server.connect(_on_client_connection_succeeded)
+
+	if not multiplayer_api.connection_failed.is_connected(_on_client_connection_failed):
+		multiplayer_api.connection_failed.connect(_on_client_connection_failed)
+
+	if not multiplayer_api.server_disconnected.is_connected(_on_client_disconnected):
+		multiplayer_api.server_disconnected.connect(_on_client_disconnected)
+
+	client = dtls_networking.client_connect(address, port)
+	if client == null:
+		GodotLogger.warn("Failed to connect to gateway server")
+		return false
+
+	multiplayer_api.multiplayer_peer = client
 
 	GodotLogger.info("Started gateway client")
 
