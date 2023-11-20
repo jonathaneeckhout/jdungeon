@@ -31,8 +31,8 @@ var create_account_button := $Panel/CreateAccountContainer/MarginContainer3/VBox
 var goto_login_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxContainer/BackToLoginButton
 
 #AudioStreamers
-@onready var click_audio_stream_player := $ClickAudioStreamPlayer
-@onready var background_audio_stream_player := $BackgroundAudioStreamPlayer
+@onready var click_audio_stream_player: AudioStreamPlayer = $ClickAudioStreamPlayer
+@onready var background_audio_stream_player: AudioStreamPlayer = $BackgroundAudioStreamPlayer
 
 @onready var _anim_player := $AnimationPlayer
 
@@ -118,5 +118,11 @@ func _on_button_pressed():
 	click_audio_stream_player.play()
 
 
+func play_login_background_audio():
+	if not background_audio_stream_player.playing:
+		background_audio_stream_player.play()
+
+
 func stop_login_background_audio():
-	background_audio_stream_player.stop()
+	if background_audio_stream_player.playing:
+		background_audio_stream_player.stop()

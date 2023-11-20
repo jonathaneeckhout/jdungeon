@@ -55,6 +55,7 @@ func fsm():
 
 
 func _handle_init():
+	login_panel.play_login_background_audio()
 	login_panel.show()
 	state = STATES.LOGIN
 	fsm.call_deferred()
@@ -230,7 +231,7 @@ func _handle_create_account():
 
 func _handle_state_running():
 	logged_in.emit()
-
+	login_panel.stop_login_background_audio()
 	login_panel.hide()
 
 
