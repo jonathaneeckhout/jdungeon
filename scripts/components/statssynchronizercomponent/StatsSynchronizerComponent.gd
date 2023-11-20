@@ -310,8 +310,9 @@ func apply_boost(boost: Boost):
 		assert(get(statName) != null, "This property does not exist as a stat.")
 		assert(
 			typeof(boost.get_stat_boost(statName)) == typeof(get(statName)),
-			"The value of the boost is different from the stat it is meant to alter. This could cause unexpected behaviour."
+			"The value type of the boost is different from the stat it is meant to alter. This could cause unexpected behaviour."
 		)
+		
 		var newValue = get(statName) + boost.statBoostDict.get(statName)
 		self.set(statName, newValue)
 
@@ -328,7 +329,6 @@ func to_json(full: bool = false) -> Dictionary:
 	var data: Dictionary = {"hp": hp, "energy": energy, "level": level, "experience": experience}
 	for statName in StatListCounter:
 		data[statName] = get(statName)
-	assert(data.size() == StatListCounter.size())
 
 	if full:
 		var dictForMerge: Dictionary = {}
@@ -336,10 +336,12 @@ func to_json(full: bool = false) -> Dictionary:
 		for statName in StatListPermanent:
 			dictForMerge[statName] = get(statName)
 		
-		assert(dictForMerge.size() == StatListPermanent.size())
 		data.merge(dictForMerge)
+		
 		assert(data.size() == StatListCounter.size() + StatListPermanent.size())
 		
+	assert(data.size() == StatListCounter.size())
+	
 	return data
 
 

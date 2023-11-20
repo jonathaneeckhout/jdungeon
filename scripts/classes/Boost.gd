@@ -10,31 +10,31 @@ var hp_max: int = 0:
 	set(val):
 		statBoostDict["hp_max"] = val
 	get:
-		return statBoostDict.get("hp_max", 0)
+		return statBoostDict.get("hp_max", 0 as int)
 
 var hp: int = 0:
 	set(val):
 		statBoostDict["hp"] = val
 	get:
-		return statBoostDict.get("hp", 0)
+		return statBoostDict.get("hp", 0 as int)
 
 var attack_power_min: int = 0:
 	set(val):
 		statBoostDict["attack_power_min"] = val
 	get:
-		return statBoostDict.get("attack_power_min", 0)
+		return statBoostDict.get("attack_power_min", 0 as int)
 
 var attack_power_max: int = 0:
 	set(val):
 		statBoostDict["attack_power_max"] = val
 	get:
-		return statBoostDict.get("attack_power_max", 0)
+		return statBoostDict.get("attack_power_max", 0 as int)
 
 var defense: int = 0:
 	set(val):
 		statBoostDict["defense"] = val
 	get:
-		return statBoostDict.get("defense", 0)
+		return statBoostDict.get("defense", 0 as int)
 
 
 func add_boost(boost: Boost):
