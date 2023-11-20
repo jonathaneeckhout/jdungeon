@@ -19,4 +19,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy your Godot project to the container
 COPY ./build/linux/ /app/
 
-ENTRYPOINT ["/app/jdungeon.x86_64", "--headless", "j_server"]
+ENTRYPOINT ["/app/jdungeon.x86_64", "--headless"]
