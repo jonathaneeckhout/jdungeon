@@ -251,6 +251,8 @@ func calculate_experience_needed(current_level: int):
 func add_level(amount: int):
 	level += amount
 
+	_sync_int_change(TYPE.LEVEL, level)
+
 
 func add_experience(amount: int):
 	experience += amount
@@ -258,6 +260,8 @@ func add_experience(amount: int):
 	while experience >= experience_needed:
 		experience -= experience_needed
 		add_level(1)
+
+	_sync_int_change(TYPE.EXPERIENCE, experience)
 
 
 func apply_boost(boost: Boost):
