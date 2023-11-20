@@ -50,7 +50,8 @@ func check_version() -> bool:
 		GodotLogger.warn("No version detected on client side")
 		return false
 
-	var request_url = "https://%s/version" % [Global.env_server_address]
+	# TODO: modify this to use a custom address for version checking
+	var request_url = "https://%s/version" % [Global.env_gateway_address]
 	var headers = ["Content-Type: application/json"]
 
 	var error = http_request.request(request_url, headers, HTTPClient.METHOD_GET)
