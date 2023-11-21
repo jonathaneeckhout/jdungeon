@@ -32,6 +32,7 @@ func _ready():
 func respawn(location: Vector2):
 	target_node.position = location
 	stats.reset_hp()
+	stats.reset_energy()
 
 
 func _on_died():

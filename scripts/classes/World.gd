@@ -190,6 +190,7 @@ func _on_peer_disconnected(id):
 		if player.stats.is_dead:
 			player.position = find_player_respawn_location(player.position)
 			player.stats.reset_hp()
+			player.stats.reset_energy()
 
 		GodotLogger.info("Removing player=[%s]" % player.name)
 

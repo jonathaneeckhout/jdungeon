@@ -304,3 +304,74 @@ func actionsynchronizer_sync_attack(n: String, t: float, d: Vector2):
 
 	if entity.component_list.has("action_synchronizer"):
 		entity.component_list["action_synchronizer"].sync_attack(t, d)
+
+
+@rpc("call_remote", "authority", "reliable")
+func actionsynchronizer_sync_skill_use(n: String, t: float, p: Vector2, s: String):
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("action_synchronizer"):
+		entity.component_list["action_synchronizer"].sync_skill_use(t, p, s)
+
+
+@rpc("call_remote", "any_peer", "reliable") func skillcomponent_sync_skills(n: String):
+	if not G.is_server():
+		return
+
+	var id = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("skill_component"):
+		entity.component_list["skill_component"].sync_skills()
+
+
+@rpc("call_remote", "authority", "reliable")
+func skillcomponent_sync_response(n: String, d: Dictionary):
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("skill_component"):
+		entity.component_list["skill_component"].sync_response(d)
+
+
+@rpc("call_remote", "any_peer", "reliable")
+func playersynchronizer_sync_skill_use(p: Vector2, s: String):
+	if not G.is_server():
+		return
+
+	var id = multiplayer.get_remote_sender_id()
+
+	var user: G.User = G.get_user_by_id(id)
+	if user == null:
+		return
+
+	if not user.logged_in:
+		return
+
+	if user.player == null:
+		return
+
+	if user.player.component_list.has("player_synchronizer"):
+		user.player.component_list["player_synchronizer"].sync_skill_use(p, s)
