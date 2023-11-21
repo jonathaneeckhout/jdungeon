@@ -25,25 +25,23 @@ const BASE_EXPERIENCE: int = 100
 #Stats that are persistent
 const StatListPermanent: Array[StringName] = [
 	"hp_max",
-	"energy_max", 
-	"attack_power_min", 
+	"energy_max",
+	"attack_power_min",
 	"attack_power_max",
 	"attack_speed",
 	"attack_range",
-	"defense", 
-	"movement_speed", 
+	"defense",
+	"movement_speed",
 ]
 #Stats that serve as a meter of sorts and change often from external factors
 const StatListCounter: Array[StringName] = [
-	"hp", 
-	"energy", 
-	"level", 
+	"hp",
+	"energy",
+	"level",
 	"experience",
 ]
 
 const StatListAll: Array[StringName] = StatListCounter + StatListPermanent
-
-
 
 signal loaded
 signal stats_changed(stat_type: TYPE)
@@ -337,7 +335,7 @@ func to_json(full: bool = false) -> Dictionary:
 	var data: Dictionary = {"hp": hp, "energy": energy, "level": level, "experience": experience}
 	for statName in StatListCounter:
 		data[statName] = get(statName)
-	
+
 	assert(data.size() == StatListCounter.size())
 
 	if full:
