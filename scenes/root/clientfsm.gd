@@ -277,7 +277,7 @@ func _on_gameserver_connected(connected: bool):
 	if connected:
 		return
 
-	if not portalled:
+	if world != null and not portalled:
 		world.set_physics_process(false)
 		world.queue_free()
 		world = null

@@ -30,11 +30,14 @@ func _ready():
 
 
 func respawn(location: Vector2):
+	GodotLogger.info("Respawning=[%s]" % target_node.name)
 	target_node.position = location
 	stats.reset_hp()
+	stats.reset_energy()
 
 
 func _on_died():
+	GodotLogger.info("%s died, starting respawn timer" % target_node.name)
 	respawn_timer.start()
 
 

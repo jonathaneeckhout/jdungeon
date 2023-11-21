@@ -5,6 +5,8 @@ class_name StatsSynchronizerComponent
 enum TYPE {
 	HP_MAX,
 	HP,
+	ENERGY_MAX,
+	ENERGY,
 	ATTACK_POWER_MIN,
 	ATTACK_POWER_MAX,
 	ATTACK_SPEED,
@@ -45,6 +47,16 @@ signal respawned
 				respawned.emit()
 			is_dead = false
 		stats_changed.emit(TYPE.HP)
+
+@export var energy_max: int = 100:
+	set(val):
+		energy_max = val
+		stats_changed.emit(TYPE.ENERGY_MAX)
+
+@export var energy: int = energy_max:
+	set(val):
+		energy = val
+		stats_changed.emit(TYPE.ENERGY)
 
 @export var attack_power_min: int = 0:
 	set(val):
@@ -102,12 +114,11 @@ var server_buffer: Array[Dictionary] = []
 var ready_done: bool = false
 
 var _default_hp_max: int = hp_max
+var _default_energy_max: int = energy_max
 var _default_attack_power_min: int = attack_power_min
 var _default_attack_power_max: int = attack_power_max
 var _default_defense: int = defense
 var _default_movement_speed: float = movement_speed
-
-var delay_timer: Timer
 
 
 func _ready():
@@ -123,15 +134,20 @@ func _ready():
 	if G.is_server():
 		set_physics_process(false)
 	else:
-		# This timer is needed to give the client some time to setup its multiplayer connection
-		delay_timer = Timer.new()
-		delay_timer.name = "DelayTimer"
-		delay_timer.wait_time = 0.1
-		delay_timer.autostart = true
-		delay_timer.one_shot = true
-		delay_timer.timeout.connect(_on_delay_timer_timeout)
-		add_child(delay_timer)
+		#Wait until the connection is ready to synchronize stats
+		if not multiplayer.has_multiplayer_peer():
+			await multiplayer.connected_to_server
 
+		#Wait an additional frame so others can get set.
+		await get_tree().process_frame
+
+		#Some entities take a bit to get added to the tree, do not update them until then.
+		if not is_inside_tree():
+			await tree_entered
+
+		G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
+
+	# Make sure this line is called on server and client's side
 	ready_done = true
 
 
@@ -148,6 +164,10 @@ func check_server_buffer():
 					hp_max = entry["value"]
 				TYPE.HP:
 					hp = entry["value"]
+				TYPE.ENERGY_MAX:
+					energy_max = entry["value"]
+				TYPE.ENERGY:
+					energy = entry["value"]
 				TYPE.ATTACK_POWER_MIN:
 					attack_power_min = entry["value"]
 				TYPE.ATTACK_POWER_MAX:
@@ -230,6 +250,11 @@ func reset_hp():
 	_sync_int_change(TYPE.HP, hp)
 
 
+func reset_energy():
+	energy = energy_max
+	_sync_int_change(TYPE.ENERGY, energy)
+
+
 func kill():
 	hp = 0
 	_sync_int_change(TYPE.HP, hp)
@@ -237,6 +262,7 @@ func kill():
 
 func load_defaults():
 	hp_max = _default_hp_max
+	energy_max = _default_energy_max
 	attack_power_min = _default_attack_power_min
 	attack_power_max = _default_attack_power_max
 	defense = _default_defense
@@ -282,11 +308,12 @@ func apply_boost(boost: Boost):
 
 
 func to_json(full: bool = false) -> Dictionary:
-	var data: Dictionary = {"hp": hp, "level": level, "experience": experience}
+	var data: Dictionary = {"hp": hp, "energy": energy, "level": level, "experience": experience}
 	if full:
 		data.merge(
 			{
 				"hp_max": hp_max,
+				"energy_max": energy_max,
 				"attack_power_min": attack_power_min,
 				"attack_power_max": attack_power_max,
 				"attack_speed": attack_speed,
@@ -303,6 +330,10 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 		GodotLogger.warn('Failed to load stats from data, missing "hp" key')
 		return false
 
+	if not "energy" in data:
+		GodotLogger.warn('Failed to load stats from data, missing "energy" key')
+		return false
+
 	if not "level" in data:
 		GodotLogger.warn('Failed to load stats from data, missing "level" key')
 		return false
@@ -314,6 +345,10 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 	if full:
 		if not "hp_max" in data:
 			GodotLogger.warn('Failed to load stats from data, missing "hp_max" key')
+			return false
+
+		if not "energy_max" in data:
+			GodotLogger.warn('Failed to load stats from data, missing "energy_max" key')
 			return false
 
 		if not "attack_power_min" in data:
@@ -341,6 +376,7 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 			return false
 
 	hp = data["hp"]
+	energy = data["energy"]
 	level = data["level"]
 	experience = data["experience"]
 
@@ -348,6 +384,7 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 
 	if full:
 		hp_max = data["hp_max"]
+		energy_max = data["energy_max"]
 		attack_power_min = data["attack_power_min"]
 		attack_power_max = data["attack_power_max"]
 		attack_speed = data["attack_speed"]
@@ -391,11 +428,6 @@ func _sync_float_change(stat_type: TYPE, value: float):
 		G.sync_rpc.statssynchronizer_sync_float_change.rpc_id(
 			watcher.peer_id, target_node.name, timestamp, stat_type, value
 		)
-
-
-func _on_delay_timer_timeout():
-	G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
-	delay_timer.queue_free()
 
 
 func sync_stats():
