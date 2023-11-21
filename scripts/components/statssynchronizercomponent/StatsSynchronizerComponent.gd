@@ -111,7 +111,7 @@ var peer_id: int = 0
 var is_dead: bool = false
 
 var server_buffer: Array[Dictionary] = []
-var is_connection_ready: bool = false
+var ready_done: bool = false
 
 var _default_hp_max: int = hp_max
 var _default_energy_max: int = energy_max
@@ -147,7 +147,8 @@ func _ready():
 
 		G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
 
-		is_connection_ready = true
+	# Make sure this line is called on server and client's side
+	ready_done = true
 
 
 func _physics_process(_delta):
@@ -397,7 +398,7 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 
 
 func _sync_int_change(stat_type: TYPE, value: int):
-	if not is_connection_ready:
+	if not ready_done:
 		return
 
 	var timestamp: float = Time.get_unix_time_from_system()
@@ -414,7 +415,7 @@ func _sync_int_change(stat_type: TYPE, value: int):
 
 
 func _sync_float_change(stat_type: TYPE, value: float):
-	if not is_connection_ready:
+	if not ready_done:
 		return
 
 	var timestamp: float = Time.get_unix_time_from_system()
