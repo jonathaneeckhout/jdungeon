@@ -1,16 +1,17 @@
-[gd_scene load_steps=14 format=3 uid="uid://cj48j2lhcde1a"]
+[gd_scene load_steps=15 format=3 uid="uid://cj48j2lhcde1a"]
 
 [ext_resource type="Script" path="res://scenes/terrain/portal/Portal.gd" id="1_bxy1m"]
-[ext_resource type="Texture2D" uid="uid://cowbk3q3u2bvv" path="res://assets/images/terrain/portal/Untitled_Artwork-1.png" id="2_a0rc0"]
-[ext_resource type="Texture2D" uid="uid://c55k1vxt6viqc" path="res://assets/images/terrain/portal/Untitled_Artwork-2.png" id="3_s4lvd"]
-[ext_resource type="Texture2D" uid="uid://houmtsiggu8" path="res://assets/images/terrain/portal/Untitled_Artwork-3.png" id="4_nnxhl"]
-[ext_resource type="Texture2D" uid="uid://b0g88xjyiepc1" path="res://assets/images/terrain/portal/Untitled_Artwork-4.png" id="5_xq638"]
-[ext_resource type="Texture2D" uid="uid://lxd108bxsybq" path="res://assets/images/terrain/portal/Untitled_Artwork-5.png" id="6_alyie"]
-[ext_resource type="Texture2D" uid="uid://wlb4xyaf4428" path="res://assets/images/terrain/portal/Untitled_Artwork-6.png" id="7_ery1h"]
-[ext_resource type="Texture2D" uid="uid://dnhbdwensxvka" path="res://assets/images/terrain/portal/Untitled_Artwork-7.png" id="8_ynbj6"]
-[ext_resource type="Texture2D" uid="uid://bgo37t5j4snnb" path="res://assets/images/terrain/portal/Untitled_Artwork-8.png" id="9_qt2ji"]
-[ext_resource type="Texture2D" uid="uid://b15n8ldileh7m" path="res://assets/images/terrain/portal/Untitled_Artwork-9.png" id="10_av83u"]
-[ext_resource type="Texture2D" uid="uid://cdidqdyykes6s" path="res://assets/images/terrain/portal/Untitled_Artwork-10.png" id="11_587kq"]
+[ext_resource type="Texture2D" uid="uid://c37bhe2ae54fj" path="res://assets/images/terrain/portal/Portal shadow.png" id="2_1ca0b"]
+[ext_resource type="Texture2D" uid="uid://cowbk3q3u2bvv" path="res://assets/images/terrain/portal/Portal_1.png" id="3_wifds"]
+[ext_resource type="Texture2D" uid="uid://c55k1vxt6viqc" path="res://assets/images/terrain/portal/Portal_2.png" id="4_fawlm"]
+[ext_resource type="Texture2D" uid="uid://houmtsiggu8" path="res://assets/images/terrain/portal/Portal_3.png" id="5_5cbis"]
+[ext_resource type="Texture2D" uid="uid://b0g88xjyiepc1" path="res://assets/images/terrain/portal/Portal_4.png" id="6_loour"]
+[ext_resource type="Texture2D" uid="uid://lxd108bxsybq" path="res://assets/images/terrain/portal/Portal_5.png" id="7_4hli2"]
+[ext_resource type="Texture2D" uid="uid://wlb4xyaf4428" path="res://assets/images/terrain/portal/Portal_6.png" id="8_txne0"]
+[ext_resource type="Texture2D" uid="uid://dnhbdwensxvka" path="res://assets/images/terrain/portal/Portal_7.png" id="9_a2y2j"]
+[ext_resource type="Texture2D" uid="uid://bgo37t5j4snnb" path="res://assets/images/terrain/portal/Portal_8.png" id="10_ftdui"]
+[ext_resource type="Texture2D" uid="uid://b15n8ldileh7m" path="res://assets/images/terrain/portal/Portal_9.png" id="11_o1vmg"]
+[ext_resource type="Texture2D" uid="uid://cdidqdyykes6s" path="res://assets/images/terrain/portal/Portal_10.png" id="12_3l5j5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4phin"]
 radius = 40.0
@@ -19,34 +20,34 @@ radius = 40.0
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_a0rc0")
+"texture": ExtResource("3_wifds")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_s4lvd")
+"texture": ExtResource("4_fawlm")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_nnxhl")
+"texture": ExtResource("5_5cbis")
 }, {
 "duration": 1.0,
-"texture": ExtResource("5_xq638")
+"texture": ExtResource("6_loour")
 }, {
 "duration": 1.0,
-"texture": ExtResource("6_alyie")
+"texture": ExtResource("7_4hli2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_ery1h")
+"texture": ExtResource("8_txne0")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_ynbj6")
+"texture": ExtResource("9_a2y2j")
 }, {
 "duration": 1.0,
-"texture": ExtResource("9_qt2ji")
+"texture": ExtResource("10_ftdui")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_av83u")
+"texture": ExtResource("11_o1vmg")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_587kq")
+"texture": ExtResource("12_3l5j5")
 }],
 "loop": true,
 "name": &"Idle",
@@ -67,6 +68,10 @@ collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PortalArea2D"]
 shape = SubResource("CircleShape2D_4phin")
+
+[node name="PortalShadow" type="Sprite2D" parent="."]
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("2_1ca0b")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(0.15, 0.15)
