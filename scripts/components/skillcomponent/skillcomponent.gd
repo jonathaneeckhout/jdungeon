@@ -53,6 +53,8 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 
 		skill_index_selected.emit(skillIndex)
 		skill_selected.emit(skill_current)
+		
+@export var accepting_input: bool = true
 
 var cooldownDict: Dictionary
 var directSpace: PhysicsDirectSpaceState2D
@@ -62,6 +64,7 @@ var shapeParameters := PhysicsShapeQueryParameters2D.new()
 func _ready() -> void:
 	#TEMP until classes are added
 	add_skill("HealSelf")
+	add_skill("Combustion")
 	assert(skills[0] is SkillComponentResource)
 	#TEMP ends
 
@@ -102,6 +105,9 @@ func _ready() -> void:
 
 #Skill selection is local
 func _input(event: InputEvent) -> void:
+	if not accepting_input:
+		return 
+		
 	if event.is_action_pressed("j_slot_deselect"):
 		skill_select_by_index(-1)
 

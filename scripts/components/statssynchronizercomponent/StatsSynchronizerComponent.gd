@@ -7,6 +7,7 @@ enum TYPE {
 	HP,
 	ENERGY_MAX,
 	ENERGY,
+	ENERGY_REGEN,
 	ATTACK_POWER_MIN,
 	ATTACK_POWER_MAX,
 	ATTACK_SPEED,
@@ -57,6 +58,11 @@ signal respawned
 	set(val):
 		energy = val
 		stats_changed.emit(TYPE.ENERGY)
+
+@export var energy_regen: float = 10: #This is per second
+	set(val):
+		energy = val
+		stats_changed.emit(TYPE.ENERGY_REGEN)
 
 @export var attack_power_min: int = 0:
 	set(val):
@@ -115,6 +121,7 @@ var ready_done: bool = false
 
 var _default_hp_max: int = hp_max
 var _default_energy_max: int = energy_max
+var _default_energy_regen: float = 10
 var _default_attack_power_min: int = attack_power_min
 var _default_attack_power_max: int = attack_power_max
 var _default_defense: int = defense
@@ -151,8 +158,9 @@ func _ready():
 	ready_done = true
 
 
-func _physics_process(_delta):
+func _physics_process(delta: float):
 	check_server_buffer()
+	energy += energy_regen * delta
 
 
 func check_server_buffer():
@@ -168,6 +176,8 @@ func check_server_buffer():
 					energy_max = entry["value"]
 				TYPE.ENERGY:
 					energy = entry["value"]
+				TYPE.ENERGY_REGEN:
+					energy_regen = entry["value"]
 				TYPE.ATTACK_POWER_MIN:
 					attack_power_min = entry["value"]
 				TYPE.ATTACK_POWER_MAX:
@@ -314,6 +324,7 @@ func to_json(full: bool = false) -> Dictionary:
 			{
 				"hp_max": hp_max,
 				"energy_max": energy_max,
+				"energy_regen": energy_regen,
 				"attack_power_min": attack_power_min,
 				"attack_power_max": attack_power_max,
 				"attack_speed": attack_speed,
@@ -385,6 +396,7 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 	if full:
 		hp_max = data["hp_max"]
 		energy_max = data["energy_max"]
+		energy_regen = data["energy_regen"]
 		attack_power_min = data["attack_power_min"]
 		attack_power_max = data["attack_power_max"]
 		attack_speed = data["attack_speed"]

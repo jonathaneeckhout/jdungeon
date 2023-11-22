@@ -9,7 +9,9 @@ class_name SkillComponentResource
 
 @export var icon: Texture = load("res://icon.svg")
 
-@export_flags_2d_physics var collision_mask: int = J.ENTITY_TYPE.ENEMY
+@export_flags_2d_physics var collision_mask: int = J.PHYSICS_LAYER_WORLD + J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS + J.PHYSICS_LAYER_ITEMS
+
+@export var valid_entities: Array[J.ENTITY_TYPE] = [J.ENTITY_TYPE.PLAYER]
 
 @export var cooldown: float = 0
 
@@ -27,13 +29,23 @@ class_name SkillComponentResource
 @export var hitbox_hits_user: bool = false
 
 #If true, the shape rotates to face where the player does
-@export var hitbox_rotate_shape: bool
+@export var hitbox_rotate_shape: bool = false
 
 #Skills cannot be used past this range
 @export var hit_range: float = 100
 
+@export var description: String = "This does something, right? ...right?" 
+
 
 func effect(information: SkillComponent.UseInfo):
+	
+	var filteredTargets: Array[Node]
+	for target in information.targets:
+		if target.get("entity_type") in valid_entities:
+			filteredTargets.append(target)
+	
+	information.targets = filteredTargets
+	
 	if damage > 0:
 		for stats in information.get_target_stats_all():
 			stats.hurt(information.user, damage)
@@ -47,3 +59,14 @@ func _target_filter(_target: Node) -> bool:
 
 func _effect(_info: SkillComponent.UseInfo):
 	pass
+
+
+## Can be used for custom descriptions
+func get_description()->String:
+	return description
+
+
+## This function is meant for rich text versions of the description, for the future tooltip system.
+func get_description_rich()->String:
+	GodotLogger.warn("No rich description has been defined for skill {0}.".format([skill_class]))
+	return description
