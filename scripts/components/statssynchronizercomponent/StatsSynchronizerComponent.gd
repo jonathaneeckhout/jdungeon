@@ -341,11 +341,12 @@ func apply_boost(boost: Boost):
 
 
 func to_json(full: bool = false) -> Dictionary:
-	var data: Dictionary = {"hp": hp, "energy": energy, "level": level, "experience": experience}
+	var data: Dictionary
 	for statName in StatListCounter:
 		data[statName] = get(statName)
 
-	assert(data.size() == StatListCounter.size())
+	if data.size() != StatListCounter.size():
+		GodotLogger.error("Discrepancy in the amount of stats, StatListCounter may be at fault.")
 
 	if full:
 		var dictForMerge: Dictionary = {}
@@ -355,7 +356,10 @@ func to_json(full: bool = false) -> Dictionary:
 
 		data.merge(dictForMerge)
 
-		assert(data.size() == StatListCounter.size() + StatListPermanent.size())
+		if data.size() != StatListCounter.size() + StatListPermanent.size():
+			GodotLogger.error(
+				"Discrepancy in the amount of stats, StatListPermanent may be at fault."
+			)
 
 	return data
 
