@@ -313,11 +313,20 @@ func add_experience(amount: int):
 
 func apply_boost(boost: Boost):
 	for statName in boost.statBoostDict:
-		assert(get(statName) != null, "This property does not exist as a stat.")
-		assert(
-			typeof(boost.get_stat_boost(statName)) == typeof(get(statName)),
-			"The value type of the boost is different from the stat it is meant to alter. This could cause unexpected behaviour."
-		)
+		#If StatsSynchronizer does not have this defined, consider it arbitrary and store it as such.
+		if not statName in StatListAll:
+			GodotLogger.error("The property '{0}' is not a stat.".format([statName]))
+
+		if typeof(boost.get_stat_boost(statName)) != typeof(get(statName)):
+			(
+				GodotLogger
+				. warn(
+					(
+						"The value type of the boost ({0}) is different from the stat it is meant to alter ({1}). This could cause unexpected behaviour."
+						. format([typeof(boost.get_stat_boost(statName)), typeof(get(statName))])
+					)
+				)
+			)
 
 		var newValue = get(statName) + boost.statBoostDict.get(statName)
 		self.set(statName, newValue)
