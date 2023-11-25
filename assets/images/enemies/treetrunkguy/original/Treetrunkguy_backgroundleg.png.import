@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ddw7gwukhi221"
-path="res://.godot/imported/Treetrunkguy.png-cc875a7aaff351fde729a3be0d89842f.ctex"
+uid="uid://bysutqfdau0dj"
+path="res://.godot/imported/Treetrunkguy_backgroundleg.png-c312648662b55adade6cfe1d37e9f75c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/treetrunkguy/Treetrunkguy.png"
-dest_files=["res://.godot/imported/Treetrunkguy.png-cc875a7aaff351fde729a3be0d89842f.ctex"]
+source_file="res://assets/images/enemies/treetrunkguy/original/Treetrunkguy_backgroundleg.png"
+dest_files=["res://.godot/imported/Treetrunkguy_backgroundleg.png-c312648662b55adade6cfe1d37e9f75c.ctex"]
 
 [params]
 
