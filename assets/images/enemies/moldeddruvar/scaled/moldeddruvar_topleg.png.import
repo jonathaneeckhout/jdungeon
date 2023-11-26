@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfgac1m50tnbp"
-path="res://.godot/imported/moldeddruvar_Head.png-e9228a2011358883ef77134e3139ca6c.ctex"
+uid="uid://cg1nuxf3ixuty"
+path="res://.godot/imported/moldeddruvar_topleg.png-9b9dd581910727ee0dd6bebf6f92e822.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/moldeddruvar/moldeddruvar_Head.png"
-dest_files=["res://.godot/imported/moldeddruvar_Head.png-e9228a2011358883ef77134e3139ca6c.ctex"]
+source_file="res://assets/images/enemies/moldeddruvar/scaled/moldeddruvar_topleg.png"
+dest_files=["res://.godot/imported/moldeddruvar_topleg.png-9b9dd581910727ee0dd6bebf6f92e822.ctex"]
 
 [params]
 

@@ -1,18 +1,12 @@
 [gd_scene load_steps=30 format=3 uid="uid://drmaubupv57n1"]
 
 [ext_resource type="Script" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.gd" id="1_ba1y1"]
-[ext_resource type="Texture2D" uid="uid://dqwsc70v1poc8" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_backhand.png" id="1_fnuxl"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_82l3i"]
-[ext_resource type="Texture2D" uid="uid://bklq7s00gbtuh" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_backleg.png" id="2_xe2qq"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_evc6g"]
-[ext_resource type="Texture2D" uid="uid://duhp2c25iba6a" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_topleg.png" id="3_x4duj"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_q10uy"]
-[ext_resource type="Texture2D" uid="uid://dexspslu6tit4" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_trunk.png" id="4_uuhj7"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="5_305lq"]
 [ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="5_aextl"]
-[ext_resource type="Texture2D" uid="uid://dfgac1m50tnbp" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_Head.png" id="5_af0rv"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="5_y1ndl"]
-[ext_resource type="Texture2D" uid="uid://dgaxltrsj2mbj" path="res://assets/images/enemies/moldeddruvar/moldeddruvar_tophand.png" id="6_ajo5s"]
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_lms8h"]
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="6_vd6gg"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="7_lx7n7"]
@@ -20,6 +14,12 @@
 [ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="9_whu8q"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="10_xhds1"]
 [ext_resource type="PackedScene" uid="uid://clyv1sf3bn5g0" path="res://scenes/enemies/common/ai/selectors/aggressive_mob/AggressiveMob.tscn" id="11_l62gi"]
+[ext_resource type="Texture2D" uid="uid://dqwsc70v1poc8" path="res://assets/images/enemies/moldeddruvar/original/moldeddruvar_backhand.png" id="12_whpie"]
+[ext_resource type="Texture2D" uid="uid://bklq7s00gbtuh" path="res://assets/images/enemies/moldeddruvar/original/moldeddruvar_backleg.png" id="13_1su62"]
+[ext_resource type="Texture2D" uid="uid://duhp2c25iba6a" path="res://assets/images/enemies/moldeddruvar/original/moldeddruvar_topleg.png" id="14_ttks1"]
+[ext_resource type="Texture2D" uid="uid://dexspslu6tit4" path="res://assets/images/enemies/moldeddruvar/original/moldeddruvar_trunk.png" id="15_wr2ux"]
+[ext_resource type="Texture2D" uid="uid://dfgac1m50tnbp" path="res://assets/images/enemies/moldeddruvar/original/moldeddruvar_Head.png" id="16_8heoj"]
+[ext_resource type="Texture2D" uid="uid://dgaxltrsj2mbj" path="res://assets/images/enemies/moldeddruvar/original/moldeddruvar_tophand.png" id="17_wps1d"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="20_vnsr5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_n3uon"]
@@ -828,22 +828,28 @@ stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 scale = Vector2(0.06, 0.06)
 
 [node name="BackHand" type="Sprite2D" parent="Sprites"]
-texture = ExtResource("1_fnuxl")
+scale = Vector2(1, 1)
+texture = ExtResource("12_whpie")
 
 [node name="BackLeg" type="Sprite2D" parent="Sprites"]
-texture = ExtResource("2_xe2qq")
+scale = Vector2(1, 1)
+texture = ExtResource("13_1su62")
 
 [node name="TopLeg" type="Sprite2D" parent="Sprites"]
-texture = ExtResource("3_x4duj")
+scale = Vector2(1, 1)
+texture = ExtResource("14_ttks1")
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
-texture = ExtResource("4_uuhj7")
+scale = Vector2(1, 1)
+texture = ExtResource("15_wr2ux")
 
 [node name="Head" type="Sprite2D" parent="Sprites"]
-texture = ExtResource("5_af0rv")
+scale = Vector2(1, 1)
+texture = ExtResource("16_8heoj")
 
 [node name="TopHand" type="Sprite2D" parent="Sprites"]
-texture = ExtResource("6_ajo5s")
+scale = Vector2(1, 1)
+texture = ExtResource("17_wps1d")
 
 [node name="Skeleton" type="Node2D" parent="."]
 scale = Vector2(0.06, 0.06)
