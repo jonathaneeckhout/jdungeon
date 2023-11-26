@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cddk2u0lmucsi"
-path="res://.godot/imported/Body.PNG-4d865d9ff77066f443b03054280ed1a6.ctex"
+uid="uid://cgqkqerlriiif"
+path="res://.godot/imported/example.png-0f0e755c8377354f651c1733c9266b47.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/mushroomdog/Body.PNG"
-dest_files=["res://.godot/imported/Body.PNG-4d865d9ff77066f443b03054280ed1a6.ctex"]
+source_file="res://assets/images/enemies/mushroomdog/scaled/example.png"
+dest_files=["res://.godot/imported/example.png-0f0e755c8377354f651c1733c9266b47.ctex"]
 
 [params]
 

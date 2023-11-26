@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckm5o77w2mmb3"
-path="res://.godot/imported/IMG_7287.PNG-30478a11e5d7fc773c17b2854b043c40.ctex"
+uid="uid://ds23e5n206b6q"
+path="res://.godot/imported/LowerJaw.PNG-08fbee00461867520c63255bb0c74802.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/mushroomdog/IMG_7287.PNG"
-dest_files=["res://.godot/imported/IMG_7287.PNG-30478a11e5d7fc773c17b2854b043c40.ctex"]
+source_file="res://assets/images/enemies/mushroomdog/original/LowerJaw.PNG"
+dest_files=["res://.godot/imported/LowerJaw.PNG-08fbee00461867520c63255bb0c74802.ctex"]
 
 [params]
 

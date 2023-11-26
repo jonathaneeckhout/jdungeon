@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfbynaor5c14n"
-path="res://.godot/imported/FarBackLeg.PNG-18e40d644d37558973150ab25da96a7b.ctex"
+uid="uid://fuu374ma6fie"
+path="res://.godot/imported/CloseFrontLeg.PNG-d2d7e0035dce0c283f17169f9c05d58a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/mushroomdog/FarBackLeg.PNG"
-dest_files=["res://.godot/imported/FarBackLeg.PNG-18e40d644d37558973150ab25da96a7b.ctex"]
+source_file="res://assets/images/enemies/mushroomdog/original/CloseFrontLeg.PNG"
+dest_files=["res://.godot/imported/CloseFrontLeg.PNG-d2d7e0035dce0c283f17169f9c05d58a.ctex"]
 
 [params]
 
