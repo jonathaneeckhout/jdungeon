@@ -39,11 +39,11 @@ class_name SkillComponentResource
 
 func effect(information: SkillComponent.UseInfo):
 	
+	#Filter targets to make sure they are valid ones
 	var filteredTargets: Array[Node]
 	for target in information.targets:
-		if target.get("entity_type") in valid_entities:
+		if target.get("entity_type") is int and target.get("entity_type") in valid_entities:
 			filteredTargets.append(target)
-	
 	information.targets = filteredTargets
 	
 	if damage > 0:

@@ -7,6 +7,7 @@ enum TYPE {
 	HP,
 	ENERGY_MAX,
 	ENERGY,
+	ENERGY_REGEN,
 	ATTACK_POWER_MIN,
 	ATTACK_POWER_MAX,
 	ATTACK_SPEED,
@@ -26,6 +27,7 @@ const BASE_EXPERIENCE: int = 100
 const StatListPermanent: Array[StringName] = [
 	"hp_max",
 	"energy_max",
+	"energy_regen",
 	"attack_power_min",
 	"attack_power_max",
 	"attack_speed",
@@ -78,6 +80,11 @@ signal respawned
 	set(val):
 		energy = val
 		stats_changed.emit(TYPE.ENERGY)
+		
+@export var energy_regen: int = 10:
+	set(val):
+		energy = val
+		stats_changed.emit(TYPE.ENERGY_REGEN)		
 
 @export var attack_power_min: int = 0:
 	set(val):
@@ -144,6 +151,7 @@ var _default_movement_speed: float = movement_speed
 
 func _ready():
 	target_node = get_parent()
+	
 
 	if target_node.get("component_list") != null:
 		target_node.component_list["stats_synchronizer"] = self
@@ -214,6 +222,7 @@ func check_server_buffer():
 					hp = entry["hp"]
 					healed.emit(entry["from"], entry["healing"])
 			server_buffer.remove_at(i)
+	
 
 
 func hurt(from: Node, damage: int) -> int:
@@ -442,14 +451,17 @@ func sync_response(data: Dictionary):
 	from_json(data, true)
 
 
+#Called only by server
 func sync_int_change(timestamp: float, stat_type: TYPE, value: int):
 	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
 
 
+#Called only by server
 func sync_float_change(timestamp: float, stat_type: TYPE, value: float):
 	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
 
 
+#Called only by server
 func sync_hurt(timestamp: float, from: String, current_hp: int, damage: int):
 	server_buffer.append(
 		{

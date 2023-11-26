@@ -151,7 +151,7 @@ func draw_range():
 	draw_circle(Vector2.ZERO, skill_current.hit_range, COLOR_RANGE)
 
 
-func draw_hitbox(localPoint: Vector2 = player_synchronizer.mouse_global_pos - user.global_position):
+func draw_hitbox(localPoint: Vector2 = to_local(player_synchronizer.mouse_global_pos)):
 	var shape: Shape2D
 	if skill_current.hitbox_rotate_shape:
 		shape = get_collision_shape(user.global_position.angle_to_point(localPoint))
@@ -238,20 +238,24 @@ func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_c
 	var skillUsed: SkillComponentResource = J.skill_resources[skillClass].duplicate()
 	skill_current = skillUsed
 
+	#Fail if not usable. Includes skill's custom checks.
 	if not is_skill_usable(skillUsed):
 		skill_failed_usage.emit(skillUsed)
 		return
 
+	#Fail if out of range
 	if user.global_position.distance_to(globalPoint) > skillUsed.hit_range:
 		skill_failed_usage.emit(skillUsed)
 		return
-
+	
+	#Actual skill functionality
 	if G.is_server():
 		var skillUsageInfo := UseInfo.new()
 		skillUsageInfo.user = user
 		skillUsageInfo.targets = get_targets(globalPoint)
 		skillUsageInfo.position_target_global = globalPoint
-
+		
+		#Perform the skill's effect on the targets
 		skillUsed.effect(skillUsageInfo)
 
 	skill_successful_usage.emit(skillUsed)
@@ -261,25 +265,35 @@ func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_c
 		skill_deselect()
 
 
-func get_targets(where: Vector2) -> Array[Node]:
+func get_targets(globalPos: Vector2) -> Array[Node]:
+	#If the hitbox should be rotated, do so.
 	if skill_current.hitbox_rotate_shape:
-		shapeParameters.shape = get_collision_shape(user.global_position.angle_to_point(where))
+		shapeParameters.shape = get_collision_shape(user.global_position.angle_to_point(globalPos))
 
 	else:
 		shapeParameters.shape = get_collision_shape(0.0)
-
-	shapeParameters.collide_with_areas = true
-	shapeParameters.collision_mask = get_collision_layer()
-
+	
+	#Move to target location
+	shapeParameters.transform = shapeParameters.transform.translated(globalPos)
+	
+	#Set the correct collisions
+	shapeParameters.collision_mask = skill_current.collision_mask
+	
+	
+	#Exclude the user if this skill is not meant to target them. (Candidate for removal, somewhat unnecessary)
 	if not skill_current.hitbox_hits_user:
 		shapeParameters.exclude = [user.get_rid()]
-
+	
+	#Get the current physics space to use
 	directSpace = user.get_world_2d().direct_space_state
+
+	#Get and store all targets found
 	var collisions: Array[Dictionary] = directSpace.intersect_shape(shapeParameters)
 	var targets: Array[Node] = []
 	for coll in collisions:
 		targets.append(coll.get("collider"))
-
+	
+	#Custom filter per skill, defaults to allow everything
 	targets.filter(skill_current._target_filter)
 	return targets
 
@@ -300,6 +314,7 @@ func get_collision_shape(userRotation: float) -> Shape2D:
 		var newPoints: PackedVector2Array = []
 		for point in skill_current.hitbox_shape:
 			newPoints.append(point.rotated(userRotation))
+		
 		shape.points = newPoints
 
 		assert(shape.points.size() >= 3)
@@ -347,8 +362,8 @@ func is_skill_present(skillClass: String) -> bool:
 func is_skill_usable(skill: SkillComponentResource) -> bool:
 	if stats_component.energy < skill.energy_usage:
 		return false
-
-	if cooldown_get_time_left(skill.skill_class) != 0:
+	
+	if not is_zero_approx(cooldown_get_time_left(skill.skill_class)):
 		return false
 
 	return true
