@@ -27,6 +27,10 @@ var uuid_util: UuidUtil
 
 
 func _ready():
+	uuid_util = load("res://scripts/uuid/uuid.gd").new()
+
+
+func register_scenes():
 	J.register_player_scene("res://scenes/player/Player.tscn")
 
 	register_enemies()
@@ -34,8 +38,6 @@ func _ready():
 	register_items()
 	register_skills()
 	register_maps()
-
-	uuid_util = load("res://scripts/uuid/uuid.gd").new()
 
 
 func register_enemies():

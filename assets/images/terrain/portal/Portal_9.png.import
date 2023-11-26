@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b15n8ldileh7m"
-path="res://.godot/imported/Untitled_Artwork-9.png-e6c22050f10a34783a1d4e9da4686829.ctex"
+path="res://.godot/imported/Portal_9.png-3b0fd785143335c5d758bfd9747982b7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/terrain/portal/Untitled_Artwork-9.png"
-dest_files=["res://.godot/imported/Untitled_Artwork-9.png-e6c22050f10a34783a1d4e9da4686829.ctex"]
+source_file="res://assets/images/terrain/portal/Portal_9.png"
+dest_files=["res://.godot/imported/Portal_9.png-3b0fd785143335c5d758bfd9747982b7.ctex"]
 
 [params]
 

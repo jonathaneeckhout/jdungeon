@@ -7,7 +7,6 @@ enum TYPE {
 	HP,
 	ENERGY_MAX,
 	ENERGY,
-	ENERGY_REGEN,
 	ATTACK_POWER_MIN,
 	ATTACK_POWER_MAX,
 	ATTACK_SPEED,
@@ -22,6 +21,27 @@ enum TYPE {
 }
 
 const BASE_EXPERIENCE: int = 100
+
+#Stats that are persistent
+const StatListPermanent: Array[StringName] = [
+	"hp_max",
+	"energy_max",
+	"attack_power_min",
+	"attack_power_max",
+	"attack_speed",
+	"attack_range",
+	"defense",
+	"movement_speed",
+]
+#Stats that serve as a meter of sorts and change often from external factors
+const StatListCounter: Array[StringName] = [
+	"hp",
+	"energy",
+	"level",
+	"experience",
+]
+
+const StatListAll: Array[StringName] = StatListCounter + StatListPermanent
 
 signal loaded
 signal stats_changed(stat_type: TYPE)
@@ -58,11 +78,6 @@ signal respawned
 	set(val):
 		energy = val
 		stats_changed.emit(TYPE.ENERGY)
-
-@export var energy_regen: float = 10: #This is per second
-	set(val):
-		energy = val
-		stats_changed.emit(TYPE.ENERGY_REGEN)
 
 @export var attack_power_min: int = 0:
 	set(val):
@@ -121,7 +136,6 @@ var ready_done: bool = false
 
 var _default_hp_max: int = hp_max
 var _default_energy_max: int = energy_max
-var _default_energy_regen: float = 10
 var _default_attack_power_min: int = attack_power_min
 var _default_attack_power_max: int = attack_power_max
 var _default_defense: int = defense
@@ -158,9 +172,8 @@ func _ready():
 	ready_done = true
 
 
-func _physics_process(delta: float):
+func _physics_process(_delta):
 	check_server_buffer()
-	energy += energy_regen * delta
 
 
 func check_server_buffer():
@@ -176,8 +189,6 @@ func check_server_buffer():
 					energy_max = entry["value"]
 				TYPE.ENERGY:
 					energy = entry["value"]
-				TYPE.ENERGY_REGEN:
-					energy_regen = entry["value"]
 				TYPE.ATTACK_POWER_MIN:
 					attack_power_min = entry["value"]
 				TYPE.ATTACK_POWER_MAX:
@@ -301,12 +312,24 @@ func add_experience(amount: int):
 
 
 func apply_boost(boost: Boost):
-	hp_max += boost.hp_max
-	hp += boost.hp
-	attack_power_min += boost.attack_power_min
-	attack_power_max += boost.attack_power_max
+	for statName in boost.statBoostDict:
+		#If StatsSynchronizer does not have this defined, consider it arbitrary and store it as such.
+		if not statName in StatListAll:
+			GodotLogger.error("The property '{0}' is not a stat.".format([statName]))
 
-	defense += boost.defense
+		if typeof(boost.get_stat_boost(statName)) != typeof(get(statName)):
+			(
+				GodotLogger
+				. warn(
+					(
+						"The value type of the boost ({0}) is different from the stat it is meant to alter ({1}). This could cause unexpected behaviour."
+						. format([typeof(boost.get_stat_boost(statName)), typeof(get(statName))])
+					)
+				)
+			)
+
+		var newValue = get(statName) + boost.statBoostDict.get(statName)
+		self.set(statName, newValue)
 
 	var data: Dictionary = to_json(true)
 
@@ -318,91 +341,51 @@ func apply_boost(boost: Boost):
 
 
 func to_json(full: bool = false) -> Dictionary:
-	var data: Dictionary = {"hp": hp, "energy": energy, "level": level, "experience": experience}
+	var data: Dictionary
+	for statName in StatListCounter:
+		data[statName] = get(statName)
+
+	if data.size() != StatListCounter.size():
+		GodotLogger.error("Discrepancy in the amount of stats, StatListCounter may be at fault.")
+
 	if full:
-		data.merge(
-			{
-				"hp_max": hp_max,
-				"energy_max": energy_max,
-				"energy_regen": energy_regen,
-				"attack_power_min": attack_power_min,
-				"attack_power_max": attack_power_max,
-				"attack_speed": attack_speed,
-				"attack_range": attack_range,
-				"defense": defense,
-				"movement_speed": movement_speed
-			}
-		)
+		var dictForMerge: Dictionary = {}
+		#Fill the dict with the permanent stats
+		for statName in StatListPermanent:
+			dictForMerge[statName] = get(statName)
+
+		data.merge(dictForMerge)
+
+		if data.size() != StatListCounter.size() + StatListPermanent.size():
+			GodotLogger.error(
+				"Discrepancy in the amount of stats, StatListPermanent may be at fault."
+			)
+
 	return data
 
 
 func from_json(data: Dictionary, full: bool = false) -> bool:
-	if not "hp" in data:
-		GodotLogger.warn('Failed to load stats from data, missing "hp" key')
-		return false
-
-	if not "energy" in data:
-		GodotLogger.warn('Failed to load stats from data, missing "energy" key')
-		return false
-
-	if not "level" in data:
-		GodotLogger.warn('Failed to load stats from data, missing "level" key')
-		return false
-
-	if not "experience" in data:
-		GodotLogger.warn('Failed to load stats from data, missing "experience" key')
-		return false
+	#Validation
+	for statName in StatListCounter:
+		if not statName in data:
+			GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
+			return false
 
 	if full:
-		if not "hp_max" in data:
-			GodotLogger.warn('Failed to load stats from data, missing "hp_max" key')
-			return false
+		for statName in StatListPermanent:
+			if not statName in data:
+				GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
+				return false
 
-		if not "energy_max" in data:
-			GodotLogger.warn('Failed to load stats from data, missing "energy_max" key')
-			return false
-
-		if not "attack_power_min" in data:
-			GodotLogger.warn('Failed to load stats from data, missing "attack_power_min" key')
-			return false
-
-		if not "attack_power_max" in data:
-			GodotLogger.warn('Failed to load stats from data, missing "attack_power_max" key')
-			return false
-
-		if not "attack_speed" in data:
-			GodotLogger.warn('Failed to load stats from data, missing "attack_speed" key')
-			return false
-
-		if not "attack_range" in data:
-			GodotLogger.warn('Failed to load stats from data, missing "attack_range" key')
-			return false
-
-		if not "defense" in data:
-			GodotLogger.warn('Failed to load stats from data, missing "defense" key')
-			return false
-
-		if not "movement_speed" in data:
-			GodotLogger.warn('Failed to load stats from data, missing "movement_speed" key')
-			return false
-
-	hp = data["hp"]
-	energy = data["energy"]
-	level = data["level"]
-	experience = data["experience"]
+	#Actually load the data
+	for statName in StatListCounter:
+		self.set(statName, data.get(statName))
 
 	experience_needed = calculate_experience_needed(level)
 
 	if full:
-		hp_max = data["hp_max"]
-		energy_max = data["energy_max"]
-		energy_regen = data["energy_regen"]
-		attack_power_min = data["attack_power_min"]
-		attack_power_max = data["attack_power_max"]
-		attack_speed = data["attack_speed"]
-		attack_range = data["attack_range"]
-		defense = data["defense"]
-		movement_speed = data["movement_speed"]
+		for statName in StatListPermanent:
+			self.set(statName, data.get(statName))
 
 	loaded.emit()
 
