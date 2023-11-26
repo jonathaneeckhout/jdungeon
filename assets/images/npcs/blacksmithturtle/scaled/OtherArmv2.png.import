@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b077wh2mplquc"
-path="res://.godot/imported/Body.png-f568b1917f1b67acf332dca5a5711e61.ctex"
+uid="uid://ddwlsouyr5d8r"
+path="res://.godot/imported/OtherArmv2.png-8577ea4601c494c8aec9ed6fd1feaf12.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/npcs/blacksmithturtle/Body.png"
-dest_files=["res://.godot/imported/Body.png-f568b1917f1b67acf332dca5a5711e61.ctex"]
+source_file="res://assets/images/npcs/blacksmithturtle/scaled/OtherArmv2.png"
+dest_files=["res://.godot/imported/OtherArmv2.png-8577ea4601c494c8aec9ed6fd1feaf12.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b724mllyjntx8"
-path="res://.godot/imported/Stool.png-5ea4918469bec8a634a77d05dc490265.ctex"
+uid="uid://bha5118iogby0"
+path="res://.godot/imported/OtherArmv2.png-613b1b06a55d1fe91b330f4ac3270ec5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/npcs/blacksmithturtle/Stool.png"
-dest_files=["res://.godot/imported/Stool.png-5ea4918469bec8a634a77d05dc490265.ctex"]
+source_file="res://assets/images/npcs/blacksmithturtle/original/OtherArmv2.png"
+dest_files=["res://.godot/imported/OtherArmv2.png-613b1b06a55d1fe91b330f4ac3270ec5.ctex"]
 
 [params]
 

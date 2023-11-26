@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b2ofa07r7jg8b"
-path="res://.godot/imported/Foot2.png-9261915c72ec148865de67a01e3f08e6.ctex"
+uid="uid://388qwilsiicy"
+path="res://.godot/imported/Anvil.png-43151b0055dbb3b0069b3531bc0ad775.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/npcs/blacksmithturtle/Foot2.png"
-dest_files=["res://.godot/imported/Foot2.png-9261915c72ec148865de67a01e3f08e6.ctex"]
+source_file="res://assets/images/npcs/blacksmithturtle/original/Anvil.png"
+dest_files=["res://.godot/imported/Anvil.png-43151b0055dbb3b0069b3531bc0ad775.ctex"]
 
 [params]
 

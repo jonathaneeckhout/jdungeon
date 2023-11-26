@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw35spid7t06u"
-path="res://.godot/imported/Sword.png-8b7f80f7ad6f996b672c484ea38d9b70.ctex"
+uid="uid://dur6ajdkkwuko"
+path="res://.godot/imported/blacksmith.jpg-3ca7646e42a3a145ff7d9c3fcc8d34b2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/npcs/blacksmithturtle/Sword.png"
-dest_files=["res://.godot/imported/Sword.png-8b7f80f7ad6f996b672c484ea38d9b70.ctex"]
+source_file="res://assets/images/npcs/blacksmithturtle/original/blacksmith.jpg"
+dest_files=["res://.godot/imported/blacksmith.jpg-3ca7646e42a3a145ff7d9c3fcc8d34b2.ctex"]
 
 [params]
 
