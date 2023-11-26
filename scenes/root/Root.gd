@@ -104,6 +104,8 @@ func start_server(map: String) -> bool:
 	if Global.env_minimize_on_start:
 		get_tree().root.mode = Window.MODE_MINIMIZED
 
+	J.register_scenes()
+
 	if not S.client_init():
 		GodotLogger.error("Failed to connect to gateway")
 		return false
@@ -140,6 +142,8 @@ func start_client() -> bool:
 	if not Global.load_client_env_variables():
 		GodotLogger.error("Could not load client's env variables")
 		return false
+
+	J.register_scenes()
 
 	if not C.client_init():
 		GodotLogger.error("Failed to init gateway client")

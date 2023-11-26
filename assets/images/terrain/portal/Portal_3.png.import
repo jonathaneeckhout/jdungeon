@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dnhbdwensxvka"
-path="res://.godot/imported/Untitled_Artwork-7.png-efc6db68546151f9ffba864462e8927a.ctex"
+uid="uid://houmtsiggu8"
+path="res://.godot/imported/Portal_3.png-86c40b5d0ab079b6d3fcdeb508132242.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/terrain/portal/Untitled_Artwork-7.png"
-dest_files=["res://.godot/imported/Untitled_Artwork-7.png-efc6db68546151f9ffba864462e8927a.ctex"]
+source_file="res://assets/images/terrain/portal/Portal_3.png"
+dest_files=["res://.godot/imported/Portal_3.png-86c40b5d0ab079b6d3fcdeb508132242.ctex"]
 
 [params]
 
