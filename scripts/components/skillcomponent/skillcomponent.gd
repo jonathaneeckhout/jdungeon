@@ -53,7 +53,7 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 
 		skill_index_selected.emit(skillIndex)
 		skill_selected.emit(skill_current)
-		
+
 @export var accepting_input: bool = true
 
 var cooldownDict: Dictionary
@@ -105,8 +105,8 @@ func _ready() -> void:
 #Skill selection is local
 func _input(event: InputEvent) -> void:
 	if not accepting_input:
-		return 
-		
+		return
+
 	if event.is_action_pressed("j_slot_deselect"):
 		skill_select_by_index(-1)
 
@@ -246,14 +246,14 @@ func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_c
 	if user.global_position.distance_to(globalPoint) > skillUsed.hit_range:
 		skill_failed_usage.emit(skillUsed)
 		return
-	
+
 	#Actual skill functionality
 	if G.is_server():
 		var skillUsageInfo := UseInfo.new()
 		skillUsageInfo.user = user
 		skillUsageInfo.targets = get_targets(globalPoint)
 		skillUsageInfo.position_target_global = globalPoint
-		
+
 		#Perform the skill's effect on the targets
 		skillUsed.effect(skillUsageInfo)
 		#Use up energy
@@ -268,25 +268,24 @@ func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_c
 
 func get_targets(globalPos: Vector2) -> Array[Node]:
 	var shapeParameters := PhysicsShapeQueryParameters2D.new()
-	
+
 	#If the hitbox should be rotated, do so.
 	if skill_current.hitbox_rotate_shape:
 		shapeParameters.shape = get_collision_shape(user.global_position.angle_to_point(globalPos))
 
 	else:
 		shapeParameters.shape = get_collision_shape(0.0)
-	
+
 	#Move to target location
 	shapeParameters.transform = shapeParameters.transform.translated(globalPos)
-	
+
 	#Set the correct collisions
 	shapeParameters.collision_mask = skill_current.collision_mask
-	
-	
+
 	#Exclude the user if this skill is not meant to target them. (Candidate for removal, somewhat unnecessary)
 	if not skill_current.hitbox_hits_user:
 		shapeParameters.exclude = [user.get_rid()]
-	
+
 	#Get the current physics space to use
 	directSpace = user.get_world_2d().direct_space_state
 
@@ -295,7 +294,7 @@ func get_targets(globalPos: Vector2) -> Array[Node]:
 	var targets: Array[Node] = []
 	for coll in collisions:
 		targets.append(coll.get("collider"))
-	
+
 	#Custom filter per skill, defaults to allow everything
 	targets.filter(skill_current._target_filter)
 	return targets
@@ -317,7 +316,7 @@ func get_collision_shape(userRotation: float) -> Shape2D:
 		var newPoints: PackedVector2Array = []
 		for point in skill_current.hitbox_shape:
 			newPoints.append(point.rotated(userRotation))
-		
+
 		shape.points = newPoints
 
 		assert(shape.points.size() >= 3)
@@ -365,7 +364,7 @@ func is_skill_present(skillClass: String) -> bool:
 func is_skill_usable(skill: SkillComponentResource) -> bool:
 	if stats_component.energy < skill.energy_usage:
 		return false
-	
+
 	if not is_zero_approx(cooldown_get_time_left(skill.skill_class)):
 		return false
 
