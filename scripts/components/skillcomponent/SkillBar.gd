@@ -55,7 +55,9 @@ func update_icons():
 		if index < skillList.size() and skillList[index] is SkillComponentResource:
 			currentDisplay.texture = skillList[index].icon
 			currentDisplay.skill_class = skillList[index].skill_class
+			currentDisplay.tooltip_text = skillList[index].displayed_name + "\n" + skillList[index].description
 			currentDisplay.skill_component = skill_component
+			
 			assert(
 				skill_component.skill_cooldown_updated.is_connected(
 					currentDisplay._on_skill_cooldown_updated

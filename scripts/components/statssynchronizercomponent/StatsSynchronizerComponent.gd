@@ -18,7 +18,8 @@ enum TYPE {
 	EXPERIENCE,
 	EXPERIENCE_NEEDED,
 	HURT,
-	HEAL
+	HEAL,
+	ENERGY_RECOVERY
 }
 
 const BASE_EXPERIENCE: int = 100
@@ -45,10 +46,13 @@ const StatListCounter: Array[StringName] = [
 
 const StatListAll: Array[StringName] = StatListCounter + StatListPermanent
 
+const PERIODIC_UPDATE_INTERVAL: float = 1
+
 signal loaded
 signal stats_changed(stat_type: TYPE)
 signal got_hurt(from: String, damage: int)
 signal healed(from: String, healing: int)
+signal energy_recovered(from: String, gained: int)
 signal died
 signal respawned
 
@@ -140,6 +144,11 @@ var is_dead: bool = false
 
 var server_buffer: Array[Dictionary] = []
 var ready_done: bool = false
+var server_periodic_update_enabled: bool:
+	set(val):
+		server_periodic_update_enabled = val
+		if server_periodic_update_enabled:
+			server_periodic_update()
 
 var _default_hp_max: int = hp_max
 var _default_energy_max: int = energy_max
@@ -147,7 +156,6 @@ var _default_attack_power_min: int = attack_power_min
 var _default_attack_power_max: int = attack_power_max
 var _default_defense: int = defense
 var _default_movement_speed: float = movement_speed
-
 
 func _ready():
 	target_node = get_parent()
@@ -175,14 +183,27 @@ func _ready():
 			await tree_entered
 
 		G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
+		
+		#Uses a setter to automatically call server_periodic_update() when true
+		server_periodic_update_enabled = true
 
 	# Make sure this line is called on server and client's side
 	ready_done = true
 
 
-func _physics_process(_delta):
+func _physics_process(_delta: float):
 	check_server_buffer()
 
+func server_periodic_update():
+	#If disabled, the loop stops.
+	if not server_periodic_update_enabled:
+		return
+		
+	energy_recovery(target_node.get_name(), energy_regen)
+	
+	#Loop itself
+	if is_inside_tree():
+		get_tree().create_timer(PERIODIC_UPDATE_INTERVAL).timeout.connect(server_periodic_update)
 
 func check_server_buffer():
 	for i in range(server_buffer.size() - 1, -1, -1):
@@ -221,9 +242,11 @@ func check_server_buffer():
 				TYPE.HEAL:
 					hp = entry["hp"]
 					healed.emit(entry["from"], entry["healing"])
+				TYPE.ENERGY_RECOVERY:
+					energy = entry["energy"]
+					energy_recovered.emit(entry["from"], entry["recovered"])
 			server_buffer.remove_at(i)
 	
-
 
 func hurt(from: Node, damage: int) -> int:
 	# # Reduce the damage according to the defense stat
@@ -284,6 +307,26 @@ func reset_energy():
 	energy = energy_max
 	_sync_int_change(TYPE.ENERGY, energy)
 
+
+func energy_recovery(from: String, recovered: int) -> int:
+	energy = min(energy_max, energy + recovered )
+
+	var timestamp: float = Time.get_unix_time_from_system()
+
+	if peer_id > 0:
+		G.sync_rpc.statssynchronizer_sync_energy_recovery.rpc_id(
+			peer_id, target_node.name, timestamp, from, energy, recovered
+		)
+
+	for watcher in watcher_synchronizer.watchers:
+		G.sync_rpc.statssynchronizer_sync_energy_recovery.rpc_id(
+			watcher.peer_id, target_node.name, timestamp, from, energy, recovered
+		)
+
+	energy_recovered.emit(from, recovered)
+
+	return recovered
+	
 
 func kill():
 	hp = 0
@@ -482,5 +525,16 @@ func sync_heal(timestamp: float, from: String, current_hp: int, healing: int):
 			"from": from,
 			"hp": current_hp,
 			"healing": healing
+		}
+	)
+
+func sync_energy_recovery(timestamp: float, from: String, current_energy: int, recovered: int):
+	server_buffer.append(
+		{
+			"type": TYPE.ENERGY_RECOVERY,
+			"timestamp": timestamp,
+			"from": from,
+			"energy": current_energy,
+			"recovered": recovered
 		}
 	)

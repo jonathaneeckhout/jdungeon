@@ -9,9 +9,9 @@ class_name SkillComponentResource
 
 @export var icon: Texture = load("res://icon.svg")
 
-@export_flags_2d_physics var collision_mask: int = J.PHYSICS_LAYER_WORLD + J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS + J.PHYSICS_LAYER_ITEMS
+@export_flags_2d_physics var collision_mask: int = J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS + J.PHYSICS_LAYER_ITEMS
 
-@export var valid_entities: Array[J.ENTITY_TYPE] = [J.ENTITY_TYPE.PLAYER]
+@export var valid_entities: Array[J.ENTITY_TYPE] = [J.ENTITY_TYPE.ENEMY]
 
 @export var cooldown: float = 0
 
@@ -22,7 +22,8 @@ class_name SkillComponentResource
 
 ## Use a single point to create a circle using the single point as radius, use more than 3 points to create a polygon
 @export var hitbox_shape: PackedVector2Array = [
-	Vector2.LEFT * 5, Vector2.DOWN * 5, Vector2.RIGHT * 5, Vector2.UP * 5
+	#Example of a rhombus hitbox: Vector2.LEFT * 5, Vector2.DOWN * 5, Vector2.RIGHT * 5, Vector2.UP * 5
+	Vector2.RIGHT * 50
 ]
 
 #This prevents the hitbox from detecting the user, does not prevent effects that directly reference it.
@@ -34,7 +35,7 @@ class_name SkillComponentResource
 #Skills cannot be used past this range
 @export var hit_range: float = 100
 
-@export var description: String = "This does something, right? ...right?" 
+@export_multiline var description: String = "This does something, right? ...right?" 
 
 
 func effect(information: SkillComponent.UseInfo):
@@ -45,6 +46,7 @@ func effect(information: SkillComponent.UseInfo):
 		if target.get("entity_type") is int and target.get("entity_type") in valid_entities:
 			filteredTargets.append(target)
 	information.targets = filteredTargets
+	
 	
 	if damage > 0:
 		for stats in information.get_target_stats_all():

@@ -58,7 +58,6 @@ const COLOR_RANGE := Color.GREEN_YELLOW / 2
 
 var cooldownDict: Dictionary
 var directSpace: PhysicsDirectSpaceState2D
-var shapeParameters := PhysicsShapeQueryParameters2D.new()
 
 
 func _ready() -> void:
@@ -257,6 +256,8 @@ func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_c
 		
 		#Perform the skill's effect on the targets
 		skillUsed.effect(skillUsageInfo)
+		#Use up energy
+		stats_component.energy_recovery(skillUsageInfo.user.get_name(), -skillUsed.energy_usage)
 
 	skill_successful_usage.emit(skillUsed)
 	cooldown_set_time_left(skillUsed.skill_class, skillUsed.cooldown)
@@ -266,6 +267,8 @@ func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_c
 
 
 func get_targets(globalPos: Vector2) -> Array[Node]:
+	var shapeParameters := PhysicsShapeQueryParameters2D.new()
+	
 	#If the hitbox should be rotated, do so.
 	if skill_current.hitbox_rotate_shape:
 		shapeParameters.shape = get_collision_shape(user.global_position.angle_to_point(globalPos))
