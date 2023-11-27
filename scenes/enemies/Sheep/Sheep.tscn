@@ -1,7 +1,6 @@
 [gd_scene load_steps=23 format=3 uid="uid://dfq5lb87meq6q"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Sheep/Sheep.gd" id="1_6p7b5"]
-[ext_resource type="Texture2D" uid="uid://dvpbmkvp7ppqm" path="res://assets/images/enemies/sheep/sheep.png" id="2_57cp7"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_nxh3l"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_umoon"]
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="5_2qlym"]
@@ -13,7 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="7_aau1x"]
 [ext_resource type="PackedScene" uid="uid://ct1h0eeeyfurc" path="res://scenes/enemies/common/ai/selectors/passive_critter/PassiveCritter.tscn" id="7_lpvxr"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="8_wd6jv"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="11_nla65"]
+[ext_resource type="Texture2D" uid="uid://djed5baiwoimr" path="res://assets/images/enemies/sheep/scaled/sheep.png" id="11_l0562"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/avoidance_rays/AvoidanceRays.tscn" id="11_nla65"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_oa8ou"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_orhwg"]
@@ -39,34 +39,22 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:scale")
+tracks/1/path = NodePath("Sprite2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.25),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(0.1, 0.1), Vector2(0.09, 0.09), Vector2(0.1, 0.1)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector2(0, -2.38419e-07), Vector2(1, 2), Vector2(2, -1), Vector2(-1, 2), Vector2(2, -2), Vector2(0, -2.38419e-07)]
 }
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Sprite2D:flip_v")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:flip_v")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
@@ -92,22 +80,10 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:scale")
+tracks/1/path = NodePath("Sprite2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.25),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(0.1, 0.1), Vector2(0.09, 0.09), Vector2(0.1, 0.1)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.2, 0.25),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
@@ -142,18 +118,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:scale")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.5),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0.1, 0.1)]
 }
 
 [sub_resource type="Animation" id="Animation_m0sor"]
@@ -201,22 +165,10 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:scale")
+tracks/2/path = NodePath("Sprite2D:flip_v")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0.1, 0.1)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Sprite2D:flip_v")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -233,7 +185,6 @@ _data = {
 }
 
 [node name="Sheep" type="CharacterBody2D"]
-scale = Vector2(0.8, 0.8)
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_6p7b5")
@@ -272,8 +223,7 @@ stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_57cp7")
+texture = ExtResource("11_l0562")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_orhwg")
