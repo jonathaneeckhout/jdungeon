@@ -84,11 +84,11 @@ signal respawned
 	set(val):
 		energy = val
 		stats_changed.emit(TYPE.ENERGY)
-		
+
 @export var energy_regen: int = 10:
 	set(val):
 		energy = val
-		stats_changed.emit(TYPE.ENERGY_REGEN)		
+		stats_changed.emit(TYPE.ENERGY_REGEN)
 
 @export var attack_power_min: int = 0:
 	set(val):
@@ -157,9 +157,9 @@ var _default_attack_power_max: int = attack_power_max
 var _default_defense: int = defense
 var _default_movement_speed: float = movement_speed
 
+
 func _ready():
 	target_node = get_parent()
-	
 
 	if target_node.get("component_list") != null:
 		target_node.component_list["stats_synchronizer"] = self
@@ -183,7 +183,7 @@ func _ready():
 			await tree_entered
 
 		G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
-		
+
 		#Uses a setter to automatically call server_periodic_update() when true
 		server_periodic_update_enabled = true
 
@@ -194,16 +194,18 @@ func _ready():
 func _physics_process(_delta: float):
 	check_server_buffer()
 
+
 func server_periodic_update():
 	#If disabled, the loop stops.
 	if not server_periodic_update_enabled:
 		return
-		
+
 	energy_recovery(target_node.get_name(), energy_regen)
-	
+
 	#Loop itself
 	if is_inside_tree():
 		get_tree().create_timer(PERIODIC_UPDATE_INTERVAL).timeout.connect(server_periodic_update)
+
 
 func check_server_buffer():
 	for i in range(server_buffer.size() - 1, -1, -1):
@@ -246,7 +248,7 @@ func check_server_buffer():
 					energy = entry["energy"]
 					energy_recovered.emit(entry["from"], entry["recovered"])
 			server_buffer.remove_at(i)
-	
+
 
 func hurt(from: Node, damage: int) -> int:
 	# # Reduce the damage according to the defense stat
@@ -309,7 +311,7 @@ func reset_energy():
 
 
 func energy_recovery(from: String, recovered: int) -> int:
-	energy = min(energy_max, energy + recovered )
+	energy = min(energy_max, energy + recovered)
 
 	var timestamp: float = Time.get_unix_time_from_system()
 
@@ -326,7 +328,7 @@ func energy_recovery(from: String, recovered: int) -> int:
 	energy_recovered.emit(from, recovered)
 
 	return recovered
-	
+
 
 func kill():
 	hp = 0
@@ -527,6 +529,7 @@ func sync_heal(timestamp: float, from: String, current_hp: int, healing: int):
 			"healing": healing
 		}
 	)
+
 
 func sync_energy_recovery(timestamp: float, from: String, current_energy: int, recovered: int):
 	server_buffer.append(

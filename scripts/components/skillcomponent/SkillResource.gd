@@ -1,6 +1,8 @@
 extends Resource
 class_name SkillComponentResource
 
+const ENTITY_TYPES := J.ENTITY_TYPE
+
 @export var skill_class: String
 
 @export var displayed_name: String = "Skidadle Skidoodle"  #Failsafe name
@@ -9,9 +11,11 @@ class_name SkillComponentResource
 
 @export var icon: Texture = load("res://icon.svg")
 
-@export_flags_2d_physics var collision_mask: int = J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS + J.PHYSICS_LAYER_ITEMS
+@export_flags_2d_physics var collision_mask: int = (
+	J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS + J.PHYSICS_LAYER_ITEMS
+)
 
-@export var valid_entities: Array[J.ENTITY_TYPE] = [J.ENTITY_TYPE.ENEMY]
+@export var valid_entities: Array[ENTITY_TYPES] = [ENTITY_TYPES.ENEMY]
 
 @export var cooldown: float = 0
 
@@ -35,19 +39,17 @@ class_name SkillComponentResource
 #Skills cannot be used past this range
 @export var hit_range: float = 100
 
-@export_multiline var description: String = "This does something, right? ...right?" 
+@export_multiline var description: String = "This does something, right? ...right?"
 
 
 func effect(information: SkillComponent.UseInfo):
-	
 	#Filter targets to make sure they are valid ones
 	var filteredTargets: Array[Node]
 	for target in information.targets:
 		if target.get("entity_type") is int and target.get("entity_type") in valid_entities:
 			filteredTargets.append(target)
 	information.targets = filteredTargets
-	
-	
+
 	if damage > 0:
 		for stats in information.get_target_stats_all():
 			stats.hurt(information.user, damage)
@@ -64,11 +66,11 @@ func _effect(_info: SkillComponent.UseInfo):
 
 
 ## Can be used for custom descriptions
-func get_description()->String:
+func get_description() -> String:
 	return description
 
 
 ## This function is meant for rich text versions of the description, for the future tooltip system.
-func get_description_rich()->String:
+func get_description_rich() -> String:
 	GodotLogger.warn("No rich description has been defined for skill {0}.".format([skill_class]))
 	return description

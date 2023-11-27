@@ -159,6 +159,7 @@ func statssynchronizer_sync_heal(n: String, t: float, f: String, c: int, h: int)
 	if entity.component_list.has("stats_synchronizer"):
 		entity.component_list["stats_synchronizer"].sync_heal(t, f, c, h)
 
+
 @rpc("call_remote", "authority", "reliable")
 func statssynchronizer_sync_energy_recovery(n: String, t: float, f: String, e: int, r: int):
 	var entity: Node = G.world.get_entity_by_name(n)
