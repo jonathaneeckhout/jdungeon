@@ -2,25 +2,25 @@
 
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="1_1etr8"]
 [ext_resource type="Script" path="res://scenes/enemies/ClamDog/ClamDog.gd" id="1_y6i23"]
-[ext_resource type="Texture2D" uid="uid://dfvsxnqnm7cd7" path="res://assets/images/enemies/mushroomdog/example.png" id="2_4iq4v"]
-[ext_resource type="Texture2D" uid="uid://dfbynaor5c14n" path="res://assets/images/enemies/mushroomdog/FarBackLeg.PNG" id="2_ihirw"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_mef7p"]
-[ext_resource type="Texture2D" uid="uid://v4nhqfetexht" path="res://assets/images/enemies/mushroomdog/FarFrontLeg.PNG" id="3_d2385"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_o8vrw"]
-[ext_resource type="Texture2D" uid="uid://cddk2u0lmucsi" path="res://assets/images/enemies/mushroomdog/Body.PNG" id="4_pxtly"]
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="5_88wie"]
-[ext_resource type="Texture2D" uid="uid://c75dnvqjexi7o" path="res://assets/images/enemies/mushroomdog/UpperJaw.PNG" id="5_olw8o"]
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_7btdw"]
 [ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="6_12hdq"]
-[ext_resource type="Texture2D" uid="uid://ds23e5n206b6q" path="res://assets/images/enemies/mushroomdog/LowerJaw.PNG" id="6_xj1kh"]
-[ext_resource type="Texture2D" uid="uid://dcneuyi1kwone" path="res://assets/images/enemies/mushroomdog/CloseBackLeg.PNG" id="7_i541a"]
-[ext_resource type="Texture2D" uid="uid://fuu374ma6fie" path="res://assets/images/enemies/mushroomdog/CloseFrontLeg.PNG" id="8_mkwb6"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="8_p56r6"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="9_3g1w6"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="9_km6so"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="10_24pnf"]
 [ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="10_34fxj"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="11_37qss"]
+[ext_resource type="Texture2D" uid="uid://42lq18adjm6m" path="res://assets/images/enemies/mushroomdog/scaled/FarBackLeg.png" id="12_1liwn"]
+[ext_resource type="Texture2D" uid="uid://bcs2wspwhlw7l" path="res://assets/images/enemies/mushroomdog/scaled/FarFrontLeg.png" id="13_qkxrr"]
+[ext_resource type="Texture2D" uid="uid://7o8y73aicwek" path="res://assets/images/enemies/mushroomdog/scaled/Body.png" id="14_8ho4d"]
+[ext_resource type="Texture2D" uid="uid://bpxmoc4vonllo" path="res://assets/images/enemies/mushroomdog/scaled/LowerJaw.png" id="15_83qlp"]
+[ext_resource type="Texture2D" uid="uid://bbn2qeb7ao8b5" path="res://assets/images/enemies/mushroomdog/scaled/UpperJaw.png" id="16_0vi81"]
+[ext_resource type="Texture2D" uid="uid://cr65ijlod4b01" path="res://assets/images/enemies/mushroomdog/scaled/CloseBackLeg.png" id="17_fswo2"]
+[ext_resource type="Texture2D" uid="uid://nvyeopdfbmx2" path="res://assets/images/enemies/mushroomdog/scaled/CloseFrontLeg.png" id="18_kyr5n"]
+[ext_resource type="Texture2D" uid="uid://cgqkqerlriiif" path="res://assets/images/enemies/mushroomdog/scaled/example.png" id="19_cmq2t"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="21_0hsp7"]
 [ext_resource type="PackedScene" uid="uid://clyv1sf3bn5g0" path="res://scenes/enemies/common/ai/selectors/aggressive_mob/AggressiveMob.tscn" id="21_0s03e"]
 
@@ -42,7 +42,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.3, 0.8, 1.3),
 "transitions": PackedFloat32Array(6, -4, -2, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(50, 10), Vector2(-150, 0), Vector2(0, 0)]
+"values": [Vector2(0, 0), Vector2(3, 0.6), Vector2(-9, 0), Vector2(0, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -114,7 +114,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(315, 280)]
+"values": [Vector2(18.9, 16.8)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -138,7 +138,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(-150, 230)]
+"values": [Vector2(-9, 13.8)]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -162,7 +162,7 @@ tracks/10/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(450, 280)]
+"values": [Vector2(27, 16.8)]
 }
 tracks/11/type = "value"
 tracks/11/imported = false
@@ -186,7 +186,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(80, 300)]
+"values": [Vector2(4.8, 18)]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -214,7 +214,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(0, 200)]
+"values": [Vector2(0, 0), Vector2(0, 12)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -286,7 +286,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(315, 280), Vector2(315, 280)]
+"values": [Vector2(18.9, 16.8), Vector2(18.9, 16.8)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -310,7 +310,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(-150, 230), Vector2(-150, 230)]
+"values": [Vector2(-9, 13.8), Vector2(-9, 13.8)]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -334,7 +334,7 @@ tracks/10/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(450, 280), Vector2(450, 280)]
+"values": [Vector2(27, 16.8), Vector2(27, 16.8)]
 }
 tracks/11/type = "value"
 tracks/11/imported = false
@@ -358,7 +358,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(80, 300), Vector2(80, 300)]
+"values": [Vector2(4.8, 18), Vector2(4.8, 18)]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -385,7 +385,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.5, 1),
 "transitions": PackedFloat32Array(1, 2, 10),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(50, -20), Vector2(0, 0)]
+"values": [Vector2(0, 0), Vector2(3, -1.2), Vector2(0, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -457,7 +457,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0, 0.5, 1),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(315, 280), Vector2(315, 280), Vector2(315, 280)]
+"values": [Vector2(18.9, 16.8), Vector2(18.9, 16.8), Vector2(18.9, 16.8)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -481,7 +481,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0, 0.5, 1),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(-150, 230), Vector2(-150, 230), Vector2(-150, 230)]
+"values": [Vector2(-9, 13.8), Vector2(-9, 13.8), Vector2(-9, 13.8)]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -505,7 +505,7 @@ tracks/10/keys = {
 "times": PackedFloat32Array(0, 0.5, 1),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(450, 280), Vector2(450, 280), Vector2(450, 280)]
+"values": [Vector2(27, 16.8), Vector2(27, 16.8), Vector2(27, 16.8)]
 }
 tracks/11/type = "value"
 tracks/11/imported = false
@@ -529,7 +529,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0, 0.5, 1),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(80, 300), Vector2(80, 300), Vector2(80, 300)]
+"values": [Vector2(4.8, 18), Vector2(4.8, 18), Vector2(4.8, 18)]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -558,7 +558,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0, 0), Vector2(-10, -10), Vector2(0, 0), Vector2(10, 10), Vector2(0, 0), Vector2(10, -10), Vector2(0, 0), Vector2(-10, 10), Vector2(0, 0)]
+"values": [Vector2(0, 0), Vector2(-0.6, -0.6), Vector2(0, 0), Vector2(-0.6, -0.6), Vector2(0, 0), Vector2(-0.6, -0.6), Vector2(0, 0), Vector2(-0.6, -0.6), Vector2(0, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -630,7 +630,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(315, 280)]
+"values": [Vector2(18.9, 16.8)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -654,7 +654,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(-150, 230)]
+"values": [Vector2(-9, 13.8)]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -678,7 +678,7 @@ tracks/10/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(450, 280)]
+"values": [Vector2(27, 16.8)]
 }
 tracks/11/type = "value"
 tracks/11/imported = false
@@ -702,7 +702,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(80, 300)]
+"values": [Vector2(4.8, 18)]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -803,7 +803,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(315, 280)]
+"values": [Vector2(18.9, 16.8)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -827,7 +827,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(-150, 230)]
+"values": [Vector2(-9, 13.8)]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -851,7 +851,7 @@ tracks/10/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(450, 280)]
+"values": [Vector2(27, 16.8)]
 }
 tracks/11/type = "value"
 tracks/11/imported = false
@@ -875,7 +875,7 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(80, 300)]
+"values": [Vector2(4.8, 18)]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
@@ -954,61 +954,53 @@ shape = SubResource("CapsuleShape2D_lislp")
 
 [node name="FarBackLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(10.9, -7.2)
-scale = Vector2(0.06, 0.06)
-texture = ExtResource("2_ihirw")
-offset = Vector2(-315, -280)
+texture = ExtResource("12_1liwn")
+offset = Vector2(-19, -14)
 
 [node name="FarFrontLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(-17, -10.2)
-scale = Vector2(0.06, 0.06)
-texture = ExtResource("3_d2385")
-offset = Vector2(150, -230)
+texture = ExtResource("13_qkxrr")
+offset = Vector2(6, -14)
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(-8, -24)
-scale = Vector2(0.06, 0.06)
-texture = ExtResource("4_pxtly")
+texture = ExtResource("14_8ho4d")
+offset = Vector2(0.658902, -0.641987)
 
 [node name="LowerJaw" type="Sprite2D" parent="Sprites"]
 position = Vector2(-8, -24)
-scale = Vector2(0.06, 0.06)
-texture = ExtResource("6_xj1kh")
+texture = ExtResource("15_83qlp")
 
 [node name="UpperJaw" type="Sprite2D" parent="Sprites"]
 position = Vector2(-8, -24)
-scale = Vector2(0.06, 0.06)
-texture = ExtResource("5_olw8o")
+texture = ExtResource("16_0vi81")
 
 [node name="CloseBackLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(19, -7.2)
-scale = Vector2(0.06, 0.06)
-texture = ExtResource("7_i541a")
-offset = Vector2(-450, -280)
+texture = ExtResource("17_fswo2")
+offset = Vector2(-25, -15)
 
 [node name="CloseFrontLeg" type="Sprite2D" parent="Sprites"]
 position = Vector2(-3.2, -6)
-scale = Vector2(0.06, 0.06)
-texture = ExtResource("8_mkwb6")
-offset = Vector2(-80, -300)
+texture = ExtResource("18_kyr5n")
+offset = Vector2(-5, -18)
 
 [node name="Sprite2D" type="Sprite2D" parent="Sprites"]
 visible = false
-scale = Vector2(0.06, 0.06)
-texture = ExtResource("2_4iq4v")
+texture = ExtResource("19_cmq2t")
 
 [node name="Skeleton" type="Node2D" parent="."]
 position = Vector2(-8, -24)
-scale = Vector2(0.06, 0.06)
 
 [node name="RemoteBody" type="RemoteTransform2D" parent="Skeleton"]
 remote_path = NodePath("../../Sprites/Body")
 
 [node name="RemoteFarBackLeg" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
-position = Vector2(315, 280)
+position = Vector2(18.9, 16.8)
 remote_path = NodePath("../../../Sprites/FarBackLeg")
 
 [node name="RemoteFarFrontLeg" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
-position = Vector2(-150, 230)
+position = Vector2(-9, 13.8)
 remote_path = NodePath("../../../Sprites/FarFrontLeg")
 
 [node name="RemoteLowerJaw" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
@@ -1018,11 +1010,11 @@ remote_path = NodePath("../../../Sprites/LowerJaw")
 remote_path = NodePath("../../../Sprites/UpperJaw")
 
 [node name="RemoteCloseBackLeg" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
-position = Vector2(450, 280)
+position = Vector2(27, 16.8)
 remote_path = NodePath("../../../Sprites/CloseBackLeg")
 
 [node name="RemoteCloseFrontLeg" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
-position = Vector2(80, 300)
+position = Vector2(4.8, 18)
 remote_path = NodePath("../../../Sprites/CloseFrontLeg")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
