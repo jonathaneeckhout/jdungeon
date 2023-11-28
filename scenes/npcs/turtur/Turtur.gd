@@ -15,6 +15,7 @@ func _ready():
 		shop.add_item("Axe", 10000)
 		shop.add_item("Sword", 5000)
 		shop.add_item("Club", 300)
+		shop.add_item("IronShield", 10000)
 
 		shop.add_item("LeatherHelm", 100)
 		shop.add_item("LeatherBody", 100)
@@ -30,6 +31,7 @@ func _ready():
 		shop.add_item("PlateBody", 10000)
 		shop.add_item("PlateArms", 10000)
 		shop.add_item("PlateLegs", 10000)
+
 	else:
 		animation_player.animation_started.connect(_on_animation_started)
 

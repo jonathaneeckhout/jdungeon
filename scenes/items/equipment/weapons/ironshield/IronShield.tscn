@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://tootl3rb4m3j"]
+
+[ext_resource type="Script" path="res://scenes/items/equipment/weapons/ironshield/IronShield.gd" id="1_roct2"]
+[ext_resource type="Texture2D" uid="uid://c7ry27xmnqvkh" path="res://assets/images/equipment/weapons/shield/scaled/shield.png" id="2_n673b"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g6336"]
+radius = 14.0
+height = 52.0
+
+[node name="IronShield" type="StaticBody2D"]
+script = ExtResource("1_roct2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_g6336")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, 40)
+texture = ExtResource("2_n673b")
+
+[node name="EquipmentSprite" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, 41)
+texture = ExtResource("2_n673b")
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_n673b")

@@ -9,7 +9,7 @@ var display_selected: SkillDisplay
 
 @onready var skill_container: HBoxContainer = $HBoxContainer
 
-const EMPTY_ICON: Texture = preload("res://assets/images/enemies/flower/Flower.png")
+const EMPTY_ICON: Texture = preload("res://assets/images/enemies/flower/scaled/Flower.png")
 
 
 func _ready() -> void:

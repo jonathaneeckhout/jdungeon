@@ -6,11 +6,15 @@ signal interacted(target: Node2D)
 signal attacked(direction: Vector2)
 signal skill_used(where: Vector2, skill_class: String)
 
+const ATTACK_RIGHT_HAND_ANIMATION: String = "Attack_Right_Hand"
+const ATTACK_LEFT_HAND_ANIMATION: String = "Attack_Left_Hand"
+
 @export var stats_component: StatsSynchronizerComponent
 @export var interaction_component: PlayerInteractionComponent
 @export var action_synchronizer: ActionSynchronizerComponent
 @export var animation_player: AnimationPlayer
 @export var skill_component: SkillComponent
+@export var update_face: UpdateFaceComponent
 
 var target_node: Node
 
@@ -27,6 +31,7 @@ var mouse_global_pos: Vector2 = Vector2.ZERO
 var current_target: Node2D
 
 var attack_timer: Timer
+var original_direction: bool = true
 
 
 func _ready():
@@ -53,7 +58,9 @@ func _ready():
 		set_process_input(false)
 	else:
 		if not is_local:
+			set_physics_process(false)
 			queue_free()
+			return
 		else:
 			#Set parameters for point-casting (can use ShapeParameters instead if necessary)
 			point_params.collide_with_areas = false
@@ -64,6 +71,8 @@ func _ready():
 				+ J.PHYSICS_LAYER_NPCS
 				+ J.PHYSICS_LAYER_ITEMS
 			)
+			update_face.direction_changed.connect(_on_direction_changed)
+
 		stats_component.died.connect(_on_died)
 
 	interacted.connect(_on_interacted)
@@ -206,7 +215,10 @@ func _on_interacted(target: Node2D):
 
 				action_synchronizer.attack(target_node.position.direction_to(mouse_global_pos))
 			else:
-				animation_player.play("Attack")
+				if original_direction:
+					animation_player.play(ATTACK_RIGHT_HAND_ANIMATION)
+				else:
+					animation_player.play(ATTACK_LEFT_HAND_ANIMATION)
 
 			attacked.emit(target_node.position.direction_to(mouse_global_pos))
 
@@ -294,3 +306,23 @@ func sync_interact(target_name: String):
 					target.interact(target_node)
 
 		interacted.emit(target)
+
+
+func _on_direction_changed(original: bool):
+	original_direction = original
+
+	# This piece of code makes sure that the attack animation stays in sync with the face direction
+	if (
+		animation_player.is_playing()
+		and (
+			animation_player.current_animation == ATTACK_RIGHT_HAND_ANIMATION
+			or animation_player.current_animation == ATTACK_LEFT_HAND_ANIMATION
+		)
+	):
+		var current_animation_position: float = animation_player.current_animation_position
+		animation_player.stop()
+		if original:
+			animation_player.play(ATTACK_RIGHT_HAND_ANIMATION)
+		else:
+			animation_player.play(ATTACK_LEFT_HAND_ANIMATION)
+		animation_player.seek(current_animation_position)

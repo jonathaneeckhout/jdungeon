@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://21bf63kh2um5"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/armour/chainmailarms/ChainMailArms.gd" id="1_w1jeb"]
-[ext_resource type="Texture2D" uid="uid://w8a0s2m51ydm" path="res://assets/images/equipment/armour/chainmail/chainmail_backhand.png" id="2_48ru2"]
-[ext_resource type="Texture2D" uid="uid://cbeu7ogmwhy08" path="res://assets/images/equipment/armour/chainmail/chainmail_fronthand.png" id="3_m8bql"]
+[ext_resource type="Texture2D" uid="uid://dv4pwvrgw7otj" path="res://assets/images/equipment/armour/chainmail/scaled/chainmail_backhand.png" id="2_wvxb3"]
+[ext_resource type="Texture2D" uid="uid://u8m0ee83oa05" path="res://assets/images/equipment/armour/chainmail/scaled/chainmail_fronthand.png" id="3_b1ufs"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sv48u"]
 radius = 19.0263
@@ -14,26 +14,23 @@ script = ExtResource("1_w1jeb")
 shape = SubResource("CircleShape2D_sv48u")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.05, 0.05)
 
 [node name="Right" type="Sprite2D" parent="Sprite"]
-texture = ExtResource("2_48ru2")
+texture = ExtResource("2_wvxb3")
 
 [node name="Left" type="Sprite2D" parent="Sprite"]
-texture = ExtResource("3_m8bql")
+texture = ExtResource("3_b1ufs")
 
 [node name="EquipmentSpriteRight" type="Sprite2D" parent="."]
 visible = false
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_48ru2")
-offset = Vector2(131, 228)
+texture = ExtResource("2_wvxb3")
+offset = Vector2(8, 15)
 
 [node name="EquipmentSpriteLeft" type="Sprite2D" parent="."]
 visible = false
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("3_m8bql")
-offset = Vector2(-189, 248)
+texture = ExtResource("3_b1ufs")
+offset = Vector2(-11, 16)
 
 [node name="Icon" type="Sprite2D" parent="."]
 visible = false
-texture = ExtResource("2_48ru2")
+texture = ExtResource("2_wvxb3")
