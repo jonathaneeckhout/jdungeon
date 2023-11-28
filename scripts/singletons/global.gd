@@ -42,6 +42,7 @@ var env_postgress_db: String = ""
 var env: GodotEnv
 var audio: SoundManager = SoundManager.new()
 
+
 func _ready():
 	env = GodotEnv.new()
 	audio.parent = self

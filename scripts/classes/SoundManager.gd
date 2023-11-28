@@ -29,6 +29,9 @@ enum CHANNEL_TYPE {MONO, POSITIONAL_2D, POSITIONAL_3D}
 ## If not set, this will be null.
 @export var failsafe_stream: AudioStream = null
 
+## Max amount of players that may be created per type.
+@export var max_channels: int = 16
+
 ## A reference to the main instance, as to use it statically.
 ## [codeblock] SoundManager.main_instance.play_sound(...)[/codeblock]
 static var main_instance: SoundManager
@@ -65,16 +68,28 @@ func play_sound(stream: AudioStream, type: CHANNEL_TYPE, settings: StreamPlayerS
 func add_channel(type: CHANNEL_TYPE) -> Node:
 	match type:
 		CHANNEL_TYPE.MONO:
+			if channels_mono.size() >= max_channels:
+				GodotLogger.warn("Could not add more non-positional channels, limit reached.")
+				return null
+			
 			var player := AudioStreamPlayer.new()
 			channels_mono.append(player)
 			return player
 			
 		CHANNEL_TYPE.POSITIONAL_2D:
+			if channels_2D.size() >= max_channels:
+				GodotLogger.warn("Could not add more 2D channels, limit reached.")
+				return null
+			
 			var player := AudioStreamPlayer2D.new()
 			channels_2D.append(player)
 			return player
 			
 		CHANNEL_TYPE.POSITIONAL_3D:
+			if channels_3D.size() >= max_channels:
+				GodotLogger.warn("Could not add more 3D channels, limit reached.")
+				return null
+			
 			var player := AudioStreamPlayer3D.new()
 			channels_3D.append(player)
 			return player
@@ -92,10 +107,10 @@ func remove_channel(player: Node):
 		channels_3D.erase(player)
 		
 		
-## Removes all AudioStreamPlayers that are not currently playing anything.
+## Removes all AudioStreamPlayers that are not currently playing anything or are simply invalid.
 func clear_unused_channels():
 	var keepPlayingPlayersFilter: Callable = func(player: Node):
-		return player.playing
+		return player.playing and is_instance_valid(player)
 		
 	channels_mono.assign(channels_mono.filter(keepPlayingPlayersFilter))
 	channels_2D.assign(channels_2D.filter(keepPlayingPlayersFilter))
@@ -113,6 +128,7 @@ func add_player_to_tree(player: Node):
 func remove_player_from_tree(player: Node):
 	#Cannot remove if not in the tree
 	if not player.is_inside_tree():
+		GodotLogger.warn("The AudioStreamPlayer is not inside the tree. Cannot remove.")
 		return
 		
 	player_parent.remove_child(player)
@@ -124,13 +140,14 @@ func get_player_from_identifier(identifier: String) -> Node:
 	if is_instance_valid(player):
 		return player
 	else:
+		GodotLogger.warn("No AudioStreamPlayer was found with identifier '{0}'. It may have finished already.".format([identifier]))
 		return null
 
 func stop_player_from_identifier(identifier: String):
 	var player: Node = get_player_from_identifier(identifier)
 	if player != null: 
 		player.stop()
-	pass
+
 
 ## Retrieves an audio stream with the given identifier as set by [method set_registered_stream]
 func get_registered_stream(streamClass: String)->AudioStream:
@@ -168,12 +185,17 @@ func get_available_channel(type: CHANNEL_TYPE, allowNew: bool = true) -> Node:
 					
 			if allowNew:
 				return add_channel(CHANNEL_TYPE.POSITIONAL_3D)
-			
+	
+	GodotLogger.error("Something went wrong when trying to add a channel.")
 	return null
 
 
 func play_sound_mono(stream: AudioStream, settings: StreamPlayerSettings = StreamPlayerSettings.new(), identifier = "") -> AudioStreamPlayer:
 	var player: AudioStreamPlayer = get_available_channel(CHANNEL_TYPE.MONO)
+	
+	if player == null:
+		return null
+		
 	add_player_to_tree(player)
 	
 	player.stream = stream
@@ -191,6 +213,10 @@ func play_sound_mono(stream: AudioStream, settings: StreamPlayerSettings = Strea
 	
 func play_sound_pos_2d(stream: AudioStream, settings: StreamPlayerSettings = StreamPlayerSettings.new(), identifier = "")-> AudioStreamPlayer2D:
 	var player: AudioStreamPlayer2D = get_available_channel(CHANNEL_TYPE.POSITIONAL_2D)
+	
+	if player == null:
+		return null
+	
 	add_player_to_tree(player)
 	
 	player.stream = stream
@@ -211,6 +237,10 @@ func play_sound_pos_2d(stream: AudioStream, settings: StreamPlayerSettings = Str
 	
 func play_sound_pos_3D(stream: AudioStream, settings: StreamPlayerSettings = StreamPlayerSettings.new(), identifier = "") -> AudioStreamPlayer3D:
 	var player: AudioStreamPlayer3D = get_available_channel(CHANNEL_TYPE.POSITIONAL_3D)
+	
+	if player == null:
+		return null
+	
 	add_player_to_tree(player)
 	
 	player.stream = stream
