@@ -170,6 +170,9 @@ func _ready():
 	# Physics only needed on client side
 	if G.is_server():
 		set_physics_process(false)
+
+		#Uses a setter to automatically call server_periodic_update() when true
+		server_periodic_update_enabled = true
 	else:
 		#Wait until the connection is ready to synchronize stats
 		if not multiplayer.has_multiplayer_peer():
@@ -183,9 +186,6 @@ func _ready():
 			await tree_entered
 
 		G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
-
-		#Uses a setter to automatically call server_periodic_update() when true
-		server_periodic_update_enabled = true
 
 	# Make sure this line is called on server and client's side
 	ready_done = true
