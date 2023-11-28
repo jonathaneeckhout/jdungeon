@@ -197,7 +197,7 @@ func _physics_process(_delta: float):
 
 func server_periodic_update():
 	#If disabled, the loop stops.
-	if not server_periodic_update_enabled:
+	if not server_periodic_update_enabled or not ready_done:
 		return
 
 	energy_recovery(target_node.get_name(), energy_regen)
