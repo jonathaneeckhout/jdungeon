@@ -40,7 +40,7 @@ var env_postgress_password: String = ""
 var env_postgress_db: String = ""
 
 var env: GodotEnv
-
+var audio:Node
 
 func _ready():
 	env = GodotEnv.new()
