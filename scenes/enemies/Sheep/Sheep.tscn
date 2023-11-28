@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://ct1h0eeeyfurc" path="res://scenes/enemies/common/ai/selectors/passive_critter/PassiveCritter.tscn" id="7_lpvxr"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="8_wd6jv"]
 [ext_resource type="Texture2D" uid="uid://djed5baiwoimr" path="res://assets/images/enemies/sheep/scaled/sheep.png" id="11_l0562"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scenes/enemies/common/avoidance_rays/AvoidanceRays.tscn" id="11_nla65"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="11_nla65"]
 [ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="12_oa8ou"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_orhwg"]

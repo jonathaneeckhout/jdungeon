@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://cpf0qypk2ky3a"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/armour/platelegs/PlateLegs.gd" id="1_bfyqd"]
-[ext_resource type="Texture2D" uid="uid://c1pg7dhljxe67" path="res://assets/images/equipment/armour/platearmor/platearmor_frontleg.png" id="2_wcnf5"]
-[ext_resource type="Texture2D" uid="uid://b1vgbsfapb4sv" path="res://assets/images/equipment/armour/platearmor/platearmor_backleg.png" id="3_022nx"]
+[ext_resource type="Texture2D" uid="uid://dtehtfrlkxbu6" path="res://assets/images/equipment/armour/platearmor/scaled/platearmor_backleg.png" id="2_fo1ew"]
+[ext_resource type="Texture2D" uid="uid://qnr5pivqvv8d" path="res://assets/images/equipment/armour/platearmor/scaled/platearmor_frontleg.png" id="3_2xkdj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sv48u"]
 radius = 19.0263
@@ -14,28 +14,26 @@ script = ExtResource("1_bfyqd")
 shape = SubResource("CircleShape2D_sv48u")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.05, 0.05)
 
 [node name="Right" type="Sprite2D" parent="Sprite"]
-position = Vector2(-60, -460)
-texture = ExtResource("3_022nx")
+position = Vector2(-0.5, -28)
+texture = ExtResource("2_fo1ew")
 
 [node name="Left" type="Sprite2D" parent="Sprite"]
-position = Vector2(40, -460)
-texture = ExtResource("2_wcnf5")
+position = Vector2(-0.5, -28)
+texture = ExtResource("3_2xkdj")
 
 [node name="EquipmentSpriteRight" type="Sprite2D" parent="."]
 visible = false
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("3_022nx")
-offset = Vector2(91, -212)
+texture = ExtResource("2_fo1ew")
+offset = Vector2(5, -12)
 
 [node name="EquipmentSpriteLeft" type="Sprite2D" parent="."]
 visible = false
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_wcnf5")
-offset = Vector2(-109, -232)
+texture = ExtResource("3_2xkdj")
+offset = Vector2(-7, -14)
 
 [node name="Icon" type="Sprite2D" parent="."]
 visible = false
-texture = ExtResource("2_wcnf5")
+position = Vector2(-5, -29)
+texture = ExtResource("3_2xkdj")

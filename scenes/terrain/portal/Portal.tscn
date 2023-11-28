@@ -1,17 +1,17 @@
 [gd_scene load_steps=15 format=3 uid="uid://cj48j2lhcde1a"]
 
 [ext_resource type="Script" path="res://scenes/terrain/portal/Portal.gd" id="1_bxy1m"]
-[ext_resource type="Texture2D" uid="uid://c37bhe2ae54fj" path="res://assets/images/terrain/portal/Portal shadow.png" id="2_1ca0b"]
-[ext_resource type="Texture2D" uid="uid://cowbk3q3u2bvv" path="res://assets/images/terrain/portal/Portal_1.png" id="3_wifds"]
-[ext_resource type="Texture2D" uid="uid://c55k1vxt6viqc" path="res://assets/images/terrain/portal/Portal_2.png" id="4_fawlm"]
-[ext_resource type="Texture2D" uid="uid://houmtsiggu8" path="res://assets/images/terrain/portal/Portal_3.png" id="5_5cbis"]
-[ext_resource type="Texture2D" uid="uid://b0g88xjyiepc1" path="res://assets/images/terrain/portal/Portal_4.png" id="6_loour"]
-[ext_resource type="Texture2D" uid="uid://lxd108bxsybq" path="res://assets/images/terrain/portal/Portal_5.png" id="7_4hli2"]
-[ext_resource type="Texture2D" uid="uid://wlb4xyaf4428" path="res://assets/images/terrain/portal/Portal_6.png" id="8_txne0"]
-[ext_resource type="Texture2D" uid="uid://dnhbdwensxvka" path="res://assets/images/terrain/portal/Portal_7.png" id="9_a2y2j"]
-[ext_resource type="Texture2D" uid="uid://bgo37t5j4snnb" path="res://assets/images/terrain/portal/Portal_8.png" id="10_ftdui"]
-[ext_resource type="Texture2D" uid="uid://b15n8ldileh7m" path="res://assets/images/terrain/portal/Portal_9.png" id="11_o1vmg"]
-[ext_resource type="Texture2D" uid="uid://cdidqdyykes6s" path="res://assets/images/terrain/portal/Portal_10.png" id="12_3l5j5"]
+[ext_resource type="Texture2D" uid="uid://c3neoxtyhb2ht" path="res://assets/images/terrain/portal/scaled/Portal shadow.png" id="2_ewai2"]
+[ext_resource type="Texture2D" uid="uid://83xtf3oe60k1" path="res://assets/images/terrain/portal/scaled/Portal_1.png" id="3_tttrh"]
+[ext_resource type="Texture2D" uid="uid://bf7ngpme0kp08" path="res://assets/images/terrain/portal/scaled/Portal_2.png" id="4_reolu"]
+[ext_resource type="Texture2D" uid="uid://b10snptmppqyg" path="res://assets/images/terrain/portal/scaled/Portal_3.png" id="5_dadcw"]
+[ext_resource type="Texture2D" uid="uid://jfb836d8gayt" path="res://assets/images/terrain/portal/scaled/Portal_4.png" id="6_dmktb"]
+[ext_resource type="Texture2D" uid="uid://bdk1leya38sr1" path="res://assets/images/terrain/portal/scaled/Portal_5.png" id="7_a7gn5"]
+[ext_resource type="Texture2D" uid="uid://nadn4lfeloxw" path="res://assets/images/terrain/portal/scaled/Portal_6.png" id="8_j08pb"]
+[ext_resource type="Texture2D" uid="uid://cmdt8dpgeoguh" path="res://assets/images/terrain/portal/scaled/Portal_7.png" id="9_t41oi"]
+[ext_resource type="Texture2D" uid="uid://c8f2m6xg8mhas" path="res://assets/images/terrain/portal/scaled/Portal_8.png" id="10_e1yr0"]
+[ext_resource type="Texture2D" uid="uid://dkrgqng5n7742" path="res://assets/images/terrain/portal/scaled/Portal_9.png" id="11_ng6f8"]
+[ext_resource type="Texture2D" uid="uid://1hww8d655pr7" path="res://assets/images/terrain/portal/scaled/Portal_10.png" id="12_su2wf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4phin"]
 radius = 40.0
@@ -20,34 +20,34 @@ radius = 40.0
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_wifds")
+"texture": ExtResource("3_tttrh")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_fawlm")
+"texture": ExtResource("4_reolu")
 }, {
 "duration": 1.0,
-"texture": ExtResource("5_5cbis")
+"texture": ExtResource("5_dadcw")
 }, {
 "duration": 1.0,
-"texture": ExtResource("6_loour")
+"texture": ExtResource("6_dmktb")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_4hli2")
+"texture": ExtResource("7_a7gn5")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_txne0")
+"texture": ExtResource("8_j08pb")
 }, {
 "duration": 1.0,
-"texture": ExtResource("9_a2y2j")
+"texture": ExtResource("9_t41oi")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_ftdui")
+"texture": ExtResource("10_e1yr0")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_o1vmg")
+"texture": ExtResource("11_ng6f8")
 }, {
 "duration": 1.0,
-"texture": ExtResource("12_3l5j5")
+"texture": ExtResource("12_su2wf")
 }],
 "loop": true,
 "name": &"Idle",
@@ -70,15 +70,13 @@ collision_mask = 2
 shape = SubResource("CircleShape2D_4phin")
 
 [node name="PortalShadow" type="Sprite2D" parent="."]
-scale = Vector2(0.15, 0.15)
-texture = ExtResource("2_1ca0b")
+texture = ExtResource("2_ewai2")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.15, 0.15)
 sprite_frames = SubResource("SpriteFrames_dqe1o")
 animation = &"Idle"
 autoplay = "Idle"
-frame_progress = 0.0397978
+frame_progress = 0.496018
 
 [node name="PortalLocation" type="Marker2D" parent="."]
 position = Vector2(0, 96)

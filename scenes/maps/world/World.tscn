@@ -150,6 +150,7 @@ position = Vector2(-1536, 3519)
 position = Vector2(-32, -48)
 
 [node name="Portals" type="Node2D" parent="."]
+y_sort_enabled = true
 
 [node name="BaseCampPortal" parent="Portals" instance=ExtResource("11_nqcmx")]
 position = Vector2(-1280, -568)

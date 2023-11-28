@@ -5,18 +5,26 @@ class_name AnimationComponent
 @export var animation_player: AnimationPlayer
 @export var stats: StatsSynchronizerComponent
 @export var action_synchronizer: ActionSynchronizerComponent
+@export var update_face: UpdateFaceComponent
 
 @export var idle_animation: String = "Idle"
 @export var move_animation: String = "Move"
 @export var attack_animation: String = "Attack"
+
+@export var attack_right_hand_animation: String = "Attack_Right_Hand"
+@export var attack_left_hand_animation: String = "Attack_Left_Hand"
+
 @export var hurt_animation: String = "Hurt"
 @export var die_animation: String = "Die"
 
 var target_node: Node
 
 var loop_animation: String = idle_animation
-var wait_to_finish = false
-var dead = false
+var wait_to_finish: bool = false
+var dead: bool = false
+
+var dual_direction_attack: bool = false
+var original_direction: bool = true
 
 
 func _ready():
@@ -38,8 +46,17 @@ func _ready():
 	stats.died.connect(_on_died)
 	stats.respawned.connect(_on_respawned)
 
+	if (
+		animation_player.has_animation(attack_right_hand_animation)
+		and animation_player.has_animation(attack_left_hand_animation)
+	):
+		dual_direction_attack = true
+
 	if action_synchronizer:
 		action_synchronizer.attacked.connect(_on_attacked)
+
+	if update_face:
+		update_face.direction_changed.connect(_on_direction_changed)
 
 	animation_player.animation_finished.connect(_on_animation_finished)
 
@@ -90,11 +107,39 @@ func _on_attacked(_direction: Vector2):
 	if dead:
 		return
 
-	if animation_player.has_animation(attack_animation):
+	if animation_player.is_playing():
 		animation_player.stop()
-		animation_player.play(attack_animation)
-		wait_to_finish = true
+
+	if dual_direction_attack:
+		if original_direction:
+			animation_player.play(attack_right_hand_animation)
+		else:
+			animation_player.play(attack_left_hand_animation)
+	else:
+		if animation_player.has_animation(attack_animation):
+			animation_player.play(attack_animation)
+
+	wait_to_finish = true
 
 
 func _on_animation_finished(_anim_name: String):
 	wait_to_finish = false
+
+
+func _on_direction_changed(original: bool):
+	original_direction = original
+	if (
+		dual_direction_attack
+		and animation_player.is_playing()
+		and (
+			animation_player.current_animation == attack_right_hand_animation
+			or animation_player.current_animation == attack_left_hand_animation
+		)
+	):
+		var current_animation_position: float = animation_player.current_animation_position
+		animation_player.stop()
+		if original:
+			animation_player.play(attack_right_hand_animation)
+		else:
+			animation_player.play(attack_left_hand_animation)
+		animation_player.seek(current_animation_position)

@@ -341,7 +341,7 @@ func apply_boost(boost: Boost):
 
 
 func to_json(full: bool = false) -> Dictionary:
-	var data: Dictionary
+	var data: Dictionary = {}
 	for statName in StatListCounter:
 		data[statName] = get(statName)
 
