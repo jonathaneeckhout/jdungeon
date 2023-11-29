@@ -308,7 +308,7 @@ func load_server_env_variables() -> bool:
 
 	env_server_map = env.get_value("SERVER_MAP")
 	if env_server_map == "":
-		GodotLogger.error("Could not load SERVER_MAP env varaible")
+		GodotLogger.info("Could not load SERVER_MAP env varaible")
 	else:
 		GodotLogger.info("SERVER_MAP=[%s]" % env_server_map)
 
