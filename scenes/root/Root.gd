@@ -26,7 +26,7 @@ func _ready():
 	if Global.env_run_as_gateway:
 		start_gateway()
 	elif Global.env_run_as_server:
-		start_server("World")
+		start_server()
 	elif Global.env_run_as_client:
 		start_client()
 	else:
@@ -45,7 +45,7 @@ func parse_cmd_arguments():
 				break
 
 			"j_server":
-				start_server("World")
+				start_server()
 				break
 
 			"j_client":
@@ -88,7 +88,7 @@ func start_gateway() -> bool:
 	return true
 
 
-func start_server(map: String) -> bool:
+func start_server() -> bool:
 	GodotLogger.info("Running as server")
 
 	select_run_mode.queue_free()
@@ -105,6 +105,11 @@ func start_server(map: String) -> bool:
 		get_tree().root.mode = Window.MODE_MINIMIZED
 
 	J.register_scenes()
+
+	var map: String = ""
+
+	if Global.env_server_map != "":
+		map = Global.env_server_map
 
 	if not S.client_init():
 		GodotLogger.error("Failed to connect to gateway")
@@ -190,7 +195,7 @@ func _on_run_as_gateway_pressed():
 
 
 func _on_run_as_server_pressed():
-	start_server("World")
+	start_server()
 
 
 func _on_run_as_client_pressed():
