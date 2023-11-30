@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://beiq65may6bdw"]
 
-[ext_resource type="Script" path="res://scenes/maps/World.gd" id="1_iidds"]
+[ext_resource type="Script" path="res://scenes/maps/world/World.gd" id="1_fsi10"]
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="5_2l8ik"]
 [ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://scenes/enemies/Sheep/Sheep.tscn" id="6_cvst6"]
 [ext_resource type="PackedScene" uid="uid://drmaubupv57n1" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn" id="7_qys7n"]
@@ -14,13 +14,11 @@
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="14_qs20i"]
 
 [node name="World" type="Node2D"]
-script = ExtResource("1_iidds")
-camera_speed = null
+script = ExtResource("1_fsi10")
 
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Enemies" type="Node2D" parent="Entities"]
-position = Vector2(472, -128)
 
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
 position = Vector2(-2006, 948)
