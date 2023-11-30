@@ -4,6 +4,10 @@ extends Control
 
 @onready var hp_value_label: Label = $ScrollContainer/StatList/HPSplitContainer/Value
 @onready var hp_max_value_label: Label = $ScrollContainer/StatList/HPMaxSplitContainer/Value
+@onready var energy_value_label: Label = $ScrollContainer/StatList/EnergySplitContainer/Value
+@onready var energy_max_value_label: Label = $ScrollContainer/StatList/EnergyMaxSplitContainer/Value
+@onready
+var energy_regeneration_value_label: Label = $ScrollContainer/StatList/EnergyRegenSplitContainer/Value
 @onready var level_value_label: Label = $ScrollContainer/StatList/LevelSplitContainer/Value
 @onready var experience_value_label: Label = $ScrollContainer/StatList/ExperienceSplitContainer/Value
 @onready
@@ -31,6 +35,9 @@ func _unhandled_input(event: InputEvent) -> void:
 func renew_values():
 	hp_value_label.text = str(stats.hp)
 	hp_max_value_label.text = str(stats.hp_max)
+	energy_value_label.text = str(stats.energy)
+	energy_max_value_label.text = str(stats.energy_max)
+	energy_regeneration_value_label.text = str(stats.energy_regen)
 	level_value_label.text = str(stats.level)
 	experience_value_label.text = str(stats.experience)
 	experience_needed_value_label.text = str(stats.experience_needed)
@@ -45,6 +52,12 @@ func _on_stats_changed(type: StatsSynchronizerComponent.TYPE):
 			hp_max_value_label.text = str(stats.hp_max)
 		StatsSynchronizerComponent.TYPE.HP:
 			hp_value_label.text = str(stats.hp)
+		StatsSynchronizerComponent.TYPE.ENERGY:
+			energy_value_label.text = str(stats.energy)
+		StatsSynchronizerComponent.TYPE.ENERGY_MAX:
+			energy_max_value_label.text = str(stats.energy_max)
+		StatsSynchronizerComponent.TYPE.ENERGY_REGEN:
+			energy_regeneration_value_label.text = str(stats.energy_regen)
 		StatsSynchronizerComponent.TYPE.ATTACK_POWER_MIN:
 			attack_power_min_value_label.text = str(stats.attack_power_min)
 		StatsSynchronizerComponent.TYPE.ATTACK_POWER_MAX:
