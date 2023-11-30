@@ -13,7 +13,7 @@ func _effect(info: SkillComponent.UseInfo):
 script = SubResource("GDScript_fecn7")
 skill_class = "HealSelf"
 displayed_name = "Heal Self"
-energy_usage = 10
+energy_usage = 25
 icon = ExtResource("1_llcs6")
 collision_mask = 31
 valid_entities = Array[int]([0])

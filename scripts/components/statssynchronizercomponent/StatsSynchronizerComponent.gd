@@ -190,6 +190,10 @@ func _ready():
 	# Make sure this line is called on server and client's side
 	ready_done = true
 
+	if G.is_server():
+		#Uses a setter to automatically call server_periodic_update() when true
+		server_periodic_update_enabled = true
+
 
 func _physics_process(_delta: float):
 	check_server_buffer()
@@ -197,7 +201,8 @@ func _physics_process(_delta: float):
 
 func server_periodic_update():
 	#If disabled, the loop stops.
-	if not server_periodic_update_enabled or not ready_done:
+	if not (G.world is World and server_periodic_update_enabled and ready_done):
+		#G.world must not be null
 		return
 
 	energy_recovery(target_node.get_name(), energy_regen)
@@ -205,6 +210,7 @@ func server_periodic_update():
 	#Loop itself
 	if is_inside_tree():
 		get_tree().create_timer(PERIODIC_UPDATE_INTERVAL).timeout.connect(server_periodic_update)
+
 
 
 func check_server_buffer():
@@ -446,6 +452,7 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 	return true
 
 
+#Client only (otherwise these synchs would be RPC'd to a client which does not support these synching methods)
 func _sync_int_change(stat_type: TYPE, value: int):
 	if not ready_done:
 		return
@@ -463,6 +470,7 @@ func _sync_int_change(stat_type: TYPE, value: int):
 		)
 
 
+#Client only (otherwise these synchs would be RPC'd to a client which does not support these synching methods)
 func _sync_float_change(stat_type: TYPE, value: float):
 	if not ready_done:
 		return

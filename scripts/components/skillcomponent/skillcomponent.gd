@@ -201,8 +201,9 @@ func skill_select_by_index(index: int):
 		#A wrong value does nothing.
 		return
 
-	#If -1, it is a deselection attempt.
-	if index == -1:
+	#If -1 OR it was already selected, treat it as a deselection attempt.
+	#It is important to check if skill_current isn't null
+	if index == -1 or (skill_current and get_skill_current_class() == skill_current.skill_class):
 		skill_deselect()
 		return
 

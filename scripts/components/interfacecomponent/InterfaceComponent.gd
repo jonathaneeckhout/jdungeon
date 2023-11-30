@@ -9,6 +9,11 @@ func _ready():
 	stats_synchronizer.stats_changed.connect(_on_stats_changed)
 
 
+var show_energy: bool = false:
+	set(val):
+		show_energy = val
+		$EnergyBar.visible = show_energy
+
 var display_name: String = "":
 	set(new_name):
 		display_name = new_name

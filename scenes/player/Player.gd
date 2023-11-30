@@ -70,6 +70,7 @@ func _ready():
 	# Client side code
 	else:
 		$InterfaceComponent.display_name = username
+		$InterfaceComponent.show_energy = true
 
 		# Your own player code
 		if peer_id == multiplayer.get_unique_id():
