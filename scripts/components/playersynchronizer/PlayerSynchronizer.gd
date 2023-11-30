@@ -138,7 +138,7 @@ func step_physics(direction: Vector2, fraction: float):
 func _handle_right_click(click_global_pos: Vector2):
 	if stats_component.is_dead:
 		return
-		
+
 	#Fetch targets under the cursor
 	update_target(click_global_pos)
 

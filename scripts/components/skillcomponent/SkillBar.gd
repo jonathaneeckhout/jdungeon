@@ -127,7 +127,6 @@ class SkillDisplay:
 		#If it is the skill from this display, activate
 		elif skill.skill_class == skill_class:
 			select()
-			
 
 		#If it isn't, deactivate
 		else:

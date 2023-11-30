@@ -6,7 +6,8 @@ extends Control
 @onready var hp_max_value_label: Label = $ScrollContainer/StatList/HPMaxSplitContainer/Value
 @onready var energy_value_label: Label = $ScrollContainer/StatList/EnergySplitContainer/Value
 @onready var energy_max_value_label: Label = $ScrollContainer/StatList/EnergyMaxSplitContainer/Value
-@onready var energy_regeneration_value_label: Label = $ScrollContainer/StatList/EnergyRegenSplitContainer/Value
+@onready
+var energy_regeneration_value_label: Label = $ScrollContainer/StatList/EnergyRegenSplitContainer/Value
 @onready var level_value_label: Label = $ScrollContainer/StatList/LevelSplitContainer/Value
 @onready var experience_value_label: Label = $ScrollContainer/StatList/ExperienceSplitContainer/Value
 @onready

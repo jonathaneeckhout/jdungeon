@@ -212,7 +212,6 @@ func server_periodic_update():
 		get_tree().create_timer(PERIODIC_UPDATE_INTERVAL).timeout.connect(server_periodic_update)
 
 
-
 func check_server_buffer():
 	for i in range(server_buffer.size() - 1, -1, -1):
 		var entry = server_buffer[i]
