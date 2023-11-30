@@ -85,7 +85,7 @@ func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
 		return
 
 	if entity.component_list.has("stats_synchronizer"):
-		entity.component_list["stats_synchronizer"].sync_stats()
+		entity.component_list["stats_synchronizer"].sync_stats(id)
 
 
 @rpc("call_remote", "authority", "reliable")

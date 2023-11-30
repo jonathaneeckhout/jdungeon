@@ -87,7 +87,7 @@ signal respawned
 
 @export var energy_regen: int = 10:
 	set(val):
-		energy = val
+		energy_regen = val
 		stats_changed.emit(TYPE.ENERGY_REGEN)
 
 @export var attack_power_min: int = 0:
@@ -472,16 +472,7 @@ func _sync_float_change(stat_type: TYPE, value: float):
 		)
 
 
-func sync_stats():
-	if not G.is_server():
-		return
-
-	var id = multiplayer.get_remote_sender_id()
-
-	# Only allow logged in players
-	if not G.is_user_logged_in(id):
-		return
-
+func sync_stats(id: int):
 	G.sync_rpc.statssynchronizer_sync_response.rpc_id(id, target_node.name, to_json(true))
 
 
