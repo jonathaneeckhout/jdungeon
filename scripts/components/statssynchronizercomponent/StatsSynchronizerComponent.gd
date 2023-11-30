@@ -46,7 +46,7 @@ const StatListCounter: Array[StringName] = [
 
 const StatListAll: Array[StringName] = StatListCounter + StatListPermanent
 
-const PERIODIC_UPDATE_INTERVAL: float = 1
+const ENERGY_INTERVAL_TIME: float = 1
 
 signal loaded
 signal stats_changed(stat_type: TYPE)
@@ -144,11 +144,6 @@ var is_dead: bool = false
 
 var server_buffer: Array[Dictionary] = []
 var ready_done: bool = false
-var server_periodic_update_enabled: bool:
-	set(val):
-		server_periodic_update_enabled = val
-		if server_periodic_update_enabled:
-			server_periodic_update()
 
 var _default_hp_max: int = hp_max
 var _default_energy_max: int = energy_max
@@ -156,6 +151,8 @@ var _default_attack_power_min: int = attack_power_min
 var _default_attack_power_max: int = attack_power_max
 var _default_defense: int = defense
 var _default_movement_speed: float = movement_speed
+
+var energy_regen_timer: Timer
 
 
 func _ready():
@@ -172,7 +169,13 @@ func _ready():
 		set_physics_process(false)
 
 		#Uses a setter to automatically call server_periodic_update() when true
-		server_periodic_update_enabled = true
+		energy_regen_timer = Timer.new()
+		energy_regen_timer.name = "EnergyRegenTimer"
+		energy_regen_timer.wait_time = ENERGY_INTERVAL_TIME
+		energy_regen_timer.autostart = true
+		energy_regen_timer.timeout.connect(_on_energy_regen_timer_timeout)
+		add_child(energy_regen_timer)
+
 	else:
 		#Wait until the connection is ready to synchronize stats
 		if not multiplayer.has_multiplayer_peer():
@@ -190,26 +193,9 @@ func _ready():
 	# Make sure this line is called on server and client's side
 	ready_done = true
 
-	if G.is_server():
-		#Uses a setter to automatically call server_periodic_update() when true
-		server_periodic_update_enabled = true
-
 
 func _physics_process(_delta: float):
 	check_server_buffer()
-
-
-func server_periodic_update():
-	#If disabled, the loop stops.
-	if not (G.world is World and server_periodic_update_enabled and ready_done):
-		#G.world must not be null
-		return
-
-	energy_recovery(target_node.get_name(), energy_regen)
-
-	#Loop itself
-	if is_inside_tree():
-		get_tree().create_timer(PERIODIC_UPDATE_INTERVAL).timeout.connect(server_periodic_update)
 
 
 func check_server_buffer():
@@ -400,7 +386,7 @@ func apply_boost(boost: Boost):
 
 
 func to_json(full: bool = false) -> Dictionary:
-	var data: Dictionary
+	var data: Dictionary = {}
 	for statName in StatListCounter:
 		data[statName] = get(statName)
 
@@ -548,3 +534,10 @@ func sync_energy_recovery(timestamp: float, from: String, current_energy: int, r
 			"recovered": recovered
 		}
 	)
+
+
+func _on_energy_regen_timer_timeout():
+	if not ready_done:
+		return
+
+	energy_recovery(target_node.get_name(), energy_regen)

@@ -44,7 +44,7 @@ const ENTITY_TYPES := J.ENTITY_TYPE
 
 func effect(information: SkillComponent.UseInfo):
 	#Filter targets to make sure they are valid ones
-	var filteredTargets: Array[Node]
+	var filteredTargets: Array[Node] = []
 	for target in information.targets:
 		if target.get("entity_type") is int and target.get("entity_type") in valid_entities:
 			filteredTargets.append(target)
