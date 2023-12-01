@@ -5,9 +5,14 @@ const CLIENT_FPS: int = 60
 
 @onready var ui: CanvasLayer = $UI
 @onready var select_run_mode: Control = $UI/SelectRunMode
-@onready var run_as_gateway_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsGatewayButton
-@onready var run_as_server_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsServerButton
-@onready var run_as_client_button: Button = $UI/SelectRunMode/VBoxContainer/RunAsClientButton
+@onready var select_mode_buttons: VBoxContainer = $UI/SelectRunMode/SelectModeButtons
+@onready var run_as_gateway_button: Button = $UI/SelectRunMode/SelectModeButtons/RunAsGatewayButton
+@onready var run_as_server_button: Button = $UI/SelectRunMode/SelectModeButtons/RunAsServerButton
+@onready var run_as_client_button: Button = $UI/SelectRunMode/SelectModeButtons/RunAsClientButton
+
+@onready var select_map: VBoxContainer = $UI/SelectRunMode/SelectMap
+@onready var map_option_button: OptionButton = $UI/SelectRunMode/SelectMap/MapOptionButton
+@onready var start_server_button: Button = $UI/SelectRunMode/SelectMap/StartServerButton
 
 var login_panel_scene: Resource = preload("res://scenes/ui/loginpanel/LoginPanel.tscn")
 var version_check_panel_scene: Resource = preload(
@@ -16,6 +21,8 @@ var version_check_panel_scene: Resource = preload(
 var disclaimer_panel_scene: Resource = preload(
 	"res://scenes/ui/disclaimerpanel/DisclaimerPanel.tscn"
 )
+
+var map_option_selected: int = 0
 
 
 func _ready():
@@ -26,7 +33,7 @@ func _ready():
 	if Global.env_run_as_gateway:
 		start_gateway()
 	elif Global.env_run_as_server:
-		start_server("World")
+		start_server()
 	elif Global.env_run_as_client:
 		start_client()
 	else:
@@ -45,7 +52,7 @@ func parse_cmd_arguments():
 				break
 
 			"j_server":
-				start_server("World")
+				start_server()
 				break
 
 			"j_client":
@@ -89,10 +96,8 @@ func start_gateway() -> bool:
 	return true
 
 
-func start_server(map: String) -> bool:
+func start_server() -> bool:
 	GodotLogger.info("Running as server")
-
-	select_run_mode.queue_free()
 
 	GodotLogger.info("Setting server's engine fps to %d" % SERVER_FPS)
 	Engine.set_physics_ticks_per_second(SERVER_FPS)
@@ -102,10 +107,35 @@ func start_server(map: String) -> bool:
 		GodotLogger.error("Could not load server's env variables")
 		return false
 
+	J.register_scenes()
+
+	var map: String = ""
+
+	if Global.env_server_map != "":
+		map = Global.env_server_map
+	else:
+		# Populate the options
+		for map_name in J.map_scenes:
+			map_option_button.add_item(map_name)
+		select_mode_buttons.hide()
+		select_map.show()
+		map_option_button.item_selected.connect(_on_map_option_selected)
+
+		await start_server_button.pressed
+		map = map_option_button.get_item_text(map_option_selected)
+
+		# Make sure to use different ports for each server
+		Global.env_server_port += map_option_selected
+
+		map_option_button.item_selected.disconnect(_on_map_option_selected)
+		select_map.hide()
+
+	GodotLogger.info("Starting server with map %s" % map)
+
+	select_run_mode.queue_free()
+
 	if Global.env_minimize_on_start:
 		get_tree().root.mode = Window.MODE_MINIMIZED
-
-	J.register_scenes()
 
 	if not S.client_init():
 		GodotLogger.error("Failed to connect to gateway")
@@ -125,7 +155,7 @@ func start_server(map: String) -> bool:
 	server_fsm.map_name = map
 	add_child(server_fsm)
 
-	GodotLogger.info("Server successfully started")
+	GodotLogger.info("Server successfully started on port %d" % Global.env_server_port)
 	get_window().title = "JDungeon (Server)"
 	return true
 
@@ -193,8 +223,13 @@ func _on_run_as_gateway_pressed():
 
 
 func _on_run_as_server_pressed():
-	start_server("World")
+	start_server()
 
 
 func _on_run_as_client_pressed():
 	start_client()
+
+
+func _on_map_option_selected(index):
+	print(index)
+	map_option_selected = index

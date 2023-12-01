@@ -15,12 +15,10 @@
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_fsi10")
-camera_speed = null
 
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Enemies" type="Node2D" parent="Entities"]
-position = Vector2(472, -128)
 
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
 position = Vector2(-2006, 948)
