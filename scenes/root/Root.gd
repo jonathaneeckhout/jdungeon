@@ -85,6 +85,7 @@ func start_gateway() -> bool:
 		return false
 
 	GodotLogger.info("Gateway successfully started")
+	get_window().title = "JDungeon (Gateway)"
 	return true
 
 
@@ -125,6 +126,7 @@ func start_server(map: String) -> bool:
 	add_child(server_fsm)
 
 	GodotLogger.info("Server successfully started")
+	get_window().title = "JDungeon (Server)"
 	return true
 
 
@@ -182,6 +184,7 @@ func start_client() -> bool:
 	add_child(client_fsm)
 
 	GodotLogger.info("Client successfully started")
+	get_window().title = "JDungeon (Client)"
 	return true
 
 
