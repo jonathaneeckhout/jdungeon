@@ -17,7 +17,8 @@ func unstuck():
 	_unstuck.rpc_id(1)
 
 
-@rpc("call_remote", "any_peer", "reliable") func _unstuck():
+@rpc("call_remote", "any_peer", "reliable")
+func _unstuck():
 	if not G.is_server():
 		return
 

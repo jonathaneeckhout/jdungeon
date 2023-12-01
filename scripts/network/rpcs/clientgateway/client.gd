@@ -8,7 +8,8 @@ signal server_info_received(response: Dictionary)
 
 signal player_logged_in(id: int, username: String)
 
-@rpc("call_remote", "any_peer", "reliable") func create_account(username, password):
+@rpc("call_remote", "any_peer", "reliable")
+func create_account(username, password):
 	if not C.is_server():
 		return
 
@@ -27,7 +28,8 @@ func create_account_response(error: bool, reason: String = ""):
 	account_created.emit({"error": error, "reason": reason})
 
 
-@rpc("call_remote", "any_peer", "reliable") func authenticate(username, password):
+@rpc("call_remote", "any_peer", "reliable")
+func authenticate(username, password):
 	if not C.is_server():
 		return
 
@@ -54,11 +56,13 @@ func create_account_response(error: bool, reason: String = ""):
 	authentication_response.rpc_id(id, true)
 
 
-@rpc("call_remote", "authority", "reliable") func authentication_response(response: bool):
+@rpc("call_remote", "authority", "reliable")
+func authentication_response(response: bool):
 	authenticated.emit(response)
 
 
-@rpc("call_remote", "any_peer", "reliable") func get_server():
+@rpc("call_remote", "any_peer", "reliable")
+func get_server():
 	if not C.is_server():
 		return
 
@@ -99,7 +103,8 @@ func create_account_response(error: bool, reason: String = ""):
 	get_server_response.rpc_id(id, false, server.name, server.address, server.port, cookie)
 
 
-@rpc("call_remote", "authority", "reliable") func get_server_response(
+@rpc("call_remote", "authority", "reliable")
+func get_server_response(
 	error: bool, server_name: String, address: String, port: int, cookie: String
 ):
 	server_info_received.emit(

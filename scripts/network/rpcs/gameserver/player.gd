@@ -12,7 +12,8 @@ signal message_sent(from: int, type: String, to: String, message: String)
 signal message_received(type: String, from: String, message: String)
 signal player_portalled(server_name: String, address: String, port: int, cookie: String)
 
-@rpc("call_remote", "any_peer", "reliable") func authenticate(username: String, cookie: String):
+@rpc("call_remote", "any_peer", "reliable")
+func authenticate(username: String, cookie: String):
 	if not G.is_server():
 		return
 
@@ -38,7 +39,8 @@ signal player_portalled(server_name: String, address: String, port: int, cookie:
 	authentication_response.rpc_id(id, true)
 
 
-@rpc("call_remote", "authority", "reliable") func authentication_response(response: bool):
+@rpc("call_remote", "authority", "reliable")
+func authentication_response(response: bool):
 	authenticated.emit(response)
 
 
@@ -47,7 +49,8 @@ func add_player(id: int, username: String, pos: Vector2):
 	player_added.emit(id, username, pos)
 
 
-@rpc("call_remote", "any_peer", "reliable") func get_player():
+@rpc("call_remote", "any_peer", "reliable")
+func get_player():
 	if not G.is_server():
 		return
 
@@ -74,7 +77,8 @@ func add_other_player(username: String, pos: Vector2, loop_animation: String):
 	other_player_added.emit(username, pos, loop_animation)
 
 
-@rpc("call_remote", "authority", "reliable") func remove_other_player(username: String):
+@rpc("call_remote", "authority", "reliable")
+func remove_other_player(username: String):
 	other_player_removed.emit(username)
 
 
