@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://lhfnxllp70h5"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/armour/platearms/PlateArms.gd" id="1_3jr2i"]
-[ext_resource type="Texture2D" uid="uid://cfwmxg3ekssot" path="res://assets/images/equipment/armour/platearmor/platearmor_backhand.png" id="2_71ep6"]
-[ext_resource type="Texture2D" uid="uid://b7ues7pvgp1m7" path="res://assets/images/equipment/armour/platearmor/platearmor_fronthand.png" id="3_cep7n"]
+[ext_resource type="Texture2D" uid="uid://b5pr4qlu5dveh" path="res://assets/images/equipment/armour/platearmor/scaled/platearmor_backhand.png" id="2_oxchb"]
+[ext_resource type="Texture2D" uid="uid://da7p1xytiq387" path="res://assets/images/equipment/armour/platearmor/scaled/platearmor_fronthand.png" id="3_e3inq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sv48u"]
 radius = 19.0263
@@ -14,26 +14,23 @@ script = ExtResource("1_3jr2i")
 shape = SubResource("CircleShape2D_sv48u")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.05, 0.05)
 
 [node name="Right" type="Sprite2D" parent="Sprite"]
-texture = ExtResource("2_71ep6")
+texture = ExtResource("2_oxchb")
 
 [node name="Left" type="Sprite2D" parent="Sprite"]
-texture = ExtResource("3_cep7n")
+texture = ExtResource("3_e3inq")
 
 [node name="EquipmentSpriteRight" type="Sprite2D" parent="."]
 visible = false
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_71ep6")
-offset = Vector2(131, 228)
+texture = ExtResource("2_oxchb")
+offset = Vector2(8, 15)
 
 [node name="EquipmentSpriteLeft" type="Sprite2D" parent="."]
 visible = false
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("3_cep7n")
-offset = Vector2(-189, 248)
+texture = ExtResource("3_e3inq")
+offset = Vector2(-11, 16)
 
 [node name="Icon" type="Sprite2D" parent="."]
 visible = false
-texture = ExtResource("2_71ep6")
+texture = ExtResource("2_oxchb")

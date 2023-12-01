@@ -1,5 +1,9 @@
 extends Node
 
+class_name UpdateFaceComponent
+
+signal direction_changed(original: bool)
+
 @export var skeleton: Node2D
 @export var action_synchronizer: ActionSynchronizerComponent
 @export var player_synchronizer: PlayerSynchronizer
@@ -7,11 +11,19 @@ extends Node
 var target_node: Node
 
 var original_scale: Vector2 = Vector2.ONE
+var last_scale: Vector2 = Vector2.ONE
 
 
 func _ready():
+	# This component should not run on the server
+	if G.is_server():
+		set_physics_process(false)
+		queue_free()
+		return
+
 	target_node = get_parent()
 	original_scale = skeleton.scale
+	last_scale = original_scale
 
 	if (
 		player_synchronizer
@@ -31,10 +43,12 @@ func _physics_process(_delta):
 func update_face_direction(direction: float):
 	if direction < 0:
 		skeleton.scale = original_scale
-		return
-	if direction > 0:
+	elif direction > 0:
 		skeleton.scale = Vector2(original_scale.x * -1, original_scale.y)
-		return
+
+	if last_scale != skeleton.scale:
+		last_scale = skeleton.scale
+		direction_changed.emit(original_scale == skeleton.scale)
 
 
 func _on_attacked(direction: Vector2):

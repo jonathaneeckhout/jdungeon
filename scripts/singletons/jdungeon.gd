@@ -64,6 +64,10 @@ func register_items():
 	J.register_item_scene("Club", "res://scenes/items/equipment/weapons/club/Club.tscn")
 
 	J.register_item_scene(
+		"IronShield", "res://scenes/items/equipment/weapons/ironshield/IronShield.tscn"
+	)
+
+	J.register_item_scene(
 		"LeatherHelm", "res://scenes/items/equipment/armour/leatherhelm/LeatherHelm.tscn"
 	)
 	J.register_item_scene(
@@ -115,6 +119,9 @@ func register_skills():
 
 func register_maps():
 	J.register_map_scene("World", "res://scenes/maps/world/World.tscn")
+	J.register_map_scene("BaseCamp", "res://scenes/maps/basecamp/BaseCamp.tscn")
+	J.register_map_scene("WakeningForest", "res://scenes/maps/wakeningforest/WakeningForest.tscn")
+	J.register_map_scene("ForestDungeon", "res://scenes/maps/forestdungeon/ForestDungeon.tscn")
 
 
 func register_player_scene(player_scene_path: String):

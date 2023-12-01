@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bdijs1ymr8vn3"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/weapons/sword/Sword.gd" id="1_ghle1"]
-[ext_resource type="Texture2D" uid="uid://bd0hjv8heg0ms" path="res://assets/images/equipment/weapons/sword/sword.png" id="2_j7xcx"]
+[ext_resource type="Texture2D" uid="uid://cdpeoqdvl12ex" path="res://assets/images/equipment/weapons/sword/scaled/sword.png" id="2_mque7"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g6336"]
 radius = 14.0
@@ -14,17 +14,15 @@ script = ExtResource("1_ghle1")
 shape = SubResource("CapsuleShape2D_g6336")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-position = Vector2(5.68434e-14, 22)
-scale = Vector2(0.05, 0.05)
-texture = ExtResource("2_j7xcx")
+position = Vector2(0, 25)
+texture = ExtResource("2_mque7")
 
 [node name="EquipmentSprite" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(-1.06583e-13, -81)
+position = Vector2(0, -49)
 rotation = 3.14159
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_j7xcx")
+texture = ExtResource("2_mque7")
 
 [node name="Icon" type="Sprite2D" parent="."]
 visible = false
-texture = ExtResource("2_j7xcx")
+texture = ExtResource("2_mque7")

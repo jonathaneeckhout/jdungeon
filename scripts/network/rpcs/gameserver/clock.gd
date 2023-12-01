@@ -21,7 +21,8 @@ func _physics_process(delta):
 	delta_latency = 0
 
 
-@rpc("call_remote", "any_peer", "reliable") func fetch_server_time(client_time: float):
+@rpc("call_remote", "any_peer", "reliable")
+func fetch_server_time(client_time: float):
 	if not G.is_server():
 		return
 
@@ -35,7 +36,8 @@ func return_server_time(server_time: float, client_time: float):
 	G.clock = server_time + latency
 
 
-@rpc("call_remote", "any_peer", "reliable") func get_latency(client_time: float):
+@rpc("call_remote", "any_peer", "reliable")
+func get_latency(client_time: float):
 	if not G.is_server():
 		return
 
@@ -43,7 +45,8 @@ func return_server_time(server_time: float, client_time: float):
 	return_latency.rpc_id(id, client_time)
 
 
-@rpc("call_remote", "authority", "reliable") func return_latency(client_time: float):
+@rpc("call_remote", "authority", "reliable")
+func return_latency(client_time: float):
 	latency_buffer.append((Time.get_unix_time_from_system() - client_time) / 2)
 	if latency_buffer.size() == LATENCY_BUFFER_SIZE:
 		var total_latency = 0

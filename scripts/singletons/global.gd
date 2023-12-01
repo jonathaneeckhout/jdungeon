@@ -23,6 +23,7 @@ var env_gateway_server_max_peers: int = 0
 var env_gateway_server_crt: String = ""
 var env_gateway_server_key: String = ""
 
+var env_server_map: String = ""
 var env_server_address: String = ""
 var env_server_port: int = 0
 var env_server_max_peers: int = 0
@@ -306,6 +307,12 @@ func load_server_env_variables() -> bool:
 		return false
 
 	GodotLogger.info("SERVER_ADDRESS=[%s]" % env_server_address)
+
+	env_server_map = env.get_value("SERVER_MAP")
+	if env_server_map == "":
+		GodotLogger.info("Could not load SERVER_MAP env varaible")
+	else:
+		GodotLogger.info("SERVER_MAP=[%s]" % env_server_map)
 
 	var env_port_str = env.get_value("SERVER_PORT")
 	if env_port_str == "":

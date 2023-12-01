@@ -148,7 +148,8 @@ func from_json(data: Dictionary) -> bool:
 	return true
 
 
-@rpc("call_remote", "any_peer", "reliable") func sync_inventory():
+@rpc("call_remote", "any_peer", "reliable")
+func sync_inventory():
 	if not G.is_server():
 		return
 
@@ -162,7 +163,8 @@ func from_json(data: Dictionary) -> bool:
 		sync_response.rpc_id(id, to_json())
 
 
-@rpc("call_remote", "authority", "reliable") func sync_response(inventory: Dictionary):
+@rpc("call_remote", "authority", "reliable")
+func sync_response(inventory: Dictionary):
 	from_json(inventory)
 
 
@@ -179,7 +181,8 @@ func sync_add_item(item_uuid: String, item_class: String, amount: int):
 	item_added.emit(item_uuid, item_class)
 
 
-@rpc("call_remote", "authority", "reliable") func sync_remove_item(item_uuid: String):
+@rpc("call_remote", "authority", "reliable")
+func sync_remove_item(item_uuid: String):
 	var item: Item = get_item(item_uuid)
 	if item != null:
 		items.erase(item)
@@ -187,17 +190,20 @@ func sync_add_item(item_uuid: String, item_class: String, amount: int):
 		item_removed.emit(item_uuid)
 
 
-@rpc("call_remote", "authority", "reliable") func sync_add_gold(total: int, amount: int):
+@rpc("call_remote", "authority", "reliable")
+func sync_add_gold(total: int, amount: int):
 	gold = total
 	gold_added.emit(total, amount)
 
 
-@rpc("call_remote", "authority", "reliable") func sync_remove_gold(total: int, amount: int):
+@rpc("call_remote", "authority", "reliable")
+func sync_remove_gold(total: int, amount: int):
 	gold = total
 	gold_removed.emit(total, amount)
 
 
-@rpc("call_remote", "any_peer", "reliable") func use_inventory_item(item_uuid: String):
+@rpc("call_remote", "any_peer", "reliable")
+func use_inventory_item(item_uuid: String):
 	if not G.is_server():
 		return
 
@@ -213,7 +219,8 @@ func sync_add_item(item_uuid: String, item_class: String, amount: int):
 	use_item(item_uuid)
 
 
-@rpc("call_remote", "any_peer", "reliable") func drop_inventory_item(item_uuid: String):
+@rpc("call_remote", "any_peer", "reliable")
+func drop_inventory_item(item_uuid: String):
 	if not G.is_server():
 		return
 

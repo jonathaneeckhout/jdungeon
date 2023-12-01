@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Jdungeon"
 run/main_scene="res://scenes/root/Root.tscn"
-config/features=PackedStringArray("4.1", "C#", "GL Compatibility")
+config/features=PackedStringArray("4.2", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -44,6 +44,10 @@ project/assembly_name="Jdungeon"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/beehave/plugin.cfg", "res://addons/logger/plugin.cfg")
+
+[gui]
+
+timers/tooltip_delay_sec=0.05
 
 [input]
 
@@ -156,3 +160,4 @@ locale/translations=PackedStringArray("res://assets/translation/en_US.en.transla
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)

@@ -32,7 +32,8 @@ func playersynchronizer_sync_input(c: int, d: Vector2, t: float, m: Vector2):
 		user.player.component_list["player_synchronizer"].sync_input(c, d, t, m)
 
 
-@rpc("call_remote", "any_peer", "reliable") func playersynchronizer_sync_interact(t: String):
+@rpc("call_remote", "any_peer", "reliable")
+func playersynchronizer_sync_interact(t: String):
 	if not G.is_server():
 		return
 
@@ -66,7 +67,8 @@ func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
 		entity.component_list["position_synchronizer"].sync(t, p, v)
 
 
-@rpc("call_remote", "any_peer", "reliable") func statssynchronizer_sync_stats(n: String):
+@rpc("call_remote", "any_peer", "reliable")
+func statssynchronizer_sync_stats(n: String):
 	if not G.is_server():
 		return
 
@@ -85,7 +87,7 @@ func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
 		return
 
 	if entity.component_list.has("stats_synchronizer"):
-		entity.component_list["stats_synchronizer"].sync_stats()
+		entity.component_list["stats_synchronizer"].sync_stats(id)
 
 
 @rpc("call_remote", "authority", "reliable")
@@ -102,7 +104,8 @@ func statssynchronizer_sync_response(n: String, d: Dictionary):
 		entity.component_list["stats_synchronizer"].sync_response(d)
 
 
-@rpc("call_remote", "authority", "reliable") func statssynchronizer_sync_int_change(
+@rpc("call_remote", "authority", "reliable")
+func statssynchronizer_sync_int_change(
 	n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: int
 ):
 	var entity: Node = G.world.get_entity_by_name(n)
@@ -117,7 +120,8 @@ func statssynchronizer_sync_response(n: String, d: Dictionary):
 		entity.component_list["stats_synchronizer"].sync_int_change(t, s, v)
 
 
-@rpc("call_remote", "authority", "reliable") func statssynchronizer_sync_float_change(
+@rpc("call_remote", "authority", "reliable")
+func statssynchronizer_sync_float_change(
 	n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: float
 ):
 	var entity: Node = G.world.get_entity_by_name(n)
@@ -158,6 +162,20 @@ func statssynchronizer_sync_heal(n: String, t: float, f: String, c: int, h: int)
 
 	if entity.component_list.has("stats_synchronizer"):
 		entity.component_list["stats_synchronizer"].sync_heal(t, f, c, h)
+
+
+@rpc("call_remote", "authority", "reliable")
+func statssynchronizer_sync_energy_recovery(n: String, t: float, f: String, e: int, r: int):
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("stats_synchronizer"):
+		entity.component_list["stats_synchronizer"].sync_energy_recovery(t, f, e, r)
 
 
 @rpc("call_remote", "authority", "reliable")
@@ -272,7 +290,8 @@ func networkviewsynchronizer_remove_item(n: String, iu: String):
 		entity.component_list["networkview_synchronizer"].remove_item(iu)
 
 
-@rpc("call_remote", "any_peer", "reliable") func networkviewsynchronizer_sync_bodies_in_view():
+@rpc("call_remote", "any_peer", "reliable")
+func networkviewsynchronizer_sync_bodies_in_view():
 	if not G.is_server():
 		return
 
@@ -320,7 +339,8 @@ func actionsynchronizer_sync_skill_use(n: String, t: float, p: Vector2, s: Strin
 		entity.component_list["action_synchronizer"].sync_skill_use(t, p, s)
 
 
-@rpc("call_remote", "any_peer", "reliable") func skillcomponent_sync_skills(n: String):
+@rpc("call_remote", "any_peer", "reliable")
+func skillcomponent_sync_skills(n: String):
 	if not G.is_server():
 		return
 

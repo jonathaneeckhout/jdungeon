@@ -15,12 +15,10 @@
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_fsi10")
-camera_speed = null
 
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="Enemies" type="Node2D" parent="Entities"]
-position = Vector2(472, -128)
 
 [node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
 position = Vector2(-2006, 948)
@@ -150,6 +148,7 @@ position = Vector2(-1536, 3519)
 position = Vector2(-32, -48)
 
 [node name="Portals" type="Node2D" parent="."]
+y_sort_enabled = true
 
 [node name="BaseCampPortal" parent="Portals" instance=ExtResource("11_nqcmx")]
 position = Vector2(-1280, -568)

@@ -21,7 +21,9 @@ var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSy
 @onready var inventory: InventorySynchronizerComponent = $InventorySynchronizerComponent
 @onready var equipment: EquipmentSynchronizerComponent = $EquipmentSynchronizerComponent
 @onready var player_unstuck: PlayerUnstuckComponent = $PlayerUnstuckComponent
-@onready var original_scale = $Skeleton.scale
+@onready var update_face: UpdateFaceComponent = $UpdateFaceComponent
+@onready var skeleton: Node2D = $Skeleton
+@onready var original_scale: Vector2 = skeleton.scale
 
 @onready var equipment_sprites = {
 	"Head": $Sprites/Head,
@@ -29,7 +31,9 @@ var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSy
 	"Legs": [$Sprites/RightLeg, $Sprites/LeftLeg],
 	"Arms": [$Sprites/RightArm, $Sprites/LeftArm],
 	"RightHand": $Sprites/RightHand,
-	"LeftHand": $Sprites/LeftHand
+	"LeftHand": $Sprites/LeftHand,
+	"RightOffHand": $Sprites/RightOffHand,
+	"LeftOffHand": $Sprites/LeftOffHand
 }
 
 @onready var original_sprite_textures = {
@@ -38,8 +42,13 @@ var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSy
 	"Legs": [$Sprites/RightLeg.texture, $Sprites/LeftLeg.texture],
 	"Arms": [$Sprites/RightArm.texture, $Sprites/LeftArm.texture],
 	"RightHand": $Sprites/RightHand.texture,
-	"LeftHand": $Sprites/LeftHand.texture
+	"LeftHand": $Sprites/LeftHand.texture,
+	"RightOffHand": $Sprites/RightOffHand.texture,
+	"LeftOffHand": $Sprites/LeftOffHand.texture
 }
+
+var right_weapon: Item = null
+var left_weapon: Item = null
 
 
 func _init():
@@ -70,6 +79,9 @@ func _ready():
 	# Client side code
 	else:
 		$InterfaceComponent.display_name = username
+		$InterfaceComponent.show_energy = true
+
+		update_face.direction_changed.connect(_on_direction_changed)
 
 		# Your own player code
 		if peer_id == multiplayer.get_unique_id():
@@ -128,13 +140,62 @@ func load_equipment_double_sprites(equipment_slot: String):
 		equipment_sprites[equipment_slot][1].texture = original_sprite_textures[equipment_slot][1]
 
 
+func load_equipment_weapons():
+	if right_weapon != null:
+		right_weapon.queue_free()
+		right_weapon = null
+
+	if left_weapon != null:
+		left_weapon.queue_free()
+		left_weapon = null
+
+	if equipment.items["RightHand"]:
+		right_weapon = equipment.items["RightHand"].duplicate()
+		right_weapon.scale = right_weapon.scale / original_scale
+		right_weapon.get_node("Sprite").hide()
+		right_weapon.get_node("EquipmentSprite").show()
+
+	if equipment.items["LeftHand"]:
+		left_weapon = equipment.items["LeftHand"].duplicate()
+		left_weapon.scale = left_weapon.scale / original_scale
+		left_weapon.get_node("Sprite").hide()
+		left_weapon.get_node("EquipmentSprite").show()
+
+	move_equipment_weapons()
+
+
+func move_equipment_weapons():
+	for child in equipment_sprites["RightHand"].get_children():
+		equipment_sprites["RightHand"].remove_child(child)
+
+	for child in equipment_sprites["LeftHand"].get_children():
+		equipment_sprites["LeftHand"].remove_child(child)
+
+	for child in equipment_sprites["RightOffHand"].get_children():
+		equipment_sprites["RightOffHand"].remove_child(child)
+
+	for child in equipment_sprites["LeftOffHand"].get_children():
+		equipment_sprites["LeftOffHand"].remove_child(child)
+
+	if skeleton.scale == original_scale:
+		if right_weapon != null:
+			equipment_sprites["RightHand"].add_child(right_weapon)
+		if left_weapon != null:
+			equipment_sprites["LeftOffHand"].add_child(left_weapon)
+
+	else:
+		if right_weapon != null:
+			equipment_sprites["LeftHand"].add_child(right_weapon)
+		if left_weapon != null:
+			equipment_sprites["RightOffHand"].add_child(left_weapon)
+
+
 func equipment_changed():
 	load_equipment_single_sprite("Head")
 	load_equipment_single_sprite("Body")
 	load_equipment_double_sprites("Arms")
 	load_equipment_double_sprites("Legs")
-	load_equipment_single_sprite("RightHand")
-	load_equipment_single_sprite("LeftHand")
+	load_equipment_weapons()
 
 
 func calculate_level_boost() -> Boost:
@@ -194,3 +255,7 @@ func _on_died():
 func _on_respawned():
 	if not G.is_server() and peer_id == multiplayer.get_unique_id():
 		$Camera2D/UILayer/GUI/DeathPopup.hide()
+
+
+func _on_direction_changed(_original: bool):
+	move_equipment_weapons()

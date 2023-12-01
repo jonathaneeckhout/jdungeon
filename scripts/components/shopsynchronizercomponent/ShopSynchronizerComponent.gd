@@ -102,13 +102,15 @@ func _on_shop_item_bought(player_id: int, item_uuid: String):
 			player.inventory.add_gold(shop_item["price"])
 
 
-@rpc("call_remote", "authority", "reliable") func sync_shop(shop: Dictionary):
+@rpc("call_remote", "authority", "reliable")
+func sync_shop(shop: Dictionary):
 	from_json(shop)
 
 	G.shop_opened.emit(target_node.name)
 
 
-@rpc("call_remote", "any_peer", "reliable") func buy_shop_item(item_uuid: String):
+@rpc("call_remote", "any_peer", "reliable")
+func buy_shop_item(item_uuid: String):
 	if not G.is_server():
 		return
 

@@ -51,6 +51,45 @@ text = "Maximum Hit Points:"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="EnergySplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/EnergySplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Energy:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/EnergySplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EnergyMaxSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/EnergyMaxSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Maximum Energy:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/EnergyMaxSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EnergyRegenSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
+layout_mode = 2
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="ScrollContainer/StatList/EnergyRegenSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Energy Regeneration/s:"
+
+[node name="Value" type="Label" parent="ScrollContainer/StatList/EnergyRegenSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="LevelSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
 layout_mode = 2
 dragger_visibility = 1

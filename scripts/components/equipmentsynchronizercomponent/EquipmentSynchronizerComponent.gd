@@ -161,7 +161,8 @@ func _on_delay_timer_timeout():
 	sync_equipment.rpc_id(1)
 
 
-@rpc("call_remote", "any_peer", "reliable") func sync_equipment():
+@rpc("call_remote", "any_peer", "reliable")
+func sync_equipment():
 	if not G.is_server():
 		return
 
@@ -174,7 +175,8 @@ func _on_delay_timer_timeout():
 	sync_response.rpc_id(id, to_json())
 
 
-@rpc("call_remote", "authority", "reliable") func sync_response(equipment: Dictionary):
+@rpc("call_remote", "authority", "reliable")
+func sync_response(equipment: Dictionary):
 	from_json(equipment)
 
 
@@ -189,12 +191,14 @@ func sync_equip_item(item_uuid: String, item_class: String):
 		item_added.emit(item_uuid, item_class)
 
 
-@rpc("call_remote", "authority", "reliable") func sync_unequip_item(item_uuid: String):
+@rpc("call_remote", "authority", "reliable")
+func sync_unequip_item(item_uuid: String):
 	if _unequip_item(item_uuid) != null:
 		item_removed.emit(item_uuid)
 
 
-@rpc("call_remote", "any_peer", "reliable") func remove_equipment_item(item_uuid: String):
+@rpc("call_remote", "any_peer", "reliable")
+func remove_equipment_item(item_uuid: String):
 	if not G.is_server():
 		return
 

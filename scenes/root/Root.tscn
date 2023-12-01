@@ -48,7 +48,7 @@ grow_vertical = 2
 position = Vector2(128, 132)
 texture = ExtResource("2_xtuay")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/SelectRunMode"]
+[node name="SelectModeButtons" type="VBoxContainer" parent="UI/SelectRunMode"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -56,17 +56,34 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RunAsGatewayButton" type="Button" parent="UI/SelectRunMode/VBoxContainer"]
+[node name="RunAsGatewayButton" type="Button" parent="UI/SelectRunMode/SelectModeButtons"]
 layout_mode = 2
 shortcut = SubResource("Shortcut_kh7qo")
 text = "1 - Run as gateway"
 
-[node name="RunAsServerButton" type="Button" parent="UI/SelectRunMode/VBoxContainer"]
+[node name="RunAsServerButton" type="Button" parent="UI/SelectRunMode/SelectModeButtons"]
 layout_mode = 2
 shortcut = SubResource("Shortcut_jdnlo")
 text = "2 - Run as server"
 
-[node name="RunAsClientButton" type="Button" parent="UI/SelectRunMode/VBoxContainer"]
+[node name="RunAsClientButton" type="Button" parent="UI/SelectRunMode/SelectModeButtons"]
 layout_mode = 2
 shortcut = SubResource("Shortcut_lgvw8")
 text = "3 - Run as client"
+
+[node name="SelectMap" type="VBoxContainer" parent="UI/SelectRunMode"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MapOptionButton" type="OptionButton" parent="UI/SelectRunMode/SelectMap"]
+layout_mode = 2
+
+[node name="StartServerButton" type="Button" parent="UI/SelectRunMode/SelectMap"]
+layout_mode = 2
+shortcut = SubResource("Shortcut_lgvw8")
+text = "StartServer"

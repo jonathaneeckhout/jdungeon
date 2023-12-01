@@ -42,11 +42,13 @@ func register_server(server_name: String, address: String, port: int, portals_in
 	register_response.rpc_id(id, true)
 
 
-@rpc("call_remote", "authority", "reliable") func register_response(response: bool):
+@rpc("call_remote", "authority", "reliable")
+func register_response(response: bool):
 	server_registered.emit(response)
 
 
-@rpc("call_remote", "authority", "reliable") func register_user(username: String, cookie: String):
+@rpc("call_remote", "authority", "reliable")
+func register_user(username: String, cookie: String):
 	S.register_user(username, cookie)
 
 
@@ -91,7 +93,8 @@ func enter_portal(username: String, server_name: String, portal_name: String):
 	)
 
 
-@rpc("call_remote", "authority", "reliable") func portal_response(
+@rpc("call_remote", "authority", "reliable")
+func portal_response(
 	response: bool,
 	username: String,
 	server_name: String,
