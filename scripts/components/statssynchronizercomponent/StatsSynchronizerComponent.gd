@@ -7,6 +7,7 @@ enum TYPE {
 	HP,
 	ENERGY_MAX,
 	ENERGY,
+	ENERGY_REGEN,
 	ATTACK_POWER_MIN,
 	ATTACK_POWER_MAX,
 	ATTACK_SPEED,
@@ -17,7 +18,8 @@ enum TYPE {
 	EXPERIENCE,
 	EXPERIENCE_NEEDED,
 	HURT,
-	HEAL
+	HEAL,
+	ENERGY_RECOVERY
 }
 
 const BASE_EXPERIENCE: int = 100
@@ -26,6 +28,7 @@ const BASE_EXPERIENCE: int = 100
 const StatListPermanent: Array[StringName] = [
 	"hp_max",
 	"energy_max",
+	"energy_regen",
 	"attack_power_min",
 	"attack_power_max",
 	"attack_speed",
@@ -43,10 +46,13 @@ const StatListCounter: Array[StringName] = [
 
 const StatListAll: Array[StringName] = StatListCounter + StatListPermanent
 
+const ENERGY_INTERVAL_TIME: float = 1
+
 signal loaded
 signal stats_changed(stat_type: TYPE)
 signal got_hurt(from: String, damage: int)
 signal healed(from: String, healing: int)
+signal energy_recovered(from: String, gained: int)
 signal died
 signal respawned
 
@@ -78,6 +84,11 @@ signal respawned
 	set(val):
 		energy = val
 		stats_changed.emit(TYPE.ENERGY)
+
+@export var energy_regen: int = 10:
+	set(val):
+		energy_regen = val
+		stats_changed.emit(TYPE.ENERGY_REGEN)
 
 @export var attack_power_min: int = 0:
 	set(val):
@@ -141,6 +152,8 @@ var _default_attack_power_max: int = attack_power_max
 var _default_defense: int = defense
 var _default_movement_speed: float = movement_speed
 
+var energy_regen_timer: Timer
+
 
 func _ready():
 	target_node = get_parent()
@@ -154,6 +167,15 @@ func _ready():
 	# Physics only needed on client side
 	if G.is_server():
 		set_physics_process(false)
+
+		#Uses a setter to automatically call server_periodic_update() when true
+		energy_regen_timer = Timer.new()
+		energy_regen_timer.name = "EnergyRegenTimer"
+		energy_regen_timer.wait_time = ENERGY_INTERVAL_TIME
+		energy_regen_timer.autostart = true
+		energy_regen_timer.timeout.connect(_on_energy_regen_timer_timeout)
+		add_child(energy_regen_timer)
+
 	else:
 		#Wait until the connection is ready to synchronize stats
 		if not multiplayer.has_multiplayer_peer():
@@ -172,7 +194,7 @@ func _ready():
 	ready_done = true
 
 
-func _physics_process(_delta):
+func _physics_process(_delta: float):
 	check_server_buffer()
 
 
@@ -213,6 +235,9 @@ func check_server_buffer():
 				TYPE.HEAL:
 					hp = entry["hp"]
 					healed.emit(entry["from"], entry["healing"])
+				TYPE.ENERGY_RECOVERY:
+					energy = entry["energy"]
+					energy_recovered.emit(entry["from"], entry["recovered"])
 			server_buffer.remove_at(i)
 
 
@@ -274,6 +299,26 @@ func reset_hp():
 func reset_energy():
 	energy = energy_max
 	_sync_int_change(TYPE.ENERGY, energy)
+
+
+func energy_recovery(from: String, recovered: int) -> int:
+	energy = min(energy_max, energy + recovered)
+
+	var timestamp: float = Time.get_unix_time_from_system()
+
+	if peer_id > 0:
+		G.sync_rpc.statssynchronizer_sync_energy_recovery.rpc_id(
+			peer_id, target_node.name, timestamp, from, energy, recovered
+		)
+
+	for watcher in watcher_synchronizer.watchers:
+		G.sync_rpc.statssynchronizer_sync_energy_recovery.rpc_id(
+			watcher.peer_id, target_node.name, timestamp, from, energy, recovered
+		)
+
+	energy_recovered.emit(from, recovered)
+
+	return recovered
 
 
 func kill():
@@ -392,6 +437,7 @@ func from_json(data: Dictionary, full: bool = false) -> bool:
 	return true
 
 
+#Client only (otherwise these synchs would be RPC'd to a client which does not support these synching methods)
 func _sync_int_change(stat_type: TYPE, value: int):
 	if not ready_done:
 		return
@@ -409,6 +455,7 @@ func _sync_int_change(stat_type: TYPE, value: int):
 		)
 
 
+#Client only (otherwise these synchs would be RPC'd to a client which does not support these synching methods)
 func _sync_float_change(stat_type: TYPE, value: float):
 	if not ready_done:
 		return
@@ -425,16 +472,7 @@ func _sync_float_change(stat_type: TYPE, value: float):
 		)
 
 
-func sync_stats():
-	if not G.is_server():
-		return
-
-	var id = multiplayer.get_remote_sender_id()
-
-	# Only allow logged in players
-	if not G.is_user_logged_in(id):
-		return
-
+func sync_stats(id: int):
 	G.sync_rpc.statssynchronizer_sync_response.rpc_id(id, target_node.name, to_json(true))
 
 
@@ -442,14 +480,17 @@ func sync_response(data: Dictionary):
 	from_json(data, true)
 
 
+#Called only by server
 func sync_int_change(timestamp: float, stat_type: TYPE, value: int):
 	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
 
 
+#Called only by server
 func sync_float_change(timestamp: float, stat_type: TYPE, value: float):
 	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
 
 
+#Called only by server
 func sync_hurt(timestamp: float, from: String, current_hp: int, damage: int):
 	server_buffer.append(
 		{
@@ -472,3 +513,22 @@ func sync_heal(timestamp: float, from: String, current_hp: int, healing: int):
 			"healing": healing
 		}
 	)
+
+
+func sync_energy_recovery(timestamp: float, from: String, current_energy: int, recovered: int):
+	server_buffer.append(
+		{
+			"type": TYPE.ENERGY_RECOVERY,
+			"timestamp": timestamp,
+			"from": from,
+			"energy": current_energy,
+			"recovered": recovered
+		}
+	)
+
+
+func _on_energy_regen_timer_timeout():
+	if not ready_done:
+		return
+
+	energy_recovery(target_node.get_name(), energy_regen)

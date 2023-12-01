@@ -79,6 +79,7 @@ func _ready():
 	# Client side code
 	else:
 		$InterfaceComponent.display_name = username
+		$InterfaceComponent.show_energy = true
 
 		update_face.direction_changed.connect(_on_direction_changed)
 
