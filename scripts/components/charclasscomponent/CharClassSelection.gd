@@ -68,7 +68,8 @@ func populate_owned_list():
 		available_list.set_item_metadata(index, characterClass.class_registered)
 		index += 1
 
-## More lightweight than [method populate_available_list], simply causes visual updates
+# Update methods are more lightweight than the "populate_" ones and can be used more freely
+# Simply cause visual updates
 func update_available_list(): 
 	if class_component.is_full():
 		for idx in available_list.item_count:
@@ -122,14 +123,14 @@ func _on_owned_selected(idx: int):
 	var charClass:String = owned_list.get_item_metadata(idx)
 	var charClassRes:CharacterClassResource = J.charclass_resources[charClass].duplicate()
 	
-	var text: String = "[bold]{0}[/bold] \n {1}"
+	var text: String = "[bold]{0}[/bold] \n {1}".format([charClassRes.displayed_name,charClassRes.description])
 	classDesc.parse_bbcode(text)
 	
 func _on_available_selected(idx: int):
 	var charClass:String = available_list.get_item_metadata(idx)
 	var charClassRes:CharacterClassResource = J.charclass_resources[charClass].duplicate()
 	
-	var text: String = "[bold]{0}[/bold] \n {1}"
+	var text: String = "[bold]{0}[/bold] \n {1}".format([charClassRes.displayed_name,charClassRes.description])
 	classDesc.parse_bbcode(text)
 
 	
