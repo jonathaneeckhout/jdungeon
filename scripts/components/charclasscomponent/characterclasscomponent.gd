@@ -36,10 +36,19 @@ func add_class(charclass: String, bypassLimit: bool = false):
 
 ## Applies bonuses and multipliers to the character's stats
 func apply_stats():
-	for charclass in classes:
-		for stat in StatsSynchronizerComponent.StatListWithDefaults:
-			var value: float = stats_component.get(stat) * charclass.get_multiplier(stat) + charclass.get_bonus(stat)
-			stats_component.set(stat, value)
+	var statsDict: Dictionary
+	for stat in StatsSynchronizerComponent.StatListWithDefaults:
+		statsDict[stat] = stats_component.get(stat)
+		
+		#Apply all multipliers from classes for the given stat
+		for charClass in classes:
+			statsDict[stat] *= charClass.get_multiplier(stat)
+			
+		#Apply all bonuses from classes
+		for charClass in classes:
+			statsDict[stat] += charClass.get_bonus(stat)
+	
+		
 
 func is_full() -> bool:
 	return classes.size() >= max_classes

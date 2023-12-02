@@ -22,10 +22,12 @@ const FAILSAFE_ICON_PATH: String = "res://icon.svg"
 
 ## Stored as a String:float pair
 ## These multipliers should be used on StatsComponent, use the name of the stat's variable followed by the multiplier
+## All values default to 1
 @export var stat_multipliers: Dictionary
 
-##Stored as a String:int pair
-## Similar to stat_multipliers, but with flat bonuses
+## Stored as a String:int pair
+## Similar to stat_multipliers, but with flat bonuses. 
+## All values default to 0
 @export var stat_bonuses: Dictionary
 
 func get_multiplier(stat: String) -> float:
