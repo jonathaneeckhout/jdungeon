@@ -20,8 +20,9 @@ var player_scene: Resource
 var enemy_scenes: Dictionary = {}
 var npc_scenes: Dictionary = {}
 var item_scenes: Dictionary = {}
-var skill_resources: Dictionary = {}
 var map_scenes: Dictionary = {}
+var skill_resources: Dictionary = {}
+var charclass_resources: Dictionary = {}
 
 var uuid_util: UuidUtil
 
@@ -147,3 +148,8 @@ func register_map_scene(map_name: String, map_scene_path: String):
 func register_skill_resource(skill_class: String, skill_res_path: String):
 	skill_resources[skill_class] = load(skill_res_path)
 	assert(skill_class == skill_resources[skill_class].skill_class)
+
+
+func register_class_resource(charclass_class: String, class_res_path: String):
+	charclass_resources[charclass_class] = load(class_res_path)
+	assert(charclass_class == charclass_resources[charclass_class].class_registered)
