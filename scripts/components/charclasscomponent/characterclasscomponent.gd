@@ -29,6 +29,10 @@ func add_class(charclass: String, bypassLimit: bool = false):
 	if bypassLimit or classes.size() >= max_classes:
 		GodotLogger.warn("Tried to add a class but the limit has already been reached for this component.")
 		return
+	
+	if charclass in class_blacklist:
+		GodotLogger.warn("Added a blacklisted class '{0}'.".format([charclass]))
+		
 		
 	var charClass: CharacterClassResource = J.charclass_resources[charclass].duplicate()
 	classes.append(charClass)
@@ -53,3 +57,11 @@ func apply_stats():
 func is_full() -> bool:
 	return classes.size() >= max_classes
 		
+func is_class_allowed(charclass:String) -> bool:
+	if not class_whitelist.is_empty() and not charclass in class_whitelist:
+		return false
+	
+	if charclass in class_blacklist:
+		return false
+	
+	return true

@@ -87,18 +87,7 @@ func update_lists():
 	update_owned_list()
 
 func update_allowed_classes():
-	allowed_classes = J.charclass_resources.keys()
-	
-	#Whitelist if present
-	if not class_component.class_whitelist.is_empty():
-		allowed_classes = allowed_classes.filter( func(charClass: String): return (
-			charClass in class_component.class_whitelist
-		))
-	
-	#Blacklist
-	allowed_classes = allowed_classes.filter( func(charClass: String): return (
-		not charClass in class_component.class_blacklist
-	))
+	allowed_classes = J.charclass_resources.keys().filter( class_component.is_class_allowed )
 
 
 #Signal targets
