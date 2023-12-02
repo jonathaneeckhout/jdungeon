@@ -8,21 +8,30 @@ extends Control
 @export var allowed_classes: Array[String]
 
 
-@export var available_list: ItemList
-@export var owned_list: ItemList
+@onready var available_list: ItemList = $AvailableClasses
+@onready var owned_list: ItemList = $OwnedClasses
+@onready var statsDisplay: Control = $StatDisplay
+@onready var classDesc: RichTextLabel = $ClassDescription
 
 
 func _ready() -> void:
 	available_list.item_activated.connect(_on_available_activated)
 	owned_list.item_activated.connect(_on_owned_activated)
 	
+	available_list.item_selected.connect(_on_available_selected)
+	owned_list.item_selected.connect(_on_owned_selected)
+	
+	statsDisplay.accept_input = false
+	
 	if not class_component:
 		GodotLogger.warn("No target has been selected. Make sure to run select_target before anything is attempted.")
 		return
+
 	
 	
 func select_target(class_comp: CharacterClassComponent):
 	class_component = class_comp
+	statsDisplay.stats = class_component.stats_component
 	
 	populate_available_list()
 	populate_owned_list()
@@ -70,6 +79,7 @@ func update_available_list():
 		
 func update_owned_list():
 	owned_list.max_columns = class_component.max_classes
+	statsDisplay.renew_values()
 	
 func update_lists():
 	update_available_list()
@@ -89,6 +99,8 @@ func update_allowed_classes():
 		not charClass in class_component.class_blacklist
 	))
 
+
+#Signal targets
 func _on_available_activated(idx: int):
 	var charClass: String = available_list.get_item_metadata(idx)
 	#var charClassRes: CharacterClassResource = J.charclass_resources[charClass]
@@ -105,3 +117,20 @@ func _on_owned_activated(idx: int):
 	
 	populate_owned_list()
 	update_lists()
+
+func _on_owned_selected(idx: int):
+	var charClass:String = owned_list.get_item_metadata(idx)
+	var charClassRes:CharacterClassResource = J.charclass_resources[charClass].duplicate()
+	
+	var text: String = "[bold]{0}[/bold] \n {1}"
+	classDesc.parse_bbcode(text)
+	
+func _on_available_selected(idx: int):
+	var charClass:String = available_list.get_item_metadata(idx)
+	var charClassRes:CharacterClassResource = J.charclass_resources[charClass].duplicate()
+	
+	var text: String = "[bold]{0}[/bold] \n {1}"
+	classDesc.parse_bbcode(text)
+
+	
+	
