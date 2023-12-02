@@ -1,6 +1,24 @@
 extends Control
+## Set the [member stats] variable to start updating
 
-@export var stats: StatsSynchronizerComponent
+## Set by export
+@export var stats: StatsSynchronizerComponent:
+	set(value):
+		#If this was unset, disconnect any previously connected stats.
+		#If the instance is no longer valid, don't bother.
+		if value == null and is_instance_valid(stats) and stats.stats_changed.is_connected(_on_stats_changed):
+			stats.stats_changed.disconnect(_on_stats_changed)
+		
+		stats = value
+		
+		if stats:
+			#If set and not yet connected, perform the connection
+			if not stats.stats_changed.is_connected(_on_stats_changed):
+				stats.stats_changed.connect(_on_stats_changed)
+				
+			renew_values()
+
+@export var accept_input: bool = true
 
 @onready var hp_value_label: Label = $ScrollContainer/StatList/HPSplitContainer/Value
 @onready var hp_max_value_label: Label = $ScrollContainer/StatList/HPMaxSplitContainer/Value
@@ -19,16 +37,8 @@ var attack_power_max_value_label: Label = $ScrollContainer/StatList/AttackPowerM
 @onready var defense_value_label: Label = $ScrollContainer/StatList/DefenseSplitContainer/Value
 
 
-func _ready() -> void:
-	if stats:
-		stats.stats_changed.connect(_on_stats_changed)
-		renew_values()
-	else:
-		GodotLogger.error("Stats is not assigned")
-
-
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("j_toggle_stats"):
+	if accept_input and event.is_action_pressed("j_toggle_stats"):
 		visible = !visible
 
 
