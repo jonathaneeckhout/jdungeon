@@ -11,7 +11,7 @@ const FAILSAFE_ICON_PATH: String = "res://icon.svg"
 
 
 ## This path is used to retrieve it's icon, avoid storing the texture directly for server memory reason
-@export var icon_path: String
+@export_dir var icon_path: String
 
 
 @export_multiline var description: String
@@ -23,12 +23,28 @@ const FAILSAFE_ICON_PATH: String = "res://icon.svg"
 ## Stored as a String:float pair
 ## These multipliers should be used on StatsComponent, use the name of the stat's variable followed by the multiplier
 ## All values default to 1
-@export var stat_multipliers: Dictionary
+@export var stat_multipliers: Dictionary = {
+	"hp_max":1.0,
+	"energy_max":1.0,
+	"energy_regen":1.0,
+	"attack_power_min":1.0,
+	"attack_power_max":1.0,
+	"defense":1.0,
+	"movement_speed":1.0,
+}
 
 ## Stored as a String:int pair
 ## Similar to stat_multipliers, but with flat bonuses. 
 ## All values default to 0
-@export var stat_bonuses: Dictionary
+@export var stat_bonuses: Dictionary = {
+	"hp_max":0,
+	"energy_max":0,
+	"energy_regen":0,
+	"attack_power_min":0,
+	"attack_power_max":0,
+	"defense":0,
+	"movement_speed":0,
+}
 
 func get_multiplier(stat: String) -> float:
 	return stat_multipliers.get(stat, 1.0 as float)

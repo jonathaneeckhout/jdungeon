@@ -25,8 +25,6 @@ func _ready():
 	if user.get("component_list") != null:
 		user.component_list["class_component"] = self
 	
-	classes_changed.connect(sync_all)
-	
 	if G.is_server():
 		return
 
@@ -40,7 +38,9 @@ func _ready():
 	#Some entities take a bit to get added to the tree, do not update them until then.
 	if not is_inside_tree():
 		await tree_entered
-
+	
+	#TEMP?
+	add_class("Base")
 	G.sync_rpc.characterclasscomponent_sync_all.rpc_id(1, user.get_name())
 
 func set_blacklist(charclass: String, enabled: bool):
@@ -90,8 +90,14 @@ func add_class(charclass: String, bypassLimit: bool = false):
 	classes_changed.emit()
 
 
-## Applies bonuses and multipliers to the character's stats
+## Applies bonuses and multipliers to the character's StatsSynchronizerComponent
 func apply_stats():
+	
+	#If the stats are not ready, wait another frame.
+	if not stats_component.ready_done:
+		get_tree().physics_frame.connect(apply_stats)
+		return
+	
 	var statsDict: Dictionary
 	for stat in StatsSynchronizerComponent.StatListWithDefaults:
 		statsDict[stat] = stats_component.get(stat)
@@ -112,11 +118,13 @@ func get_charclass_classes() -> Array[String]:
 	return output
 	
 	
-#Server only
+#Client only
 func sync_all(id: int):
 	#Calls self.sync_response
 	G.sync_rpc.characterclasscomponent_sync_response.rpc_id(id, user.get_name(), to_json())
-	
+
+
+#Client only
 func sync_response(data: Dictionary):
 	from_json(data)
 	
