@@ -1,17 +1,63 @@
 extends Node
 class_name CharacterClassComponent
 
+const JSON_KEYS: Array[String] = ["classes", "class_whitelist", "class_blacklist", "max_classes"]
+
+signal classes_changed
+signal list_changed
+
+@export var user: Node
+
 @export var stats_component: StatsSynchronizerComponent
 
-@export var classes: Array[CharacterClassResource]
+var classes: Array[CharacterClassResource]
 
 ##Only those here will be presented to the user, leave empty to disable
-@export var class_whitelist: Array[String]
+var class_whitelist: Array[String]
 
 ##Removes any option presented to the user that's defined here, taking precedence over [member class_whitelist]
-@export var class_blacklist: Array[String]
+var class_blacklist: Array[String]
 
-@export var max_classes: int
+var max_classes: int = 2
+
+
+func _ready():
+	if user.get("component_list") != null:
+		user.component_list["class_component"] = self
+	
+	classes_changed.connect(sync_all)
+	
+	if G.is_server():
+		return
+
+	#Wait until the connection is ready to synchronize stats
+	if not multiplayer.has_multiplayer_peer():
+		await multiplayer.connected_to_server
+
+	#Wait an additional frame so others can get set.
+	await get_tree().process_frame
+
+	#Some entities take a bit to get added to the tree, do not update them until then.
+	if not is_inside_tree():
+		await tree_entered
+
+	G.sync_rpc.characterclasscomponent_sync_all.rpc_id(1, user.get_name())
+
+func set_blacklist(charclass: String, enabled: bool):
+	if enabled and not charclass in class_blacklist:
+		class_blacklist.append(charclass)
+	elif not enabled:
+		class_blacklist.erase(charclass)
+	list_changed.emit()
+
+
+func set_whitelist(charclass: String, enabled: bool):
+	if enabled and not charclass in class_blacklist:
+		class_whitelist.append(charclass)
+	elif not enabled:
+		class_whitelist.erase(charclass)
+	list_changed.emit()
+		
 
 func remove_class(charclass: String):
 	if classes.is_empty():
@@ -22,7 +68,9 @@ func remove_class(charclass: String):
 	while index < classes.size():
 		if classes[index].class_registered == charclass:
 			classes.remove_at(index)
+			classes_changed.emit()
 			return
+	
 
 
 func add_class(charclass: String, bypassLimit: bool = false):
@@ -32,10 +80,14 @@ func add_class(charclass: String, bypassLimit: bool = false):
 	
 	if charclass in class_blacklist:
 		GodotLogger.warn("Added a blacklisted class '{0}'.".format([charclass]))
+	
+	if not class_whitelist.is_empty() and not charclass in class_whitelist:
+		GodotLogger.warn("Whitelist is not empty but class '{0}' isn't in it.".format([charclass]))
 		
 		
 	var charClass: CharacterClassResource = J.charclass_resources[charclass].duplicate()
 	classes.append(charClass)
+	classes_changed.emit()
 
 
 ## Applies bonuses and multipliers to the character's stats
@@ -52,11 +104,53 @@ func apply_stats():
 		for charClass in classes:
 			statsDict[stat] += charClass.get_bonus(stat)
 	
+	
+func get_charclass_classes() -> Array[String]:
+	var output: Array[String] = []
+	for charClass in classes:
+		output.append(charClass.class_registered)
+	return output
+	
+	
+#Server only
+func sync_all(id: int):
+	#Calls self.sync_response
+	G.sync_rpc.characterclasscomponent_sync_response.rpc_id(id, user.get_name(), to_json())
+	
+func sync_response(data: Dictionary):
+	from_json(data)
+	
+func to_json()->Dictionary:
+	var output: Dictionary = {"classes": [], "blacklist": [], "whitelist": [], "max_classes": max_classes}
+	
+	for charClass in classes:
+		output["classes"].append(charClass.class_registered)
+		
+	for charClass in class_blacklist:
+		output["blacklist"].append(charClass)
+
+	for charClass in class_whitelist:
+		output["whitelist"].append(charClass)
+
+	return output
+	pass
+
+func from_json(data: Dictionary) -> bool:
+	for key in JSON_KEYS:
+		if not key in data:
+			GodotLogger.error('Failed to load classes from data, missing "{0}" key'.format([key]))
+			return false
+		
+		set(key, data[key])
+		
+	return true
 		
 
 func is_full() -> bool:
 	return classes.size() >= max_classes
 		
+		
+## Returns wether or not this component is allowed to have this class 
 func is_class_allowed(charclass:String) -> bool:
 	if not class_whitelist.is_empty() and not charclass in class_whitelist:
 		return false

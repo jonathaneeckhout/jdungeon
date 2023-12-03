@@ -1,11 +1,12 @@
 extends Control
-## Once [method select_target] is ran, a list will fill with allowed and dissallowed
+## Call [method select_target] to start.
 
 
 @export var class_component: CharacterClassComponent
 
-## These are the classes that will be presented to the player as available
-@export var allowed_classes: Array[String]
+
+## These are the classes that will be presented to the player as available. Updated from [method update_allowed_classes]
+var allowed_classes: Array[String]
 
 
 @onready var available_list: ItemList = $AvailableClasses
@@ -54,6 +55,8 @@ func populate_available_list():
 		available_list.set_item_metadata(index, characterClass.class_registered)
 		
 		index += 1
+		
+	update_available_list()
 
 func populate_owned_list():
 	#if not class_component:
@@ -67,6 +70,8 @@ func populate_owned_list():
 		available_list.add_item(characterClass.displayed_name, characterClass.get_icon())
 		available_list.set_item_metadata(index, characterClass.class_registered)
 		index += 1
+		
+	update_owned_list()
 
 # Update methods are more lightweight than the "populate_" ones and can be used more freely
 # Simply cause visual updates
@@ -122,5 +127,3 @@ func _on_available_selected(idx: int):
 	var text: String = "[bold]{0}[/bold] \n {1}".format([charClassRes.displayed_name,charClassRes.description])
 	classDesc.parse_bbcode(text)
 
-	
-	

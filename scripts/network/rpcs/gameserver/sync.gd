@@ -395,3 +395,38 @@ func playersynchronizer_sync_skill_use(p: Vector2, s: String):
 
 	if user.player.component_list.has("player_synchronizer"):
 		user.player.component_list["player_synchronizer"].sync_skill_use(p, s)
+
+@rpc("call_remote", "any_peer", "reliable")
+func characterclasscomponent_sync_all(n: String):
+	if not G.is_server():
+		return
+
+	var id = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("class_component"):
+		entity.component_list["class_component"].sync_all(id)
+	
+@rpc("call_remote", "authority", "reliable")
+func characterclasscomponent_sync_response(n: String, d: Dictionary):
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("class_component"):
+		entity.component_list["class_component"].sync_response(d)
