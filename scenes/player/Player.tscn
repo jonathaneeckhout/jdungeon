@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=46 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="2_p6rt0"]
@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://bqsdy2usb2e6d" path="res://scenes/player/equipment/Equipment.tscn" id="14_2fdu8"]
 [ext_resource type="PackedScene" uid="uid://b1dgvmg6277k4" path="res://scripts/components/playerunstuckcomponent/PlayerUnstuckComponent.tscn" id="15_elwtb"]
 [ext_resource type="PackedScene" uid="uid://ccq2mcrkefjnb" path="res://scenes/player/deathpopup/DeathPopup.tscn" id="15_ho0h1"]
+[ext_resource type="Script" path="res://scripts/components/charclasscomponent/characterclasscomponent.gd" id="16_gai5d"]
 [ext_resource type="PackedScene" uid="uid://dmf2tmcuq22vg" path="res://scenes/player/chatpanel/ChatPanel.tscn" id="16_xx8pu"]
 [ext_resource type="PackedScene" uid="uid://dirsk8pf0bxh5" path="res://scenes/player/statdisplay/StatDisplay.tscn" id="17_3wdg5"]
 [ext_resource type="PackedScene" uid="uid://qdyqn5c3hmey" path="res://scripts/components/cursorcomponent/CursorComponent.tscn" id="17_u25e0"]
@@ -1238,6 +1239,11 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
 [node name="PlayerRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("12_qxjy0")]
 stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="CharacterClassComponent" type="Node" parent="." node_paths=PackedStringArray("user", "stats_component")]
+script = ExtResource("16_gai5d")
+user = NodePath("..")
+stats_component = NodePath("../StatsSynchronizerComponent")
 
 [node name="PlayerUnstuckComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("15_elwtb")]
 stats = NodePath("../StatsSynchronizerComponent")
