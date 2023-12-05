@@ -45,8 +45,7 @@ var env: GodotEnv
 
 func _ready():
 	env = GodotEnv.new()
-	audio.parent = self
-	audio.main_instance = audio
+	
 	load_common_env_variables()
 
 

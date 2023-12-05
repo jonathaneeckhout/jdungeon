@@ -30,6 +30,9 @@ var audio: SoundManager = SoundManager.new()
 
 func _ready():
 	uuid_util = load("res://scripts/uuid/uuid.gd").new()
+	
+	audio.parent = self
+	audio.main_instance = audio
 
 
 func register_scenes():
