@@ -25,6 +25,8 @@ var map_scenes: Dictionary = {}
 
 var uuid_util: UuidUtil
 
+var audio: SoundManager = SoundManager.new()
+
 
 func _ready():
 	uuid_util = load("res://scripts/uuid/uuid.gd").new()
