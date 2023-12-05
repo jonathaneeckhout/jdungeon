@@ -55,8 +55,6 @@ var debug_mode: bool:
 func _ready():
 	#Do not listen to inputs in non-debug builds, for performance reasons.
 	set_process_unhandled_input(OS.is_debug_build())
-	#Start with it enabled if on a debug build
-	debug_mode = OS.is_debug_build()
 
 	env = GodotEnv.new()
 
