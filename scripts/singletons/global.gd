@@ -45,7 +45,7 @@ var env: GodotEnv
 
 func _ready():
 	env = GodotEnv.new()
-	
+
 	load_common_env_variables()
 
 
