@@ -340,6 +340,7 @@ func kill():
 func load_defaults():
 	hp_max = _default_hp_max
 	energy_max = _default_energy_max
+	energy_regen = _default_energy_regen
 	attack_power_min = _default_attack_power_min
 	attack_power_max = _default_attack_power_max
 	defense = _default_defense

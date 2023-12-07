@@ -16,6 +16,7 @@ extends Control
 			if not stats.stats_changed.is_connected(_on_stats_changed):
 				stats.stats_changed.connect(_on_stats_changed)
 				
+			await ready
 			renew_values()
 
 @export var accept_input: bool = true

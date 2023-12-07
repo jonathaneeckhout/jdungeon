@@ -339,6 +339,7 @@ func actionsynchronizer_sync_skill_use(n: String, t: float, p: Vector2, s: Strin
 		entity.component_list["action_synchronizer"].sync_skill_use(t, p, s)
 
 
+#Server only
 @rpc("call_remote", "any_peer", "reliable")
 func skillcomponent_sync_skills(n: String):
 	if not G.is_server():
@@ -362,6 +363,7 @@ func skillcomponent_sync_skills(n: String):
 		entity.component_list["skill_component"].sync_skills()
 
 
+#Client only
 @rpc("call_remote", "authority", "reliable")
 func skillcomponent_sync_response(n: String, d: Dictionary):
 	var entity: Node = G.world.get_entity_by_name(n)
@@ -396,6 +398,8 @@ func playersynchronizer_sync_skill_use(p: Vector2, s: String):
 	if user.player.component_list.has("player_synchronizer"):
 		user.player.component_list["player_synchronizer"].sync_skill_use(p, s)
 
+
+#Server only
 @rpc("call_remote", "any_peer", "reliable")
 func characterclasscomponent_sync_all(n: String):
 	if not G.is_server():
@@ -418,6 +422,7 @@ func characterclasscomponent_sync_all(n: String):
 	if entity.component_list.has("class_component"):
 		entity.component_list["class_component"].sync_all(id)
 	
+#Client only	
 @rpc("call_remote", "authority", "reliable")
 func characterclasscomponent_sync_response(n: String, d: Dictionary):
 	var entity: Node = G.world.get_entity_by_name(n)
