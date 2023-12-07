@@ -101,13 +101,6 @@ func _ready() -> void:
 
 	G.sync_rpc.skillcomponent_sync_skills.rpc_id(1, user.get_name())
 
-	#Setup user
-	while directSpace == null:
-		directSpace = user.get_world_2d().direct_space_state
-		await get_tree().process_frame
-
-	assert(directSpace is PhysicsDirectSpaceState2D)
-
 
 #Skill selection is local
 func _input(event: InputEvent) -> void:

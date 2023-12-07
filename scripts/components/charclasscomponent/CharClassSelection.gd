@@ -8,12 +8,17 @@ extends Control
 ## These are the classes that will be presented to the player as available. Updated from [method update_allowed_classes]
 var allowed_classes: Array[String]
 
+## Used to know when a synch is required on the next timeout.
+var sync_required: bool
+
+## Internally used to queue syncs with the server.
+var syncTimer := Timer.new()
+
 
 @onready var available_list: ItemList = $AvailableClasses
 @onready var owned_list: ItemList = $OwnedClasses
 @onready var statsDisplay: Control = $StatDisplay
 @onready var classDesc: RichTextLabel = $ClassDescription
-
 
 func _ready() -> void:
 	available_list.item_activated.connect(_on_available_activated)
@@ -24,11 +29,14 @@ func _ready() -> void:
 	
 	statsDisplay.accept_input = false
 	
+	syncTimer.timeout.connect(_on_sync_timer_timeout)
+	add_child(syncTimer)
+	syncTimer.start(1)
+	
 	if not class_component:
 		GodotLogger.warn("No target has been selected. Make sure to run select_target before anything is attempted.")
 		return
 
-	
 	
 func select_target(class_comp: CharacterClassComponent):
 	class_component = class_comp
@@ -104,6 +112,7 @@ func _on_available_activated(idx: int):
 	
 	populate_owned_list()
 	update_lists()
+	sync_required = true
 	
 func _on_owned_activated(idx: int):
 	var charClass: String = available_list.get_item_metadata(idx)
@@ -112,6 +121,7 @@ func _on_owned_activated(idx: int):
 	
 	populate_owned_list()
 	update_lists()
+	sync_required = true
 
 func _on_owned_selected(idx: int):
 	var charClass:String = owned_list.get_item_metadata(idx)
@@ -127,3 +137,7 @@ func _on_available_selected(idx: int):
 	var text: String = "[bold]{0}[/bold] \n {1}".format([charClassRes.displayed_name,charClassRes.description])
 	classDesc.parse_bbcode(text)
 
+func _on_sync_timer_timeout():
+	if sync_required and class_component:
+		class_component.client_class_change_attempt()
+		sync_required = false
