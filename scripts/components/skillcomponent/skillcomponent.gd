@@ -6,9 +6,12 @@ class_name SkillComponent
 #Connect player input to skill usage
 #Prepare an UI element to check skills
 
+enum SKILL_ATTEMPT_RESULT { OK, INSUFFICIENT_ENERGY, OUT_OF_RANGE, COOLDOWN_RUNNING }
+
 #All of these signals are meant for local use, they should not affect any networking related stuff.
 signal skill_successful_usage(skill: SkillComponentResource)
 signal skill_failed_usage(skill: SkillComponentResource)
+signal skill_attempt_result(result: SKILL_ATTEMPT_RESULT)
 
 signal skill_selected(skill: SkillComponentResource)
 signal skill_index_selected(index: int)
@@ -66,6 +69,10 @@ func _ready() -> void:
 	add_skill("Combustion")
 	assert(skills[0] is SkillComponentResource)
 	#TEMP ends
+
+	#Do not connect if not debug, for performance reasons.
+	if OS.is_debug_build():
+		skill_attempt_result.connect(print_skill_attempt_result)
 
 	if user.get("component_list") != null:
 		user.component_list["skill_component"] = self
@@ -159,7 +166,7 @@ func draw_hitbox(localPoint: Vector2 = to_local(player_synchronizer.mouse_global
 
 	#Color selection
 	var colorUsed: Color
-	if is_skill_usable(skill_current):
+	if is_skill_energy_affordable(skill_current) and not is_skill_cooling_down(skill_current):
 		colorUsed = COLOR_HITBOX
 	else:
 		colorUsed = COLOR_HITBOX_UNUSABLE
@@ -238,31 +245,36 @@ func skill_use_at(globalPoint: Vector2, skillClass: String = get_skill_current_c
 	var skillUsed: SkillComponentResource = J.skill_resources[skillClass].duplicate()
 	skill_current = skillUsed
 
-	#Fail if not usable. Includes skill's custom checks.
-	if not is_skill_usable(skillUsed):
+	#Prepare the usage info.
+	var skillUsageInfo := UseInfo.new()
+	skillUsageInfo.user = user
+	skillUsageInfo.targets = get_targets(globalPoint)
+	skillUsageInfo.position_target_global = globalPoint
+
+	#Check the expected result of attempting this use.
+	var skillUseResult: SKILL_ATTEMPT_RESULT = get_skill_use_expected_result(
+		skillUsed, skillUsageInfo
+	)
+
+	#If usable
+	if skillUseResult == SKILL_ATTEMPT_RESULT.OK:
+		#Perform the usage IF it's the server
+		if G.is_server():
+			#Perform the skill's effect on the targets
+			skillUsed.effect(skillUsageInfo)
+			#Use up energy
+			stats_component.energy_recovery(skillUsageInfo.user.get_name(), -skillUsed.energy_usage)
+
+		#Emit success and start cooldown on both
+		skill_successful_usage.emit(skillUsed)
+		cooldown_set_time_left(skillUsed.skill_class, skillUsed.cooldown)
+	else:
 		skill_failed_usage.emit(skillUsed)
-		return
 
-	#Fail if out of range
-	if user.global_position.distance_to(globalPoint) > skillUsed.hit_range:
-		skill_failed_usage.emit(skillUsed)
-		return
+	#Broadcast the result regardless of success
+	skill_attempt_result.emit(skillUseResult)
 
-	#Actual skill functionality
-	if G.is_server():
-		var skillUsageInfo := UseInfo.new()
-		skillUsageInfo.user = user
-		skillUsageInfo.targets = get_targets(globalPoint)
-		skillUsageInfo.position_target_global = globalPoint
-
-		#Perform the skill's effect on the targets
-		skillUsed.effect(skillUsageInfo)
-		#Use up energy
-		stats_component.energy_recovery(skillUsageInfo.user.get_name(), -skillUsed.energy_usage)
-
-	skill_successful_usage.emit(skillUsed)
-	cooldown_set_time_left(skillUsed.skill_class, skillUsed.cooldown)
-
+	#cast_on_select skills should never stay selected.
 	if skillUsed.cast_on_select:
 		skill_deselect()
 
@@ -362,14 +374,35 @@ func is_skill_present(skillClass: String) -> bool:
 	return false
 
 
-func is_skill_usable(skill: SkillComponentResource) -> bool:
-	if stats_component.energy < skill.energy_usage:
-		return false
+func get_skill_use_expected_result(
+	skill: SkillComponentResource, useInfo: UseInfo
+) -> SKILL_ATTEMPT_RESULT:
+	if is_skill_cooling_down(skill):
+		return SKILL_ATTEMPT_RESULT.COOLDOWN_RUNNING
 
-	if not is_zero_approx(cooldown_get_time_left(skill.skill_class)):
-		return false
+	if not is_skill_energy_affordable(skill):
+		return SKILL_ATTEMPT_RESULT.INSUFFICIENT_ENERGY
 
-	return true
+	if not is_skill_target_within_range(
+		skill, useInfo.user.global_position, useInfo.position_target_global
+	):
+		return SKILL_ATTEMPT_RESULT.OUT_OF_RANGE
+
+	return SKILL_ATTEMPT_RESULT.OK
+
+
+func is_skill_cooling_down(skill: SkillComponentResource) -> bool:
+	return not is_zero_approx(cooldown_get_time_left(skill.skill_class))
+
+
+func is_skill_energy_affordable(skill: SkillComponentResource) -> bool:
+	return stats_component.energy >= skill.energy_usage
+
+
+func is_skill_target_within_range(
+	skill: SkillComponentResource, userPosGlobal: Vector2, targetPosGlobal: Vector2
+):
+	return userPosGlobal.distance_to(targetPosGlobal) <= skill.hit_range
 
 
 func to_json() -> Dictionary:
@@ -511,3 +544,19 @@ class UseInfo:
 		targets = foundTargets
 		position_target_global = data["position_global"]
 		return true
+
+
+func print_skill_attempt_result(result: SKILL_ATTEMPT_RESULT):
+	if Global.debug_mode:
+		print(
+			(
+				"'"
+				+ user.get_name()
+				+ "' attempted to use skill '"
+				+ skill_current.skill_class
+				+ "' with result: '"
+				+ SKILL_ATTEMPT_RESULT.find_key(result)
+				+ "' on instance "
+				+ get_window().title
+			)
+		)

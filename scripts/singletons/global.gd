@@ -1,5 +1,7 @@
 extends Node
 
+signal debug_mode_toggled(newStats: bool)
+
 var env_debug: bool = false
 var env_audio_mute: bool = false
 var env_version_file: String = ""
@@ -42,11 +44,26 @@ var env_postgress_db: String = ""
 
 var env: GodotEnv
 
+## This is used to increase/reduce output in some classes.
+var debug_mode: bool:
+	set(val):
+		debug_mode = val
+		print_debug("Debug mode: " + str(debug_mode))
+		debug_mode_toggled.emit(debug_mode)
+
 
 func _ready():
+	#Do not listen to inputs in non-debug builds, for performance reasons.
+	set_process_unhandled_input(OS.is_debug_build())
+
 	env = GodotEnv.new()
 	
 	load_common_env_variables()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("debug_mode_toggle"):
+		debug_mode = !debug_mode
 
 
 func load_local_settings():
