@@ -57,7 +57,7 @@ func _ready():
 	set_process_unhandled_input(OS.is_debug_build())
 
 	env = GodotEnv.new()
-	
+
 	load_common_env_variables()
 
 
