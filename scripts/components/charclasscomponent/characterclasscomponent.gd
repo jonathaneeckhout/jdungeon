@@ -1,9 +1,13 @@
 extends Node
 class_name CharacterClassComponent
 
+
+const CharacterClassSelectionScene: PackedScene = preload("res://scripts/components/charclasscomponent/CharClassSelection.tscn")
 const JSON_KEYS: Array[String] = ["classes", "class_whitelist", "class_blacklist", "max_classes"]
+const SYNC_MINIMUM_INTERVAL: float = 1.0
 
 signal classes_changed
+signal class_lock_changed
 signal list_changed
 
 @export var user: Node
@@ -12,18 +16,41 @@ signal list_changed
 
 var classes: Array[CharacterClassResource]
 
-##Only those here will be presented to the user, leave empty to disable
+## Only those here will be presented to the user, leave empty to disable
 var class_whitelist: Array[String]
 
-##Removes any option presented to the user that's defined here, taking precedence over [member class_whitelist]
+## Removes any option presented to the user that's defined here, taking precedence over [member class_whitelist]
 var class_blacklist: Array[String]
 
+## Max amount of simultaneous classes selected for this component
 var max_classes: int = 2
+
+## Class changes are prevented while this is true, used by the server to filter when a player should be capable of performing a change
+var class_change_locked: bool = false:
+	set(val):
+		class_change_locked = val
+		class_lock_changed.emit()
+		
+## Keep a menu to show the player, only client side
+var classChangeMenu: CharacterClassSelectionMenu
 
 
 func _ready():
 	if user.get("component_list") != null:
 		user.component_list["class_component"] = self
+	
+	classChangeMenu = CharacterClassSelectionScene.instantiate()
+	classChangeMenu.select_target(self)
+	
+	#TEMP?
+	if classes.is_empty():
+		add_class("Base")
+	
+	#Re-apply stats anytime a class changes.
+	classes_changed.connect(apply_stats)
+		
+	#This line should stay commented until there's a system to detect when a player should be allowed to change classes
+	#class_change_locked = true
 	
 	if G.is_server():
 		return
@@ -39,9 +66,16 @@ func _ready():
 	if not is_inside_tree():
 		await tree_entered
 	
-	#TEMP?
-	add_class("Base")
 	G.sync_rpc.characterclasscomponent_sync_all.rpc_id(1, user.get_name())
+	
+	
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("j_toggle_class_menu"):
+		if classChangeMenu.is_inside_tree():
+			classChangeMenu.close()
+		else:
+			user.ui_control.add_child(classChangeMenu)
 
 func set_blacklist(charclass: String, enabled: bool):
 	if enabled and not charclass in class_blacklist:
@@ -52,7 +86,7 @@ func set_blacklist(charclass: String, enabled: bool):
 
 
 func set_whitelist(charclass: String, enabled: bool):
-	if enabled and not charclass in class_blacklist:
+	if enabled and not charclass in class_whitelist:
 		class_whitelist.append(charclass)
 	elif not enabled:
 		class_whitelist.erase(charclass)
@@ -62,6 +96,10 @@ func set_whitelist(charclass: String, enabled: bool):
 func remove_class(charclass: String):
 	if classes.is_empty():
 		GodotLogger.warn("Tried to remove a class but there are none in this component.")
+		return
+	
+	if not is_class_change_allowed():
+		GodotLogger.warn("Tried to change classes, but this component is not allowed to do so at the present time.")
 		return
 		
 	# Clean the classes Array of any class matching this charclass
@@ -74,22 +112,53 @@ func remove_class(charclass: String):
 	
 
 
-func add_class(charclass: String, bypassLimit: bool = false):
-	if bypassLimit or classes.size() >= max_classes:
+func add_class(charclass: String):
+	if not is_class_change_allowed():
+		GodotLogger.warn("Tried to change classes, but this component is not allowed to do so at the present time.")
+		return
+	
+	if classes.size() >= max_classes:
 		GodotLogger.warn("Tried to add a class but the limit has already been reached for this component.")
 		return
 	
 	if charclass in class_blacklist:
-		GodotLogger.warn("Added a blacklisted class '{0}'.".format([charclass]))
+		GodotLogger.warn("Attempted to add a blacklisted class '{0}', it was not added.".format([charclass]))
+		return
 	
 	if not class_whitelist.is_empty() and not charclass in class_whitelist:
-		GodotLogger.warn("Whitelist is enabled (not empty) but class '{0}' isn't in it.".format([charclass]))
-		
+		GodotLogger.warn("Whitelist is enabled (not empty) but class '{0}' isn't in it, it was not added.".format([charclass]))
+		return
 		
 	var charClass: CharacterClassResource = J.charclass_resources[charclass].duplicate()
 	classes.append(charClass)
 	classes_changed.emit()
 
+
+## Takes an Array[String] and uses it to replace all classes from the component
+func replace_classes(newClasses: Array[String]):
+	if not is_class_change_allowed():
+		GodotLogger.warn("Tried to change classes, but this component is not allowed to do so at the present time.")
+		return
+	
+	if newClasses.size() > max_classes:
+		GodotLogger.warn("Tried to replace classes but the replacement Array is larger than the allowed size.")
+		return
+	
+	#Remove the ones that don't belong
+	var currentClasses: Array[String] = get_charclass_classes()
+	for charclass: String in currentClasses:
+		if not charclass in newClasses:
+			remove_class(charclass)
+	
+	#Add the ones missing
+	currentClasses = get_charclass_classes()
+	for charclass: String in newClasses:
+		#Not in, add it
+		if not charclass in currentClasses:
+			add_class(charclass)
+	
+	#Do not emit classes_changed, add_class and remove_class already do it.
+	#classes_changed.emit()
 
 ## Applies bonuses and multipliers to the character's StatsSynchronizerComponent
 func apply_stats():
@@ -119,7 +188,7 @@ func get_charclass_classes() -> Array[String]:
 	return output
 	
 	
-#Client only
+#Server only
 func sync_all(id: int):
 	#Calls self.sync_response
 	G.sync_rpc.characterclasscomponent_sync_response.rpc_id(id, user.get_name(), to_json())
@@ -128,6 +197,13 @@ func sync_all(id: int):
 #Client only
 func sync_response(data: Dictionary):
 	from_json(data)
+	
+
+#Client only
+func client_class_change_attempt(classList: Array[String] = get_charclass_classes()):
+	assert(not G.is_server(), "This method is only intended for client use")
+	G.sync_rpc.characterclasscomponent_sync_class_change.rpc_id(1, user.get_name(), classList )
+	
 	
 func to_json() -> Dictionary:
 	var output: Dictionary = {"classes": [], "class_blacklist": [], "class_whitelist": [], "max_classes": max_classes}
@@ -166,4 +242,10 @@ func is_class_allowed(charclass:String) -> bool:
 	if charclass in class_blacklist:
 		return false
 	
+	return true
+
+func is_class_change_allowed() -> bool:
+	if class_change_locked:
+		return false
+		
 	return true

@@ -1,4 +1,5 @@
 extends Control
+class_name CharacterClassSelectionMenu
 ## Call [method select_target] to start.
 
 
@@ -14,21 +15,37 @@ var sync_required: bool
 ## Internally used to queue syncs with the server.
 var syncTimer := Timer.new()
 
+var charClassRegisteredNameAvailable: Dictionary
+var charClassRegisteredNameOwned: Dictionary
+
 
 @onready var available_list: ItemList = $AvailableClasses
 @onready var owned_list: ItemList = $OwnedClasses
 @onready var statsDisplay: Control = $StatDisplay
 @onready var classDesc: RichTextLabel = $ClassDescription
+@onready var lockedText: Label = $LockedText
+@onready var doneButton: Button = $Done
 
 func _ready() -> void:
+	assert(not G.is_server(), "The server should not be creating UI elements on it's end.")
+	
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
+	
+	#Activation of a list's element
 	available_list.item_activated.connect(_on_available_activated)
 	owned_list.item_activated.connect(_on_owned_activated)
 	
+	#Selection of a list's element
 	available_list.item_selected.connect(_on_available_selected)
-	owned_list.item_selected.connect(_on_owned_selected)
-	
+	owned_list.item_selected.connect(_on_owned_selected)	
+
+	#Close button
+	doneButton.pressed.connect(close)
+
 	statsDisplay.accept_input = false
 	
+	#Sync changes to server on a timer
 	syncTimer.timeout.connect(_on_sync_timer_timeout)
 	add_child(syncTimer)
 	syncTimer.start(1)
@@ -39,8 +56,14 @@ func _ready() -> void:
 
 	
 func select_target(class_comp: CharacterClassComponent):
+	if not is_node_ready():
+		await ready
+		
 	class_component = class_comp
 	statsDisplay.stats = class_component.stats_component
+	
+	lockedText.visible = class_component.class_change_locked
+	class_component.class_lock_changed.connect(_on_class_lock_changed)
 	
 	populate_available_list()
 	populate_owned_list()
@@ -55,14 +78,12 @@ func populate_available_list():
 	
 	update_allowed_classes()
 	
-	var index: int = 0
 	for charclass in J.charclass_resources:
 		var characterClass: CharacterClassResource = J.charclass_resources[charclass].duplicate()
 		
 		available_list.add_item(characterClass.displayed_name, characterClass.get_icon())
-		available_list.set_item_metadata(index, characterClass.class_registered)
-		
-		index += 1
+		available_list.set_item_metadata(available_list.item_count-1, characterClass.class_registered)
+		print("Put {0} class in index {1} of the available list".format([characterClass.class_registered, str(available_list.item_count-1)]))
 		
 	update_available_list()
 
@@ -72,12 +93,10 @@ func populate_owned_list():
 		#return
 	owned_list.clear()
 
-	var index: int = 0
-	for characterClass in class_component.classes:
-		
-		available_list.add_item(characterClass.displayed_name, characterClass.get_icon())
-		available_list.set_item_metadata(index, characterClass.class_registered)
-		index += 1
+	for characterClass in class_component.classes:	
+		owned_list.add_item(characterClass.displayed_name, characterClass.get_icon())
+		owned_list.set_item_metadata(owned_list.item_count-1, characterClass.class_registered)
+		print("Put {0} class in index {1} of the owned list".format([characterClass.class_registered, str(owned_list.item_count-1)]))
 		
 	update_owned_list()
 
@@ -93,18 +112,21 @@ func update_available_list():
 		
 func update_owned_list():
 	owned_list.max_columns = class_component.max_classes
-	statsDisplay.renew_values()
+	statsDisplay.renew_values.call_deferred()
 	
 func update_lists():
 	update_available_list()
 	update_owned_list()
 
 func update_allowed_classes():
-	allowed_classes = J.charclass_resources.keys().filter( class_component.is_class_allowed )
+	allowed_classes.assign( J.charclass_resources.keys().filter( class_component.is_class_allowed ) ) 
 
 
 #Signal targets
 func _on_available_activated(idx: int):
+	if class_component.class_change_locked:
+		return
+	
 	var charClass: String = available_list.get_item_metadata(idx)
 	#var charClassRes: CharacterClassResource = J.charclass_resources[charClass]
 	
@@ -115,6 +137,9 @@ func _on_available_activated(idx: int):
 	sync_required = true
 	
 func _on_owned_activated(idx: int):
+	if class_component.class_change_locked:
+		return
+	
 	var charClass: String = available_list.get_item_metadata(idx)
 	
 	class_component.remove_class(charClass)
@@ -141,3 +166,23 @@ func _on_sync_timer_timeout():
 	if sync_required and class_component:
 		class_component.client_class_change_attempt()
 		sync_required = false
+
+func _on_class_lock_changed():
+	lockedText.visible = class_component.class_change_locked
+		
+
+func close():
+	if is_inside_tree():
+		get_parent().remove_child(self)
+
+func _on_mouse_entered():
+	JUI.above_ui = true
+
+func _on_mouse_exited():
+	JUI.above_ui = false
+
+## Should the UI quit early with a sync queued, the change attempt will be deferred instantly.
+func _notification(what: int):
+	if (what == NOTIFICATION_PREDELETE or what == NOTIFICATION_EXIT_TREE) and sync_required and class_component:
+		class_component.client_class_change_attempt.call_deferred()
+		

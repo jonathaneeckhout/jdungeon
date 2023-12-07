@@ -67,6 +67,7 @@ func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
 		entity.component_list["position_synchronizer"].sync(t, p, v)
 
 
+#Called by client, runs on server
 @rpc("call_remote", "any_peer", "reliable")
 func statssynchronizer_sync_stats(n: String):
 	if not G.is_server():
@@ -399,13 +400,13 @@ func playersynchronizer_sync_skill_use(p: Vector2, s: String):
 		user.player.component_list["player_synchronizer"].sync_skill_use(p, s)
 
 
-#Server only
+#Only client can make this RPC, runs on server
 @rpc("call_remote", "any_peer", "reliable")
 func characterclasscomponent_sync_all(n: String):
 	if not G.is_server():
 		return
 
-	var id = multiplayer.get_remote_sender_id()
+	var id: int = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
 	if not G.is_user_logged_in(id):
@@ -422,9 +423,11 @@ func characterclasscomponent_sync_all(n: String):
 	if entity.component_list.has("class_component"):
 		entity.component_list["class_component"].sync_all(id)
 	
-#Client only	
+	
+#Only server can make this RPC, runs on client
 @rpc("call_remote", "authority", "reliable")
 func characterclasscomponent_sync_response(n: String, d: Dictionary):
+	assert(not G.is_server(), "This method is only intended for client use")
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -435,3 +438,30 @@ func characterclasscomponent_sync_response(n: String, d: Dictionary):
 
 	if entity.component_list.has("class_component"):
 		entity.component_list["class_component"].sync_response(d)
+
+
+#Only client can make this RPC, runs on server
+@rpc("call_remote", "any_peer", "reliable")
+func characterclasscomponent_sync_class_change(n: String, c: Array[String]):
+	if not G.is_server():
+		return
+	
+	var id: int = multiplayer.get_remote_sender_id()
+	
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+	
+	var entity: Node = G.world.get_entity_by_name(n)
+	
+	if entity == null:
+		return
+		
+	if entity.get("component_list") == null:
+		return
+		
+	if entity.component_list.has("class_component"):
+		#The component can run it's own checks to verify it is allowed to change them.
+		entity.component_list["class_component"].replace_classes(c)
+			
+		characterclasscomponent_sync_all(n)
