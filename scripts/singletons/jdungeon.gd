@@ -39,6 +39,7 @@ func register_scenes():
 	register_items()
 	register_skills()
 	register_maps()
+	register_character_classes()
 
 
 func register_enemies():
