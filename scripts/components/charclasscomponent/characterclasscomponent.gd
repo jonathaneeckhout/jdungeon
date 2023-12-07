@@ -99,7 +99,7 @@ func apply_stats():
 		get_tree().physics_frame.connect(apply_stats)
 		return
 	
-	var statsDict: Dictionary
+	var statsDict: Dictionary = {}
 	for stat: String in StatsSynchronizerComponent.StatListWithDefaults:
 		statsDict[stat] = stats_component.get(stat)
 		
@@ -129,20 +129,19 @@ func sync_all(id: int):
 func sync_response(data: Dictionary):
 	from_json(data)
 	
-func to_json()->Dictionary:
-	var output: Dictionary = {"classes": [], "blacklist": [], "whitelist": [], "max_classes": max_classes}
+func to_json() -> Dictionary:
+	var output: Dictionary = {"classes": [], "class_blacklist": [], "class_whitelist": [], "max_classes": max_classes}
 	
 	for charClass: CharacterClassResource  in classes:
 		output["classes"].append(charClass.class_registered)
 		
 	for charClass: String in class_blacklist:
-		output["blacklist"].append(charClass)
+		output["class_blacklist"].append(charClass)
 
 	for charClass: String in class_whitelist:
-		output["whitelist"].append(charClass)
+		output["class_whitelist"].append(charClass)
 
 	return output
-	pass
 
 func from_json(data: Dictionary) -> bool:
 	for key: String in JSON_KEYS:
