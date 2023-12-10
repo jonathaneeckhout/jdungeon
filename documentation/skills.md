@@ -1,7 +1,7 @@
 # Skill system
 
 ## Overview
-This system uses SkillComponentResource to define new skills that a player can use. Which are then handled by the SkillComponent node.  
+This system uses `SkillComponentResource` resources to define new skills that a player can use. Which are then handled by the `SkillComponent` node.  
 Each `SkillComponent` can hold an arbitrary amount of skills. Despite holding a direct reference to said skills, this system relies mostly on the `SkillComponentResource.skill_class` (of `String` type) property to identify skills over the network.     
 Like other resources, these are registered in the `J` singleton with `J.register_skill_resource(skill_class: String, resource_path: String)`
 
