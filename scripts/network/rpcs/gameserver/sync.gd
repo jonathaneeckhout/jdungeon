@@ -422,8 +422,8 @@ func characterclasscomponent_sync_all(n: String):
 
 	if entity.component_list.has("class_component"):
 		entity.component_list["class_component"].sync_all(id)
-	
-	
+
+
 #Only server can make this RPC, runs on client
 @rpc("call_remote", "authority", "reliable")
 func characterclasscomponent_sync_response(n: String, d: Dictionary):
@@ -445,25 +445,25 @@ func characterclasscomponent_sync_response(n: String, d: Dictionary):
 func characterclasscomponent_sync_class_change(n: String, c: Array[String]):
 	if not G.is_server():
 		return
-	
+
 	var id: int = multiplayer.get_remote_sender_id()
-	
+
 	# Only allow logged in players
 	if not G.is_user_logged_in(id):
 		return
-	
+
 	var entity: Node = G.world.get_entity_by_name(n)
-	
+
 	if entity == null:
 		return
-		
+
 	if entity.get("component_list") == null:
 		return
-		
+
 	if entity.component_list.has("class_component"):
 		#The component can run it's own checks to verify it is allowed to change them.
 		entity.component_list["class_component"].replace_classes(c)
-			
+
 		characterclasscomponent_sync_all(n)
-		
+
 		statssynchronizer_sync_stats(n)

@@ -125,9 +125,15 @@ func register_maps():
 	J.register_map_scene("WakeningForest", "res://scenes/maps/wakeningforest/WakeningForest.tscn")
 	J.register_map_scene("ForestDungeon", "res://scenes/maps/forestdungeon/ForestDungeon.tscn")
 
+
 func register_character_classes():
-	J.register_class_resource("Base", "res://scripts/components/charclasscomponent/classes/Base.tres")
-	J.register_class_resource("Warrior", "res://scripts/components/charclasscomponent/classes/Warrior.tres")
+	J.register_class_resource(
+		"Base", "res://scripts/components/charclasscomponent/classes/Base.tres"
+	)
+	J.register_class_resource(
+		"Warrior", "res://scripts/components/charclasscomponent/classes/Warrior.tres"
+	)
+
 
 func register_player_scene(player_scene_path: String):
 	player_scene = load(player_scene_path)
