@@ -22,6 +22,15 @@ From there, the script must override the `_effect(usageInformation: SkillCompone
 extends SkillComponentResource
 
 func _effect(info: SkillComponent.UseInfo):
-	info.get_user_stats().heal(info.user.get_name(), 20)```
+	info.get_user_stats().heal(info.user.get_name(), 20)
+```
 
 
+## Advanced `SkillComponentResource` properties  
+`collision_mask: int` > Used by `SkillComponent` when attempting to retrieve targets using the `PhysicsServer2D`. The skill will not be able to detect anything in a layer that's not included here. For performance reasons, only the essential layers should be included. Example set: `collision_mask = J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ITEMS`   
+
+  `valid_entities: Array[ENTITY_TYPES]` > `ENTITY_TYPES` is an enum that mirrors `J.ENTITY_TYPE` and acts as an identifier for the kind of entity that the `SkillComponentResource` can affect. Entities that do not fall into any of these types will be filtered out of the valid targets if detected. Example set: `valid_entities = [ENTITY_TYPES.ENEMY, ENTITY_TYPES.NPC]`
+
+`hitbox_shape: PackedVector2Array` > Contains the points to make a polygon to use as a shape for collisions. If only one point is defined, the shape will be a circle, using the single Vector2's length as the radius. Setting 2 points is currently unsupported, but is planned to perform a raycast from point 0 to point 1. Example set (triangle): `hitbox_shape = [Vector2(-10,-5),Vector2(10,-5),Vector2(0,10)]`  
+
+`hitbox_rotate_shape: bool` > This simply makes the shape defined in `hitbox_shape` be rotated to where the character is aiming at, useful for making cones that project away from the player. 
