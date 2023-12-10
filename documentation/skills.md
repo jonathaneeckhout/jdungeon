@@ -2,7 +2,8 @@
 
 ## Overview
 This system uses SkillComponentResource to define new skills that a player can use. Which are then handled by the SkillComponent node.  
-Each `SkillComponent` can hold an arbitrary amount of skills. Despite holding a direct reference to said skills, this system relies mostly on the `SkillComponentResource.skill_class` (of `String` type) property to identify skills over the network.   
+Each `SkillComponent` can hold an arbitrary amount of skills. Despite holding a direct reference to said skills, this system relies mostly on the `SkillComponentResource.skill_class` (of `String` type) property to identify skills over the network.     
+Like other resources, these are registered in the `J` singleton with `J.register_skill_resource(skill_class: String, resource_path: String)`
 
 ## Networking side  
 If a skill has been selected and the action button is pressed, `PlayerSynchronizer._handle_right_click()` sends the class of the chosen skill to the server, as well as a global position of where it was used. The server, after running checks like distance to target or if the player even owns said skill. It then uses the `SkillComponentResource.skill_class` received to load the correct skill resource and runs `SkillComponentResource.effect()` in the desired location.  
