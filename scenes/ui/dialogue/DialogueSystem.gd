@@ -3,7 +3,6 @@ class_name DialogueSystem
 ## Call [method load_dialogue] to start. Then call [method show_next_snippet] to advance trough each snippet of the dialogue.
 ## Use [method DialogueSystem.create_dialogue_box] to get an instance of the DialogueBox.tscn scene ready for use.
 
-const DIALOGUE_BOX_SCENE: PackedScene = preload("res://scenes/ui/dialogue/DialogueBox.tscn")
 
 signal dialogue_started
 signal dialogue_finished
