@@ -6,7 +6,7 @@
 script = ExtResource("1_lpdwr")
 displayed_name = "Base"
 class_registered = &"Base"
-icon_path = "res://assets/images/ui/buttons/sound_off"
+icon_path = "res://assets/images/ui/buttons/sound_off/sound_off_black.png"
 description = "Your average hee-hoo-human."
 available_skills = Array[String](["Combustion", "HealSelf"])
 stat_multipliers = {
