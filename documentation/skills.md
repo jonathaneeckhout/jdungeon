@@ -34,4 +34,6 @@ func _effect(info: SkillComponent.UseInfo):
 
 `hitbox_shape: PackedVector2Array` > Contains the points to make a polygon to use as a shape for collisions. If only one point is defined, the shape will be a circle, using the single Vector2's length as the radius. Setting 2 points is currently unsupported, but is planned to perform a raycast from point 0 to point 1. Example set (triangle): `hitbox_shape = [Vector2(-10,-5),Vector2(10,-5),Vector2(0,10)]`  
 
-`hitbox_rotate_shape: bool` > This simply makes the shape defined in `hitbox_shape` be rotated to where the character is aiming at, useful for making cones that project away from the player. 
+`hitbox_rotate_shape: bool` > This simply makes the shape defined in `hitbox_shape` be rotated to where the character is aiming at, useful for making cones that project away from the player.   
+  
+`cast_on_select: bool` > Makes it so when the skill is selected, it is instantly used at the player's current position and then deselected during the same frame. For skills that do not need targeting, like "HealSelf"
