@@ -465,3 +465,5 @@ func characterclasscomponent_sync_class_change(n: String, c: Array[String]):
 		entity.component_list["class_component"].replace_classes(c)
 			
 		characterclasscomponent_sync_all(n)
+		
+		statssynchronizer_sync_stats(n)

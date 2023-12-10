@@ -11,7 +11,7 @@ const FAILSAFE_ICON_PATH: String = "res://icon.svg"
 
 
 ## This path is used to retrieve it's icon, avoid storing the texture directly for server memory reason
-@export_dir var icon_path: String
+@export_file var icon_path: String
 
 
 @export_multiline var description: String

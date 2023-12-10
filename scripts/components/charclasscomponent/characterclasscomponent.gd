@@ -109,12 +109,17 @@ func remove_class(charclass: String):
 			classes.remove_at(index)
 			classes_changed.emit()
 			return
+		index += 1
 	
 
 
 func add_class(charclass: String):
 	if not is_class_change_allowed():
 		GodotLogger.warn("Tried to change classes, but this component is not allowed to do so at the present time.")
+		return
+		
+	if charclass in get_charclass_classes():
+		GodotLogger.warn("Tried to add a repeat class.")
 		return
 	
 	if classes.size() >= max_classes:
@@ -169,8 +174,12 @@ func apply_stats():
 		return
 	
 	var statsDict: Dictionary = {}
+	
+	#Reset character stats before applying the stats from the classes
+	stats_component.load_defaults()
+	
 	for stat: String in StatsSynchronizerComponent.StatListWithDefaults:
-		statsDict[stat] = stats_component.get(stat)
+		statsDict[stat] = stats_component.get("_default_"+stat)
 		
 		#Apply all multipliers from classes for the given stat
 		for charClass: CharacterClassResource in classes:
@@ -180,6 +189,8 @@ func apply_stats():
 		for charClass: CharacterClassResource in classes:
 			statsDict[stat] += charClass.get_bonus(stat)
 	
+	for statName: String in statsDict:
+		stats_component.set(statName, statsDict[statName]) 
 	
 func get_charclass_classes() -> Array[String]:
 	var output: Array[String] = []
@@ -202,14 +213,18 @@ func sync_response(data: Dictionary):
 #Client only
 func client_class_change_attempt(classList: Array[String] = get_charclass_classes()):
 	assert(not G.is_server(), "This method is only intended for client use")
+	if classList.is_empty():
+		if Global.debug_mode:
+			GodotLogger.warn("Ignored class change attempt with no classes selected.")
+		return
 	G.sync_rpc.characterclasscomponent_sync_class_change.rpc_id(1, user.get_name(), classList )
 	
 	
 func to_json() -> Dictionary:
-	var output: Dictionary = {"classes": [], "class_blacklist": [], "class_whitelist": [], "max_classes": max_classes}
+	var output: Dictionary = {"classes": [], "class_blacklist": [], "class_whitelist": [], "max_classes": max_classes as int}
 	
 	for charClass: CharacterClassResource  in classes:
-		output["classes"].append(charClass.class_registered)
+		output["classes"].append(charClass.class_registered as String)
 		
 	for charClass: String in class_blacklist:
 		output["class_blacklist"].append(charClass)
