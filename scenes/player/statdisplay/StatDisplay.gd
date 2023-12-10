@@ -6,16 +6,20 @@ extends Control
 	set(value):
 		#If this was unset, disconnect any previously connected stats.
 		#If the instance is no longer valid, don't bother.
-		if value == null and is_instance_valid(stats) and stats.stats_changed.is_connected(_on_stats_changed):
+		if (
+			value == null
+			and is_instance_valid(stats)
+			and stats.stats_changed.is_connected(_on_stats_changed)
+		):
 			stats.stats_changed.disconnect(_on_stats_changed)
-		
+
 		stats = value
-		
+
 		if stats:
 			#If set and not yet connected, perform the connection
 			if not stats.stats_changed.is_connected(_on_stats_changed):
 				stats.stats_changed.connect(_on_stats_changed)
-				
+
 			await ready
 			renew_values()
 
