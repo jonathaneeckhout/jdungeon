@@ -70,8 +70,11 @@ func set_user_flag(user: String, flagName: String, activate: bool):
 	
 	flagDictionary[user][flagName] = activate
 	
-func get_user_flag(user: String, flagName: String):
-	return flagDictionary
+func get_user_flag(user: String, flagName: String) -> Dictionary:
+	return flagDictionary[user][flagName]
+
+func get_user_flag_all(user: String) -> Dictionary:
+	return flagDictionary[user]
 
 func save_user_flags(user: String, backup: bool) -> bool:
 	if not user_exists(user):
