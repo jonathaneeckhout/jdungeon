@@ -51,9 +51,12 @@ static func load_flags(flags: Dictionary):
 static func create_dialogue_box(dialogueToLoad: DialogueResource = null) -> Control:
 	var dialogueBox: Control = DIALOGUE_BOX_SCENE.instantiate()
 	if dialogueToLoad is DialogueResource:
-		dialogueBox.get_node("DialogueSystem").load_dialogue(dialogueToLoad)
+		get_system_from_dialogue_box(dialogueBox).load_dialogue(dialogueToLoad)
 		
 	return dialogueBox
+	
+static func get_system_from_dialogue_box(dialogueBox: Control) -> DialogueSystem:
+	return dialogueBox.get_node("DialogueSystem")
 
 func load_dialogue(dialogueRes: DialogueResource):
 	dialogueIndexProgress = 0
