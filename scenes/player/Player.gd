@@ -24,6 +24,7 @@ var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSy
 @onready var update_face: UpdateFaceComponent = $UpdateFaceComponent
 @onready var skeleton: Node2D = $Skeleton
 @onready var original_scale: Vector2 = skeleton.scale
+@onready var ui_control: Control = $Camera2D/UILayer/GUI
 
 @onready var equipment_sprites = {
 	"Head": $Sprites/Head,

@@ -43,6 +43,16 @@ const StatListCounter: Array[StringName] = [
 	"level",
 	"experience",
 ]
+#Stats that have a base default value
+const StatListWithDefaults: Array[StringName] = [
+	"hp_max",
+	"energy_max",
+	"energy_regen",
+	"attack_power_min",
+	"attack_power_max",
+	"defense",
+	"movement_speed",
+]
 
 const StatListAll: Array[StringName] = StatListCounter + StatListPermanent
 
@@ -147,6 +157,7 @@ var ready_done: bool = false
 
 var _default_hp_max: int = hp_max
 var _default_energy_max: int = energy_max
+var _default_energy_regen: int = energy_regen
 var _default_attack_power_min: int = attack_power_min
 var _default_attack_power_max: int = attack_power_max
 var _default_defense: int = defense
@@ -329,6 +340,7 @@ func kill():
 func load_defaults():
 	hp_max = _default_hp_max
 	energy_max = _default_energy_max
+	energy_regen = _default_energy_regen
 	attack_power_min = _default_attack_power_min
 	attack_power_max = _default_attack_power_max
 	defense = _default_defense

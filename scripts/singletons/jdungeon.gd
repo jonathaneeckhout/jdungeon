@@ -20,8 +20,9 @@ var player_scene: Resource
 var enemy_scenes: Dictionary = {}
 var npc_scenes: Dictionary = {}
 var item_scenes: Dictionary = {}
-var skill_resources: Dictionary = {}
 var map_scenes: Dictionary = {}
+var skill_resources: Dictionary = {}
+var charclass_resources: Dictionary = {}
 
 var uuid_util: UuidUtil
 
@@ -43,6 +44,7 @@ func register_scenes():
 	register_items()
 	register_skills()
 	register_maps()
+	register_character_classes()
 
 
 func register_enemies():
@@ -129,6 +131,15 @@ func register_maps():
 	J.register_map_scene("ForestDungeon", "res://scenes/maps/forestdungeon/ForestDungeon.tscn")
 
 
+func register_character_classes():
+	J.register_class_resource(
+		"Base", "res://scripts/components/charclasscomponent/classes/Base.tres"
+	)
+	J.register_class_resource(
+		"Warrior", "res://scripts/components/charclasscomponent/classes/Warrior.tres"
+	)
+
+
 func register_player_scene(player_scene_path: String):
 	player_scene = load(player_scene_path)
 
@@ -152,3 +163,8 @@ func register_map_scene(map_name: String, map_scene_path: String):
 func register_skill_resource(skill_class: String, skill_res_path: String):
 	skill_resources[skill_class] = load(skill_res_path)
 	assert(skill_class == skill_resources[skill_class].skill_class)
+
+
+func register_class_resource(charclass_class: String, class_res_path: String):
+	charclass_resources[charclass_class] = load(class_res_path)
+	assert(charclass_class == charclass_resources[charclass_class].class_registered)

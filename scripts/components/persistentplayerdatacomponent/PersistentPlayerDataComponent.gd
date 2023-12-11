@@ -5,6 +5,7 @@ class_name PersistentPlayerDataComponent
 @export var stats: StatsSynchronizerComponent
 @export var inventory: InventorySynchronizerComponent
 @export var equipment: EquipmentSynchronizerComponent
+@export var character_class: CharacterClassComponent
 @export var store_interval_time: float = 60.0
 var target_node: Node
 
@@ -83,6 +84,10 @@ func load_persistent_data() -> bool:
 		if not equipment.from_json(data["equipment"]):
 			GodotLogger.warn("Failed to load equipment from data")
 
+	if character_class and "characterClass" in data:
+		if not character_class.from_json(data["characterClass"]):
+			GodotLogger.warn("Failed to load character classes from data")
+
 	return true
 
 
@@ -100,6 +105,9 @@ func store_persistent_data() -> bool:
 
 	if equipment:
 		data["equipment"] = equipment.to_json()
+
+	if character_class:
+		data["characterClass"] = character_class.to_json()
 
 	return G.database.store_player_data(target_node.username, data)
 
