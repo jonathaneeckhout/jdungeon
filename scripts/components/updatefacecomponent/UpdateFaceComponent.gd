@@ -28,7 +28,7 @@ func _ready():
 	if (
 		player_synchronizer
 		and target_node.get("peer_id") != null
-		and target_node.peer_id == multiplayer.get_unique_id()
+		and G.is_own_player(target_node)
 	):
 		player_synchronizer.attacked.connect(_on_attacked)
 	if action_synchronizer:
