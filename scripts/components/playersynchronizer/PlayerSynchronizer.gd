@@ -26,7 +26,7 @@ const ATTACK_LEFT_HAND_ANIMATION: String = "Attack_Left_Hand"
 @export var skill_component: SkillComponent
 @export var update_face: UpdateFaceComponent
 
-## This variable stores the postion
+## This variable stores the postion of the player's mouse. It is updated on client and server side.
 var mouse_global_pos: Vector2 = Vector2.ZERO
 ## This is the current target which is under the cursor of the player
 var current_target: Node2D
