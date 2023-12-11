@@ -442,7 +442,7 @@ func characterclasscomponent_sync_response(n: String, d: Dictionary):
 
 #Only client can make this RPC, runs on server
 @rpc("call_remote", "any_peer", "reliable")
-func characterclasscomponent_sync_class_change(n: String, c: Array[String]):
+func characterclasscomponent_sync_class_change(n: String, c: Array):
 	if not G.is_server():
 		return
 
@@ -462,7 +462,11 @@ func characterclasscomponent_sync_class_change(n: String, c: Array[String]):
 
 	if entity.component_list.has("class_component"):
 		#The component can run it's own checks to verify it is allowed to change them.
-		entity.component_list["class_component"].replace_classes(c)
+
+		#Temporary adding this typecast to prevent errorcode caused by: https://github.com/godotengine/godot/issues/69215
+		var stringArray: Array[String] = []
+		stringArray.assign(c)
+		entity.component_list["class_component"].replace_classes(stringArray)
 
 		characterclasscomponent_sync_all(n)
 
