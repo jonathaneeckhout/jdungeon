@@ -30,7 +30,7 @@ var audio: SoundManager = SoundManager.new()
 
 
 func _ready():
-	uuid_util = load("res://scripts/uuid/uuid.gd").new()
+	uuid_util = load("res://scripts/utilities/uuid/uuid.gd").new()
 
 	audio.player_parent = self
 	audio.main_instance = audio
