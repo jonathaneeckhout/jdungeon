@@ -2,16 +2,16 @@ extends Node2D
 
 class_name PlayerSynchronizer
 
-## Signal emitted when a player interacts with a target
-## This signal is being send on client and server side
+## Signal emitted when a player interacts with a target.
+## This signal is being sent on the client and server sides.
 signal interacted(target: Node2D)
 
-## Signal emitted when a player attacks in a certain direction
-## This signal is being send on client and server side
+## Signal emitted when a player attacks in a certain direction.
+## This signal is being sent on the client and server sides.
 signal attacked(direction: Vector2)
 
-## Signal emitted when a player uses a skill
-## This signal is being send on client and server side
+## Signal emitted when a player uses a skill.
+## This signal is being sent on the client and server sides.
 signal skill_used(where: Vector2, skill_class: String)
 
 ## Name of the animation of when the player has the weapon in his/her right hand
