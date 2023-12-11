@@ -85,9 +85,6 @@ func populate_available_list():
 		available_list.add_child(menuElement)
 		menuElement.self_hovered.connect(_on_available_selected)
 		menuElement.self_pressed.connect(_on_available_activated)
-		#available_list.add_item(characterClass.displayed_name, characterClass.get_icon())
-		#available_list.set_item_metadata(available_list.item_count-1, characterClass.class_registered)
-		#print("Put {0} class in index {1} of the available list".format([characterClass.class_registered, str(available_list.item_count-1)]))
 
 	update_available_list()
 
@@ -150,7 +147,6 @@ func _on_available_activated(element: CharacterClassMenuElement):
 		return
 
 	var charClass: String = element.char_class
-	#var charClassRes: CharacterClassResource = J.charclass_resources[charClass]
 
 	class_component.add_class(charClass)
 

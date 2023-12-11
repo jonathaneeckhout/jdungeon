@@ -188,8 +188,6 @@ func replace_classes(newClasses: Array[String]):
 		if not charclass in currentClasses:
 			add_class(charclass)
 
-	#Do not emit classes_changed, add_class and remove_class already do it.
-	#classes_changed.emit()
 
 
 ## Applies bonuses and multipliers to the character's StatsSynchronizerComponent
