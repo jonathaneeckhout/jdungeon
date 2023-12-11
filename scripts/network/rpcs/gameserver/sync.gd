@@ -471,3 +471,53 @@ func characterclasscomponent_sync_class_change(n: String, c: Array):
 		characterclasscomponent_sync_all(n)
 
 		statssynchronizer_sync_stats(n)
+
+#Only client can make this RPC, runs on server
+@rpc("call_remote", "any_peer", "reliable")
+func progressflags_sync_flags():
+	if not G.is_server():
+		return
+
+	var id: int = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+		
+	var userName: String = G.get_user_by_id(id).username
+	
+	var flags: Dictionary = G.progress_flags.get_user_flag_all(userName)
+	G.sync_rpc.progressflags_sync_flags_response.rpc_id(id, flags)
+	
+#Only server can make this RPC, runs on client
+@rpc("call_remote", "authority", "reliable")
+func progressflags_sync_flags_response(flags: Dictionary):
+	assert(not G.is_server(), "This method is only intended for client use")
+	C.progress_flags_received = flags
+	
+#Only client can make this RPC, runs on server
+@rpc("call_remote", "any_peer", "reliable")
+func progressflagscomponent_sync_select_flags(flagsRequested: Array[String]):
+	if not G.is_server():
+		return
+
+	var id: int = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+		
+	var userName: String = G.get_user_by_id(id).username
+	
+	var flags: Dictionary
+	for flag:String in flagsRequested:
+		flags.progress_flags.get_user_flag(userName)
+		
+	
+	G.sync_rpc.progressflags_sync_flags_response.rpc_id(id, flags)
+	
+#Only server can make this RPC, runs on client
+@rpc("call_remote", "authority", "reliable")
+func progressflagscomponent_sync_select_flags_response(flags: Dictionary):
+	assert(not G.is_server(), "This method is only intended for client use")
+	C.progress_flags_received = flags
