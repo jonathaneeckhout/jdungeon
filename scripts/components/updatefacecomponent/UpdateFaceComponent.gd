@@ -25,11 +25,7 @@ func _ready():
 	original_scale = skeleton.scale
 	last_scale = original_scale
 
-	if (
-		player_synchronizer
-		and target_node.get("peer_id") != null
-		and G.is_own_player(target_node)
-	):
+	if player_synchronizer and target_node.get("peer_id") != null and G.is_own_player(target_node):
 		player_synchronizer.attacked.connect(_on_attacked)
 	if action_synchronizer:
 		action_synchronizer.attacked.connect(_on_attacked)
