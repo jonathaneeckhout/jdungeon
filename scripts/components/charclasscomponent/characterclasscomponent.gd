@@ -189,7 +189,6 @@ func replace_classes(newClasses: Array[String]):
 			add_class(charclass)
 
 
-
 ## Applies bonuses and multipliers to the character's StatsSynchronizerComponent
 func apply_stats():
 	#If the stats are not ready, wait another frame.
