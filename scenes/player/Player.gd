@@ -85,7 +85,7 @@ func _ready():
 		update_face.direction_changed.connect(_on_direction_changed)
 
 		# Your own player code
-		if peer_id == multiplayer.get_unique_id():
+		if G.is_own_player(self):
 			focus_camera()
 		# Another player code
 		else:
@@ -249,12 +249,12 @@ func _on_item_unequiped(_item_uuid: String):
 
 
 func _on_died():
-	if not G.is_server() and peer_id == multiplayer.get_unique_id():
+	if not G.is_server() and G.is_own_player(self):
 		$Camera2D/UILayer/GUI/DeathPopup.show_popup()
 
 
 func _on_respawned():
-	if not G.is_server() and peer_id == multiplayer.get_unique_id():
+	if not G.is_server() and G.is_own_player(self):
 		$Camera2D/UILayer/GUI/DeathPopup.hide()
 
 

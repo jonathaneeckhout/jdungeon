@@ -85,6 +85,8 @@ func _ready() -> void:
 
 	skills_changed.connect(sync_skills)
 
+	player_synchronizer.skill_used.connect(_on_skill_used)
+
 	if G.is_server():
 		return
 
@@ -553,3 +555,7 @@ func print_skill_attempt_result(result: SKILL_ATTEMPT_RESULT):
 				+ get_window().title
 			)
 		)
+
+
+func _on_skill_used(where: Vector2, skillClass: String):
+	skill_use_at(where, skillClass)

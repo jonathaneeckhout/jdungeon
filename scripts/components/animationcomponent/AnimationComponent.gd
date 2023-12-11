@@ -34,7 +34,8 @@ func _ready():
 		queue_free()
 		return
 
-	if target_node.get("peer_id") != null and target_node.peer_id == multiplayer.get_unique_id():
+	# This component only handles other players
+	if target_node.get("peer_id") != null and G.is_own_player(target_node):
 		queue_free()
 		return
 
