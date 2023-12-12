@@ -1,17 +1,23 @@
 extends Node
 class_name ProgressFlagsComponent
+## Simply stores String:bool pairs that other scripts can read to deduce the player's progress in the game.
 
 signal flag_changed(flag: String, state: bool)
+
+## Client only
+signal sync_received
 
 @export var user: Node
 
 var flags_stored: Dictionary
 
-
 func _ready() -> void:
+	assert(user is Player)
+	
 	if G.is_server():
 		G.progress_flags.register_component(self)
 		flag_changed.connect(_on_flag_changed)
+		
 
 	if user.get("component_list") != null:
 		user.component_list["progress_flags"] = self
@@ -49,6 +55,8 @@ func sync_flags(id: int, flagsSpecified: Array):  #Change to Array[String] after
 func sync_response(flags: Dictionary):
 	for flag: String in flags:
 		flags_stored[flag] = flags[flag]
+		
+	sync_received.emit()
 
 
 func from_json(data: Dictionary) -> bool:
@@ -60,7 +68,6 @@ func to_json() -> Dictionary:
 	return flags_stored
 
 
-#Only meant to be called by server
-func _on_flag_changed(flagName: String, _state: bool):
-	assert(G.is_server())
-	sync_flags(user.peer_id, [flagName])
+#Server only
+func _on_flag_changed(flag: String, _state: bool):
+	sync_flags(user.peer_id, [flag])
