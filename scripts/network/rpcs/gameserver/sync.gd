@@ -503,12 +503,6 @@ func progressflags_sync_flags(n: String, f: Array):
 func progressflags_sync_flags_response(n: String, f: Dictionary):
 	assert(not G.is_server(), "This method is only intended for client use")
 
-	var id: int = multiplayer.get_remote_sender_id()
-
-	# Only allow logged in players
-	if not G.is_user_logged_in(id):
-		return
-
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
