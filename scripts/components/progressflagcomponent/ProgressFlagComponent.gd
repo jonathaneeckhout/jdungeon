@@ -11,16 +11,26 @@ signal sync_received
 
 var flags_stored: Dictionary
 
+
 func _ready() -> void:
 	assert(user is Player)
-	
+
 	if G.is_server():
-		G.progress_flags.register_component(self)
 		flag_changed.connect(_on_flag_changed)
-		
 
 	if user.get("component_list") != null:
 		user.component_list["progress_flags"] = self
+
+	#Wait until the connection is ready
+	if not multiplayer.has_multiplayer_peer():
+		await multiplayer.connected_to_server
+
+	#Wait an additional frame so others can get set.
+	await get_tree().process_frame
+
+	#Some entities take a bit to get added to the tree, do not update them until then.
+	if not is_inside_tree():
+		await tree_entered
 
 	#Retrieve ALL flags by not specifying any (empty Array)
 	G.sync_rpc.progressflags_sync_flags.rpc_id(1, user.get_name(), [])
@@ -55,7 +65,7 @@ func sync_flags(id: int, flagsSpecified: Array):  #Change to Array[String] after
 func sync_response(flags: Dictionary):
 	for flag: String in flags:
 		flags_stored[flag] = flags[flag]
-		
+
 	sync_received.emit()
 
 
