@@ -27,6 +27,10 @@ Centuries ago the world was whole. The kingdoms were diverse, numerous, and frui
 ![preview_1](https://github.com/jonathaneeckhout/jdungeon/assets/44840503/ec5ce150-82d2-4176-8af1-c32586c88400)
 
 ## Videos
+### How to open and run the Godot project
+[![Watch the video](https://img.youtube.com/vi/p-54V3rKuaQ/maxresdefault.jpg)](https://youtu.be/p-54V3rKuaQ)
+
+### How to run the online deployed game
 [![Watch the video](https://img.youtube.com/vi/45mzdgq25eE/maxresdefault.jpg)](https://youtu.be/45mzdgq25eE?si=AypC6xL_UiPwCAEU)
 
 ## List of Features
