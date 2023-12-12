@@ -50,34 +50,41 @@ func get_path_to_file(user: String, backup: bool):
 ## But a backup will be made beforehand.
 func register_user(user: String, forceOverwrite: bool):
 	#If the user does not exist, simply register it.
-	if not user_exists(user):
+	if not is_user_registered(user):
 		flagDictionary[user] = {}
+		save_user_flags(user, false)
+		return
 	
 	#If it does but it is set to overwrite, make a backup and replace.
-	if user_exists(user) and forceOverwrite:
+	if is_user_registered(user) and forceOverwrite:
 		GodotLogger.info("Overwritting user '{0}' data, backup in progress.")
 		#Ensure the save succeeded before overwriting
 		if save_user_flags(user, true):
 			flagDictionary[user] = {}
+			GodotLogger.info("User '{0}' registered successfully.".format([user]))
 		else:
-			GodotLogger.error("Failed to create backup, the user could not be registered.")
+			GodotLogger.error(
+				"Failed to create backup, the new user could not be registered."
+				)
 		
 
 func set_user_flag(user: String, flagName: String, activate: bool):
-	if not flagDictionary[user] is Dictionary:
-		GodotLogger.error("User '{0}' is not registered.")
+	if not is_user_loaded(user):
+		GodotLogger.error(
+			"User '{0}' is not loaded. Exists = {1}".format([user, str(is_user_registered(user))])
+		)
 		return
 	
 	flagDictionary[user][flagName] = activate
 	
-func get_user_flag(user: String, flagName: String) -> Dictionary:
-	return flagDictionary[user][flagName]
+func get_user_flag_state(user: String, flagName: String) -> bool:
+	return flagDictionary[user].get(flagName, false)
 
-func get_user_flag_all(user: String) -> Dictionary:
+func get_user_flags(user: String) -> Dictionary:
 	return flagDictionary[user]
 
 func save_user_flags(user: String, backup: bool) -> bool:
-	if not user_exists(user):
+	if not is_user_loaded(user):
 		GodotLogger.error("User '{0}' does not exist, cannot save.")
 		return false
 	
@@ -87,15 +94,15 @@ func save_user_flags(user: String, backup: bool) -> bool:
 	
 	if backup:
 		GodotLogger.info(
-			"Creating backup for user '{0}' with path '{1}'"
-		).format([user, pathToFile])
+			"Creating backup for user '{0}' with path '{1}'".format([user, pathToFile])
+		)
 	
 	#Failed to open
 	if file == null:
 		var openError: Error = FileAccess.get_open_error()
 		GodotLogger.error(
-			"Could not open/create file '{0}', failed with error {1} ({2})"
-			).format([pathToFile, openError, error_string(openError)])
+			"Could not open/create file '{0}', failed with error {1} ({2})".format([pathToFile, openError, error_string(openError)])
+			)
 		return false
 	
 	var stringData: String = JSON.stringify(flagDictionary[user], "    ")
@@ -111,8 +118,8 @@ func load_user_flags(user: String) -> bool:
 	if file == null:
 		var openError: Error = FileAccess.get_open_error()
 		GodotLogger.error(
-			"Could not open/create file '{0}', failed with error {1} ({2})"
-			).format([pathToFile, openError, error_string(openError)])
+			"Could not open/create file '{0}', failed with error {1} ({2})".format([pathToFile, openError, error_string(openError)])
+			)
 		return false
 
 	var string_data: String = file.get_as_text()
@@ -120,13 +127,21 @@ func load_user_flags(user: String) -> bool:
 	
 	if flagsLoaded is Dictionary:
 		flagDictionary[user] = flagsLoaded
+		if Global.debug_mode:
+			GodotLogger.info(
+				"Loaded flags for user '{0}'.".format([user])
+			)
 		return true
 	else:
 		GodotLogger.error(
-			"The retrieved data from file '{0}' is not a Dictionary"
-			).format([pathToFile])
+			"The retrieved data from file '{0}' is not a Dictionary".format([pathToFile])
+			)
 		return false
 	
 
-func user_exists(user: String) -> bool:
+func is_user_loaded(user: String) -> bool:
 	return flagDictionary.has(user)
+
+func is_user_registered(user: String) -> bool:
+	return FileAccess.file_exists(get_path_to_file(user, false))
+	
