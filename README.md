@@ -27,7 +27,7 @@ Centuries ago the world was whole. The kingdoms were diverse, numerous, and frui
 ![preview_1](https://github.com/jonathaneeckhout/jdungeon/assets/44840503/ec5ce150-82d2-4176-8af1-c32586c88400)
 
 ## Videos
-[![Watch the video](https://img.youtube.com/vi/45mzdgq25eE/maxresdefault.jpg)](youtube.com/watch?v=45mzdgq25eE)
+[![Watch the video](https://img.youtube.com/vi/45mzdgq25eE/maxresdefault.jpg)](https://youtu.be/45mzdgq25eE?si=AypC6xL_UiPwCAEU)
 
 ## List of Features
 
