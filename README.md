@@ -11,11 +11,12 @@
 To get started with JDungeon, follow these steps:
 1. [Lore](#lore)
 2. [Screenshots](#screenshots)
-3. [List of Features](#list-of-features)
-4. [Feature Roadmap](#feature-roadmap)
-5. [Feature Requests](#feature-requests)
-6. [Install Instructions](#install-instructions)
-7. [Contributor Guide](#contributing)
+3. [Videos](#videos)
+4. [List of Features](#list-of-features)
+5. [Feature Roadmap](#feature-roadmap)
+6. [Feature Requests](#feature-requests)
+7. [Install Instructions](#install-instructions)
+8. [Contributor Guide](#contributing)
 
 ## Lore
 Centuries ago the world was whole. The kingdoms were diverse, numerous, and fruitful. The world enjoyed relative peace barring the occasional border conflict. Not much is known anymore of this bright past. The histories are as fragmented as the world itself, each Shard possessing a modicum of knowledge. We don't know what happened. We don't know why. We don't know who. All we know is that the Shards drift further and faster every year. The land itself is not gone. There's no magic that can do that. But to move it? To encourage the very foundation of the earth to shift and set sail? Well, apparently that is possible. In the past there were several Rooted Shards. The last vestiges of normalcy. You could charter transport between them. The magnetic poles of each Root were set and were navigable. They didn't just blip in and out of existence. The Shard would not be persuaded. It liked where it was and it would damn well remain there. But just as water chisels away at the earth, so does time carve away bits of the soul. Now all that's left is...us. Formerly South Radix, now just Radix. You can't be "South" if there's nothing to be South of eh?
@@ -25,6 +26,8 @@ Centuries ago the world was whole. The kingdoms were diverse, numerous, and frui
 ![preview_2](https://github.com/jonathaneeckhout/jdungeon/assets/44840503/164aef2b-56df-4c04-add3-9312cde66db7)
 ![preview_1](https://github.com/jonathaneeckhout/jdungeon/assets/44840503/ec5ce150-82d2-4176-8af1-c32586c88400)
 
+## Videos
+[![Watch the video](https://img.youtube.com/vi/45mzdgq25eE/maxresdefault.jpg)](youtube.com/watch?v=45mzdgq25eE)
 
 ## List of Features
 
