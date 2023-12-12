@@ -31,9 +31,6 @@ var clock_sync_timer: Timer
 # The current world
 var world: World = null
 
-# Player's progress
-var progress_flags := ProgressFlagSystem.new()
-
 var client_player: Player = null
 
 

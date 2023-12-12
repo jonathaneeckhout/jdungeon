@@ -472,9 +472,10 @@ func characterclasscomponent_sync_class_change(n: String, c: Array):
 
 		statssynchronizer_sync_stats(n)
 
+
 #Only client can make this RPC, runs on server
 @rpc("call_remote", "any_peer", "reliable")
-func progressflags_sync_flags():
+func progressflags_sync_flags(n: String, f: Array):
 	if not G.is_server():
 		return
 
@@ -483,12 +484,20 @@ func progressflags_sync_flags():
 	# Only allow logged in players
 	if not G.is_user_logged_in(id):
 		return
-		
-	var userName: String = G.get_user_by_id(id).username
-	
-	var flags: Dictionary = G.progress_flags.get_user_flag_all(userName)
-	G.sync_rpc.progressflags_sync_flags_response.rpc_id(id, flags)
-	
+
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("progress_flags"):
+		#Temporary typecast to prevent errorcode caused by: https://github.com/godotengine/godot/issues/69215
+		entity.component_list["progress_flags"].sync_flags(id, f)
+
+
 #Only server can make this RPC, runs on client
 @rpc("call_remote", "authority", "reliable")
 func progressflags_sync_flags_response(n: String, f: Dictionary):
@@ -509,34 +518,5 @@ func progressflags_sync_flags_response(n: String, f: Dictionary):
 		return
 
 	if entity.component_list.has("progress_flags"):
-		#The component can run it's own checks to verify it is allowed to change them.
-
 		#Temporary typecast to prevent errorcode caused by: https://github.com/godotengine/godot/issues/69215
-		entity.component_list["progress_flags"].flags_stored = f
-	
-#Only client can make this RPC, runs on server
-@rpc("call_remote", "any_peer", "reliable")
-func progressflagscomponent_sync_select_flags(flagsRequested: Array[String]):
-	if not G.is_server():
-		return
-
-	var id: int = multiplayer.get_remote_sender_id()
-
-	# Only allow logged in players
-	if not G.is_user_logged_in(id):
-		return
-		
-	var userName: String = G.get_user_by_id(id).username
-	
-	var flags: Dictionary
-	for flag:String in flagsRequested:
-		flags.progress_flags.get_user_flag(userName)
-		
-	
-	G.sync_rpc.progressflags_sync_flags_response.rpc_id(id, flags)
-	
-#Only server can make this RPC, runs on client
-@rpc("call_remote", "authority", "reliable")
-func progressflagscomponent_sync_select_flags_response(flags: Dictionary):
-	assert(not G.is_server(), "This method is only intended for client use")
-	C.progress_flags_received = flags
+		entity.component_list["progress_flags"].sync_response(f)

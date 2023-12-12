@@ -1,27 +1,66 @@
 extends Node
 class_name ProgressFlagsComponent
 
-#var flag_system: ProgressFlagSystem
+signal flag_changed(flag: String, state: bool)
+
+@export var user: Node
+
 var flags_stored: Dictionary
 
-var target_node: Node
 
 func _ready() -> void:
-	target_node = get_parent()
+	if G.is_server():
+		G.progress_flags.register_component(self)
+		flag_changed.connect(_on_flag_changed)
 
-	if target_node.get("component_list") != null:
-		target_node.component_list["progress_flags"] = self
-		
+	if user.get("component_list") != null:
+		user.component_list["progress_flags"] = self
 
-func get_flag(flagName: String) -> bool:
+	#Retrieve ALL flags by not specifying any (empty Array)
+	G.sync_rpc.progressflags_sync_flags.rpc_id(1, user.get_name(), [])
+
+
+func set_flag_state(flagName: String, state: bool):
+	flags_stored[flagName] = state
+	flag_changed.emit(flagName, state)
+
+
+func get_flag_state(flagName: String) -> bool:
 	if not flags_stored.has(flagName):
 		GodotLogger.warn("Flag not stored.")
 		return false
-		
+
 	return flags_stored[flagName]
 
-func sync_flags(flagsSelected: Array): #Array[String], temporarily removed typecast due to a Godot bug
-	G.sync_rpc.progressflags_sync_flags.rpc_id(1, flagsSelected)
 
+#Called and ran only on server
+func sync_flags(id: int, flagsSpecified: Array):  #Change to Array[String] after this is fixed: https://github.com/godotengine/godot/issues/69215
+	var flags: Dictionary = {}
+	if flagsSpecified.is_empty():
+		flags = flags_stored
+	else:
+		for flag: String in flagsSpecified:
+			flags[flag] = flags_stored.get(flag, false)
+
+	G.sync_rpc.progressflags_sync_flags_response.rpc_id(id, user.get_name(), flags)
+
+
+#RPCd by server, ran only on client
 func sync_response(flags: Dictionary):
-	flags_stored = flags
+	for flag: String in flags:
+		flags_stored[flag] = flags[flag]
+
+
+func from_json(data: Dictionary) -> bool:
+	flags_stored = data
+	return true
+
+
+func to_json() -> Dictionary:
+	return flags_stored
+
+
+#Only meant to be called by server
+func _on_flag_changed(flagName: String, _state: bool):
+	assert(G.is_server())
+	sync_flags(user.peer_id, [flagName])

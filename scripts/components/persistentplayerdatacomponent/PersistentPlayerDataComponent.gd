@@ -1,11 +1,12 @@
 extends Node
-
 class_name PersistentPlayerDataComponent
+## This node's functionality is entirely server-sided.
 
 @export var stats: StatsSynchronizerComponent
 @export var inventory: InventorySynchronizerComponent
 @export var equipment: EquipmentSynchronizerComponent
 @export var character_class: CharacterClassComponent
+@export var progress_flags: ProgressFlagsComponent
 @export var store_interval_time: float = 60.0
 var target_node: Node
 
@@ -17,7 +18,7 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("username") == null:
-		GodotLogger.error("target_node does not have the position variable")
+		GodotLogger.error("target_node does not have the username variable")
 		return
 
 	if target_node.get("server") == null:
@@ -88,6 +89,10 @@ func load_persistent_data() -> bool:
 		if not character_class.from_json(data["characterClass"]):
 			GodotLogger.warn("Failed to load character classes from data")
 
+	if progress_flags and "progressFlags" in data:
+		if not progress_flags.from_json(data["progressFlags"]):
+			GodotLogger.warn("Failed to load progress flags from data")
+
 	return true
 
 
@@ -108,6 +113,9 @@ func store_persistent_data() -> bool:
 
 	if character_class:
 		data["characterClass"] = character_class.to_json()
+
+	if progress_flags:
+		data["progressFlags"] = progress_flags.to_json()
 
 	return G.database.store_player_data(target_node.username, data)
 
