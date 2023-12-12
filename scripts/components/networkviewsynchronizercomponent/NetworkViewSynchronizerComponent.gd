@@ -60,7 +60,7 @@ func _ready():
 		body_network_view_area.body_entered.connect(_on_body_network_view_area_body_entered)
 		body_network_view_area.body_exited.connect(_on_body_network_view_area_body_exited)
 
-	elif target_node.peer_id == multiplayer.get_unique_id():
+	elif G.is_own_player(target_node):
 		# This timer is needed to give the client some time to setup its multiplayer connection
 		delay_timer = Timer.new()
 		delay_timer.name = "DelayTimer"

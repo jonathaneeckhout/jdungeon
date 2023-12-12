@@ -28,7 +28,7 @@ func _ready():
 	if G.is_server():
 		_init_loot_area()
 		_init_npc_interact_area()
-	elif target_node.peer_id != multiplayer.get_unique_id():
+	elif not G.is_own_player(target_node):
 		queue_free()
 
 

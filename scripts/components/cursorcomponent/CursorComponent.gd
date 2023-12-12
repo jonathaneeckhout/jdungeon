@@ -27,7 +27,7 @@ func _ready():
 		GodotLogger.error("target_node does not have the peer_id variable")
 		return
 
-	if G.is_server() or target_node.peer_id != multiplayer.get_unique_id():
+	if G.is_server() or not G.is_own_player(target_node):
 		queue_free()
 
 	set_cursor(CursorGraphics.DEFAULT)

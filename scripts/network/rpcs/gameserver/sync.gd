@@ -8,7 +8,7 @@ func playersynchronizer_sync_pos(c: int, p: Vector2, v: Vector2):
 		return
 
 	if G.client_player.component_list.has("player_synchronizer"):
-		G.client_player.component_list["player_synchronizer"].sync_pos(c, p, v)
+		G.client_player.component_list["player_synchronizer"].client_sync_pos(c, p, v)
 
 
 @rpc("call_remote", "any_peer", "reliable")
@@ -29,7 +29,7 @@ func playersynchronizer_sync_input(c: int, d: Vector2, t: float, m: Vector2):
 		return
 
 	if user.player.component_list.has("player_synchronizer"):
-		user.player.component_list["player_synchronizer"].sync_input(c, d, t, m)
+		user.player.component_list["player_synchronizer"].server_sync_input(c, d, t, m)
 
 
 @rpc("call_remote", "any_peer", "reliable")
@@ -50,7 +50,7 @@ func playersynchronizer_sync_interact(t: String):
 		return
 
 	if user.player.component_list.has("player_synchronizer"):
-		user.player.component_list["player_synchronizer"].sync_interact(t)
+		user.player.component_list["player_synchronizer"].server_sync_interact(t)
 
 
 @rpc("call_remote", "authority", "unreliable")
@@ -397,7 +397,7 @@ func playersynchronizer_sync_skill_use(p: Vector2, s: String):
 		return
 
 	if user.player.component_list.has("player_synchronizer"):
-		user.player.component_list["player_synchronizer"].sync_skill_use(p, s)
+		user.player.component_list["player_synchronizer"].server_sync_skill_use(p, s)
 
 
 #Only client can make this RPC, runs on server
