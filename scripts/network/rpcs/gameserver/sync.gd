@@ -512,5 +512,4 @@ func progressflags_sync_flags_response(n: String, f: Dictionary):
 		return
 
 	if entity.component_list.has("progress_flags"):
-		#Temporary typecast to prevent errorcode caused by: https://github.com/godotengine/godot/issues/69215
 		entity.component_list["progress_flags"].sync_response(f)
