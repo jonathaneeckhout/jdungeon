@@ -20,7 +20,7 @@ func _ready() -> void:
 
 	if user.get("component_list") != null:
 		user.component_list["progress_flags"] = self
-	
+
 	if G.is_server():
 		return
 	#Wait until the connection is ready
