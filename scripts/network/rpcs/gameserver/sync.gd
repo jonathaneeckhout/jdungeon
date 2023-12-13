@@ -485,4 +485,28 @@ func dialoguesynchronizer_sync_invoke_response(n: String, d: String):
 		return
 
 	if entity.component_list.has("class_component"):
-		entity.component_list["class_component"].sync_response(d)
+		entity.component_list["dialogue_component"].sync_invoke_response(d)
+
+#Only client can make this RPC, runs on server
+@rpc("call_remote", "any_peer", "reliable")
+func dialoguesynchronizer_sync_dialogue_finished(n: String):
+	if not G.is_server():
+		return
+
+	var id: int = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("dialogue_component"):
+
+		entity.component_list["dialogue_component"].dialogue_system_instance.dialogue_finished.emit()

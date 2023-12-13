@@ -23,6 +23,7 @@ var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSy
 @onready var player_unstuck: PlayerUnstuckComponent = $PlayerUnstuckComponent
 @onready var update_face: UpdateFaceComponent = $UpdateFaceComponent
 @onready var skeleton: Node2D = $Skeleton
+@onready var dialogue: DialogueSynhcronizerComponent = $DialogueSynchronizerComponent
 @onready var original_scale: Vector2 = skeleton.scale
 @onready var ui_control: Control = $Camera2D/UILayer/GUI
 

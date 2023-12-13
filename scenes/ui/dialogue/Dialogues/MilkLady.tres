@@ -5,7 +5,7 @@
 
 [sub_resource type="Resource" id="Resource_vfg0g"]
 script = ExtResource("1_05atd")
-text = "Welcome dear. It must have taken some effort to get all the way out here."
+text = "Welcome dear. It must have taken quite some effort to get all the way here."
 enableBBCode = true
 speaker_id = 0
 portrait_id = 0

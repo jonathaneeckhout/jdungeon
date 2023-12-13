@@ -23,13 +23,12 @@ func _init() -> void:
 	if speaker_portraits.size() != speaker_names.size():
 		GodotLogger.warn("Dialogue Array size mismatch")
 
-## Format of a dialogue snippet is as follows:
-var snippets: Dictionary
-
-func get_speaker_name(id: int):
+func get_speaker_name(id: int) -> String:
 	if abs(id) >= speaker_names.size():
 		GodotLogger.warn("Speaker ID {0} out of range. There's {1} speakers in this dialogue.").format([str(id), str(speaker_names.size())])
-		return
+		return ""
+	else:
+		return speaker_names[id]
 
 func get_speaker_portrait(id: int, portraitID: int) -> Texture:
 	if abs(id) >= speaker_portraits.size():
@@ -56,7 +55,7 @@ func get_speaker_portrait(id: int, portraitID: int) -> Texture:
 func get_snippets_to_show(trueConditions: Dictionary) -> Array[DialogueSnippetResource]:
 	var output: Array[DialogueSnippetResource] = []
 	
-	for snippet: DialogueSnippetResource in snippets:
+	for snippet: DialogueSnippetResource in dialogue_snippets:
 
 		if should_snippet_be_shown(snippet, trueConditions):
 			output.append(snippet)

@@ -2,8 +2,10 @@ extends Node
 class_name DialogueSynhcronizerComponent
 ## This component is merely an intermediary for the [DialogueSystem] class
 ## Unlike other components, dialogues are invoked autonomously by the server when the player triggers one.
+## All methods in this component are client-only unless stated otherwise
 
 @export var dialogue_box_top_anchor: float = 0.65
+@export var dialogue_box_opacity: float = 0.6
 
 @export var user: Player
 
@@ -16,34 +18,36 @@ var accepting_input: bool = false:
 ## The node that will display the dialogue
 var dialogueBox: Control
 
-## The DialogueSystem that will be used, part of the dialogueBox scene
-var systemInstance := DialogueSystem.new()
+## The DialogueSystem that will be used
+var dialogue_system_instance := DialogueSystem.new()
 
 func _ready() -> void:
-	if not G.is_server():
+	if user.get("component_list") != null:
+		user.component_list["dialogue_component"] = self
+	
+	if G.is_server():
 		return
 		
-	dialogueBox = systemInstance.create_dialogue_box()
+	dialogueBox = dialogue_system_instance.create_dialogue_box( DialogueSystem.DEFAULT_THEME, dialogue_box_opacity)
+	assert(dialogueBox is Control)
 	dialogueBox.anchor_top = dialogue_box_top_anchor
-	systemInstance.dialogue_finished.connect(_on_dialogue_finished)
+	dialogue_system_instance.dialogue_finished.connect(_on_dialogue_finished)
 	
 	
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("continue"):
-		systemInstance.show_next_snippet()
+	if event.is_action_pressed("j_continue"):
+		dialogue_system_instance.show_next_snippet()
 	
 	
-#Called on server only
+#Called by and on server only
 func sync_invoke(id: int, dialogueIdentifier: String):
 	assert(G.is_server(), "Only the server can invoke dialogue.")
-	G.sync_rpc.dialoguesynchronizer_sync_invoke_response.rpc_id(id, dialogueIdentifier)
+	G.sync_rpc.dialoguesynchronizer_sync_invoke_response.rpc_id(id, user.get_name(), dialogueIdentifier)
 
 
-#Called on client only
 func sync_invoke_response(dialogueIdentifier: String):
 	assert(dialogueBox.get_parent() == null or dialogueBox.get_parent() == user.ui_control)
 	
-	show_dialogue()
 	var dialogueRes: DialogueResource = J.dialogue_resources.get(dialogueIdentifier, null).duplicate()
 	
 	if dialogueRes == null:
@@ -52,13 +56,17 @@ func sync_invoke_response(dialogueIdentifier: String):
 		)
 		return
 	
-	systemInstance.load_dialogue(dialogueRes)
-	systemInstance.show_next_snippet()
+	dialogue_system_instance.load_dialogue(dialogueRes)
+	
+	show_dialogue()
+	dialogue_system_instance.show_next_snippet()
 	
 	
 func show_dialogue():
 	if not dialogueBox.is_inside_tree():
 		user.ui_control.add_child(dialogueBox)
+		
+	assert(dialogueBox.get_parent() == user.ui_control)
 	
 	dialogueBox.anchor_top = dialogue_box_top_anchor
 	accepting_input = true
@@ -73,3 +81,4 @@ func hide_dialogue():
 
 func _on_dialogue_finished():
 	hide_dialogue()
+	G.sync_rpc.dialoguesynchronizer_sync_dialogue_finished.rpc_id(1, user.get_name())

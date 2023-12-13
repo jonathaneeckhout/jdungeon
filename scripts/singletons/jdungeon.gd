@@ -183,7 +183,7 @@ func register_dialogue_all(dialogue_folder: String):
 		if file.get_extension() != "tres":
 			continue
 		
-		var res: Resource = load(file)
+		var res: Resource = load(dialogue_folder + file)
 		
 		#Ignore non dialogues, if they happened to be in the folder
 		if not res is DialogueResource:
