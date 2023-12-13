@@ -116,7 +116,9 @@ func register_items():
 
 
 func register_skills():
-	J.register_skill_resource("debug", "res://scripts/components/player/skillcomponent/Skills/debug.tres")
+	J.register_skill_resource(
+		"debug", "res://scripts/components/player/skillcomponent/Skills/debug.tres"
+	)
 	J.register_skill_resource(
 		"HealSelf", "res://scripts/components/player/skillcomponent/Skills/HealSelf.tres"
 	)
