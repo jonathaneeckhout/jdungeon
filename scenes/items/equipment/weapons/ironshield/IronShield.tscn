@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://tootl3rb4m3j"]
+[gd_scene load_steps=5 format=3 uid="uid://tootl3rb4m3j"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/weapons/ironshield/IronShield.gd" id="1_roct2"]
 [ext_resource type="Texture2D" uid="uid://c7ry27xmnqvkh" path="res://assets/images/equipment/weapons/shield/scaled/shield.png" id="2_n673b"]
@@ -7,10 +7,14 @@
 radius = 14.0
 height = 52.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_2dm82"]
+radius = 33.0606
+
 [node name="IronShield" type="StaticBody2D"]
 script = ExtResource("1_roct2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CapsuleShape2D_g6336")
 
 [node name="Sprite" type="Sprite2D" parent="."]
@@ -25,3 +29,8 @@ texture = ExtResource("2_n673b")
 [node name="Icon" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource("2_n673b")
+
+[node name="LootArea" type="Area2D" parent="."]
+
+[node name="LootBox" type="CollisionShape2D" parent="LootArea"]
+shape = SubResource("CircleShape2D_2dm82")

@@ -1,18 +1,18 @@
-[gd_scene load_steps=32 format=3 uid="uid://pp0i54sl5web"]
+[gd_scene load_steps=31 format=3 uid="uid://pp0i54sl5web"]
 
-[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="1_1etr8"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="1_1etr8"]
 [ext_resource type="Script" path="res://scenes/enemies/ClamDog/ClamDog.gd" id="1_y6i23"]
-[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_mef7p"]
-[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_o8vrw"]
-[ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="5_88wie"]
-[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_7btdw"]
-[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="6_12hdq"]
-[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="8_p56r6"]
-[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="9_3g1w6"]
-[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="9_km6so"]
-[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="10_24pnf"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="10_34fxj"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="11_37qss"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_mef7p"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_o8vrw"]
+[ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/enemy/lootcomponent/LootComponent.tscn" id="5_88wie"]
+[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_7btdw"]
+[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/networking/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="6_12hdq"]
+[ext_resource type="PackedScene" uid="uid://d3pv4rqlo3xh7" path="res://scripts/components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.tscn" id="7_4gfqn"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="8_p56r6"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="9_3g1w6"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="9_km6so"]
+[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="10_24pnf"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/common/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="10_34fxj"]
 [ext_resource type="Texture2D" uid="uid://42lq18adjm6m" path="res://assets/images/enemies/mushroomdog/scaled/FarBackLeg.png" id="12_1liwn"]
 [ext_resource type="Texture2D" uid="uid://bcs2wspwhlw7l" path="res://assets/images/enemies/mushroomdog/scaled/FarFrontLeg.png" id="13_qkxrr"]
 [ext_resource type="Texture2D" uid="uid://7o8y73aicwek" path="res://assets/images/enemies/mushroomdog/scaled/Body.png" id="14_8ho4d"]
@@ -21,12 +21,6 @@
 [ext_resource type="Texture2D" uid="uid://cr65ijlod4b01" path="res://assets/images/enemies/mushroomdog/scaled/CloseBackLeg.png" id="17_fswo2"]
 [ext_resource type="Texture2D" uid="uid://nvyeopdfbmx2" path="res://assets/images/enemies/mushroomdog/scaled/CloseFrontLeg.png" id="18_kyr5n"]
 [ext_resource type="Texture2D" uid="uid://cgqkqerlriiif" path="res://assets/images/enemies/mushroomdog/scaled/example.png" id="19_cmq2t"]
-[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="21_0hsp7"]
-[ext_resource type="PackedScene" uid="uid://clyv1sf3bn5g0" path="res://scenes/enemies/common/ai/selectors/aggressive_mob/AggressiveMob.tscn" id="21_0s03e"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lislp"]
-radius = 27.0
-height = 80.0
 
 [sub_resource type="Animation" id="Animation_1h8sv"]
 resource_name = "Attack"
@@ -899,6 +893,13 @@ _data = {
 "Move": SubResource("Animation_gl385")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_ghi5o"]
+radius = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_p27rd"]
+radius = 36.0
+height = 82.0
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_w0bt5"]
 radius = 275.0
 
@@ -925,6 +926,12 @@ stats = NodePath("../StatsSynchronizerComponent")
 [node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("6_12hdq")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
+[node name="AttackAndWanderBehaviorComponent" parent="." node_paths=PackedStringArray("stats_component", "action_synchronizer", "avoidance_rays_component", "aggro_area") instance=ExtResource("7_4gfqn")]
+stats_component = NodePath("../StatsSynchronizerComponent")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
+avoidance_rays_component = NodePath("../AvoidanceRays")
+aggro_area = NodePath("../AggroRadius")
+
 [node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_7btdw")]
 stats = NodePath("../StatsSynchronizerComponent")
 
@@ -944,11 +951,6 @@ stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("10_24pnf")]
 stats_synchronizer = NodePath("../StatsSynchronizerComponent")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -16)
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_lislp")
 
 [node name="Sprites" type="Node2D" parent="."]
 
@@ -1024,28 +1026,24 @@ libraries = {
 
 [node name="AvoidanceRays" parent="." instance=ExtResource("10_34fxj")]
 
-[node name="StuckTimer" type="Timer" parent="."]
-process_callback = 0
-wait_time = 0.5
-one_shot = true
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ghi5o")
+
+[node name="HurtArea" type="Area2D" parent="."]
+position = Vector2(-44, -20)
+rotation = 1.5708
+
+[node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
+position = Vector2(-2.32458e-06, -37)
+shape = SubResource("CapsuleShape2D_p27rd")
 
 [node name="AggroRadius" type="Area2D" parent="."]
 position = Vector2(0, -45)
 scale = Vector2(1.00615, 1)
 collision_layer = 0
 collision_mask = 2
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AggroRadius"]
 shape = SubResource("CircleShape2D_w0bt5")
-
-[node name="BeehaveTree" type="Node" parent="." node_paths=PackedStringArray("blackboard")]
-script = ExtResource("11_37qss")
-enabled = false
-actor_node_path = NodePath("..")
-blackboard = NodePath("../Blackboard")
-
-[node name="AggressiveMob" parent="BeehaveTree" node_paths=PackedStringArray("aggro_radius") instance=ExtResource("21_0s03e")]
-aggro_radius = NodePath("../../AggroRadius")
-
-[node name="Blackboard" type="Node" parent="."]
-script = ExtResource("21_0hsp7")
+metadata/_edit_lock_ = true

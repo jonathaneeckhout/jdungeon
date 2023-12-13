@@ -1,11 +1,11 @@
-[gd_scene load_steps=22 format=3 uid="uid://da2hmdia7jfvy"]
+[gd_scene load_steps=23 format=3 uid="uid://da2hmdia7jfvy"]
 
-[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="1_47ndk"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="1_47ndk"]
 [ext_resource type="Script" path="res://scenes/npcs/turtur/Turtur.gd" id="1_swogk"]
-[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_81jcy"]
-[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="3_nrmfh"]
-[ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://scripts/components/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="4_r4601"]
-[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="6_8cka4"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_81jcy"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="3_nrmfh"]
+[ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://scripts/components/networking/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="4_r4601"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="6_8cka4"]
 [ext_resource type="Texture2D" uid="uid://dro8p6hqyf8ft" path="res://assets/images/npcs/blacksmithturtle/scaled/blacksmith.png" id="7_ad4mf"]
 [ext_resource type="Texture2D" uid="uid://dgg08pbycwx70" path="res://assets/images/npcs/blacksmithturtle/scaled/Stool.png" id="8_rv7ru"]
 [ext_resource type="Texture2D" uid="uid://djor18ivdn5lj" path="res://assets/images/npcs/blacksmithturtle/scaled/Otherarm.png" id="9_gvr6a"]
@@ -16,10 +16,6 @@
 [ext_resource type="Texture2D" uid="uid://d3e40mbass0n2" path="res://assets/images/npcs/blacksmithturtle/scaled/Sword.png" id="14_ek0h1"]
 [ext_resource type="Texture2D" uid="uid://dftixrl6une1w" path="res://assets/images/npcs/blacksmithturtle/scaled/Upperarm.png" id="15_iend1"]
 [ext_resource type="Texture2D" uid="uid://qtt82owgwwjt" path="res://assets/images/npcs/blacksmithturtle/scaled/Forearm.png" id="16_a0qvh"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ujvmo"]
-radius = 64.0
-height = 128.0
 
 [sub_resource type="Animation" id="Animation_kfffo"]
 resource_name = "Idle"
@@ -471,6 +467,13 @@ _data = {
 "Smithing": SubResource("Animation_npwfm")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_r3msd"]
+radius = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_d5p1m"]
+radius = 72.0
+height = 144.0
+
 [node name="Turtur" type="CharacterBody2D"]
 script = ExtResource("1_swogk")
 
@@ -504,27 +507,22 @@ texture = ExtResource("8_rv7ru")
 offset = Vector2(-44.5578, -42.8275)
 
 [node name="RightArm" type="Sprite2D" parent="Sprites"]
-position = Vector2(-14.2521, -24.0506)
-rotation = -0.663506
+position = Vector2(-27, -17)
 texture = ExtResource("9_gvr6a")
 offset = Vector2(22.592, 18.914)
 
 [node name="RightFoot" type="Sprite2D" parent="Sprites"]
-position = Vector2(-2.6304, 7.47614)
-rotation = -0.320744
-scale = Vector2(1, 1)
+position = Vector2(-7, 10)
 texture = ExtResource("10_6rx6o")
 offset = Vector2(18.1485, -10.0668)
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(4, 24)
-rotation = 0.284375
 texture = ExtResource("11_l73qk")
 offset = Vector2(-9.00101, -22.089)
 
 [node name="LeftFoot" type="Sprite2D" parent="Sprites"]
-position = Vector2(27.1985, 26.6135)
-rotation = -0.155771
+position = Vector2(27, 20)
 texture = ExtResource("12_ujdyy")
 offset = Vector2(-31.096, -17.3263)
 
@@ -539,14 +537,12 @@ texture = ExtResource("14_ek0h1")
 offset = Vector2(42.257, -8.70601)
 
 [node name="LeftUpperArm" type="Sprite2D" parent="Sprites"]
-position = Vector2(20.3021, -13.9505)
-rotation = -0.127838
+position = Vector2(9, -17)
 texture = ExtResource("15_iend1")
 offset = Vector2(-12.8972, 18.654)
 
 [node name="LeftLowerArm" type="Sprite2D" parent="Sprites"]
-position = Vector2(23.3618, 9.85363)
-rotation = -0.127838
+position = Vector2(9, 7)
 texture = ExtResource("16_a0qvh")
 offset = Vector2(-14.2303, -5.19159)
 
@@ -589,11 +585,16 @@ remote_path = NodePath("../../../Sprites/Sword")
 position = Vector2(40, 14)
 remote_path = NodePath("../../Sprites/Stool")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -32)
-shape = SubResource("CapsuleShape2D_ujvmo")
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_ckrre")
 }
+
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_r3msd")
+
+[node name="HurtArea" type="Area2D" parent="."]
+
+[node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
+position = Vector2(0, -56)
+shape = SubResource("CapsuleShape2D_d5p1m")

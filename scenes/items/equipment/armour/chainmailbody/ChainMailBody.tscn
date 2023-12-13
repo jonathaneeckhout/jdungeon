@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://b2bfdwtgsm2im"]
+[gd_scene load_steps=5 format=3 uid="uid://b2bfdwtgsm2im"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/armour/chainmailbody/ChainMailBody.gd" id="1_yct1v"]
 [ext_resource type="Texture2D" uid="uid://dwlenbo6lp7nd" path="res://assets/images/equipment/armour/chainmail/scaled/chainmail_trunk.png" id="2_ni3eq"]
@@ -6,10 +6,14 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_sv48u"]
 radius = 19.0263
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_8xpm1"]
+radius = 20.0
+
 [node name="ChainMailBody" type="StaticBody2D"]
 script = ExtResource("1_yct1v")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_sv48u")
 
 [node name="Sprite" type="Sprite2D" parent="."]
@@ -23,3 +27,8 @@ offset = Vector2(-1, -8)
 [node name="Icon" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource("2_ni3eq")
+
+[node name="LootArea" type="Area2D" parent="."]
+
+[node name="LootBox" type="CollisionShape2D" parent="LootArea"]
+shape = SubResource("CircleShape2D_8xpm1")

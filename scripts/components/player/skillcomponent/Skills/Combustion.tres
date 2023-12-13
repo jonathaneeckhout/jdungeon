@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="SkillComponentResource" load_steps=3 format=3 uid="uid://drxdxsq8flo4b"]
+
+[ext_resource type="Script" path="res://scripts/components/player/skillcomponent/SkillResource.gd" id="1_6lfvo"]
+[ext_resource type="Texture2D" uid="uid://c8nuckiss4ew3" path="res://assets/images/spells/fireball/Fireball.png" id="1_rsbkf"]
+
+[resource]
+script = ExtResource("1_6lfvo")
+skill_class = "Combustion"
+displayed_name = "Combustion"
+energy_usage = 5
+icon = ExtResource("1_rsbkf")
+collision_mask = 30
+valid_entities = Array[int]([0, 1])
+cooldown = 2.0
+cast_on_select = false
+damage = 15
+hitbox_shape = [Vector2(300, 0)]
+hitbox_hits_user = true
+hitbox_rotate_shape = false
+hit_range = 200.0
+description = "Uncontrolled explosion that will also hit the user."

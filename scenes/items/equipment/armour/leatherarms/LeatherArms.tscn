@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dp22lfva2dx7k"]
+[gd_scene load_steps=6 format=3 uid="uid://dp22lfva2dx7k"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/armour/leatherarms/LeatherArms.gd" id="1_kle4j"]
 [ext_resource type="Texture2D" uid="uid://n03ctmf2vdq0" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_handback.png" id="2_hine1"]
@@ -7,10 +7,14 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_sv48u"]
 radius = 19.0263
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_0dm0k"]
+radius = 20.0
+
 [node name="LeatherArms" type="StaticBody2D"]
 script = ExtResource("1_kle4j")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_sv48u")
 
 [node name="Sprite" type="Sprite2D" parent="."]
@@ -34,3 +38,8 @@ offset = Vector2(-11, 16)
 [node name="Icon" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource("2_hine1")
+
+[node name="LootArea" type="Area2D" parent="."]
+
+[node name="LootBox" type="CollisionShape2D" parent="LootArea"]
+shape = SubResource("CircleShape2D_0dm0k")

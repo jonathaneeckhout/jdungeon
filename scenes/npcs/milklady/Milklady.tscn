@@ -1,26 +1,22 @@
-[gd_scene load_steps=23 format=3 uid="uid://dj1mpx8a8yeko"]
+[gd_scene load_steps=24 format=3 uid="uid://dj1mpx8a8yeko"]
 
 [ext_resource type="Script" path="res://scenes/npcs/milklady/Milklady.gd" id="1_i2k6g"]
-[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_444i3"]
-[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="2_v4sko"]
-[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_xwj24"]
-[ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://scripts/components/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="4_jq4vr"]
-[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="6_7nn8c"]
-[ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://scripts/components/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="7_b43t0"]
-[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="7_kfsbv"]
-[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="9_3kap7"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_444i3"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="2_v4sko"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_xwj24"]
+[ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://scripts/components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="4_jq4vr"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="6_7nn8c"]
+[ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://scripts/components/networking/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="7_b43t0"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="7_kfsbv"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="9_3kap7"]
 [ext_resource type="Texture2D" uid="uid://d3bki65r7slmw" path="res://assets/images/npcs/milklady/scaled/milklady_whole.png" id="11_lg4rx"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="11_y6h07"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/common/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="11_y6h07"]
 [ext_resource type="Texture2D" uid="uid://gwalcp3d24vg" path="res://assets/images/npcs/milklady/scaled/milklady_right_arm.png" id="12_ky2ex"]
 [ext_resource type="Texture2D" uid="uid://cwmwgqtp4cxco" path="res://assets/images/npcs/milklady/scaled/milklady_body.png" id="13_mb4tp"]
 [ext_resource type="Texture2D" uid="uid://cdertmyasij3g" path="res://assets/images/npcs/milklady/scaled/milklady_head.png" id="14_adu7f"]
 [ext_resource type="Texture2D" uid="uid://bndpe4xdmqemn" path="res://assets/images/npcs/milklady/scaled/milklady_right_foot.png" id="15_ya05q"]
 [ext_resource type="Texture2D" uid="uid://djpmgvs7ecgaa" path="res://assets/images/npcs/milklady/scaled/milklady_left_foot.png" id="16_kx4j8"]
 [ext_resource type="Texture2D" uid="uid://ceexi4r61jks6" path="res://assets/images/npcs/milklady/scaled/milklady_left_arm.png" id="17_yaj1r"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6kb0l"]
-radius = 26.0
-height = 74.0
 
 [sub_resource type="Animation" id="Animation_84xvv"]
 resource_name = "Idle"
@@ -449,6 +445,13 @@ _data = {
 "RESET": SubResource("Animation_2nkpv")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_jmgyh"]
+radius = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a7cn7"]
+radius = 27.0
+height = 80.0
+
 [node name="Milklady" type="CharacterBody2D"]
 collision_layer = 9
 script = ExtResource("1_i2k6g")
@@ -481,10 +484,6 @@ stats = NodePath("../StatsSynchronizerComponent")
 offset_top = -90.0
 offset_bottom = -50.0
 stats_synchronizer = NodePath("../StatsSynchronizerComponent")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -36)
-shape = SubResource("CapsuleShape2D_6kb0l")
 
 [node name="Sprites" type="Node2D" parent="."]
 
@@ -552,3 +551,12 @@ remote_path = NodePath("../../../Sprites/MilkladyLeftFoot")
 libraries = {
 "": SubResource("AnimationLibrary_4d8u1")
 }
+
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_jmgyh")
+
+[node name="HurtArea" type="Area2D" parent="."]
+
+[node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
+position = Vector2(2, -38)
+shape = SubResource("CapsuleShape2D_a7cn7")

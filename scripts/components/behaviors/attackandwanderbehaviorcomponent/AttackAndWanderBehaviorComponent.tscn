@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3pv4rqlo3xh7"]
+
+[ext_resource type="Script" path="res://scripts/components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.gd" id="1_hil3r"]
+
+[node name="AttackAndWanderBehaviorComponent" type="Node2D"]
+script = ExtResource("1_hil3r")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_postprocessing = 1
