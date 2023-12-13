@@ -472,6 +472,7 @@ func characterclasscomponent_sync_class_change(n: String, c: Array):
 
 		statssynchronizer_sync_stats(n)
 
+
 #Only server can make this RPC, runs on client
 @rpc("call_remote", "authority", "reliable")
 func dialoguesynchronizer_sync_invoke_response(n: String, d: String):
@@ -486,6 +487,7 @@ func dialoguesynchronizer_sync_invoke_response(n: String, d: String):
 
 	if entity.component_list.has("class_component"):
 		entity.component_list["dialogue_component"].sync_invoke_response(d)
+
 
 #Only client can make this RPC, runs on server
 @rpc("call_remote", "any_peer", "reliable")
@@ -508,5 +510,10 @@ func dialoguesynchronizer_sync_dialogue_finished(n: String):
 		return
 
 	if entity.component_list.has("dialogue_component"):
-
-		entity.component_list["dialogue_component"].dialogue_system_instance.dialogue_finished.emit()
+		(
+			entity
+			. component_list["dialogue_component"]
+			. dialogue_system_instance
+			. dialogue_finished
+			. emit()
+		)

@@ -2,11 +2,10 @@ extends Resource
 class_name DialogueSnippetResource
 ## This class is only meant to be used by [DialogueResource]
 
-
 ## The actual text displayed
 @export_multiline var text: String = "Undefined dialogue snippet!"
 
-## If true, it makes the [DialogueSystem] use BBCode, otherwise metatags like [ b ] won't work. 
+## If true, it makes the [DialogueSystem] use BBCode, otherwise metatags like [ b ] won't work.
 ## Altho it will improve performance.
 @export var enableBBCode: bool = true
 
