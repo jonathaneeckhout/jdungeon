@@ -11,6 +11,8 @@ func _init():
 
 
 func _ready():
+	super()
+
 	# Server side
 	if G.is_server():
 		shop.add_item("HealthPotion", 100)

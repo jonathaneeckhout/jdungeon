@@ -52,6 +52,7 @@ func register_enemies():
 	J.register_enemy_scene("TreeTrunkGuy", "res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn")
 	J.register_enemy_scene("MoldedDruvar", "res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn")
 	J.register_enemy_scene("ClamDog", "res://scenes/enemies/ClamDog/ClamDog.tscn")
+	J.register_enemy_scene("BlueMole", "res://scenes/enemies/BlueMole/BlueMole.tscn")
 
 
 func register_npcs():
@@ -115,12 +116,12 @@ func register_items():
 
 
 func register_skills():
-	J.register_skill_resource("debug", "res://scripts/components/skillcomponent/Skills/debug.tres")
+	J.register_skill_resource("debug", "res://scripts/components/player/skillcomponent/Skills/debug.tres")
 	J.register_skill_resource(
-		"HealSelf", "res://scripts/components/skillcomponent/Skills/HealSelf.tres"
+		"HealSelf", "res://scripts/components/player/skillcomponent/Skills/HealSelf.tres"
 	)
 	J.register_skill_resource(
-		"Combustion", "res://scripts/components/skillcomponent/Skills/Combustion.tres"
+		"Combustion", "res://scripts/components/player/skillcomponent/Skills/Combustion.tres"
 	)
 
 
@@ -133,10 +134,10 @@ func register_maps():
 
 func register_character_classes():
 	J.register_class_resource(
-		"Base", "res://scripts/components/charclasscomponent/classes/Base.tres"
+		"Base", "res://scripts/components/player/charclasscomponent/classes/Base.tres"
 	)
 	J.register_class_resource(
-		"Warrior", "res://scripts/components/charclasscomponent/classes/Warrior.tres"
+		"Warrior", "res://scripts/components/player/charclasscomponent/classes/Warrior.tres"
 	)
 
 

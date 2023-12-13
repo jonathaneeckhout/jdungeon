@@ -1,30 +1,24 @@
-[gd_scene load_steps=29 format=3 uid="uid://drmaubupv57n1"]
+[gd_scene load_steps=28 format=3 uid="uid://drmaubupv57n1"]
 
 [ext_resource type="Script" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.gd" id="1_ba1y1"]
-[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_82l3i"]
-[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_evc6g"]
-[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_q10uy"]
-[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/floatingtextcomponent/FloatingTextComponent.tscn" id="5_305lq"]
-[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="5_aextl"]
-[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/interfacecomponent/InterfaceComponent.tscn" id="5_y1ndl"]
-[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_lms8h"]
-[ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/lootcomponent/LootComponent.tscn" id="6_vd6gg"]
-[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/updatefacecomponent/UpdateFaceComponent.tscn" id="7_lx7n7"]
-[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/animationcomponent/AnimationComponent.tscn" id="8_7r242"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="9_whu8q"]
-[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="10_xhds1"]
-[ext_resource type="PackedScene" uid="uid://clyv1sf3bn5g0" path="res://scenes/enemies/common/ai/selectors/aggressive_mob/AggressiveMob.tscn" id="11_l62gi"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_82l3i"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_evc6g"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_q10uy"]
+[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="5_305lq"]
+[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/networking/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="5_aextl"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="5_y1ndl"]
+[ext_resource type="PackedScene" uid="uid://d3pv4rqlo3xh7" path="res://scripts/components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.tscn" id="6_b030s"]
+[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_lms8h"]
+[ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/enemy/lootcomponent/LootComponent.tscn" id="6_vd6gg"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="7_lx7n7"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="8_7r242"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/common/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="9_whu8q"]
 [ext_resource type="Texture2D" uid="uid://bklewt71b0gcw" path="res://assets/images/enemies/moldeddruvar/scaled/moldeddruvar_backhand.png" id="12_jf6n7"]
 [ext_resource type="Texture2D" uid="uid://dbsx18d3552ie" path="res://assets/images/enemies/moldeddruvar/scaled/moldeddruvar_backleg.png" id="13_kdama"]
 [ext_resource type="Texture2D" uid="uid://cg1nuxf3ixuty" path="res://assets/images/enemies/moldeddruvar/scaled/moldeddruvar_topleg.png" id="14_2qow6"]
 [ext_resource type="Texture2D" uid="uid://dvlo4ub355s4d" path="res://assets/images/enemies/moldeddruvar/scaled/moldeddruvar_trunk.png" id="15_hc1o0"]
 [ext_resource type="Texture2D" uid="uid://cxjby57l51iuk" path="res://assets/images/enemies/moldeddruvar/scaled/moldeddruvar_Head.png" id="16_uq0hp"]
 [ext_resource type="Texture2D" uid="uid://bolb8af6ilhbg" path="res://assets/images/enemies/moldeddruvar/scaled/moldeddruvar_tophand.png" id="17_ltm6o"]
-[ext_resource type="Script" path="res://addons/beehave/blackboard.gd" id="20_vnsr5"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_n3uon"]
-radius = 17.0
-height = 108.0
 
 [sub_resource type="Animation" id="Animation_5gs2m"]
 resource_name = "Attack"
@@ -627,6 +621,13 @@ _data = {
 "RESET": SubResource("Animation_5ksln")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_hetrj"]
+radius = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ov0s8"]
+radius = 25.0
+height = 122.0
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_dqm6v"]
 radius = 200.0
 
@@ -653,6 +654,12 @@ experience_worth = 80
 
 [node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_aextl")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="AttackAndWanderBehaviorComponent" parent="." node_paths=PackedStringArray("stats_component", "action_synchronizer", "avoidance_rays_component", "aggro_area") instance=ExtResource("6_b030s")]
+stats_component = NodePath("../StatsSynchronizerComponent")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
+avoidance_rays_component = NodePath("../AvoidanceRays")
+aggro_area = NodePath("../AggroRadius")
 
 [node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_vd6gg")]
 stats = NodePath("../StatsSynchronizerComponent")
@@ -737,10 +744,6 @@ remote_path = NodePath("../../../Sprites/Head")
 position = Vector2(16, -30)
 remote_path = NodePath("../../../Sprites/TopHand")
 
-[node name="Hurtbox" type="CollisionShape2D" parent="."]
-position = Vector2(0, -48)
-shape = SubResource("CapsuleShape2D_n3uon")
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_sumus")
@@ -748,10 +751,15 @@ libraries = {
 
 [node name="AvoidanceRays" parent="." instance=ExtResource("9_whu8q")]
 
-[node name="StuckTimer" type="Timer" parent="."]
-process_callback = 0
-wait_time = 0.5
-one_shot = true
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_hetrj")
+
+[node name="HurtArea" type="Area2D" parent="."]
+position = Vector2(-44, -20)
+
+[node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
+position = Vector2(40, -26)
+shape = SubResource("CapsuleShape2D_ov0s8")
 
 [node name="AggroRadius" type="Area2D" parent="."]
 position = Vector2(0, -45)
@@ -762,14 +770,3 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AggroRadius"]
 position = Vector2(0, 44)
 shape = SubResource("CircleShape2D_dqm6v")
-
-[node name="BeehaveTree" type="Node" parent="."]
-script = ExtResource("10_xhds1")
-enabled = false
-actor_node_path = NodePath("..")
-
-[node name="AggressiveMob" parent="BeehaveTree" node_paths=PackedStringArray("aggro_radius") instance=ExtResource("11_l62gi")]
-aggro_radius = NodePath("../../AggroRadius")
-
-[node name="Blackboard" type="Node" parent="."]
-script = ExtResource("20_vnsr5")

@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dtoop6xo6ukwe"]
-
-[ext_resource type="Script" path="res://scenes/enemies/common/ai/actions/move_to/MoveTo.gd" id="1_rquae"]
-
-[node name="MoveTo" type="Node"]
-script = ExtResource("1_rquae")

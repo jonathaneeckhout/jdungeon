@@ -1,0 +1,34 @@
+[gd_resource type="TileSet" load_steps=6 format=3 uid="uid://d0vhi8a2dswg6"]
+
+[ext_resource type="Texture2D" uid="uid://b7rx26xe47f8s" path="res://assets/images/tileset/navtile.png" id="1_6mhl5"]
+[ext_resource type="Texture2D" uid="uid://df7nx24kj6i5s" path="res://assets/images/tileset/coltile.png" id="2_jfy14"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_uswgw"]
+vertices = PackedVector2Array(16, 16, -16, 16, -16, -16, 16, -16)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)])
+source_geometry_group_name = &"navigation_polygon_source_group"
+agent_radius = 0.0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_clwhf"]
+texture = ExtResource("1_6mhl5")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_uswgw")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rctqh"]
+texture = ExtResource("2_jfy14")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[resource]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+navigation_layer_0/layers = 1
+sources/0 = SubResource("TileSetAtlasSource_clwhf")
+sources/1 = SubResource("TileSetAtlasSource_rctqh")

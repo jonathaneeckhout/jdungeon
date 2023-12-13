@@ -9,6 +9,7 @@ var component_list: Dictionary = {}
 @onready var spawn_position: Vector2 = position
 
 @onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
+@onready var hurtbox: Area2D = $HurtArea
 
 
 func _init():
@@ -20,3 +21,10 @@ func _init():
 	else:
 		# Don't handle collision on client side
 		collision_mask = 0
+
+
+func _ready():
+	# Make sure to set the layer to enemies
+	hurtbox.collision_layer = J.PHYSICS_LAYER_ENEMIES
+	# We're not interested in others
+	hurtbox.collision_mask = 0

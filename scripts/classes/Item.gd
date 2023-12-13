@@ -32,6 +32,8 @@ var equipment_slot: String = ""
 
 var boost: Boost
 
+@onready var lootarea: Area2D = $LootArea
+
 
 func _init():
 	# Disable physics by default
@@ -43,6 +45,14 @@ func _init():
 
 
 func _ready():
+	# Make sure to set the layer to items
+	lootarea.collision_layer = J.PHYSICS_LAYER_ITEMS
+	# We're not interested in others
+	lootarea.collision_mask = 0
+
+	# Hiding the lootarea, else the player will be surrounded by collision shapes. Remove this line if you want to debug
+	lootarea.hide()
+
 	if G.is_server():
 		expire_timer = Timer.new()
 		expire_timer.one_shot = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://u35hf8h5t8f2"]
+[gd_scene load_steps=5 format=3 uid="uid://u35hf8h5t8f2"]
 
 [ext_resource type="Script" path="res://scenes/items/equipment/weapons/axe/Axe.gd" id="1_wnkji"]
 [ext_resource type="Texture2D" uid="uid://cd2ylylna8pqw" path="res://assets/images/equipment/weapons/axe/scaled/axe.png" id="2_mwvuj"]
@@ -7,12 +7,17 @@
 radius = 14.0
 height = 52.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dyfj6"]
+radius = 21.0
+height = 78.0
+
 [node name="Axe" type="StaticBody2D"]
 script = ExtResource("1_wnkji")
 uuid = null
 expire_time = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CapsuleShape2D_g6336")
 
 [node name="Sprite" type="Sprite2D" parent="."]
@@ -27,3 +32,8 @@ texture = ExtResource("2_mwvuj")
 [node name="Icon" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource("2_mwvuj")
+
+[node name="LootArea" type="Area2D" parent="."]
+
+[node name="LootBox" type="CollisionShape2D" parent="LootArea"]
+shape = SubResource("CapsuleShape2D_dyfj6")

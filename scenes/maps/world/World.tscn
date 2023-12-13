@@ -122,7 +122,7 @@ position = Vector2(-6096, 4344)
 [node name="NPCs" type="Node2D" parent="Entities"]
 
 [node name="Milklady" parent="Entities/NPCs" instance=ExtResource("9_e850n")]
-position = Vector2(320, -128)
+position = Vector2(324, -199)
 
 [node name="Turtur" parent="Entities/NPCs" instance=ExtResource("10_bxiih")]
 position = Vector2(-4265, 2872)
