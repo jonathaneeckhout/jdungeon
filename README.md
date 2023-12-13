@@ -28,10 +28,7 @@ Centuries ago the world was whole. The kingdoms were diverse, numerous, and frui
 
 ## Videos
 ### How to open and run the Godot project
-[![Watch the video](https://img.youtube.com/vi/p-54V3rKuaQ/maxresdefault.jpg)](https://youtu.be/p-54V3rKuaQ)
-
-### How to run the online deployed game
-[![Watch the video](https://img.youtube.com/vi/45mzdgq25eE/maxresdefault.jpg)](https://youtu.be/45mzdgq25eE?si=AypC6xL_UiPwCAEU)
+[![Watch the video](https://img.youtube.com/vi/RkikLTK98EQ/maxresdefault.jpg)](https://youtu.be/RkikLTK98EQ)
 
 ## List of Features
 
