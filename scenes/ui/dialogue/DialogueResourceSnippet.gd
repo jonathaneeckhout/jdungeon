@@ -24,3 +24,9 @@ class_name DialogueSnippetResource
 
 ## A direct modifier to text scroll speed, set to 0 or lower for instant text.
 @export var text_speed_modifier: float = 1
+
+## When a player sees this snippet, the following flags are set
+@export var flags_set_on_seen: Array[String]
+
+## Opposite as above
+@export var flags_unset_on_seen: Array[String]

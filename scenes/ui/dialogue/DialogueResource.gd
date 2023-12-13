@@ -10,11 +10,14 @@ const FAILSAFE_TEXTURE: Texture = preload("res://icon.svg")
 @export var dialogue_identifier: String = "UNDEFINED"
 
 @export var speaker_names: Array[String] = ["Spaker One"]
+
 ## The later Array contains strings as paths to textures.
 @export var speaker_portraits: Array[Array] = [ ["res://assets/images/enemies/flower/original/Flower_head.png"] ]
 
 ## Snippets are executed in order, if one is set to not be shown, then it is skipped in favour of the next one.
 @export var dialogue_snippets: Array[DialogueSnippetResource]
+
+
 
 func _init() -> void:
 	if speaker_portraits.size() != speaker_names.size():
@@ -51,7 +54,7 @@ func get_speaker_portrait(id: int, portraitID: int) -> Texture:
 		return FAILSAFE_TEXTURE
 
 func get_snippets_to_show(trueConditions: Dictionary) -> Array[DialogueSnippetResource]:
-	var output: Array[DialogueSnippetResource]
+	var output: Array[DialogueSnippetResource] = []
 	
 	for snippet: DialogueSnippetResource in snippets:
 

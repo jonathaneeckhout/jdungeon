@@ -471,3 +471,18 @@ func characterclasscomponent_sync_class_change(n: String, c: Array):
 		characterclasscomponent_sync_all(n)
 
 		statssynchronizer_sync_stats(n)
+
+#Only server can make this RPC, runs on client
+@rpc("call_remote", "authority", "reliable")
+func dialoguesynchronizer_sync_invoke_response(n: String, d: String):
+	assert(not G.is_server(), "This method is only intended for client use")
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("class_component"):
+		entity.component_list["class_component"].sync_response(d)
