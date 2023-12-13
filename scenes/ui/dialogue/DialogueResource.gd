@@ -9,9 +9,9 @@ const FAILSAFE_TEXTURE: Texture = preload("res://icon.svg")
 
 @export var dialogue_identifier: String = "UNDEFINED"
 
-@export var speaker_names: Array[String]
+@export var speaker_names: Array[String] = ["Spaker One"]
 ## The later Array contains strings as paths to textures.
-@export var speaker_portraits: Array[Array] 
+@export var speaker_portraits: Array[Array] = [ ["res://assets/images/enemies/flower/original/Flower_head.png"] ]
 
 ## Snippets are executed in order, if one is set to not be shown, then it is skipped in favour of the next one.
 @export var dialogue_snippets: Array[DialogueSnippetResource]

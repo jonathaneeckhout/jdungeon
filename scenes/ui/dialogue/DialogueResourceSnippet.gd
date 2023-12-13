@@ -4,7 +4,7 @@ class_name DialogueSnippetResource
 
 
 ## The actual text displayed
-@export var text: String = "Undefined dialogue snippet!"
+@export_multiline var text: String = "Undefined dialogue snippet!"
 
 ## If true, it makes the [DialogueSystem] use BBCode, otherwise metatags like [ b ] won't work. 
 ## Altho it will improve performance.
