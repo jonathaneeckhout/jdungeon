@@ -27,5 +27,5 @@ class_name DialogueSnippetResource
 ## When a player sees this snippet, the following flags are set
 @export var flags_set_on_seen: Array[String]
 
-## Opposite as above
+## Opposite as [member flags_set_on_seen]
 @export var flags_unset_on_seen: Array[String]

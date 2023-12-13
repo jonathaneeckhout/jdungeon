@@ -15,7 +15,6 @@ signal dialogue_text_changed(newText: String)
 signal dialogue_speaker_changed(newSpeaker: String)
 signal dialogue_portrait_changed(newPortrait: Texture)
 
-#Nodes
 @export var rich_label_dialogue: RichTextLabel
 
 ## Used to set the time required for the text to finish appearing, if you want to modify the speed of individual text snippets. Modify [member DialogueSnippetResource.text_speed_multiplier]

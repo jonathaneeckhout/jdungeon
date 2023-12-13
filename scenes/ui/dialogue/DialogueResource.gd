@@ -3,7 +3,7 @@ class_name DialogueResource
 ## This class works by having an [int] to identify each speaker.
 ## As such, both speaker_names and speaker_portraits must have the same amount of elements.
 ## So when someone refers to speaker 0, it takes [member speaker_names][0] and [member speaker_portraits][0]
-## [member spaker_portaits] contains nested Arrays as to hold several portaits per speaker.
+## [member speaker_portaits] contains nested Arrays as to hold several portaits per speaker.
 
 const FAILSAFE_TEXTURE: Texture = preload("res://icon.svg")
 
@@ -16,7 +16,7 @@ const FAILSAFE_TEXTURE: Texture = preload("res://icon.svg")
 	["res://assets/images/enemies/flower/original/Flower_head.png"]
 ]
 
-## Snippets are executed in order, if one is set to not be shown, then it is skipped in favour of the next one.
+## Snippets are executed in order, if one is set to not be shown, then it is skipped as if it didn't exist.
 @export var dialogue_snippets: Array[DialogueSnippetResource]
 
 
