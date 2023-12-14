@@ -27,7 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://qdyqn5c3hmey" path="res://scripts/components/player/cursorcomponent/CursorComponent.tscn" id="17_u25e0"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="18_bmbbk"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="18_ot7di"]
-[ext_resource type="PackedScene" uid="uid://cj121d2pvc3s8" path="res://scripts/components/dialoguesynhcronizercomponent/DialogueSynchronizerComponent.tscn" id="18_qerp2"]
+[ext_resource type="PackedScene" uid="uid://cj121d2pvc3s8" path="res://scripts/components/networking/dialoguesynhcronizercomponent/DialogueSynchronizerComponent.tscn" id="18_qerp2"]
 [ext_resource type="Texture2D" uid="uid://dbm30gu6qnmt2" path="res://assets/images/player/base/scaled/Basecharacter.png" id="19_lfk4e"]
 [ext_resource type="Texture2D" uid="uid://bhjm6d6tf1jmt" path="res://assets/images/player/base/scaled/base_handback.png" id="20_26vwi"]
 [ext_resource type="Texture2D" uid="uid://b6cxuf50u0nbt" path="res://assets/images/player/base/scaled/base_legback.png" id="21_1v54o"]
