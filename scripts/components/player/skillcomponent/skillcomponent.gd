@@ -384,6 +384,7 @@ func get_skill_current_class() -> String:
 		return ""
 
 
+## Returns the classes of the skills currently in this component
 func get_skills_classes() -> Array[String]:
 	var arr: Array[String] = []
 	for skill in skills:
@@ -453,8 +454,15 @@ func from_json(data: Dictionary) -> bool:
 	return true
 
 
-func sync_skills(id: int):
-	assert(G.is_server(), "Only the server may call this function")
+func sync_skills():
+	if not G.is_server():
+		return
+	
+	var id: int = multiplayer.get_remote_sender_id()
+	
+	if not G.is_user_logged_in(id):
+		return
+	
 	G.sync_rpc.skillcomponent_sync_response.rpc_id(id, user.get_name(), to_json())
 
 

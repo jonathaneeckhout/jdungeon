@@ -361,7 +361,7 @@ func skillcomponent_sync_skills(n: String):
 		return
 
 	if entity.component_list.has("skill_component"):
-		entity.component_list["skill_component"].sync_skills(id)
+		entity.component_list["skill_component"].sync_skills()
 
 
 #Client only
