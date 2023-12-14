@@ -22,15 +22,29 @@ signal skill_cast_on_select_selected(skill: SkillComponentResource)
 
 signal skills_changed
 
-const COLOR_HITBOX := Color.AQUA / 2
-const COLOR_HITBOX_UNUSABLE := Color.FIREBRICK / 2
-const COLOR_RANGE := Color.GREEN_YELLOW / 2
-
 @export var user: CharacterBody2D
 
+@export_group("Node References")
 @export var stats_component: StatsSynchronizerComponent
 @export var player_synchronizer: PlayerSynchronizer
 
+@export_group("Visual Preferences")
+## Color for the area where the skill will hit.
+@export var color_hitbox: Color = Color.AQUA / 2
+## Color for the hitbox when the skill cannot be used.
+@export var color_hitbox_unusable: Color = Color.FIREBRICK / 2
+## Color for the area drawn around the user when the skill is selected. Determining how far the skill can be used.
+@export var color_range: Color = Color.GREEN_YELLOW / 3
+## Range is from -1 and upwards, does not affect polygons.
+@export var hitbox_line_thickness: float = 4
+## Does not affect polygons.
+@export var hitbox_line_antialiasing: bool = false
+## Only used for CircleShape2D hitboxes. Determines the definition of the drawn circle outline
+@export var hitbox_circle_outline_point_count: int = 45
+
+
+
+@export_group("Main Functionality")
 @export var skills: Array[SkillComponentResource]
 @export var skill_current: SkillComponentResource:
 	set(val):
@@ -64,11 +78,6 @@ var directSpace: PhysicsDirectSpaceState2D
 
 
 func _ready() -> void:
-	#TEMP until classes are added
-	add_skill("HealSelf")
-	add_skill("Combustion")
-	assert(skills[0] is SkillComponentResource)
-	#TEMP ends
 
 	#Do not connect if not debug, for performance reasons.
 	if OS.is_debug_build():
@@ -149,7 +158,7 @@ func _draw():
 
 
 func draw_range():
-	draw_circle(Vector2.ZERO, skill_current.hit_range, COLOR_RANGE)
+	draw_circle(Vector2.ZERO, skill_current.hit_range, color_range)
 
 
 func draw_hitbox(localPoint: Vector2 = to_local(player_synchronizer.mouse_global_pos)):
@@ -162,14 +171,19 @@ func draw_hitbox(localPoint: Vector2 = to_local(player_synchronizer.mouse_global
 	#Color selection
 	var colorUsed: Color
 	if is_skill_energy_affordable(skill_current) and not is_skill_cooling_down(skill_current):
-		colorUsed = COLOR_HITBOX
+		colorUsed = color_hitbox
 	else:
-		colorUsed = COLOR_HITBOX_UNUSABLE
+		colorUsed = color_hitbox_unusable
 
 	#Drawing
 	if shape is CircleShape2D:
-		draw_circle(localPoint, shape.radius, colorUsed)
-
+		draw_circle(localPoint, shape.radius, colorUsed*0.35)
+		draw_arc(localPoint, shape.radius, 0, TAU, hitbox_circle_outline_point_count, colorUsed, hitbox_line_thickness, hitbox_line_antialiasing)
+	
+	elif shape is SegmentShape2D:
+		var points: Array[Vector2] = [shape.a + localPoint, shape.b + localPoint]
+		draw_line(points[0], points[1], colorUsed, hitbox_line_thickness, hitbox_line_antialiasing)
+	
 	elif shape is ConvexPolygonShape2D:
 		assert(shape.points.size() >= 3)
 		var polygon: PackedVector2Array = []
@@ -182,6 +196,14 @@ func draw_hitbox(localPoint: Vector2 = to_local(player_synchronizer.mouse_global
 
 
 func add_skill(skillClass: String):
+	#Do not allow duplicates
+	if skillClass in get_skills_classes():
+		if Global.debug_mode:
+			GodotLogger.info(
+				"Rejected duplicate skill '{0}'".format([skillClass])
+				)
+		return
+		
 	var skillFound: SkillComponentResource = J.skill_resources.get(skillClass, null)
 
 	if skillFound is SkillComponentResource:
@@ -321,6 +343,12 @@ func get_collision_shape(userRotation: float) -> Shape2D:
 		shape = CircleShape2D.new()
 		shape.radius = skill_current.hitbox_shape[0].length()
 
+	#Otherwise, it is a line
+	elif skill_current.hitbox_shape.size() == 2:
+		shape = SegmentShape2D.new()
+		shape.a = skill_current.hitbox_shape[0]
+		shape.b = skill_current.hitbox_shape[1]
+
 	#Otherwise treat it as a polygon
 	else:
 		shape = ConvexPolygonShape2D.new()
@@ -427,16 +455,8 @@ func from_json(data: Dictionary) -> bool:
 	return true
 
 
-func sync_skills():
-	if not G.is_server():
-		return
-
-	var id: int = multiplayer.get_remote_sender_id()
-
-	# Only allow logged in players
-	if not G.is_user_logged_in(id):
-		return
-
+func sync_skills(id: int):
+	assert(G.is_server(), "Only the server may call this function")
 	G.sync_rpc.skillcomponent_sync_response.rpc_id(id, user.get_name(), to_json())
 
 
