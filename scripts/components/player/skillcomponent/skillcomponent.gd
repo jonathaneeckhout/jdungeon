@@ -92,8 +92,6 @@ func _ready() -> void:
 	add_child(cooldownTimer)
 	cooldownTimer.start(0.1)
 
-	skills_changed.connect(sync_skills)
-
 	player_synchronizer.skill_used.connect(_on_skill_used)
 
 	if G.is_server():
