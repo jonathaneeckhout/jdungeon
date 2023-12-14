@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://d4b7x1k03s5hr"]
+[gd_scene load_steps=29 format=3 uid="uid://d4b7x1k03s5hr"]
 
 [ext_resource type="Script" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.gd" id="1_j7ilt"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_q5nxg"]
@@ -12,7 +12,6 @@
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/enemy/lootcomponent/LootComponent.tscn" id="6_pi68j"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="7_so3fl"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="8_vt6nj"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/common/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="10_2fx0n"]
 [ext_resource type="Texture2D" uid="uid://v560c0nsf25w" path="res://assets/images/enemies/treetrunkguy/scaled/Treetrunkguy.png" id="12_pcwq1"]
 [ext_resource type="Texture2D" uid="uid://cd78sw8cj8kmd" path="res://assets/images/enemies/treetrunkguy/scaled/Treetrunkguy_backgroundhand.png" id="13_gualf"]
 [ext_resource type="Texture2D" uid="uid://bnm5v77widjjr" path="res://assets/images/enemies/treetrunkguy/scaled/Treetrunkguy_backgroundleg.png" id="14_byciu"]
@@ -802,10 +801,9 @@ experience_worth = 50
 [node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_75v1y")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
-[node name="AttackAndWanderBehaviorComponent" parent="." node_paths=PackedStringArray("stats_component", "action_synchronizer", "avoidance_rays_component", "aggro_area") instance=ExtResource("6_4b61l")]
+[node name="AttackAndWanderBehaviorComponent" parent="." node_paths=PackedStringArray("stats_component", "action_synchronizer", "aggro_area") instance=ExtResource("6_4b61l")]
 stats_component = NodePath("../StatsSynchronizerComponent")
 action_synchronizer = NodePath("../ActionSynchronizerComponent")
-avoidance_rays_component = NodePath("../AvoidanceRays")
 aggro_area = NodePath("../AggroArea")
 
 [node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_pi68j")]
@@ -898,10 +896,6 @@ remote_path = NodePath("../../../Sprites/LeftLeg")
 libraries = {
 "": SubResource("AnimationLibrary_64j07")
 }
-
-[node name="AvoidanceRays" parent="." instance=ExtResource("10_2fx0n")]
-position = Vector2(0, -45)
-ray_magnitude = 75
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_x88qt")

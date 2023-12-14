@@ -53,7 +53,34 @@ func _ready():
 
 	# This Node should run one level deeper than the behavior component
 	_target_node = _parent.get_parent()
+	
+	# Call this one deferred to give the time to the parent to add all it's childs
+	_link_parent.call_deferred()
 
+	_idle_timer = Timer.new()
+	_idle_timer.one_shot = true
+	_idle_timer.name = "IdleTimer"
+	_idle_timer.timeout.connect(_on_idle_timer_timeout)
+	add_child(_idle_timer)
+
+	_colliding_timer = Timer.new()
+	_colliding_timer.one_shot = true
+	_colliding_timer.name = "CollidingTimer"
+	_colliding_timer.wait_time = MAX_COLLIDING_TIME
+	_colliding_timer.timeout.connect(_on_colliding_timer_timeout)
+	add_child(_colliding_timer)
+
+	# Keep track of the original starting position for later use
+	_starting_postion = _target_node.position
+
+	# For now stay at your spawned location
+	_wander_target = _starting_postion
+
+	# Start the idle timer once to start the mechanism
+	_idle_timer.start(randi_range(_min_idle_time, _max_idle_time))
+
+
+func _link_parent():
 	assert(
 		_parent.get("stats_component") != null,
 		"The parent behavior should have the stats_component variable"
@@ -84,28 +111,6 @@ func _ready():
 	)
 	_max_wander_distance = _parent.max_wander_distance
 
-	_idle_timer = Timer.new()
-	_idle_timer.one_shot = true
-	_idle_timer.name = "IdleTimer"
-	_idle_timer.timeout.connect(_on_idle_timer_timeout)
-	add_child(_idle_timer)
-
-	_colliding_timer = Timer.new()
-	_colliding_timer.one_shot = true
-	_colliding_timer.name = "CollidingTimer"
-	_colliding_timer.wait_time = MAX_COLLIDING_TIME
-	_colliding_timer.timeout.connect(_on_colliding_timer_timeout)
-	add_child(_colliding_timer)
-
-	# Keep track of the original starting position for later use
-	_starting_postion = _target_node.position
-
-	# For now stay at your spawned location
-	_wander_target = _starting_postion
-
-	# Start the idle timer once to start the mechanism
-	_idle_timer.start(randi_range(_min_idle_time, _max_idle_time))
-
 
 func wander():
 	# If the navigation agent is still going, move towards the next point
@@ -119,7 +124,7 @@ func wander():
 		)
 
 		# Try to move to the next point but avoid any obstacles
-		_move_with_avoidance()
+		_avoidance_rays_component.move_with_avoidance(_target_node.stats.movement_speed)
 
 		# Check if the parent is stuck or not
 		_check_if_stuck()
@@ -139,16 +144,6 @@ func _check_if_stuck():
 	else:
 		if !_colliding_timer.is_stopped():
 			_colliding_timer.stop()
-
-
-func _move_with_avoidance():
-	# Use the avoidance rays to find the optimal velocity
-	_target_node.velocity = _avoidance_rays_component.find_avoidant_velocity(
-		_stats_component.movement_speed
-	)
-
-	# Actually perform a move and slide
-	_target_node.move_and_slide()
 
 
 ## Find a random location around the origin position within a maximum distance

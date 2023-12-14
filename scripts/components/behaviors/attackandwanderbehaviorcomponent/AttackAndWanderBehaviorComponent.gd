@@ -2,9 +2,6 @@ extends Node2D
 
 class_name AttackAndWanderBehaviorComponent
 
-## The maximum time the parent can stay stuck
-const MAX_COLLIDING_TIME: float = 1.0
-
 ## When aggroed, the time between 2 path search
 const TIME_BEFORE_NEXT_PATH_SEARCH: float = 1.0
 
@@ -13,9 +10,6 @@ const TIME_BEFORE_NEXT_PATH_SEARCH: float = 1.0
 
 ## The action synchronzer used to sync the attack animation to other players
 @export var action_synchronizer: ActionSynchronizerComponent
-
-## The avoidance ray component is used to detect obstacles ahead
-@export var avoidance_rays_component: AvoidanceRaysComponent
 
 ## This is the area used to detect players
 @export var aggro_area: Area2D = null
@@ -53,8 +47,16 @@ var _line_of_sight_raycast: RayCast2D = null
 # The component used to handle the wandering
 @onready var _wander_component: WanderComponent = $WanderComponent
 
+# The avoidance ray component is used to detect obstacles ahead
+@onready var avoidance_rays_component: AvoidanceRaysComponent = $AvoidanceRaysComponent
+
 
 func _ready():
+	# This node should only run the server side
+	if not G.is_server():
+		set_physics_process(false)
+		queue_free()
+
 	_target_node = get_parent()
 
 	if _target_node.get("position") == null:
@@ -63,11 +65,6 @@ func _ready():
 	if _target_node.get("velocity") == null:
 		GodotLogger.error("target_node does not have the position variable")
 		return
-
-	# This node should only run the server side
-	if not G.is_server():
-		set_physics_process(false)
-		queue_free()
 
 	# Connect to the aggro area to detect closeby players
 	aggro_area.body_entered.connect(_on_aggro_area_body_entered)
@@ -165,7 +162,7 @@ func _handle_aggro():
 			)
 
 			# Try to move to the next point but avoid any obstacles
-			_move_with_avoidance()
+			avoidance_rays_component.move_with_avoidance(_target_node.stats.movement_speed)
 		else:
 			# If the target's position has changed and the search path timer is not running, calculate a new path towards the target
 			if (
@@ -189,22 +186,12 @@ func _handle_aggro():
 				)
 
 				# Try to move to the next point but avoid any obstacles
-				_move_with_avoidance()
+				avoidance_rays_component.move_with_avoidance(_target_node.stats.movement_speed)
 
 			# Navigation is finish, let's calculate a new path
 			else:
 				_navigation_agent.target_position = _current_target.position
 	return
-
-
-func _move_with_avoidance():
-	# Use the avoidance rays to find the optimal velocity
-	_target_node.velocity = avoidance_rays_component.find_avoidant_velocity(
-		stats_component.movement_speed
-	)
-
-	# Actually perform a move and slide
-	_target_node.move_and_slide()
 
 
 func _is_target_in_line_of_sight(target: Node2D) -> bool:
