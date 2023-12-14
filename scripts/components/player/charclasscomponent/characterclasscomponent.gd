@@ -11,9 +11,10 @@ signal classes_changed
 signal class_lock_changed
 signal list_changed
 
+@export_group("Node References")
 @export var user: Node
-
 @export var stats_component: StatsSynchronizerComponent
+@export var skill_component: SkillComponent
 
 var classes: Array[CharacterClassResource]
 
@@ -42,13 +43,13 @@ func _ready():
 
 	classChangeMenu = CharacterClassSelectionScene.instantiate()
 	classChangeMenu.select_target(self)
-
 	#TEMP?
 	if classes.is_empty():
 		add_class("Base")
 
-	#Re-apply stats anytime a class changes.
+	#Re-apply stats and skills anytime a class changes.
 	classes_changed.connect(apply_stats)
+	classes_changed.connect(apply_skills)
 
 	#This line should stay commented until there's a system to detect when a player should be allowed to change classes
 	#class_change_locked = true
@@ -215,6 +216,19 @@ func apply_stats():
 	for statName: String in statsDict:
 		stats_component.set(statName, statsDict[statName])
 
+func apply_skills():
+	if not skill_component.is_node_ready():
+		get_tree().physics_frame.connect(apply_skills)
+		return
+	
+	for existingSkill: String in skill_component.get_skills_classes():
+		skill_component.remove_skill(existingSkill)
+	
+	for charClass: CharacterClassResource in classes:
+		for skill: String in charClass.available_skills:
+			skill_component.add_skill(skill)
+	
+	skill_component.sync_skills(user.peer_id)
 
 func get_charclass_classes() -> Array[String]:
 	var output: Array[String] = []
