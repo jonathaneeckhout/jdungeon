@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://d3pv4rqlo3xh7"]
+[gd_scene load_steps=5 format=3 uid="uid://d3pv4rqlo3xh7"]
 
 [ext_resource type="Script" path="res://scripts/components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.gd" id="1_hil3r"]
 [ext_resource type="PackedScene" uid="uid://cnj2i4x6kdm4c" path="res://scripts/components/behaviors/components/wandercomponent/WanderComponent.tscn" id="2_u2qbf"]
 [ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/behaviors/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="3_pre5k"]
+[ext_resource type="PackedScene" uid="uid://bf5e7if2bids" path="res://scripts/components/behaviors/components/aggrocomponent/AggroComponent.tscn" id="4_0w2bs"]
 
 [node name="AttackAndWanderBehaviorComponent" type="Node2D"]
 script = ExtResource("1_hil3r")
@@ -13,3 +14,5 @@ script = ExtResource("1_hil3r")
 path_postprocessing = 1
 
 [node name="WanderComponent" parent="." instance=ExtResource("2_u2qbf")]
+
+[node name="AggroComponent" parent="." instance=ExtResource("4_0w2bs")]

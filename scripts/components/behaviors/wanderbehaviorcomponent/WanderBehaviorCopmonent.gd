@@ -17,6 +17,9 @@ class_name WanderBehaviorComponent
 # The parent node
 var _target_node: Node
 
+## The navigation agent used to find a new location
+@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
+
 # The component used to handle the wandering
 @onready var _wander_component: WanderComponent = $WanderComponent
 

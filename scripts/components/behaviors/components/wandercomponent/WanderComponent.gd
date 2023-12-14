@@ -17,6 +17,9 @@ var _stats_component: StatsSynchronizerComponent = null
 # The avoidance ray component is used to detect obstacles ahead
 var _avoidance_rays_component: AvoidanceRaysComponent = null
 
+# The navigation agent used to find a new location
+var _navigation_agent: NavigationAgent2D = null
+
 # The minimum time the parent will stay idle
 var _min_idle_time: int = 0
 
@@ -38,8 +41,8 @@ var _wander_target: Vector2
 # The starting location of the parent, used to move back when a player lured him away
 var _starting_postion: Vector2
 
-# The navigation agent used to find a new location
-@onready var _navigation_agent: NavigationAgent2D = $NavigationAgent2D
+# Check if you're linked with your parent
+var _linked: bool = false
 
 
 func _ready():
@@ -53,7 +56,7 @@ func _ready():
 
 	# This Node should run one level deeper than the behavior component
 	_target_node = _parent.get_parent()
-	
+
 	# Call this one deferred to give the time to the parent to add all it's childs
 	_link_parent.call_deferred()
 
@@ -94,6 +97,12 @@ func _link_parent():
 	_avoidance_rays_component = _parent.avoidance_rays_component
 
 	assert(
+		_parent.get("navigation_agent") != null,
+		"The parent behavior should have the navigation_agent variable"
+	)
+	_navigation_agent = _parent.navigation_agent
+
+	assert(
 		_parent.get("min_idle_time") != null,
 		"The parent behavior should have the min_idle_time variable"
 	)
@@ -111,8 +120,14 @@ func _link_parent():
 	)
 	_max_wander_distance = _parent.max_wander_distance
 
+	_linked = true
+
 
 func wander():
+	# Don't do anything if you're not linked yet with your parent
+	if not _linked:
+		return
+
 	# If the navigation agent is still going, move towards the next point
 	if not _navigation_agent.is_navigation_finished():
 		# Get the next path position
