@@ -217,8 +217,12 @@ func apply_stats():
 		stats_component.set(statName, statsDict[statName])
 
 func apply_skills():
-	if not skill_component.is_node_ready():
-		get_tree().physics_frame.connect(apply_skills)
+	if not G.is_server():
+		return
+	
+	#While this modifies skills, stats are the actual limiting factor as skill_component is always ready for use.
+	if not stats_component.ready_done:
+		get_tree().physics_frame.connect(apply_stats)
 		return
 	
 	for existingSkill: String in skill_component.get_skills_classes():
@@ -228,7 +232,7 @@ func apply_skills():
 		for skill: String in charClass.available_skills:
 			skill_component.add_skill(skill)
 	
-	skill_component.sync_skills(user.peer_id)
+	skill_component.sync_skills()
 
 func get_charclass_classes() -> Array[String]:
 	var output: Array[String] = []
