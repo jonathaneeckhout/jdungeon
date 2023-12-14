@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dj1mpx8a8yeko"]
+[gd_scene load_steps=23 format=3 uid="uid://dj1mpx8a8yeko"]
 
 [ext_resource type="Script" path="res://scenes/npcs/milklady/Milklady.gd" id="1_i2k6g"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_444i3"]
@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="7_kfsbv"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="9_3kap7"]
 [ext_resource type="Texture2D" uid="uid://d3bki65r7slmw" path="res://assets/images/npcs/milklady/scaled/milklady_whole.png" id="11_lg4rx"]
-[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://scripts/components/common/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="11_y6h07"]
 [ext_resource type="Texture2D" uid="uid://gwalcp3d24vg" path="res://assets/images/npcs/milklady/scaled/milklady_right_arm.png" id="12_ky2ex"]
 [ext_resource type="Texture2D" uid="uid://cwmwgqtp4cxco" path="res://assets/images/npcs/milklady/scaled/milklady_body.png" id="13_mb4tp"]
 [ext_resource type="Texture2D" uid="uid://cdertmyasij3g" path="res://assets/images/npcs/milklady/scaled/milklady_head.png" id="14_adu7f"]
@@ -465,14 +464,11 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 movement_speed = 125.0
 
-[node name="WanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component", "avoidance_rays_component") instance=ExtResource("4_jq4vr")]
+[node name="WanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component") instance=ExtResource("4_jq4vr")]
 stats_component = NodePath("../StatsSynchronizerComponent")
-avoidance_rays_component = NodePath("../AvoidanceRaysComponent")
 
 [node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("6_7nn8c")]
 skeleton = NodePath("../Skeleton")
-
-[node name="AvoidanceRaysComponent" parent="." instance=ExtResource("11_y6h07")]
 
 [node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats") instance=ExtResource("7_kfsbv")]
 animation_player = NodePath("../AnimationPlayer")

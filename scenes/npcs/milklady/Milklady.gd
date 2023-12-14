@@ -1,7 +1,6 @@
 extends NPC
 
 @onready var wander_behavior: WanderBehaviorComponent = $WanderBehaviorCopmonent
-@onready var avoidance_rays: AvoidanceRaysComponent = $AvoidanceRaysComponent
 @onready var shop: ShopSynchronizerComponent = $ShopSynchronizerComponent
 
 
@@ -16,13 +15,6 @@ func _ready():
 	# Server side
 	if G.is_server():
 		shop.add_item("HealthPotion", 100)
-
-	# Client side
-	else:
-		# Behavior is not handeld on client's side
-		wander_behavior.queue_free()
-		# Behavior is not handeld on client's side
-		avoidance_rays.queue_free()
 
 	$InterfaceComponent.display_name = npc_class
 
