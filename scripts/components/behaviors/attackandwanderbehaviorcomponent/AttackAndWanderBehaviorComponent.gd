@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name AttackAndWanderBehaviorComponent
+
 ## The maximum time the parent can stay stuck
 const MAX_COLLIDING_TIME: float = 1.0
 
@@ -36,12 +38,6 @@ var _players_in_aggro_range: Array[Player] = []
 # The current targeted player
 var _current_target: Player = null
 
-# Timer used to check how long the parent should stay idle
-var _idle_timer: Timer = null
-
-# Timer used to check if the parent is not stuck too long
-var _colliding_timer: Timer = null
-
 # Timer used to delay searching for a new path. Mainly used to save some cpu power
 var _search_path_timer: Timer = null
 
@@ -51,14 +47,11 @@ var _attack_timer: Timer = null
 # Raycast used to check if the current target is in line of sight
 var _line_of_sight_raycast: RayCast2D = null
 
-# Location to which the parent will wander to
-var _wander_target: Vector2
-
-# The starting location of the parent, used to move back when a player lured him away
-var _starting_postion: Vector2
-
 # The navigation agent used to find a new location
 @onready var _navigation_agent: NavigationAgent2D = $NavigationAgent2D
+
+# The component used to handle the wandering
+@onready var _wander_component: WanderComponent = $WanderComponent
 
 
 func _ready():
@@ -76,12 +69,6 @@ func _ready():
 		set_physics_process(false)
 		queue_free()
 
-	# Keep track of the original starting position for later use
-	_starting_postion = _target_node.position
-
-	# For now stay at your spawned location
-	_wander_target = _starting_postion
-
 	# Connect to the aggro area to detect closeby players
 	aggro_area.body_entered.connect(_on_aggro_area_body_entered)
 	aggro_area.body_exited.connect(_on_aggro_area_body_exited)
@@ -95,28 +82,12 @@ func _ready():
 	_line_of_sight_raycast.collision_mask = J.PHYSICS_LAYER_WORLD
 	add_child(_line_of_sight_raycast)
 
-	# Start the idle timer once to start the mechanism
-	_idle_timer.start(randi_range(min_idle_time, max_idle_time))
-
 
 func _init_timers():
-	_idle_timer = Timer.new()
-	_idle_timer.one_shot = true
-	_idle_timer.name = "IdleTimer"
-	_idle_timer.timeout.connect(_on_idle_timer_timeout)
-	add_child(_idle_timer)
-
-	_colliding_timer = Timer.new()
-	_colliding_timer.one_shot = true
-	_colliding_timer.name = "CollidingTimer"
-	_colliding_timer.wait_time = MAX_COLLIDING_TIME
-	_colliding_timer.timeout.connect(_on_colliding_timer_timeout)
-	add_child(_colliding_timer)
-
 	_search_path_timer = Timer.new()
 	_search_path_timer.one_shot = true
-	_search_path_timer.name = "CollidingTimer"
-	_search_path_timer.wait_time = MAX_COLLIDING_TIME
+	_search_path_timer.name = "SearchPathTimer"
+	_search_path_timer.wait_time = TIME_BEFORE_NEXT_PATH_SEARCH
 	add_child(_search_path_timer)
 
 	# Create a new timer to keep track of the time between attacks
@@ -155,7 +126,7 @@ func _behavior():
 
 	# If no player is in range, wander around
 	else:
-		_handle_wandering()
+		_wander_component.wander()
 
 
 func _handle_aggro():
@@ -226,29 +197,6 @@ func _handle_aggro():
 	return
 
 
-func _handle_wandering():
-	# If the navigation agent is still going, move towards the next point
-	if not _navigation_agent.is_navigation_finished():
-		# Get the next path position
-		var next_path_position: Vector2 = _navigation_agent.get_next_path_position()
-
-		# Calculate the velocity towards this next path position
-		_target_node.velocity = (
-			_target_node.position.direction_to(next_path_position) * stats_component.movement_speed
-		)
-
-		# Try to move to the next point but avoid any obstacles
-		_move_with_avoidance()
-
-		# Check if the parent is stuck or not
-		_check_if_stuck()
-
-	# If the idle timer is stopped, restart it to find a new wander location
-	elif _idle_timer.is_stopped():
-		_idle_timer.start(randi_range(min_idle_time, max_idle_time))
-		_target_node.velocity = Vector2.ZERO
-
-
 func _move_with_avoidance():
 	# Use the avoidance rays to find the optimal velocity
 	_target_node.velocity = avoidance_rays_component.find_avoidant_velocity(
@@ -266,24 +214,6 @@ func _is_target_in_line_of_sight(target: Node2D) -> bool:
 	_line_of_sight_raycast.force_raycast_update()
 
 	return not _line_of_sight_raycast.is_colliding()
-
-
-func _check_if_stuck():
-	# Check if there is a collision even after avoidance
-	if _target_node.get_slide_collision_count() > 0:
-		if _colliding_timer.is_stopped():
-			_colliding_timer.start()
-	# Stop the avoidance timer
-	else:
-		if !_colliding_timer.is_stopped():
-			_colliding_timer.stop()
-
-
-func _find_random_spot(origin: Vector2, distance: float) -> Vector2:
-	return Vector2(
-		float(randi_range(origin.x - distance, origin.x + distance)),
-		float(randi_range(origin.y - distance, origin.y + distance))
-	)
 
 
 func _select_traget(target: Node2D):
@@ -312,15 +242,3 @@ func _on_aggro_area_body_exited(body: Node2D):
 			_current_target = null
 
 		_players_in_aggro_range.erase(body)
-
-
-func _on_idle_timer_timeout():
-	# Find a new location to wander to
-	_wander_target = _find_random_spot(_starting_postion, max_wander_distance)
-	_navigation_agent.target_position = _wander_target
-
-
-func _on_colliding_timer_timeout():
-	# Find a new location to wander to
-	_wander_target = _find_random_spot(_starting_postion, max_wander_distance)
-	_navigation_agent.target_position = _wander_target

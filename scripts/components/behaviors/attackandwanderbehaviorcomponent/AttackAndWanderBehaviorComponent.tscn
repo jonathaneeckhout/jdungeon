@@ -1,9 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://d3pv4rqlo3xh7"]
+[gd_scene load_steps=3 format=3 uid="uid://d3pv4rqlo3xh7"]
 
 [ext_resource type="Script" path="res://scripts/components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.gd" id="1_hil3r"]
+[ext_resource type="PackedScene" uid="uid://cnj2i4x6kdm4c" path="res://scripts/components/behaviors/components/wandercomponent/WanderComponent.tscn" id="2_u2qbf"]
 
 [node name="AttackAndWanderBehaviorComponent" type="Node2D"]
 script = ExtResource("1_hil3r")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_postprocessing = 1
+
+[node name="WanderComponent" parent="." instance=ExtResource("2_u2qbf")]
