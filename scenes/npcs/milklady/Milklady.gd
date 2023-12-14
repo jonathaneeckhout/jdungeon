@@ -33,8 +33,10 @@ func interact(player: Player):
 		return
 
 	player.dialogue.sync_invoke(player.peer_id, "MilkLady")
-	
-	if not player.dialogue.dialogue_system_instance.dialogue_finished.is_connected(_on_dialogue_finished.bind(player.peer_id)):
+
+	if not player.dialogue.dialogue_system_instance.dialogue_finished.is_connected(
+		_on_dialogue_finished.bind(player.peer_id)
+	):
 		player.dialogue.dialogue_system_instance.dialogue_finished.connect(
 			_on_dialogue_finished.bind(player.peer_id), CONNECT_ONE_SHOT
 		)
