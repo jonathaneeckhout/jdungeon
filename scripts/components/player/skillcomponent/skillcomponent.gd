@@ -9,6 +9,7 @@ class_name SkillComponent
 enum SKILL_ATTEMPT_RESULT { OK, INSUFFICIENT_ENERGY, OUT_OF_RANGE, COOLDOWN_RUNNING }
 
 const COLOR_HITBOX: Color = Color.AQUA / 2
+const COLOR_HITBOX_OUT_OF_RANGE: Color = Color.MISTY_ROSE / 2
 const COLOR_HITBOX_UNUSABLE: Color = Color.FIREBRICK / 2
 const COLOR_RANGE: Color = Color.GREEN_YELLOW / 2
 
@@ -201,7 +202,8 @@ func _draw():
 	assert(_skill_current.hitbox_shape.size() > 0)
 
 	# Draw the range of the skill
-	_draw_range()
+	if Global.debug_mode:
+		_draw_range()
 
 	# Draw the hitbox of the skill
 	_draw_hitbox()
@@ -224,16 +226,22 @@ func _draw_hitbox(local_point: Vector2 = to_local(player_synchronizer.mouse_glob
 	else:
 		shape = get_collision_shape(0.0)
 
-	#Color selection
+	# Color selection
 	var color_used: Color
 
-	# If the skill can be used and is not on cooldown, draw it it's normal color
-	if _is_skill_energy_affordable(_skill_current) and not _is_skill_cooling_down(_skill_current):
-		color_used = COLOR_HITBOX
-
-	# If not, draw it red
-	else:
+	# When a skill is on cooldown or you don't have enough energy, display the hitbox red
+	if _is_skill_cooling_down(_skill_current) or not _is_skill_energy_affordable(_skill_current):
 		color_used = COLOR_HITBOX_UNUSABLE
+
+	# When trying to use a skill out of skill range, display it rose
+	elif not _is_skill_target_within_range(
+		_skill_current, _target_node.position, player_synchronizer.mouse_global_pos
+	):
+		color_used = COLOR_HITBOX_OUT_OF_RANGE
+
+	# If the skill can be used and is not on cooldown, draw it it's normal color
+	else:
+		color_used = COLOR_HITBOX
 
 	# Draw the shape if it's a circle
 	if shape is CircleShape2D:
