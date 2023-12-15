@@ -1,5 +1,6 @@
 [![build latest jdungeon](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-artifacts-and-push-docker-image.yml/badge.svg)](https://github.com/jonathaneeckhout/jdungeon/actions/workflows/build-artifacts-and-push-docker-image.yml)
 [![](https://dcbadge.vercel.app/api/server/KGwTyXumdv?style=flat)](https://discord.gg/KGwTyXumdv)
+[![YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=flat&logo=youtube&logoColor=white)](https://www.youtube.com/channel/UCE6uLslDSAiTxxZ8BI9UYgA)
 
 
 # JDungeon
