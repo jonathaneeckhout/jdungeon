@@ -53,6 +53,10 @@ func effect(information: SkillUseInfo):
 
 	if damage > 0:
 		for stats in information.get_target_stats_all():
+			# Leave the dead alone
+			if stats.is_dead:
+				continue
+
 			stats.hurt(information.user, damage)
 
 	_effect(information)
