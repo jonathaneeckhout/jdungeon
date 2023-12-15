@@ -1,4 +1,5 @@
 extends Resource
+
 class_name SkillComponentResource
 
 const ENTITY_TYPES := J.ENTITY_TYPE
@@ -42,7 +43,7 @@ const ENTITY_TYPES := J.ENTITY_TYPE
 @export_multiline var description: String = "This does something, right? ...right?"
 
 
-func effect(information: SkillComponent.UseInfo):
+func effect(information: SkillUseInfo):
 	#Filter targets to make sure they are valid ones
 	var filteredTargets: Array[Node] = []
 	for target in information.targets:
@@ -61,7 +62,7 @@ func _target_filter(_target: Node) -> bool:
 	return true
 
 
-func _effect(_info: SkillComponent.UseInfo):
+func _effect(_info: SkillUseInfo):
 	pass
 
 
