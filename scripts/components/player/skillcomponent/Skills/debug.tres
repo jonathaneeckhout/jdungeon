@@ -7,7 +7,7 @@ func _init() -> void:
 	skill_class = \"debug\"
 	displayed_name = \"DEBUGGINATOR\"
 
-func _effect(info: SkillComponent.UseInfo):
+func _effect(info: SkillUseInfo):
 	print_debug(\"Used debug skill at \" + str(info.position_target_global))
 	for entity in info.get_targets_filter_entity_type(J.ENTITY_TYPE.ENEMY):
 		print_debug(entity.get_name() + \" got debugged!\")
@@ -20,10 +20,12 @@ skill_class = "debug"
 displayed_name = "Skidadle Skidoodle"
 energy_usage = 0
 collision_mask = 1
+valid_entities = Array[int]([1])
 cooldown = 0.0
 cast_on_select = false
 damage = 0
-hitbox_shape = [Vector2(-5, 0), Vector2(0, 5), Vector2(5, 0), Vector2(0, -5)]
+hitbox_shape = [Vector2(50, 0)]
 hitbox_hits_user = false
 hitbox_rotate_shape = false
 hit_range = 400.0
+description = "This does something, right? ...right?"
