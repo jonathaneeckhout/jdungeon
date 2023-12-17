@@ -9,9 +9,6 @@ on:
       - main
 
 
-env:
-  PROJECT_PATH: ./
-
 jobs:
   execute-gut:
     name: Run GUT tests
@@ -20,11 +17,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Docker test
-        uses: ceceppa/godot-gut-ci@main
-
-      - name: Docker test
-        uses: ceceppa/godot-gut-ci@main
+      - name: Godot GUT CI Test
+        uses: ./
         with:
           godot_version: 4.2
           gut_params: -gdir=res://test/unit
+          project_path: gut-ci-test-project/godot4
