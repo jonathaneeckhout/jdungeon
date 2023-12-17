@@ -1,0 +1,30 @@
+name: unit-test
+run-name: ${{ github.head_ref || github.ref_name }}-unit-test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+
+env:
+  PROJECT_PATH: ./
+
+jobs:
+  execute-gut:
+    name: Run GUT tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Docker test
+        uses: ceceppa/godot-gut-ci@main
+
+      - name: Docker test
+        uses: ceceppa/godot-gut-ci@main
+        with:
+          godot_version: 4.2
+          gut_params: -gdir=res://test/unit
