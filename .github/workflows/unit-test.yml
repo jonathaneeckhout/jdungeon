@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Godot GUT CI Test
-        uses: ./
+        uses: ceceppa/godot-gut-ci@main
         with:
           godot_version: 4.2
           gut_params: -gdir=res://test/unit
