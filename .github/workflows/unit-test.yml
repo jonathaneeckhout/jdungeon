@@ -22,4 +22,3 @@ jobs:
         with:
           godot_version: 4.2
           gut_params: -gdir=res://test/unit
-          project_path: gut-ci-test-project/godot4
