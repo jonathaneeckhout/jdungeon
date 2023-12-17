@@ -177,12 +177,19 @@ func register_class_resource(charclass_class: String, class_res_path: String):
 
 ## There'll be a LOT of dialogue, so loading each manually could not only dramatically increase load times, but it could also make errors more likely.
 func register_dialogue_all(dialogue_folder: String):
-	for file: String in DirAccess.get_files_at(dialogue_folder):
+	var allFiles: PackedStringArray = DirAccess.get_files_at(dialogue_folder)
+	print(allFiles)
+	for file: String in allFiles:
+		var actualFile: String = file
+		#If the file is an import (like in exported builds) remove the extension.
+		if actualFile.get_extension() == "import":
+			actualFile = actualFile.get_basename()
+		
 		#Ignore non resources, if they happened to be in the folder
-		if file.get_extension() != "tres":
+		if actualFile.get_extension() != "tres":
 			continue
-
-		var res: Resource = load(dialogue_folder + file)
+		
+		var res: Resource = load(dialogue_folder + actualFile)
 
 		#Ignore non dialogues, if they happened to be in the folder
 		if not res is DialogueResource:
