@@ -16,7 +16,7 @@ env:
 
 jobs:
   build-linux:
-    name: Run units test for JDungeon in Linux
+    name: Run units tests
     runs-on: ubuntu-22.04
     container:
       image: mawakajaka/godot:v1.0.1
@@ -33,5 +33,5 @@ jobs:
         run: |
           mkdir -v -p build/linux
           cd $PROJECT_PATH
-          # /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless --export-release "Linux/X11" build/linux/$EXPORT_NAME.x86_64
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless --export-release "Linux/X11" build/linux/$EXPORT_NAME.x86_64
           /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v -s --headless addons/gut/gut_cmdln.gd -gdir=res://test/unit -gexit
