@@ -9,16 +9,29 @@ on:
       - main
 
 
+env:
+  GODOT_VERSION: "4.2"
+  EXPORT_NAME: jdungeon
+  PROJECT_PATH: ./
+
 jobs:
-  execute-gut:
-    name: Run GUT tests
-    runs-on: ubuntu-latest
+  build-linux:
+    name: Run units test for JDungeon in Linux
+    runs-on: ubuntu-22.04
+    container:
+      image: mawakajaka/godot:v1.0.1
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Godot GUT CI Test
-        uses: ceceppa/godot-gut-ci@main
+        uses: actions/checkout@v3
         with:
-          godot_version: 4.2
-          gut_params: -gdir=res://test/unit
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
+      - name: Run tests Build
+        run: |
+          mkdir -v -p build/linux
+          cd $PROJECT_PATH
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless --export-release "Linux/X11" build/linux/$EXPORT_NAME.x86_64
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless addons/gut/gut_cmdln.gd -gdir=res://test/unit -gexit
