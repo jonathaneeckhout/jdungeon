@@ -219,14 +219,17 @@ func start_client() -> bool:
 
 
 func _on_run_as_gateway_pressed():
+	GodotLogger._prefix = "GatewayServer"
 	start_gateway()
 
 
 func _on_run_as_server_pressed():
+	GodotLogger._prefix = "GameServer"
 	start_server()
 
 
 func _on_run_as_client_pressed():
+	GodotLogger._prefix = "Client"
 	start_client()
 
 

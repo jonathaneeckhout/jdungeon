@@ -49,9 +49,10 @@ func with(prefix:String="",args:Dictionary={}) ->Log :
 func logger(message:String,values,log_level=LogLevel.INFO):
 	if CURRENT_LOG_LEVEL > log_level :
 		return
-	var log_msg_format = "{level} [{time}]{prefix} {message} "
 
-	var now = Time.get_datetime_dict_from_system(true)
+	var log_msg_format = "{level} [{time}] {prefix}: {message} "
+
+	var now = Time.get_datetime_dict_from_system()
 	
 	var msg = log_msg_format.format(
 		{
