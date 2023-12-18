@@ -306,16 +306,17 @@ func client_sync_pos(c: int, p: Vector2, v: Vector2):
 	_last_sync_velocity = v
 
 
-func server_sync_input(c: int, d: Vector2, t: float, m: Vector2):
+## sync the player's inputs towards the server
+func server_sync_input(frame: int, direction: Vector2, timestamp: float, mouse_pos: Vector2):
 	# Ignore older frames
-	if c < _current_frame:
+	if frame < _current_frame:
 		return
 
-	_current_frame = c
-	mouse_global_pos = m
+	_current_frame = frame
+	mouse_global_pos = mouse_pos
 
 	# Store the inputs in a input buffer
-	_input_buffer.append({"dir": d, "dt": t})
+	_input_buffer.append({"dir": direction, "dt": timestamp})
 
 
 func server_sync_skill_use(target_location: Vector2, skill_class: String):

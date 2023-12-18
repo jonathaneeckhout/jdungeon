@@ -41,7 +41,7 @@ project/assembly_name="Jdungeon"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/logger/plugin.cfg")
+enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/logger/plugin.cfg")
 
 [gui]
 

@@ -1,0 +1,48 @@
+name: unit-test
+run-name: ${{ github.head_ref || github.ref_name }}-unit-test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+
+env:
+  GODOT_VERSION: "4.2"
+  EXPORT_NAME: jdungeon
+  PROJECT_PATH: ./
+
+jobs:
+  build-linux:
+    name: Run units tests
+    runs-on: ubuntu-22.04
+    container:
+      image: mawakajaka/godot:v1.0.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
+      - name: Run tests
+        run: |
+          mkdir -v -p build/linux
+          cd $PROJECT_PATH
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v --headless --export-release "Linux/X11" build/linux/$EXPORT_NAME.x86_64
+          /Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64 -v -s --headless addons/gut/gut_cmdln.gd -gdir=res://test/unit -gexit -gjunit_xml_file="test_results.xml"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: test-results
+          path: test_results.xml
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            *.xml
