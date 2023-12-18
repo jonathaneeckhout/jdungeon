@@ -123,6 +123,7 @@ func get_player_by_username(username: String) -> Player:
 	return players.get_node_or_null(username)
 
 
+## Return an entity by it's name if it doesn't exist it will return null
 func get_entity_by_name(entity_name: String) -> Node:
 	var entity: Node = enemies.get_node_or_null(entity_name)
 	if entity != null:

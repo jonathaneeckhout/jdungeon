@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scenes/enemies/Sheep/Sheep.gd" id="1_6p7b5"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_nxh3l"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_umoon"]
-[ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://scripts/components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="5_2nlxr"]
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/enemy/lootcomponent/LootComponent.tscn" id="5_2qlym"]
+[ext_resource type="PackedScene" uid="uid://d2ippv4gqf6as" path="res://scripts/components/behaviors/fleeandwanderbehaviorcomponent/FleeAndWanderBehaviorCopmonent.tscn" id="5_bxi47"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="5_derlk"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="5_ho1ox"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="5_juh1b"]
@@ -201,7 +201,7 @@ hp = 20
 movement_speed = 50.0
 experience_worth = 10
 
-[node name="WanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component") instance=ExtResource("5_2nlxr")]
+[node name="FleeAndWanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component") instance=ExtResource("5_bxi47")]
 stats_component = NodePath("../StatsSynchronizerComponent")
 
 [node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("5_2qlym")]
