@@ -7,8 +7,7 @@ class_name ServerFSM
 ## CONNECT: Try to connect and authenticate to the gateway server
 ## STARTL: Start the gameserver
 ## RUNNING: The gameserver is operational and running
-## ERROR: The gameserver is in error state
-enum STATES { INIT, CONNECT, RUNNING, START, ERROR }
+enum STATES { INIT, CONNECT, RUNNING, START }
 
 ## The time before the server tries to reconnect to the gateway server
 const RETRY_TIME: int = 10.0
@@ -27,9 +26,6 @@ var _retry_timer: Timer
 
 # Bool indicating if the init was done
 var _init_done: bool = false
-
-# Bool indicating if the server is connected to the gateway or not
-var _connected_to_gateway: bool = false
 
 
 func _ready():
@@ -70,24 +66,23 @@ func _fsm(new_state: STATES):
 		STATES.RUNNING:
 			_handle_state_running()
 
-		STATES.ERROR:
-			_handle_state_error()
-
 
 # Handle the INIT state
 func _handle_init():
 	# Init the client side for the gateway server
 	if not S.client_init():
-		GodotLogger.error("Failed to init the client for the gateway server")
+		GodotLogger.error("Failed to init the client for the gateway server, quitting")
 
-		_fsm.call_deferred(STATES.ERROR)
+		# Stop the game if init fails
+		get_tree().quit()
 		return
 
 	# Init the gameserver server-side
 	if not G.server_init():
-		GodotLogger.error("Failed to init gameserver")
+		GodotLogger.error("Failed to init gameserver, quitting")
 
-		_fsm.call_deferred(STATES.ERROR)
+		# Stop the game if init fails
+		get_tree().quit()
 		return
 
 	# Instantiate the world scene
@@ -112,7 +107,8 @@ func _handle_connect():
 			"Server=[%s] could not connect to gateway server, starting retry timer" % map_name
 		)
 
-		_fsm.call_deferred(STATES.ERROR)
+		# Start the retry timer
+		_retry_timer.start()
 		return
 
 	GodotLogger.info("Successfully connected and registered with the gateway server")
@@ -129,9 +125,10 @@ func _handle_start():
 		Global.env_server_crt,
 		Global.env_server_key
 	):
-		GodotLogger.error("Failed to start DTLS gameserver")
+		GodotLogger.error("Failed to start DTLS gameserver, quitting")
 
-		_fsm.call_deferred(STATES.ERROR)
+		# Stop the game if init fails
+		get_tree().quit()
 
 		return
 
@@ -141,19 +138,6 @@ func _handle_start():
 # Handle the RUNNING state
 func _handle_state_running():
 	GodotLogger.info("Server successfully started on port %d" % Global.env_server_port)
-
-
-# Handle the ERROR state
-func _handle_state_error():
-	if not _init_done:
-		GodotLogger.warn("The init was not done yet, not starting the retry timer")
-
-		# Shut down the process if the init failed and in error state
-		get_tree().quit()
-
-	# Start the retry timer if it wasn't running yet
-	elif _retry_timer.is_stopped():
-		_retry_timer.start()
 
 
 # Connect to the gateway server
@@ -216,21 +200,16 @@ func state_to_string(to_string_state: STATES) -> String:
 			return "Starting"
 		STATES.RUNNING:
 			return "Running"
-		STATES.ERROR:
-			return "Error"
 
 	return "Unknown"
 
 
 func _on__retry_timer_timeout():
-	# If not connected, try to the reconnect
-	if not _connected_to_gateway:
-		_fsm.call_deferred(STATES.CONNECT)
+	# Try to the reconnect
+	_fsm.call_deferred(STATES.CONNECT)
 
 
 func _on_server_connected(connected: bool):
-	_connected_to_gateway = connected
-
 	if state == STATES.RUNNING and not connected:
 		GodotLogger.info("Disconnected from gateway server, starting retry timer")
 
