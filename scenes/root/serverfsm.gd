@@ -227,10 +227,6 @@ func _on__retry_timer_timeout():
 	if not _connected_to_gateway:
 		_fsm.call_deferred(STATES.CONNECT)
 
-	# Else try to restart the server
-	else:
-		_fsm.call_deferred(STATES.START)
-
 
 func _on_server_connected(connected: bool):
 	_connected_to_gateway = connected
