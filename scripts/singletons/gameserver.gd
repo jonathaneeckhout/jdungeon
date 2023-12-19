@@ -57,7 +57,7 @@ func init_common() -> bool:
 	return true
 
 
-func server_init(port: int, max_clients: int, cert_path: String, key_path: String) -> bool:
+func server_init() -> bool:
 	mode = MODE.SERVER
 
 	if not init_common():
@@ -73,6 +73,10 @@ func server_init(port: int, max_clients: int, cert_path: String, key_path: Strin
 	message_handler.name = "MessageHandler"
 	add_child(message_handler)
 
+	return true
+
+
+func server_start(port: int, max_clients: int, cert_path: String, key_path: String) -> bool:
 	server = dtls_networking.server_init(port, max_clients, cert_path, key_path)
 	if server == null:
 		GodotLogger.error("Failed create server")

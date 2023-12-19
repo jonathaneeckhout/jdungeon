@@ -146,30 +146,11 @@ func start_server() -> bool:
 	if Global.env_minimize_on_start:
 		get_tree().root.mode = Window.MODE_MINIMIZED
 
-	# Init the client side for the gateway server
-	if not S.client_init():
-		GodotLogger.error("Failed to init the client for the gateway server")
-
-		return false
-
-	# Start the gameserver server
-	if not G.server_init(
-		Global.env_server_port,
-		Global.env_server_max_peers,
-		Global.env_server_crt,
-		Global.env_server_key
-	):
-		GodotLogger.error("Failed to start DTLS gameserver")
-
-		return false
-
-	# Create the gameserver's fsm
+	# Create the gameserver's fsm, this script will further handle the startup of the server
 	var server_fsm: ServerFSM = ServerFSM.new()
 	server_fsm.name = "ServerFSM"
 	server_fsm.map_name = map
 	add_child(server_fsm)
-
-	GodotLogger.info("Server successfully started on port %d" % Global.env_server_port)
 
 	# Set the title of the window
 	get_window().title = "JDungeon (Gameserver)"
