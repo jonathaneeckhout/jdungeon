@@ -1,6 +1,19 @@
 extends Node
 
+# This is the entrypoint of the JDungeon project
+# Signletons used in this project:
+# GodotLogger -> use this singleton to log message
+# Global -> singleton that contains env variable settings and local settings
+# J -> this singleton contains all the scenes and resources used in the game
+# G -> Gameserver singleton
+# C -> Gateway's side for the clients to connect to
+# S -> Gateway's side for the gameservers to connect to
+# JUI -> Singleton to keep track of some ui related stuff
+
+## FPS used on the gameserver side
 const SERVER_FPS: int = 20
+
+## FPS used on the client-side
 const CLIENT_FPS: int = 60
 
 @onready var ui: CanvasLayer = $UI
@@ -22,7 +35,8 @@ var disclaimer_panel_scene: Resource = preload(
 	"res://scenes/ui/disclaimerpanel/DisclaimerPanel.tscn"
 )
 
-var map_option_selected: int = 0
+# Variable to keep track which map option is selected in the map selection menu
+var _map_option_selected: int = 0
 
 
 func _ready():
@@ -61,6 +75,8 @@ func parse_cmd_arguments():
 
 
 func start_gateway() -> bool:
+	GodotLogger._prefix = "GatewayServer"
+
 	GodotLogger.info("Running as Gateway")
 
 	select_run_mode.queue_free()
@@ -97,70 +113,98 @@ func start_gateway() -> bool:
 
 
 func start_server() -> bool:
+	# Set the prefix for all the logs on this instance
+	GodotLogger._prefix = "GameServer"
+
 	GodotLogger.info("Running as server")
 
+	# set the fps on the server-side, this is typically slower than the client-side
 	GodotLogger.info("Setting server's engine fps to %d" % SERVER_FPS)
+
 	Engine.set_physics_ticks_per_second(SERVER_FPS)
 
+	# Load the env variables for the server
 	GodotLogger.info("Loading server's env variables")
+
 	if not Global.load_server_env_variables():
 		GodotLogger.error("Could not load server's env variables")
+
 		return false
 
+	# Register all the scenes so that they can accesses via the J singleton in the rest of the project
 	J.register_scenes()
 
-	var map: String = ""
-
-	if Global.env_server_map != "":
-		map = Global.env_server_map
-	else:
-		# Populate the options
-		for map_name in J.map_scenes:
-			map_option_button.add_item(map_name)
-		select_mode_buttons.hide()
-		select_map.show()
-		map_option_button.item_selected.connect(_on_map_option_selected)
-
-		await start_server_button.pressed
-		map = map_option_button.get_item_text(map_option_selected)
-
-		# Make sure to use different ports for each server
-		Global.env_server_port += map_option_selected
-
-		map_option_button.item_selected.disconnect(_on_map_option_selected)
-		select_map.hide()
+	# Start the map selection
+	var map: String = await _server_get_map()
 
 	GodotLogger.info("Starting server with map %s" % map)
 
+	# Remove the select run mode menu as it will not be used anymore
 	select_run_mode.queue_free()
 
+	# Minimize the window if this env variable is set
 	if Global.env_minimize_on_start:
 		get_tree().root.mode = Window.MODE_MINIMIZED
 
-	if not S.client_init():
-		GodotLogger.error("Failed to connect to gateway")
-		return false
-
-	if not G.server_init(
-		Global.env_server_port,
-		Global.env_server_max_peers,
-		Global.env_server_crt,
-		Global.env_server_key
-	):
-		GodotLogger.error("Failed to start DTLS server")
-		return false
-
+	# Create the gameserver's fsm, this script will further handle the startup of the server
 	var server_fsm: ServerFSM = ServerFSM.new()
 	server_fsm.name = "ServerFSM"
 	server_fsm.map_name = map
 	add_child(server_fsm)
 
-	GodotLogger.info("Server successfully started on port %d" % Global.env_server_port)
-	get_window().title = "JDungeon (Server)"
+	# Set the title of the window
+	get_window().title = "JDungeon (Gameserver)"
+
 	return true
 
 
+# Get the map which will be used for the gameserver side
+func _server_get_map() -> String:
+	var map: String = ""
+
+	# If the env variable is set, use this one
+	if Global.env_server_map != "":
+		map = Global.env_server_map
+
+	# If not, use the map selection menu
+	else:
+		# Populate the menu options
+		for map_name in J.map_scenes:
+			map_option_button.add_item(map_name)
+
+		# Hide the previous menu
+		select_mode_buttons.hide()
+
+		# Show the map selection menu
+		select_map.show()
+
+		# Connect to the selection signal
+		map_option_button.item_selected.connect(_on__map_option_selected)
+
+		# Wait until the start button is pressed
+		await start_server_button.pressed
+
+		# Take the current selected option as map
+		map = map_option_button.get_item_text(_map_option_selected)
+
+		# This line is to make sure that when running multiple instances of server that they all have different ports
+		Global.env_server_port += _map_option_selected
+
+		# Disconnect from the signal
+		map_option_button.item_selected.disconnect(_on__map_option_selected)
+
+		# Hide the map selection menu
+		select_map.hide()
+
+		# Show the previous menu
+		select_mode_buttons.show()
+
+	return map
+
+
 func start_client() -> bool:
+	GodotLogger._prefix = "Client"
+
 	GodotLogger.info("Running as client")
 	select_run_mode.queue_free()
 
@@ -219,20 +263,16 @@ func start_client() -> bool:
 
 
 func _on_run_as_gateway_pressed():
-	GodotLogger._prefix = "GatewayServer"
 	start_gateway()
 
 
 func _on_run_as_server_pressed():
-	GodotLogger._prefix = "GameServer"
 	start_server()
 
 
 func _on_run_as_client_pressed():
-	GodotLogger._prefix = "Client"
 	start_client()
 
 
-func _on_map_option_selected(index):
-	print(index)
-	map_option_selected = index
+func _on__map_option_selected(index):
+	_map_option_selected = index

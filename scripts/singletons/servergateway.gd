@@ -112,6 +112,27 @@ func client_connect(address: String, port: int) -> bool:
 	return true
 
 
+func client_disconnect():
+	client_cleanup()
+
+	if client != null:
+		client.close()
+		client = null
+
+
+func client_cleanup():
+	multiplayer_api.multiplayer_peer = null
+
+	if multiplayer_api.connected_to_server.is_connected(_on_client_connection_succeeded):
+		multiplayer_api.connected_to_server.disconnect(_on_client_connection_succeeded)
+
+	if multiplayer_api.connection_failed.is_connected(_on_client_connection_failed):
+		multiplayer_api.connection_failed.disconnect(_on_client_connection_failed)
+
+	if multiplayer_api.server_disconnected.is_connected(_on_client_disconnected):
+		multiplayer_api.server_disconnected.disconnect(_on_client_disconnected)
+
+
 func is_server() -> bool:
 	return mode == MODE.SERVER
 
