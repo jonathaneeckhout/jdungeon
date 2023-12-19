@@ -2,8 +2,12 @@ extends Node
 
 class_name ServerFSM
 
+## The states of the fsm
+## INIT: starting state
+## CONNECT: Try to connect and authenticate to the gateway server
 enum STATES { INIT, CONNECT, RUNNING }
 
+## The time before the server tries to reconnect to the gateway server
 const RETRY_TIME: int = 10.0
 
 var state: STATES = STATES.INIT
@@ -45,6 +49,11 @@ func fsm():
 			_handle_state_running()
 
 
+func _handle_init():
+	state = STATES.CONNECT
+	fsm.call_deferred()
+
+
 func _connect_to_gateway() -> bool:
 	if !S.client_connect(Global.env_gateway_address, Global.env_gateway_server_port):
 		GodotLogger.warn(
@@ -76,11 +85,6 @@ func _connect_to_gateway() -> bool:
 	)
 
 	return true
-
-
-func _handle_init():
-	state = STATES.CONNECT
-	fsm.call_deferred()
 
 
 func _handle_connect():
