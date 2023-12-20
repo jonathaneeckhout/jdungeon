@@ -1196,21 +1196,17 @@ position = Vector2(28, 54)
 texture = ExtResource("21_rx0a2")
 
 [node name="RightOffHand" type="Sprite2D" parent="Sprites"]
-position = Vector2(16.2547, 68.034)
-rotation = -1.57958
-scale = Vector2(1, 1)
+position = Vector2(16, 68)
+rotation = -1.5708
 
 [node name="RightArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(20, 39)
-rotation = -0.00877921
-scale = Vector2(1, 1)
 texture = ExtResource("9_yvbv3")
 offset = Vector2(8, 15)
 
 [node name="RightHand" type="Sprite2D" parent="Sprites"]
-position = Vector2(16.2547, 68.034)
-rotation = -1.57958
-scale = Vector2(1, 1)
+position = Vector2(16, 68)
+rotation = -1.5708
 
 [node name="Club" type="Sprite2D" parent="Sprites/RightHand"]
 position = Vector2(0.879528, -48.414)
@@ -1238,19 +1234,17 @@ texture = ExtResource("14_y6xme")
 offset = Vector2(0, 23)
 
 [node name="LeftHand" type="Sprite2D" parent="Sprites"]
-position = Vector2(39.7366, 67.9988)
-rotation = -1.56202
+position = Vector2(40, 68)
+rotation = -1.5708
 
 [node name="LeftArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(40, 38)
-rotation = 0.00877921
-scale = Vector2(1, 1)
 texture = ExtResource("15_wk7q7")
 offset = Vector2(-11, 16)
 
 [node name="LeftOffHand" type="Sprite2D" parent="Sprites"]
-position = Vector2(39.7366, 67.9988)
-rotation = -1.56202
+position = Vector2(40, 68)
+rotation = -1.5708
 
 [node name="Skeleton" type="Node2D" parent="."]
 

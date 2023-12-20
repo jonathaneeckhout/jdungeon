@@ -1,7 +1,5 @@
 extends NPC
 
-@onready var wander_behavior: WanderBehaviorComponent = $WanderBehaviorCopmonent
-
 
 func _init():
 	super()

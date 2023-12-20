@@ -1,11 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://vsig12850hrc"]
+[gd_scene load_steps=2 format=3 uid="uid://vsig12850hrc"]
 
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_41g43"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5payv"]
-size = Vector2(391, 191)
-
-[node name="BigTent" type="StaticBody2D"]
+[node name="BigTent" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(-24, 8)
@@ -15,13 +12,4 @@ format = 2
 layer_0/name = "Base"
 layer_0/tile_data = PackedInt32Array(-131075, 2, 49, -3, 2, 52, -65534, 327682, 52, -1, 196610, 56)
 layer_1/name = "Details"
-layer_1/enabled = true
-layer_1/modulate = Color(1, 1, 1, 1)
-layer_1/y_sort_enabled = false
-layer_1/y_sort_origin = 0
-layer_1/z_index = 0
 layer_1/tile_data = PackedInt32Array()
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1.5, -95.5)
-shape = SubResource("RectangleShape2D_5payv")
