@@ -46,7 +46,7 @@ func register_scenes():
 	register_skills()
 	register_maps()
 	register_character_classes()
-	register_dialogue_all("res://scenes/ui/dialogue/Dialogues/")
+	register_dialogues()
 
 
 func register_enemies():
@@ -144,6 +144,9 @@ func register_character_classes():
 		"Warrior", "res://scripts/components/player/charclasscomponent/classes/Warrior.tres"
 	)
 
+func register_dialogues():
+	J.register_dialogue_resource("MilkLady", "res://scenes/ui/dialogue/Dialogues/MilkLady.tres")
+	J.register_dialogue_resource("FALLBACK", "res://scenes/ui/dialogue/Dialogues/FALLBACK.tres")
 
 func register_player_scene(player_scene_path: String):
 	player_scene = load(player_scene_path)
@@ -176,22 +179,6 @@ func register_class_resource(charclass_class: String, class_res_path: String):
 
 
 ## There'll be a LOT of dialogue, so loading each manually could not only dramatically increase load times, but it could also make errors more likely.
-func register_dialogue_all(dialogue_folder: String):
-	var allFiles: PackedStringArray = DirAccess.get_files_at(dialogue_folder)
-	for file: String in allFiles:
-		var actualFile: String = file
-		#If the file is an import (like in exported builds) remove the extension.
-		if actualFile.get_extension() == "import":
-			actualFile = actualFile.get_basename()
-
-		#Ignore non resources, if they happened to be in the folder
-		if actualFile.get_extension() != "tres":
-			continue
-
-		var res: Resource = load(dialogue_folder + actualFile)
-
-		#Ignore non dialogues, if they happened to be in the folder
-		if not res is DialogueResource:
-			continue
-
-		dialogue_resources[res.dialogue_identifier] = res
+func register_dialogue_resource(dialogue_class: String, dialogue_res_path: String):
+	dialogue_resources[dialogue_class] = load(dialogue_res_path)
+	assert(dialogue_class == dialogue_resources[dialogue_class].dialogue_identifier)
