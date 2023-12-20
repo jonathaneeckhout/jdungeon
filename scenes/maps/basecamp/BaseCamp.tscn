@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=9 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cj48j2lhcde1a" path="res://scenes/terrain/portal/Portal.tscn" id="3_x8ed5"]
 [ext_resource type="PackedScene" uid="uid://ilcdoo6dba8g" path="res://scenes/npcs/fernand/Fernand.tscn" id="4_1ma72"]
 [ext_resource type="PackedScene" uid="uid://cgxevug65fx3d" path="res://scenes/enemies/BlueMole/BlueMole.tscn" id="5_oe42q"]
+[ext_resource type="PackedScene" uid="uid://cssne8offdlm8" path="res://scenes/npcs/guard/Guard.tscn" id="5_xpwou"]
 
 [node name="BaseCamp" type="Node2D"]
 script = ExtResource("1_4tpho")
@@ -66,6 +67,18 @@ position = Vector2(509, 41)
 
 [node name="Fernand" parent="Entities/NPCs" instance=ExtResource("4_1ma72")]
 position = Vector2(-271, 227)
+
+[node name="Guard" parent="Entities/NPCs" instance=ExtResource("5_xpwou")]
+position = Vector2(-987, -77)
+
+[node name="Guard2" parent="Entities/NPCs" instance=ExtResource("5_xpwou")]
+position = Vector2(-989, 108)
+
+[node name="Guard3" parent="Entities/NPCs" instance=ExtResource("5_xpwou")]
+position = Vector2(-134, 1087)
+
+[node name="Guard4" parent="Entities/NPCs" instance=ExtResource("5_xpwou")]
+position = Vector2(143, 1087)
 
 [node name="Map" type="Node2D" parent="Entities"]
 y_sort_enabled = true
