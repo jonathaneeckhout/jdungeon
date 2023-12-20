@@ -1,0 +1,149 @@
+[gd_scene load_steps=17 format=3 uid="uid://ilcdoo6dba8g"]
+
+[ext_resource type="Script" path="res://scenes/npcs/fernand/Fernand.gd" id="1_dgqa6"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_yfw0l"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_5dcri"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_1rkqu"]
+[ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://scripts/components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="5_ogec5"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="6_cwl5p"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="7_tx6ks"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="8_yx887"]
+[ext_resource type="Texture2D" uid="uid://copwvxy8ippdm" path="res://assets/images/npcs/oldman/scaled/Body.png" id="9_5x3o0"]
+[ext_resource type="Texture2D" uid="uid://db4to6tp1m2mg" path="res://assets/images/npcs/oldman/scaled/Forearm.png" id="10_7ascr"]
+[ext_resource type="Texture2D" uid="uid://cagbgvwqsxujq" path="res://assets/images/npcs/oldman/scaled/Head.png" id="11_wfw2f"]
+[ext_resource type="Texture2D" uid="uid://byruxxeb71aaw" path="res://assets/images/npcs/oldman/scaled/Leg1.png" id="12_yapoj"]
+[ext_resource type="Texture2D" uid="uid://bbbo04rw6r1t" path="res://assets/images/npcs/oldman/scaled/Leg2.png" id="13_ndawo"]
+[ext_resource type="Texture2D" uid="uid://c5i5myjqw0rea" path="res://assets/images/npcs/oldman/scaled/Upper arm.png" id="14_djwes"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hpv18"]
+radius = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_psloc"]
+radius = 27.0
+height = 80.0
+
+[node name="Fernand" type="CharacterBody2D"]
+script = ExtResource("1_dgqa6")
+
+[node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("2_yfw0l")]
+
+[node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_5dcri")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_1rkqu")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+movement_speed = 50.0
+
+[node name="WanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component") instance=ExtResource("5_ogec5")]
+stats_component = NodePath("../StatsSynchronizerComponent")
+
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("6_cwl5p")]
+skeleton = NodePath("../Skeleton")
+
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "update_face") instance=ExtResource("7_tx6ks")]
+animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
+update_face = NodePath("../UpdateFaceComponent")
+
+[node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("8_yx887")]
+offset_top = -90.0
+offset_bottom = -50.0
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+
+[node name="Node2D" type="Node2D" parent="."]
+visible = false
+position = Vector2(-92, -14)
+
+[node name="Body" type="Sprite2D" parent="Node2D"]
+position = Vector2(85, -20)
+texture = ExtResource("9_5x3o0")
+
+[node name="Leg2" type="Sprite2D" parent="Node2D"]
+position = Vector2(85, -20)
+texture = ExtResource("13_ndawo")
+
+[node name="Forearm" type="Sprite2D" parent="Node2D"]
+position = Vector2(85, -20)
+texture = ExtResource("10_7ascr")
+
+[node name="UpperArm" type="Sprite2D" parent="Node2D"]
+position = Vector2(85, -20)
+texture = ExtResource("14_djwes")
+
+[node name="Head" type="Sprite2D" parent="Node2D"]
+visible = false
+position = Vector2(85, -20)
+texture = ExtResource("11_wfw2f")
+
+[node name="Leg1" type="Sprite2D" parent="Node2D"]
+position = Vector2(85, -20)
+texture = ExtResource("12_yapoj")
+
+[node name="Sprites" type="Node2D" parent="."]
+
+[node name="RightLeg" type="Sprite2D" parent="Sprites"]
+position = Vector2(-4, -18)
+texture = ExtResource("13_ndawo")
+offset = Vector2(-2.5, -15.5)
+
+[node name="LeftLeg" type="Sprite2D" parent="Sprites"]
+position = Vector2(8, -20)
+texture = ExtResource("12_yapoj")
+offset = Vector2(-14.5, -14.5)
+
+[node name="Body" type="Sprite2D" parent="Sprites"]
+position = Vector2(4, -25)
+texture = ExtResource("9_5x3o0")
+offset = Vector2(-11, -8)
+
+[node name="RightLowerArm" type="Sprite2D" parent="Sprites"]
+position = Vector2(-13, -28)
+texture = ExtResource("10_7ascr")
+offset = Vector2(6.5, -6.5)
+
+[node name="RightUpperArm" type="Sprite2D" parent="Sprites"]
+position = Vector2(-14, -40)
+texture = ExtResource("14_djwes")
+offset = Vector2(7, 6)
+
+[node name="Head" type="Sprite2D" parent="Sprites"]
+position = Vector2(-8, -39)
+texture = ExtResource("11_wfw2f")
+offset = Vector2(2, 5)
+
+[node name="Skeleton" type="Node2D" parent="."]
+
+[node name="RemoteBody" type="RemoteTransform2D" parent="Skeleton"]
+position = Vector2(-7, -33)
+remote_path = NodePath("../../Sprites/Body")
+
+[node name="RemoteHead" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(1, -1)
+remote_path = NodePath("../../../Sprites/Head")
+
+[node name="RemoteUpperArm" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-7, -7)
+remote_path = NodePath("../../../Sprites/RightUpperArm")
+
+[node name="RemoteLowerArm" type="RemoteTransform2D" parent="Skeleton/RemoteBody/RemoteUpperArm"]
+position = Vector2(1, 12)
+remote_path = NodePath("../../../../Sprites/RightLowerArm")
+
+[node name="RemoteLeftLeg" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(15, 13)
+remote_path = NodePath("../../../Sprites/LeftLeg")
+
+[node name="RemoteRightLeg" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(3, 15)
+remote_path = NodePath("../../../Sprites/RightLeg")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_hpv18")
+
+[node name="HurtArea" type="Area2D" parent="."]
+
+[node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
+position = Vector2(2, -38)
+shape = SubResource("CapsuleShape2D_psloc")

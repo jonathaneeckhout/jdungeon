@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=8 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
 [ext_resource type="TileSet" uid="uid://d0vhi8a2dswg6" path="res://data/tileset/navcol.tres" id="3_37stb"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="3_mj652"]
 [ext_resource type="PackedScene" uid="uid://cj48j2lhcde1a" path="res://scenes/terrain/portal/Portal.tscn" id="3_x8ed5"]
+[ext_resource type="PackedScene" uid="uid://ilcdoo6dba8g" path="res://scenes/npcs/fernand/Fernand.tscn" id="4_1ma72"]
 [ext_resource type="PackedScene" uid="uid://cgxevug65fx3d" path="res://scenes/enemies/BlueMole/BlueMole.tscn" id="5_oe42q"]
 
 [node name="BaseCamp" type="Node2D"]
@@ -62,6 +63,9 @@ y_sort_enabled = true
 
 [node name="Milklady" parent="Entities/NPCs" instance=ExtResource("3_mj652")]
 position = Vector2(509, 41)
+
+[node name="Fernand" parent="Entities/NPCs" instance=ExtResource("4_1ma72")]
+position = Vector2(-271, 227)
 
 [node name="Map" type="Node2D" parent="Entities"]
 y_sort_enabled = true
