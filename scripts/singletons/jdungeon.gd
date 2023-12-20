@@ -144,9 +144,11 @@ func register_character_classes():
 		"Warrior", "res://scripts/components/player/charclasscomponent/classes/Warrior.tres"
 	)
 
+
 func register_dialogues():
 	J.register_dialogue_resource("MilkLady", "res://scenes/ui/dialogue/Dialogues/MilkLady.tres")
 	J.register_dialogue_resource("FALLBACK", "res://scenes/ui/dialogue/Dialogues/FALLBACK.tres")
+
 
 func register_player_scene(player_scene_path: String):
 	player_scene = load(player_scene_path)
