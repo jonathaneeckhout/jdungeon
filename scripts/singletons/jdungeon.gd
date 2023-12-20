@@ -60,6 +60,7 @@ func register_enemies():
 func register_npcs():
 	J.register_npc_scene("MilkLady", "res://scenes/npcs/milklady/Milklady.tscn")
 	J.register_npc_scene("Turtur", "res://scenes/npcs/turtur/Turtur.tscn")
+	J.register_npc_scene("Fernand", "res://scenes/npcs/fernand/Fernand.tscn")
 
 
 func register_items():
@@ -147,6 +148,7 @@ func register_character_classes():
 
 func register_dialogues():
 	J.register_dialogue_resource("MilkLady", "res://scenes/ui/dialogue/Dialogues/MilkLady.tres")
+	J.register_dialogue_resource("Fernand", "res://scenes/ui/dialogue/Dialogues/Fernand.tres")
 	J.register_dialogue_resource("FALLBACK", "res://scenes/ui/dialogue/Dialogues/FALLBACK.tres")
 
 

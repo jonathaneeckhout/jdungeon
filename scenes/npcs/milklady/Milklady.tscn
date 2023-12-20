@@ -490,6 +490,7 @@ texture = ExtResource("11_lg4rx")
 
 [node name="MilkladyRightArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(-12, -33)
+rotation = -0.183078
 texture = ExtResource("12_ky2ex")
 offset = Vector2(12, -5)
 
@@ -514,6 +515,7 @@ offset = Vector2(-8, -35)
 
 [node name="MilkladyLeftArm" type="Sprite2D" parent="Sprites"]
 position = Vector2(8, -30)
+rotation = 0.1248
 texture = ExtResource("17_yaj1r")
 offset = Vector2(-7, -7)
 
