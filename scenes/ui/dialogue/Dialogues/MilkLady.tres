@@ -44,5 +44,5 @@ flags_unset_on_seen = Array[String]([])
 script = ExtResource("1_3t1yd")
 dialogue_identifier = "MilkLady"
 speaker_names = Array[String](["Milk Lady"])
-speaker_portraits = Array[Array]([["res://assets/images/npcs/milklady/original/milklady_head.png"]])
+speaker_portraits = Array[Array]([["res://assets/images/npcs/milklady/scaled/milklady_head.png"]])
 dialogue_snippets = Array[ExtResource("1_05atd")]([SubResource("Resource_vfg0g"), SubResource("Resource_07mrd"), SubResource("Resource_tslh3")])

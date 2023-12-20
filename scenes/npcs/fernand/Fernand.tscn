@@ -484,7 +484,7 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
 [node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_1rkqu")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
-movement_speed = 50.0
+movement_speed = 30.0
 
 [node name="WanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component") instance=ExtResource("5_ogec5")]
 stats_component = NodePath("../StatsSynchronizerComponent")
@@ -505,36 +505,31 @@ stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 [node name="Sprites" type="Node2D" parent="."]
 
 [node name="RightLeg" type="Sprite2D" parent="Sprites"]
-position = Vector2(-3.973, -18.0054)
-rotation = 0.00226539
+position = Vector2(-4, -18)
 texture = ExtResource("13_ndawo")
 offset = Vector2(-2.5, -15.5)
 
 [node name="LeftLeg" type="Sprite2D" parent="Sprites"]
-position = Vector2(8.02338, -20.027)
-rotation = 0.00226539
+position = Vector2(8, -20)
 texture = ExtResource("12_yapoj")
 offset = Vector2(-14.5, -14.5)
 
 [node name="RightLowerArm" type="Sprite2D" parent="Sprites"]
-position = Vector2(-12.991, -27.9892)
-rotation = -0.00180043
+position = Vector2(-13, -28)
 texture = ExtResource("10_7ascr")
 offset = Vector2(6.5, -6.5)
 
 [node name="RightUpperArm" type="Sprite2D" parent="Sprites"]
-position = Vector2(-14.0126, -39.9874)
-rotation = -0.00180043
+position = Vector2(-14, -40)
 texture = ExtResource("14_djwes")
 offset = Vector2(7, 6)
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(-7, -33)
-rotation = -0.00180043
 texture = ExtResource("9_5x3o0")
 
 [node name="Head" type="Sprite2D" parent="Sprites"]
-position = Vector2(-6.0018, -34.0018)
+position = Vector2(-6, -34)
 texture = ExtResource("11_wfw2f")
 offset = Vector2(2, 5)
 

@@ -148,6 +148,7 @@ func register_character_classes():
 
 func register_dialogues():
 	J.register_dialogue_resource("MilkLady", "res://scenes/ui/dialogue/Dialogues/MilkLady.tres")
+	J.register_dialogue_resource("Fernand", "res://scenes/ui/dialogue/Dialogues/Fernand.tres")
 	J.register_dialogue_resource("FALLBACK", "res://scenes/ui/dialogue/Dialogues/FALLBACK.tres")
 
 
