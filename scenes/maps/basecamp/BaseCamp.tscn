@@ -157,6 +157,72 @@ position = Vector2(-944, 1472)
 [node name="Ladybug" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
 position = Vector2(-368, 1392)
 
+[node name="Ladybug2" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-1520, 1472)
+
+[node name="Ladybug3" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-2216, 1272)
+
+[node name="Ladybug4" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-2688, 1696)
+
+[node name="Ladybug5" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-3048, 1296)
+
+[node name="Ladybug6" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-3704, 944)
+
+[node name="Ladybug7" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-3784, 1936)
+
+[node name="Ladybug8" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-3240, 2504)
+
+[node name="Ladybug9" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-2816, 2104)
+
+[node name="Ladybug10" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-2008, 1936)
+
+[node name="Ladybug11" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-1536, 2376)
+
+[node name="Ladybug12" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-1888, 744)
+
+[node name="Ladybug13" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-1888, 3512)
+
+[node name="Ladybug14" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-1000, 3984)
+
+[node name="Ladybug15" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-32, 3928)
+
+[node name="Ladybug16" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-408, 3536)
+
+[node name="Ladybug17" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(1024, 3968)
+
+[node name="Ladybug18" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(504, 3392)
+
+[node name="Ladybug19" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(1192, 3056)
+
+[node name="Ladybug20" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(1816, 2704)
+
+[node name="Ladybug21" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(1712, 2160)
+
+[node name="Ladybug22" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(600, 2080)
+
+[node name="Ladybug23" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(2304, 2264)
+
 [node name="NPCs" type="Node2D" parent="Entities"]
 y_sort_enabled = true
 
