@@ -669,37 +669,31 @@ stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 [node name="Sprites" type="Node2D" parent="."]
 
 [node name="BackWingCover" type="Sprite2D" parent="Sprites"]
-position = Vector2(13.2985, -9.46882)
-rotation = -2.74064
+position = Vector2(-9, -1)
 texture = ExtResource("12_7lv0i")
 offset = Vector2(10, -3)
 
 [node name="BackWing" type="Sprite2D" parent="Sprites"]
-position = Vector2(8.44483, -8.26793)
-rotation = -2.74064
+position = Vector2(-5, -4)
 texture = ExtResource("13_said4")
 offset = Vector2(7, 0)
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
-position = Vector2(2, -11)
-rotation = -2.74064
+position = Vector2(2, -4)
 texture = ExtResource("14_rxh3s")
 
 [node name="FrontWing" type="Sprite2D" parent="Sprites"]
-position = Vector2(6.46335, -11.2802)
-rotation = -2.74064
+position = Vector2(-2, -2)
 texture = ExtResource("15_c82sp")
 offset = Vector2(4, -2)
 
 [node name="FrontWingCover" type="Sprite2D" parent="Sprites"]
-position = Vector2(10.5364, -10.6397)
-rotation = -2.74064
+position = Vector2(-6, -1)
 texture = ExtResource("16_ojdru")
 offset = Vector2(8, -3)
 
 [node name="Head" type="Sprite2D" parent="Sprites"]
-position = Vector2(13.2985, -9.46882)
-rotation = 2.63891
+position = Vector2(-9, -1)
 texture = ExtResource("17_q6yn7")
 offset = Vector2(11, -3)
 
