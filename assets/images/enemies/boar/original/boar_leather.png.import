@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://birqoauotpmo7"
-path="res://.godot/imported/closed_eyes.png-497045048a05e8151eb6076f45990286.ctex"
+uid="uid://bx40xwei2s1g5"
+path="res://.godot/imported/boar_leather.png-3a3a87483372c582796cc4d3e861e4bf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/boar/closed_eyes.png"
-dest_files=["res://.godot/imported/closed_eyes.png-497045048a05e8151eb6076f45990286.ctex"]
+source_file="res://assets/images/enemies/boar/original/boar_leather.png"
+dest_files=["res://.godot/imported/boar_leather.png-3a3a87483372c582796cc4d3e861e4bf.ctex"]
 
 [params]
 

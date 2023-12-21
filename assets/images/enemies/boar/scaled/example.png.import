@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bx40xwei2s1g5"
-path="res://.godot/imported/boar_leather.png-9f842fa9058878c8fc0ca8d3a3ff5242.ctex"
+uid="uid://cnxmtxtbmy4d3"
+path="res://.godot/imported/example.png-13ff029016aae713f83f0025160b28d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/boar/boar_leather.png"
-dest_files=["res://.godot/imported/boar_leather.png-9f842fa9058878c8fc0ca8d3a3ff5242.ctex"]
+source_file="res://assets/images/enemies/boar/scaled/example.png"
+dest_files=["res://.godot/imported/example.png-13ff029016aae713f83f0025160b28d4.ctex"]
 
 [params]
 

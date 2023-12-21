@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=15 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
 [ext_resource type="TileSet" uid="uid://d0vhi8a2dswg6" path="res://data/tileset/navcol.tres" id="3_37stb"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="3_mj652"]
+[ext_resource type="PackedScene" uid="uid://bv8wlx0nq04pc" path="res://scenes/enemies/WildBoar/WildBoar.tscn" id="3_nm4wr"]
 [ext_resource type="PackedScene" uid="uid://cj48j2lhcde1a" path="res://scenes/terrain/portal/Portal.tscn" id="3_x8ed5"]
 [ext_resource type="PackedScene" uid="uid://ilcdoo6dba8g" path="res://scenes/npcs/fernand/Fernand.tscn" id="4_1ma72"]
 [ext_resource type="PackedScene" uid="uid://cgxevug65fx3d" path="res://scenes/enemies/BlueMole/BlueMole.tscn" id="5_oe42q"]
@@ -63,6 +64,48 @@ position = Vector2(-2432, 3960)
 
 [node name="BlueMole4" parent="Entities/Enemies" instance=ExtResource("5_oe42q")]
 position = Vector2(-2760, 3914)
+
+[node name="WildBoar" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-2336, 944)
+
+[node name="WildBoar2" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-2720, 384)
+
+[node name="WildBoar3" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-1760, 376)
+
+[node name="WildBoar4" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-1472, 1000)
+
+[node name="WildBoar5" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-1928, 1576)
+
+[node name="WildBoar6" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-2344, 2056)
+
+[node name="WildBoar8" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-1128, 2176)
+
+[node name="WildBoar9" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-3216, -448)
+
+[node name="WildBoar10" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-3440, -1088)
+
+[node name="WildBoar11" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-2616, -1408)
+
+[node name="WildBoar12" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-3392, -1776)
+
+[node name="WildBoar13" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-1648, -808)
+
+[node name="WildBoar14" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-2296, -384)
+
+[node name="WildBoar7" parent="Entities/Enemies" instance=ExtResource("3_nm4wr")]
+position = Vector2(-3256, 1952)
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 y_sort_enabled = true

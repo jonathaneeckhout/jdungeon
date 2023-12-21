@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://j6hxkj45p463"
-path="res://.godot/imported/opened_eyes.png-6389e2e0230d658bacf291ee5a170e26.ctex"
+uid="uid://6xr1yq6hn8dv"
+path="res://.godot/imported/snout.png-9a14dc441dbc02698b9fee6305957dc3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/boar/opened_eyes.png"
-dest_files=["res://.godot/imported/opened_eyes.png-6389e2e0230d658bacf291ee5a170e26.ctex"]
+source_file="res://assets/images/enemies/boar/original/snout.png"
+dest_files=["res://.godot/imported/snout.png-9a14dc441dbc02698b9fee6305957dc3.ctex"]
 
 [params]
 

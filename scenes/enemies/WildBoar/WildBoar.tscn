@@ -1,0 +1,176 @@
+[gd_scene load_steps=24 format=3 uid="uid://bv8wlx0nq04pc"]
+
+[ext_resource type="Script" path="res://scenes/enemies/WildBoar/WildBoar.gd" id="1_p2524"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_6ui5c"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_8lf5i"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_5s61a"]
+[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="5_3stlk"]
+[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/networking/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="6_ueada"]
+[ext_resource type="PackedScene" uid="uid://d3pv4rqlo3xh7" path="res://scripts/components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.tscn" id="7_kanc1"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="8_g7gpp"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="9_0yelv"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="10_k4u5q"]
+[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="11_wem1f"]
+[ext_resource type="Texture2D" uid="uid://cisv1a7xuemgs" path="res://assets/images/enemies/boar/scaled/body.png" id="14_hsdk1"]
+[ext_resource type="Texture2D" uid="uid://cnxmtxtbmy4d3" path="res://assets/images/enemies/boar/scaled/example.png" id="15_88mb8"]
+[ext_resource type="Texture2D" uid="uid://jqror5mpe44o" path="res://assets/images/enemies/boar/scaled/front_l_hoof.png" id="16_ts8jf"]
+[ext_resource type="Texture2D" uid="uid://ccm8s6xj5i6bg" path="res://assets/images/enemies/boar/scaled/front_r_hoof.png" id="17_67wl5"]
+[ext_resource type="Texture2D" uid="uid://cw7r4ojyqbmxr" path="res://assets/images/enemies/boar/scaled/head.png" id="18_xgtri"]
+[ext_resource type="Texture2D" uid="uid://brgjwvmht3tob" path="res://assets/images/enemies/boar/scaled/opened_eyes.png" id="19_5salc"]
+[ext_resource type="Texture2D" uid="uid://b84rerloofiny" path="res://assets/images/enemies/boar/scaled/rear_r_hoof.png" id="20_1vgai"]
+[ext_resource type="Texture2D" uid="uid://43y6b1fwws5k" path="res://assets/images/enemies/boar/scaled/snout.png" id="21_oivx0"]
+[ext_resource type="Texture2D" uid="uid://bi7hq3q4u0myf" path="res://assets/images/enemies/boar/scaled/tail.png" id="22_tk5li"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_uxvhk"]
+radius = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_28ggr"]
+radius = 32.0
+height = 80.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_06ge0"]
+radius = 128.0
+
+[node name="WildBoar" type="CharacterBody2D"]
+script = ExtResource("1_p2524")
+
+[node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("2_6ui5c")]
+
+[node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_8lf5i")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_5s61a")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+hp_max = 30
+hp = 30
+attack_power_min = 4
+attack_power_max = 8
+movement_speed = 200.0
+experience_worth = 30
+
+[node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("5_3stlk")]
+stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("6_ueada")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="AttackAndWanderBehaviorComponent" parent="." node_paths=PackedStringArray("stats_component", "action_synchronizer", "aggro_area") instance=ExtResource("7_kanc1")]
+stats_component = NodePath("../StatsSynchronizerComponent")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
+aggro_area = NodePath("../AggroArea")
+
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton", "action_synchronizer") instance=ExtResource("8_g7gpp")]
+skeleton = NodePath("../Skeleton")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
+
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "action_synchronizer", "update_face") instance=ExtResource("9_0yelv")]
+animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
+update_face = NodePath("../UpdateFaceComponent")
+
+[node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("10_k4u5q")]
+offset_top = -72.0
+offset_bottom = -32.0
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+
+[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("11_wem1f")]
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+
+[node name="Example" type="Sprite2D" parent="."]
+position = Vector2(-0.5, -31)
+texture = ExtResource("15_88mb8")
+
+[node name="Sprites" type="Node2D" parent="."]
+
+[node name="Tail" type="Sprite2D" parent="Sprites"]
+position = Vector2(28, -32)
+texture = ExtResource("22_tk5li")
+offset = Vector2(-28.5, -1)
+
+[node name="Body" type="Sprite2D" parent="Sprites"]
+position = Vector2(15, -14)
+texture = ExtResource("14_hsdk1")
+offset = Vector2(-16.5, -15)
+
+[node name="RightFrontHoof" type="Sprite2D" parent="Sprites"]
+position = Vector2(-22, -12)
+texture = ExtResource("16_ts8jf")
+offset = Vector2(21.5, -19)
+
+[node name="LeftFrontHoof" type="Sprite2D" parent="Sprites"]
+position = Vector2(1, -7)
+texture = ExtResource("17_67wl5")
+offset = Vector2(-1.5, -24)
+
+[node name="Head" type="Sprite2D" parent="Sprites"]
+position = Vector2(-9, -23)
+texture = ExtResource("18_xgtri")
+offset = Vector2(8.5, -8)
+
+[node name="OpenedEyes" type="Sprite2D" parent="Sprites/Head"]
+position = Vector2(8.5, -8)
+texture = ExtResource("19_5salc")
+
+[node name="Snout" type="Sprite2D" parent="Sprites"]
+position = Vector2(-28, -17)
+texture = ExtResource("21_oivx0")
+offset = Vector2(27.5, -16)
+
+[node name="LeftRearHoof" type="Sprite2D" parent="Sprites"]
+position = Vector2(25, -15)
+texture = ExtResource("20_1vgai")
+offset = Vector2(-24.5, -16)
+
+[node name="Skeleton" type="Node2D" parent="."]
+
+[node name="RemoteBody" type="RemoteTransform2D" parent="Skeleton"]
+position = Vector2(15, -14)
+remote_path = NodePath("../../Sprites/Body")
+
+[node name="RemoteHead" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-24, -9)
+remote_path = NodePath("../../../Sprites/Head")
+
+[node name="RemoteSnout" type="RemoteTransform2D" parent="Skeleton/RemoteBody/RemoteHead"]
+position = Vector2(-19, 6)
+remote_path = NodePath("../../../../Sprites/Snout")
+
+[node name="Tail" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(13, -18)
+remote_path = NodePath("../../../Sprites/Tail")
+
+[node name="RemoteLeftFrontHoof" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-14, 7)
+remote_path = NodePath("../../../Sprites/LeftFrontHoof")
+
+[node name="RemoteRightFrontHoof" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-37, 2)
+remote_path = NodePath("../../../Sprites/RightFrontHoof")
+
+[node name="RemoteLeftRearHoof" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(10, -1)
+remote_path = NodePath("../../../Sprites/LeftRearHoof")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_uxvhk")
+metadata/_edit_lock_ = true
+
+[node name="HurtArea" type="Area2D" parent="."]
+visible = false
+
+[node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
+position = Vector2(0, -27)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_28ggr")
+
+[node name="AggroArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="AggroBox" type="CollisionShape2D" parent="AggroArea"]
+shape = SubResource("CircleShape2D_06ge0")
