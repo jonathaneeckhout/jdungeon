@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bk4x4ke1jod0w"
-path="res://.godot/imported/Front wing .png-5ccbc269af470fcc08928d92adf0a7f2.ctex"
+uid="uid://ddmucq5q8m31c"
+path="res://.godot/imported/Head.png-b07321eaff883ecbd9be712268777885.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/ladybug/Front wing .png"
-dest_files=["res://.godot/imported/Front wing .png-5ccbc269af470fcc08928d92adf0a7f2.ctex"]
+source_file="res://assets/images/enemies/ladybug/scaled/Head.png"
+dest_files=["res://.godot/imported/Head.png-b07321eaff883ecbd9be712268777885.ctex"]
 
 [params]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=17 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://vsig12850hrc" path="res://scenes/terrain/buildings/bigtent/BigTent.tscn" id="10_mdbr4"]
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_8nwqo"]
 [ext_resource type="PackedScene" uid="uid://2e4xaioctby5" path="res://scenes/terrain/attributes/fires/campfire/Campfire.tscn" id="12_c2e8t"]
+[ext_resource type="PackedScene" uid="uid://bsauq1smmlnkl" path="res://scenes/enemies/Ladybug/Ladybug.tscn" id="16_oij41"]
 
 [node name="BaseCamp" type="Node2D"]
 script = ExtResource("1_4tpho")
@@ -152,6 +153,9 @@ position = Vector2(-1416, 3920)
 
 [node name="Sheep5" parent="Entities/Enemies" instance=ExtResource("4_ycvjw")]
 position = Vector2(-944, 1472)
+
+[node name="Ladybug" parent="Entities/Enemies" instance=ExtResource("16_oij41")]
+position = Vector2(-368, 1392)
 
 [node name="NPCs" type="Node2D" parent="Entities"]
 y_sort_enabled = true

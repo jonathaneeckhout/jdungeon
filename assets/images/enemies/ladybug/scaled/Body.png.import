@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dgg8o1vounh41"
-path="res://.godot/imported/Back wing cover.png-399bc6e8659fca8c62135eca00942bc0.ctex"
+uid="uid://dsdssqsqt78k"
+path="res://.godot/imported/Body.png-5c1d2cbd482197828168fc496a49a813.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/ladybug/Back wing cover.png"
-dest_files=["res://.godot/imported/Back wing cover.png-399bc6e8659fca8c62135eca00942bc0.ctex"]
+source_file="res://assets/images/enemies/ladybug/scaled/Body.png"
+dest_files=["res://.godot/imported/Body.png-5c1d2cbd482197828168fc496a49a813.ctex"]
 
 [params]
 

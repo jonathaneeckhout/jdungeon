@@ -1,0 +1,137 @@
+[gd_scene load_steps=20 format=3 uid="uid://bsauq1smmlnkl"]
+
+[ext_resource type="Script" path="res://scenes/enemies/Ladybug/Ladybug.gd" id="1_kxhsd"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="1_q6d72"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_gyryr"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="3_hr36v"]
+[ext_resource type="PackedScene" uid="uid://d2ippv4gqf6as" path="res://scripts/components/behaviors/fleeandwanderbehaviorcomponent/FleeAndWanderBehaviorCopmonent.tscn" id="4_2pd3h"]
+[ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/enemy/lootcomponent/LootComponent.tscn" id="5_liyjx"]
+[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_hxky4"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="7_tstyb"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="8_0qsyc"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="9_td36y"]
+[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="10_j2kad"]
+[ext_resource type="Texture2D" uid="uid://cqg88k6138b4k" path="res://assets/images/enemies/ladybug/scaled/Back wing cover.png" id="12_7lv0i"]
+[ext_resource type="Texture2D" uid="uid://cmqj7o6ykxgdh" path="res://assets/images/enemies/ladybug/scaled/Back wing.png" id="13_said4"]
+[ext_resource type="Texture2D" uid="uid://dsdssqsqt78k" path="res://assets/images/enemies/ladybug/scaled/Body.png" id="14_rxh3s"]
+[ext_resource type="Texture2D" uid="uid://i4vljsobr55n" path="res://assets/images/enemies/ladybug/scaled/Front wing .png" id="15_c82sp"]
+[ext_resource type="Texture2D" uid="uid://d4aqsuh5byrfw" path="res://assets/images/enemies/ladybug/scaled/Front wing cover.png" id="16_ojdru"]
+[ext_resource type="Texture2D" uid="uid://ddmucq5q8m31c" path="res://assets/images/enemies/ladybug/scaled/Head.png" id="17_q6yn7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xq684"]
+radius = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qhkmw"]
+radius = 18.0
+height = 36.0
+
+[node name="Ladybug" type="CharacterBody2D"]
+script = ExtResource("1_kxhsd")
+
+[node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("1_q6d72")]
+
+[node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("2_gyryr")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_hr36v")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+hp_max = 20
+hp = 20
+movement_speed = 128.0
+experience_worth = 10
+
+[node name="FleeAndWanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component") instance=ExtResource("4_2pd3h")]
+stats_component = NodePath("../StatsSynchronizerComponent")
+
+[node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("5_liyjx")]
+stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_hxky4")]
+stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("7_tstyb")]
+skeleton = NodePath("../Skeleton")
+
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats") instance=ExtResource("8_0qsyc")]
+animation_player = NodePath("../AnimationPlayer")
+stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("9_td36y")]
+offset_top = -30.0
+offset_bottom = 10.0
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+
+[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("10_j2kad")]
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+
+[node name="Sprites" type="Node2D" parent="."]
+
+[node name="BackWingCover" type="Sprite2D" parent="Sprites"]
+position = Vector2(-9, -1)
+texture = ExtResource("12_7lv0i")
+offset = Vector2(10, -3)
+
+[node name="BackWing" type="Sprite2D" parent="Sprites"]
+position = Vector2(-5, -4)
+texture = ExtResource("13_said4")
+offset = Vector2(7, 0)
+
+[node name="Body" type="Sprite2D" parent="Sprites"]
+position = Vector2(2, -4)
+texture = ExtResource("14_rxh3s")
+
+[node name="FrontWing" type="Sprite2D" parent="Sprites"]
+position = Vector2(2, -4)
+texture = ExtResource("15_c82sp")
+offset = Vector2(4, -2)
+
+[node name="FrontWingCover" type="Sprite2D" parent="Sprites"]
+position = Vector2(-6, -1)
+texture = ExtResource("16_ojdru")
+offset = Vector2(8, -3)
+
+[node name="Head" type="Sprite2D" parent="Sprites"]
+position = Vector2(-9, -1)
+texture = ExtResource("17_q6yn7")
+offset = Vector2(11, -3)
+
+[node name="Skeleton" type="Node2D" parent="."]
+
+[node name="RemoteBody" type="RemoteTransform2D" parent="Skeleton"]
+position = Vector2(2, -4)
+remote_path = NodePath("../../Sprites/Body")
+
+[node name="RemoteHead" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-11, 3)
+remote_path = NodePath("../../../Sprites/Head")
+
+[node name="RemoteLeftWingCover" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-8, 3)
+remote_path = NodePath("../../../Sprites/FrontWingCover")
+
+[node name="RemoteLeftWing" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-4, 2)
+remote_path = NodePath("../../../Sprites/FrontWing")
+
+[node name="RemoteRightWingCover" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-11, 3)
+remote_path = NodePath("../../../Sprites/BackWingCover")
+
+[node name="RemoteRightWing" type="RemoteTransform2D" parent="Skeleton/RemoteBody"]
+position = Vector2(-7, 0)
+remote_path = NodePath("../../../Sprites/BackWing")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_xq684")
+metadata/_edit_lock_ = true
+
+[node name="HurtArea" type="Area2D" parent="."]
+visible = false
+
+[node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
+visible = false
+position = Vector2(0, -10)
+shape = SubResource("CapsuleShape2D_qhkmw")
