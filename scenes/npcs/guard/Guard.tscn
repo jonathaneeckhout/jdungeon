@@ -1210,7 +1210,6 @@ rotation = -1.5708
 
 [node name="Club" type="Sprite2D" parent="Sprites/RightHand"]
 position = Vector2(0.879528, -48.414)
-scale = Vector2(1, 1)
 texture = ExtResource("10_3h5f8")
 
 [node name="RightLeg" type="Sprite2D" parent="Sprites"]

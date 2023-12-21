@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjmmrk2ovyqap"
-path="res://.godot/imported/ko_eyes.png-a71ba7e9084e061347f336f9d9dad28b.ctex"
+uid="uid://dixey7ju5jebg"
+path="res://.godot/imported/head.png-518fbd3d6d05bf958f2245f7a5ce8103.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/boar/ko_eyes.png"
-dest_files=["res://.godot/imported/ko_eyes.png-a71ba7e9084e061347f336f9d9dad28b.ctex"]
+source_file="res://assets/images/enemies/boar/original/head.png"
+dest_files=["res://.godot/imported/head.png-518fbd3d6d05bf958f2245f7a5ce8103.ctex"]
 
 [params]
 

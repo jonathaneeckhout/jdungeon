@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dc0b6ukvm3xwj"
-path="res://.godot/imported/tail.png-6b6c64b9cc0a860efb5f0f45b6fee080.ctex"
+uid="uid://b6mtubi2t8q1o"
+path="res://.godot/imported/boar_hair.png-fe0576a0552ad7766e11e409997ddc6e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/boar/tail.png"
-dest_files=["res://.godot/imported/tail.png-6b6c64b9cc0a860efb5f0f45b6fee080.ctex"]
+source_file="res://assets/images/enemies/boar/scaled/boar_hair.png"
+dest_files=["res://.godot/imported/boar_hair.png-fe0576a0552ad7766e11e409997ddc6e.ctex"]
 
 [params]
 

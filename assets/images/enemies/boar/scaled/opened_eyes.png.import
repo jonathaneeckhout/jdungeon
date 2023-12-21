@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gs1slihwvofn"
-path="res://.godot/imported/boar_tusk.png-7d099f46036da879c8534ead7fa8ec1f.ctex"
+uid="uid://brgjwvmht3tob"
+path="res://.godot/imported/opened_eyes.png-5f7fd981f8ba074a491024b6470d940a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/boar/boar_tusk.png"
-dest_files=["res://.godot/imported/boar_tusk.png-7d099f46036da879c8534ead7fa8ec1f.ctex"]
+source_file="res://assets/images/enemies/boar/scaled/opened_eyes.png"
+dest_files=["res://.godot/imported/opened_eyes.png-5f7fd981f8ba074a491024b6470d940a.ctex"]
 
 [params]
 

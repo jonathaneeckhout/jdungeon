@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vskfi6gv1bve"
-path="res://.godot/imported/enraged_effect.png-f0a8e8ec51847d87aabab1a981d99843.ctex"
+uid="uid://43y6b1fwws5k"
+path="res://.godot/imported/snout.png-544532989a115ac795e0f45b7db02c8a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/boar/enraged_effect.png"
-dest_files=["res://.godot/imported/enraged_effect.png-f0a8e8ec51847d87aabab1a981d99843.ctex"]
+source_file="res://assets/images/enemies/boar/scaled/snout.png"
+dest_files=["res://.godot/imported/snout.png-544532989a115ac795e0f45b7db02c8a.ctex"]
 
 [params]
 

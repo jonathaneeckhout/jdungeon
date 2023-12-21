@@ -55,6 +55,7 @@ func register_enemies():
 	J.register_enemy_scene("MoldedDruvar", "res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn")
 	J.register_enemy_scene("ClamDog", "res://scenes/enemies/ClamDog/ClamDog.tscn")
 	J.register_enemy_scene("BlueMole", "res://scenes/enemies/BlueMole/BlueMole.tscn")
+	J.register_enemy_scene("WildBoar", "res://scenes/enemies/WildBoar/WildBoar.tscn")
 
 
 func register_npcs():

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4n4kr8mvtafj"
-path="res://.godot/imported/front_l_hoof.png-94b82c10ed2862249f826791ab3bca20.ctex"
+uid="uid://bt6jxw7l0ig2g"
+path="res://.godot/imported/boar_leather.png-542113044d951069da7ecba5ef47c0a7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/enemies/boar/front_l_hoof.png"
-dest_files=["res://.godot/imported/front_l_hoof.png-94b82c10ed2862249f826791ab3bca20.ctex"]
+source_file="res://assets/images/enemies/boar/scaled/boar_leather.png"
+dest_files=["res://.godot/imported/boar_leather.png-542113044d951069da7ecba5ef47c0a7.ctex"]
 
 [params]
 
