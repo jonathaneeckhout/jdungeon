@@ -1,19 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://by50kfgdbc37a"]
+[gd_scene load_steps=2 format=3 uid="uid://by50kfgdbc37a"]
 
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_muhcg"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_e3jms"]
-radius = 22.0
-
-[node name="flat cart empty" type="StaticBody2D"]
+[node name="flat cart empty" type="Node2D"]
 scale = Vector2(2, 2)
 
 [node name="TileMap" type="TileMap" parent="."]
-position = Vector2(-5, 18.5)
+position = Vector2(-32, 4)
 tile_set = ExtResource("1_muhcg")
 format = 2
 layer_0/tile_data = PackedInt32Array(-65536, 393218, 16)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(11, -7)
-shape = SubResource("CircleShape2D_e3jms")

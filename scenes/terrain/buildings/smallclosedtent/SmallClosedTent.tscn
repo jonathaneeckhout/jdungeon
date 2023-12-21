@@ -1,19 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://cgbfsliknfb2x"]
+[gd_scene load_steps=2 format=3 uid="uid://cgbfsliknfb2x"]
 
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_54ljg"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5payv"]
-size = Vector2(288, 192)
-
-[node name="SmallClosedTent" type="StaticBody2D"]
+[node name="SmallClosedTent" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
-position = Vector2(0, 8)
+position = Vector2(32, 8)
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_54ljg")
 format = 2
 layer_0/tile_data = PackedInt32Array(-3, 458754, 50)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-30, -96)
-shape = SubResource("RectangleShape2D_5payv")
