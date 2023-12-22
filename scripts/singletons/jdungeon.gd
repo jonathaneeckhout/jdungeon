@@ -24,6 +24,7 @@ var map_scenes: Dictionary = {}
 var skill_resources: Dictionary = {}
 var charclass_resources: Dictionary = {}
 var dialogue_resources: Dictionary = {}
+var status_effect_resources
 
 var uuid_util: UuidUtil
 
@@ -185,7 +186,11 @@ func register_class_resource(charclass_class: String, class_res_path: String):
 	assert(charclass_class == charclass_resources[charclass_class].class_registered)
 
 
-## There'll be a LOT of dialogue, so loading each manually could not only dramatically increase load times, but it could also make errors more likely.
 func register_dialogue_resource(dialogue_class: String, dialogue_res_path: String):
 	dialogue_resources[dialogue_class] = load(dialogue_res_path)
 	assert(dialogue_class == dialogue_resources[dialogue_class].dialogue_identifier)
+
+
+func register_status_effect_resource(status_class: String, status_res_path: String):
+	status_effect_resources[status_class] = load(status_res_path)
+	assert(status_class == status_effect_resources[status_class].status_class)

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://crqboml4548vk"]
+
+[sub_resource type="GDScript" id="GDScript_cqumv"]
+script/source = "extends StatusEffectResource
+
+func _effect():
+	target"
+
+[resource]
+script = SubResource("GDScript_cqumv")
+class_identifier = ""
+displayed_name = "Unnamed Status"
+description = ""
+icon_path = ""
+behaviour_stackable_duration = false
+behaviour_stack_override = false
+stacks = 1
+duration_left = 1.0
