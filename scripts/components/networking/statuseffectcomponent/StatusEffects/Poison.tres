@@ -3,16 +3,21 @@
 [sub_resource type="GDScript" id="GDScript_cqumv"]
 script/source = "extends StatusEffectResource
 
-func _effect():
-	target"
+func _effect_timeout(target: Node, json_data: Dictionary):
+	var targetStats: StatsSynchronizerComponent = get_entity_stats_component(target)
+	targetStats.hurt(json_data[\"owner\"], json_data[\"stacks\"])
+	
+"
 
 [resource]
 script = SubResource("GDScript_cqumv")
-class_identifier = ""
-displayed_name = "Unnamed Status"
-description = ""
+status_class = "Poison"
+displayed_name = "Poison"
+description = "Deals damage every time it's duration ends equal to it's stack, then looses 20% of it's stacks. "
 icon_path = ""
-behaviour_stackable_duration = false
-behaviour_stack_override = false
-stacks = 1
-duration_left = 1.0
+stack_consumption_flat = 0
+stack_consumption_percent = 1.0
+combine_stackable_duration = false
+combine_stack_override = true
+default_stacks = 20
+default_duration = 2.0
