@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4mf44uj8msy5"]
+
+[ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_0etk3"]
+
+[node name="MilkladyShop" type="Node2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+scale = Vector2(2, 2)
+tile_set = ExtResource("1_0etk3")
+format = 2
+layer_0/tile_data = PackedInt32Array(-1, 589826, 30, -65537, 851970, 29, 65534, 393218, 44, -131074, 393218, 37)
+layer_1/tile_data = PackedInt32Array()
+
+[node name="TileMap2" type="TileMap" parent="."]
+tile_set = ExtResource("1_0etk3")
+format = 2
+layer_0/tile_data = PackedInt32Array(-65537, 4, 15, -131072, 4, 17)
+layer_1/tile_data = PackedInt32Array(-65538, 786436, 15, -131071, 589828, 15, -131072, 851972, 16, -65537, 655364, 16, -262144, 458756, 26, -196609, 458756, 26)
