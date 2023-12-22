@@ -14,6 +14,7 @@ signal list_changed
 @export var user: Node
 
 @export var stats_component: StatsSynchronizerComponent
+@export var skill_component: SkillComponent
 
 var classes: Array[CharacterClassResource]
 
@@ -49,6 +50,7 @@ func _ready():
 
 	#Re-apply stats anytime a class changes.
 	classes_changed.connect(apply_stats)
+	classes_changed.connect(apply_skills)
 
 	#This line should stay commented until there's a system to detect when a player should be allowed to change classes
 	#class_change_locked = true
@@ -215,6 +217,25 @@ func apply_stats():
 	for statName: String in statsDict:
 		stats_component.set(statName, statsDict[statName])
 
+
+func apply_skills():
+	if not G.is_server():
+		return
+
+	#While this modifies skills, stats are the actual limiting factor as skill_component is always ready for use.
+	if not stats_component.ready_done:
+		get_tree().physics_frame.connect(apply_stats)
+		return
+
+	for existingSkill: String in skill_component.get_skills_classes():
+		skill_component.remove_skill(existingSkill)
+
+	for charClass: CharacterClassResource in classes:
+		for skill: String in charClass.available_skills:
+			skill_component.add_skill(skill)
+
+	skill_component.sync_skills( user.peer_id )
+	
 
 func get_charclass_classes() -> Array[String]:
 	var output: Array[String] = []

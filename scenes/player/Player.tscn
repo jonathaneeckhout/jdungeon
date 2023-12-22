@@ -1835,10 +1835,11 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 [node name="PlayerRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("12_qxjy0")]
 stats = NodePath("../StatsSynchronizerComponent")
 
-[node name="CharacterClassComponent" type="Node" parent="." node_paths=PackedStringArray("user", "stats_component")]
+[node name="CharacterClassComponent" type="Node" parent="." node_paths=PackedStringArray("user", "stats_component", "skill_component")]
 script = ExtResource("16_gai5d")
 user = NodePath("..")
 stats_component = NodePath("../StatsSynchronizerComponent")
+skill_component = NodePath("../SkillComponent")
 
 [node name="PlayerUnstuckComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("15_elwtb")]
 stats = NodePath("../StatsSynchronizerComponent")

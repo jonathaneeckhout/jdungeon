@@ -8,11 +8,6 @@ class_name SkillComponent
 
 enum SKILL_ATTEMPT_RESULT { OK, INSUFFICIENT_ENERGY, OUT_OF_RANGE, COOLDOWN_RUNNING }
 
-const COLOR_HITBOX: Color = Color.AQUA / 2
-const COLOR_HITBOX_OUT_OF_RANGE: Color = Color.MISTY_ROSE / 2
-const COLOR_HITBOX_UNUSABLE: Color = Color.FIREBRICK / 2
-const COLOR_RANGE: Color = Color.GREEN_YELLOW / 2
-
 const COOLDOWN_TIMER_INTERVAL: float = 0.1
 
 # All of these signals are meant for local use, they should not affect any networking related stuff.
@@ -39,10 +34,27 @@ signal skill_cast_on_select_selected(skill: SkillComponentResource)
 
 ## Signal indicating that something about the skills have changed
 signal skills_changed
-
+@export_group("Node References")
 @export var stats_component: StatsSynchronizerComponent
 @export var player_synchronizer: PlayerSynchronizer
 
+@export_group("Visual Preferences")
+## Color for the area where the skill will hit.
+@export var color_hitbox: Color = Color.AQUA / 2
+## Color for the hitbox when the skill cannot be used.
+@export var color_hitbox_unusable: Color = Color.FIREBRICK / 2
+## Color for the hitbox when the cursor is out of range
+@export var color_hitbox_out_of_range: Color = Color.MISTY_ROSE / 2
+## Color for the area drawn around the user when the skill is selected. Determining how far the skill can be used.
+@export var color_range: Color = Color.GREEN_YELLOW / 3
+## Range is from -1 and upwards, does not affect polygons.
+@export var hitbox_line_thickness: float = 4
+## Does not affect polygons.
+@export var hitbox_line_antialiasing: bool = false
+## Only used for CircleShape2D hitboxes. Determines the definition of the drawn circle outline
+@export var hitbox_circle_outline_point_count: int = 45
+
+@export_group("Main Functionality")
 ## The array containing all the skills
 @export var skills: Array[SkillComponentResource]
 
@@ -212,7 +224,7 @@ func _draw():
 # Draw a circle around the player indicating what the range is
 # This function should only be ran on the client-side
 func _draw_range():
-	draw_circle(Vector2.ZERO, _skill_current.hit_range, COLOR_RANGE)
+	draw_circle(Vector2.ZERO, _skill_current.hit_range, color_range)
 
 
 # Draw a shape indicating the area the skill has effect on
@@ -231,22 +243,27 @@ func _draw_hitbox(local_point: Vector2 = to_local(player_synchronizer.mouse_glob
 
 	# When a skill is on cooldown or you don't have enough energy, display the hitbox red
 	if _is_skill_cooling_down(_skill_current) or not _is_skill_energy_affordable(_skill_current):
-		color_used = COLOR_HITBOX_UNUSABLE
+		color_used = color_hitbox_unusable
 
 	# When trying to use a skill out of skill range, display it rose
 	elif not _is_skill_target_within_range(
 		_skill_current, _target_node.position, player_synchronizer.mouse_global_pos
 	):
-		color_used = COLOR_HITBOX_OUT_OF_RANGE
+		color_used = color_hitbox_out_of_range
 
 	# If the skill can be used and is not on cooldown, draw it it's normal color
 	else:
-		color_used = COLOR_HITBOX
+		color_used = color_hitbox
 
 	# Draw the shape if it's a circle
 	if shape is CircleShape2D:
-		draw_circle(local_point, shape.radius, color_used)
-
+		draw_circle(local_point, shape.radius, color_used * 0.35)
+		draw_arc(local_point, shape.radius, 0, TAU, hitbox_circle_outline_point_count, color_used, hitbox_line_thickness, hitbox_line_antialiasing)
+	
+	elif shape is SegmentShape2D:
+		var points: Array[Vector2] = [shape.a + local_point, shape.b + local_point]
+		draw_line(points[0], points[1], color_used, hitbox_line_thickness, hitbox_line_antialiasing)
+	
 	# Draw the shape if it's a convex polygon
 	elif shape is ConvexPolygonShape2D:
 		# A minimal shape should have at least 3 points
@@ -276,6 +293,14 @@ func cooldown_process():
 
 # Add a skill
 func add_skill(skill_class: String):
+	#Do not allow duplicates
+	if skill_class in get_skills_classes():
+		if Global.debug_mode:
+			GodotLogger.info(
+				"Rejected duplicate skill '{0}'".format([skill_class])
+				)
+		return
+	
 	var skill_found: SkillComponentResource = J.skill_resources.get(skill_class, null)
 
 	if skill_found is SkillComponentResource:
@@ -432,14 +457,19 @@ func _get_targets_under_current_skill(global_pos: Vector2) -> Array[Node]:
 ## Fetch the collision shape of the current selected skill
 func get_collision_shape(user_rotation: float) -> Shape2D:
 	var shape: Shape2D
-	# Do not allow shapes with a size of 2, as it would denote a line, which is not yet supported
-	assert(_skill_current.hitbox_shape.size() != 2)
+	assert(_skill_current.hitbox_shape.size() > 0)
 
 	# If it is only 1 point, treat it as a circle
 	if _skill_current.hitbox_shape.size() == 1:
 		shape = CircleShape2D.new()
 
 		shape.radius = _skill_current.hitbox_shape[0].length()
+
+	#If 2, it is a line
+	elif _skill_current.hitbox_shape.size() == 2:
+		shape = SegmentShape2D.new()
+		shape.a = _skill_current.hitbox_shape[0].rotated(user_rotation)
+		shape.b = _skill_current.hitbox_shape[1].rotated(user_rotation)
 
 	# Otherwise treat it as a polygon
 	else:
