@@ -22,7 +22,7 @@ enum Properties {
 @export var stack_consumption_flat: int = 0
 ## The percentage of stacks that are consumed every timeout, applies before [member stack_consumption_flat]
 ## A value of 0.5 would remove half of the stacks, 1.0 removes all of them.
-@export_range(0,1.0, 0.01) var stack_consumption_ratio: float = 1.0
+@export_range(0,1.0, 0.01) var stack_consumption_percent: float = 1.0
 
 @export_group("Combine Behaviour", "combine")
 ## The duration of this status and the combined status will be added togheter instead of choosing the highest of the two.
@@ -34,14 +34,14 @@ enum Properties {
 @export var default_stacks: int = 1
 @export var default_duration: float = 1.0
 
-
-func _effect_applied(_target: Node):
+## [param _json_data] contains a "owner, "stacks" and a "duration" entry. Of type Node, int and float respectively.
+func _effect_applied(_target: Node, _json_data: Dictionary):
 	pass
 
-func _effect_tick(_target: Node):
+func _effect_tick(_target: Node, _json_data: Dictionary):
 	pass
 	
-func _effect_timeout(_target: Node):
+func _effect_timeout(_target: Node, _json_data: Dictionary):
 	pass
 
 ## May be overriden

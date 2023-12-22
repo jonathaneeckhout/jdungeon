@@ -27,15 +27,15 @@ func process_statuses():
 		var startResource: Resource = get_resource(status)
 		
 		# Run this status' effect
-		startResource._effect_tick(user)
+		startResource._effect_tick(user, status_effect_json_data(status))
 		
 		# Progress the duration
 		set_duration(status, startDuration - TICK_INTERVAL)
 		
 		#If it timed out, reduce the amount of stacks and proc the timeout effect
 		if get_duration(status) <= 0:
-			set_stacks(status, (startStacks - (startStacks * startResource.stack_consumption_ratio)) - startResource.stack_consumption_flat )
-			startResource._effect_timeout(user)
+			set_stacks(status, (startStacks - (startStacks * startResource.stack_consumption_percent)) - startResource.stack_consumption_flat )
+			startResource._effect_timeout(user, status_effect_json_data(status))
 		
 		#If any stacks remain, reset the duration. Otherwise remove this status.
 		if get_stacks(status) > 0:
@@ -80,7 +80,7 @@ func add_status_effect(status_class: String, stack_override: int = -1, duration_
 	
 	var res: StatusEffectResource = get_resource(status_class)
 	if res is StatusEffectResource:
-		res._effect_applied(user)
+		res._effect_applied(user, status_effect_json_data(status_class))
 	else:
 		GodotLogger.error("This status effects' resource wasn't properly set.")
 	return newStatus
@@ -123,6 +123,15 @@ func set_resource(status_class: String, resource: StatusEffectResource):
 func get_resource(status_class: String) -> StatusEffectResource:
 	return status_effects_active.get(status_class,{}).get("resource",null)
 
+func status_effect_json_data(status_class: String) -> Dictionary:
+	if not status_effects_active.has(status_class):
+		GodotLogger.error("This status is not present at this time.")
+		return {}
+		
+	var output: Dictionary = status_effects_active.get(status_class)
+	output["owner"] = user.get_name()
+	return output
+	
 func to_json() -> Dictionary:
 	var output: Dictionary
 	for status_class: String in status_effects_active:
@@ -135,5 +144,6 @@ func to_json() -> Dictionary:
 
 func from_json(data: Dictionary):
 	for status_class: String in data:
+		assert(data[status_class].size() == 2)
 		add_status_effect(status_class, data[status_class]["stacks"], data[status_class]["duration"])
 
