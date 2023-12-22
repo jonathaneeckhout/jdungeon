@@ -1,18 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://cty6288chb836"]
+[gd_scene load_steps=2 format=3 uid="uid://cty6288chb836"]
 
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="1_d86w6"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_p7ow3"]
-radius = 48.6621
-
-[node name="TreeWoodPiles" type="StaticBody2D"]
+[node name="TreeWoodPiles" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
+position = Vector2(0, 16)
 scale = Vector2(2, 2)
 tile_set = ExtResource("1_d86w6")
 format = 2
 layer_0/tile_data = PackedInt32Array(-1, 196612, 7)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -48)
-shape = SubResource("CircleShape2D_p7ow3")
