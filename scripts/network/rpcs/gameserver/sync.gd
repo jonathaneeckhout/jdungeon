@@ -136,6 +136,36 @@ func statssynchronizer_sync_float_change(
 	if entity.component_list.has("stats_synchronizer"):
 		entity.component_list["stats_synchronizer"].sync_float_change(t, s, v)
 
+@rpc("call_remote", "authority", "reliable")
+func statssynchronizer_sync_bonus_change(
+	n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: int
+):
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("stats_synchronizer"):
+		entity.component_list["stats_synchronizer"].sync_bonus_change(t, s, v)
+
+
+@rpc("call_remote", "authority", "reliable")
+func statssynchronizer_sync_modifier_change(
+	n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: float
+):
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("stats_synchronizer"):
+		entity.component_list["stats_synchronizer"].sync_modifier_change(t, s, v)
 
 @rpc("call_remote", "authority", "reliable")
 func statssynchronizer_sync_hurt(n: String, t: float, f: String, c: int, d: int):

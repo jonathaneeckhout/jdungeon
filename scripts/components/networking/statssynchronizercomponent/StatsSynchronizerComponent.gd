@@ -69,6 +69,8 @@ signal respawned
 @export var watcher_synchronizer: WatcherSynchronizerComponent
 
 @export var hp_max: int = 100:
+	get:
+		return (hp_max * temporary_modifiers.get("hp_max",1.0)) + temporary_bonuses.get("hp_max",0)
 	set(val):
 		hp_max = val
 		stats_changed.emit(TYPE.HP_MAX)
@@ -86,6 +88,8 @@ signal respawned
 		stats_changed.emit(TYPE.HP)
 
 @export var energy_max: int = 100:
+	get:
+		return (energy_max * temporary_modifiers.get("energy_max",1.0)) + temporary_bonuses.get("energy_max",0)
 	set(val):
 		energy_max = val
 		stats_changed.emit(TYPE.ENERGY_MAX)
@@ -96,36 +100,51 @@ signal respawned
 		stats_changed.emit(TYPE.ENERGY)
 
 @export var energy_regen: int = 10:
+	get:
+		return (energy_regen * temporary_modifiers.get("energy_regen",1.0)) + temporary_bonuses.get("energy_regen",0)
 	set(val):
 		energy_regen = val
 		stats_changed.emit(TYPE.ENERGY_REGEN)
+	
 
 @export var attack_power_min: int = 0:
+	get:
+		return (attack_power_min * temporary_modifiers.get("attack_power_min",1.0)) + temporary_bonuses.get("attack_power_min",0)
 	set(val):
 		attack_power_min = val
 		stats_changed.emit(TYPE.ATTACK_POWER_MIN)
 
 @export var attack_power_max: int = 5:
+	get:
+		return (attack_power_max * temporary_modifiers.get("attack_power_max",1.0)) + temporary_bonuses.get("attack_power_max",0)	
 	set(val):
 		attack_power_max = val
 		stats_changed.emit(TYPE.ATTACK_POWER_MAX)
 
 @export var attack_speed: float = 0.8:
+	get:
+		return (attack_speed * temporary_modifiers.get("attack_speed",1.0)) + temporary_bonuses.get("attack_speed",0)	
 	set(val):
 		attack_speed = val
 		stats_changed.emit(TYPE.ATTACK_SPEED)
 
 @export var attack_range: float = 64.0:
+	get:
+		return (attack_range * temporary_modifiers.get("attack_range",1.0)) + temporary_bonuses.get("attack_range",0)	
 	set(val):
 		attack_range = val
 		stats_changed.emit(TYPE.ATTACK_RANGE)
 
 @export var defense: int = 0:
+	get:
+		return (defense * temporary_modifiers.get("defense",1.0)) + temporary_bonuses.get("defense",0)	
 	set(val):
 		defense = val
 		stats_changed.emit(TYPE.DEFENSE)
 
 @export var movement_speed: float = 300.0:
+	get:
+		return (movement_speed * temporary_modifiers.get("movement_speed",1.0)) + temporary_bonuses.get("movement_speed",0)	
 	set(val):
 		movement_speed = val
 		stats_changed.emit(TYPE.MOVEMENT_SPEED)
@@ -147,6 +166,9 @@ signal respawned
 		stats_changed.emit(TYPE.EXPERIENCE_NEEDED)
 
 @export var experience_worth: int = 0
+
+var temporary_modifiers: Dictionary
+var temporary_bonuses: Dictionary
 
 var target_node: Node
 var peer_id: int = 0
@@ -211,46 +233,106 @@ func _physics_process(_delta: float):
 
 func check_server_buffer():
 	for i in range(server_buffer.size() - 1, -1, -1):
-		var entry = server_buffer[i]
+		var entry: Dictionary = server_buffer[i]
 		if entry["timestamp"] <= G.clock:
-			match entry["type"]:
-				TYPE.HP_MAX:
-					hp_max = entry["value"]
-				TYPE.HP:
-					hp = entry["value"]
-				TYPE.ENERGY_MAX:
-					energy_max = entry["value"]
-				TYPE.ENERGY:
-					energy = entry["value"]
-				TYPE.ATTACK_POWER_MIN:
-					attack_power_min = entry["value"]
-				TYPE.ATTACK_POWER_MAX:
-					attack_power_max = entry["value"]
-				TYPE.ATTACK_SPEED:
-					attack_speed = entry["value"]
-				TYPE.ATTACK_RANGE:
-					attack_range = entry["value"]
-				TYPE.DEFENSE:
-					defense = entry["value"]
-				TYPE.MOVEMENT_SPEED:
-					movement_speed = entry["value"]
-				TYPE.LEVEL:
-					level = entry["value"]
-				TYPE.EXPERIENCE:
-					experience = entry["value"]
-				TYPE.EXPERIENCE_NEEDED:
-					experience_needed = entry["value"]
-				TYPE.HURT:
-					hp = entry["hp"]
-					got_hurt.emit(entry["from"], entry["damage"])
-				TYPE.HEAL:
-					hp = entry["hp"]
-					healed.emit(entry["from"], entry["healing"])
-				TYPE.ENERGY_RECOVERY:
-					energy = entry["energy"]
-					energy_recovered.emit(entry["from"], entry["recovered"])
+			assert(entry["type"] in TYPE, "This is not a valid type")
+			#Bonus detected
+			if entry.get("special","") == "bonus":
+				match entry["type"]:
+					TYPE.HP_MAX:
+						temporary_bonuses["hp_max"] = entry["value"]
+					TYPE.ENERGY_MAX:
+						temporary_bonuses["energy_max"] = entry["value"]
+					TYPE.ENERGY_REGEN:
+						temporary_bonuses["energy_regen"] = entry["value"]
+					TYPE.ENERGY:
+						temporary_bonuses["energy"] = entry["value"]
+					TYPE.ATTACK_POWER_MIN:
+						temporary_bonuses["attack_power_min"] = entry["value"]
+					TYPE.ATTACK_POWER_MAX:
+						temporary_bonuses["attack_power_max"] = entry["value"]
+					TYPE.ATTACK_SPEED:
+						temporary_bonuses["attack_speed"] = entry["value"]
+					TYPE.ATTACK_RANGE:
+						temporary_bonuses["attack_range"] = entry["value"]
+					TYPE.DEFENSE:
+						temporary_bonuses["defense"] = entry["value"]
+					TYPE.MOVEMENT_SPEED:
+						temporary_bonuses["movement_speed"] = entry["value"]
+			elif entry.get("special","") == "modifier":
+				match entry["type"]:
+					TYPE.HP_MAX:
+						temporary_modifiers["hp_max"] = entry["value"]
+					TYPE.ENERGY_MAX:
+						temporary_modifiers["energy_max"] = entry["value"]
+					TYPE.ENERGY_REGEN:
+						temporary_modifiers["energy_regen"] = entry["value"]
+					TYPE.ENERGY:
+						temporary_modifiers["energy"] = entry["value"]
+					TYPE.ATTACK_POWER_MIN:
+						temporary_modifiers["attack_power_min"] = entry["value"]
+					TYPE.ATTACK_POWER_MAX:
+						temporary_modifiers["attack_power_max"] = entry["value"]
+					TYPE.ATTACK_SPEED:
+						temporary_modifiers["attack_speed"] = entry["value"]
+					TYPE.ATTACK_RANGE:
+						temporary_modifiers["attack_range"] = entry["value"]
+					TYPE.DEFENSE:
+						temporary_modifiers["defense"] = entry["value"]
+					TYPE.MOVEMENT_SPEED:
+						temporary_modifiers["movement_speed"] = entry["value"]
+			else:
+				match entry["type"]:
+					TYPE.HP_MAX:
+						hp_max = entry["value"]
+					TYPE.HP:
+						hp = entry["value"]
+					TYPE.ENERGY_MAX:
+						energy_max = entry["value"]
+					TYPE.ENERGY_REGEN:
+						energy_regen = entry["value"]
+					TYPE.ENERGY:
+						energy = entry["value"]
+					TYPE.ATTACK_POWER_MIN:
+						attack_power_min = entry["value"]
+					TYPE.ATTACK_POWER_MAX:
+						attack_power_max = entry["value"]
+					TYPE.ATTACK_SPEED:
+						attack_speed = entry["value"]
+					TYPE.ATTACK_RANGE:
+						attack_range = entry["value"]
+					TYPE.DEFENSE:
+						defense = entry["value"]
+					TYPE.MOVEMENT_SPEED:
+						movement_speed = entry["value"]
+					TYPE.LEVEL:
+						level = entry["value"]
+					TYPE.EXPERIENCE:
+						experience = entry["value"]
+					TYPE.EXPERIENCE_NEEDED:
+						experience_needed = entry["value"]
+					TYPE.HURT:
+						hp = entry["hp"]
+						got_hurt.emit(entry["from"], entry["damage"])
+					TYPE.HEAL:
+						hp = entry["hp"]
+						healed.emit(entry["from"], entry["healing"])
+					TYPE.ENERGY_RECOVERY:
+						energy = entry["energy"]
+						energy_recovered.emit(entry["from"], entry["recovered"])
 			server_buffer.remove_at(i)
 
+func set_modifier(stat_name: String, value: float = 1.0):
+	temporary_modifiers[stat_name] = value
+
+func clear_modifiers():
+	temporary_modifiers.clear()
+
+func set_bonus(stat_name: String, value: int = 0):
+	temporary_bonuses[stat_name] = value
+
+func clear_bonuses():
+	temporary_bonuses.clear()
 
 func hurt(from: Node, damage: int) -> int:
 	# # Reduce the damage according to the defense stat
@@ -345,7 +427,6 @@ func load_defaults():
 	attack_power_max = _default_attack_power_max
 	defense = _default_defense
 	movement_speed = _default_movement_speed
-
 
 func calculate_experience_needed(current_level: int):
 	# TODO: Replace placeholder function to calculate experience needed to level up
@@ -484,6 +565,38 @@ func _sync_float_change(stat_type: TYPE, value: float):
 		)
 
 
+func _sync_bonus_change(stat_type: TYPE, value: int):
+	if not ready_done:
+		return
+
+	var timestamp: float = Time.get_unix_time_from_system()
+
+	if peer_id > 0:
+		G.sync_rpc.statssynchronizer_sync_bonus_change.rpc_id(
+			peer_id, target_node.name, timestamp, stat_type, value
+		)
+
+	for watcher in watcher_synchronizer.watchers:
+		G.sync_rpc.statssynchronizer_sync_bonus_change.rpc_id(
+			watcher.peer_id, target_node.name, timestamp, stat_type, value
+		)
+
+
+func _sync_modifier_change(stat_type: TYPE, value: float):
+	if not ready_done:
+		return
+
+	var timestamp: float = Time.get_unix_time_from_system()
+
+	if peer_id > 0:
+		G.sync_rpc.statssynchronizer_sync_modifier_change.rpc_id(
+			peer_id, target_node.name, timestamp, stat_type, value
+		)
+	for watcher in watcher_synchronizer.watchers:
+		G.sync_rpc.statssynchronizer_sync_modifier_change.rpc_id(
+			watcher.peer_id, target_node.name, timestamp, stat_type, value
+		)
+
 func sync_stats(id: int):
 	G.sync_rpc.statssynchronizer_sync_response.rpc_id(id, target_node.name, to_json(true))
 
@@ -501,6 +614,11 @@ func sync_int_change(timestamp: float, stat_type: TYPE, value: int):
 func sync_float_change(timestamp: float, stat_type: TYPE, value: float):
 	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
 
+func sync_bonus_change(timestamp: float, stat_type: TYPE, value: int):
+	server_buffer.append({"timestamp": timestamp, "type": stat_type, "special": "bonus", "value": value})
+
+func sync_modifier_change(timestamp: float, stat_type: TYPE, value: int):
+	server_buffer.append({"timestamp": timestamp, "type": stat_type, "special": "modifier", "value": value})
 
 #Called only by server
 func sync_hurt(timestamp: float, from: String, current_hp: int, damage: int):
