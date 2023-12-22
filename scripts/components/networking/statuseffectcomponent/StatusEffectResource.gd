@@ -2,7 +2,7 @@ extends Resource
 class_name StatusEffectResource
 ## Uses a factor pattern for quick customization.
 ## Example:
-##	var newStatus := StatusEffectResource.new().set_owner(self).set_duration_left(3.5)
+##	var newStatus := StatusEffectResource.new().set_owner(self).set_duration(3.5)
 
 signal target_chosen(node: Node)
 
@@ -17,26 +17,31 @@ enum Properties {
 @export_multiline var description: String
 @export_file var icon_path: String
 
-@export_group("Combine Behaviour", "behaviour")
-## The duration duration of this and the combined status will be added togheter.
-## Otherwise the highest duration_left of the two will be chosen.
-@export var behaviour_stackable_duration: bool 
+@export_group("General Behaviour")
+## How many stacks are removed per timeout (flat amount)
+@export var stack_consumption_flat: int = 0
+## The percentage of stacks that are consumed every timeout, applies before [member stack_consumption_flat]
+## A value of 0.5 would remove half of the stacks, 1.0 removes all of them.
+@export_range(0,1.0, 0.01) var stack_consumption_ratio: float = 1.0
+
+@export_group("Combine Behaviour", "combine")
+## The duration of this status and the combined status will be added togheter instead of choosing the highest of the two.
+@export var combine_stackable_duration: bool = false
 ## Stacks will not be added togheter,but instead the highest amount of the two statuses will be chosen.
-@export var behaviour_stack_override: bool
+@export var combine_stack_override: bool = true
 
-@export_group("Properties")
-@export var stacks: int = 1
-@export var duration_left: float = 1.0
+@export_group("Defaults", "default")
+@export var default_stacks: int = 1
+@export var default_duration: float = 1.0
 
-## Who originally created this status effect
-var owner: Node
-## Who it is meant to affect
-var target: Node
 
-func effect():
-	_effect()
+func _effect_applied(_target: Node):
+	pass
 
-func _effect():
+func _effect_tick(_target: Node):
+	pass
+	
+func _effect_timeout(_target: Node):
 	pass
 
 ## May be overriden
@@ -58,59 +63,3 @@ func get_entity_stats_component(node: Node) -> StatsSynchronizerComponent:
 		
 	return stats
 
-func set_owner(own: Node) -> StatusEffectResource:
-	owner = own
-	return self
-
-func set_target(targ: Node) -> StatusEffectResource:
-	target = targ
-	return self
-
-func set_duration_left(duration: float) -> StatusEffectResource:
-	duration_left = duration
-	return self
-
-func change_duration_left(duration: float) -> StatusEffectResource:
-	duration_left += duration
-	return self
-
-func set_stacks(sta: int) -> StatusEffectResource:
-	stacks = sta
-	return self
-	
-func change_stacks(sta: int) -> StatusEffectResource:
-	stacks += sta
-	return self
-	
-## Attempts to combine a status effect with this one.
-func combine_status(status_effect: StatusEffectResource):
-	set_target(status_effect.target)
-	
-	# If it can be stacked, add both togheter, otherwise, set duration to to highest of the two
-	if behaviour_stackable_duration:
-		change_duration_left(status_effect.duration_left)
-	else:
-		set_duration_left( max(duration_left, status_effect.duration_left) )
-	
-	if behaviour_stack_override:
-		set_stacks( max(stacks, status_effect.stacks) )
-	else:
-		change_stacks( status_effect.stacks )
-
-func to_json() -> Dictionary:
-	return {
-			"class": status_class, 
-			"owner": owner.get_name(),
-			"target": target.get_name(),
-			"duration_left": duration_left,
-			"stacks": stacks
-		}
-
-func from_json(data: Dictionary):
-	if data.size() != 5:
-		GodotLogger.error("Data size mismatch.")
-	# "class" is ignored and only used by the component.
-	owner = G.world.get_entity_by_name(data["owner"])
-	target = G.world.get_entity_by_name(data["target"])
-	duration_left = data["duration_left"]
-	stacks = data["stacks"]
