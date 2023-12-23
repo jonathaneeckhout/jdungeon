@@ -13,6 +13,9 @@ var status_effects_active: Dictionary
 var status_tick_timer := Timer.new()
 
 func _ready():
+	if user.get("component_list") != null:
+		user.component_list["status_effect_component"] = self
+	
 	status_tick_timer = Timer.new()
 	status_tick_timer.name = "TickTimer"
 	status_tick_timer.wait_time = TICK_INTERVAL
@@ -27,7 +30,7 @@ func process_statuses():
 		var startResource: Resource = get_resource(status)
 		
 		# Run this status' effect
-		startResource._effect_tick(user, status_effect_json_data(status))
+		startResource._effect_tick(user, status_effect_to_json_data(status, true))
 		
 		# Progress the duration
 		set_duration(status, startDuration - TICK_INTERVAL)
@@ -35,7 +38,7 @@ func process_statuses():
 		#If it timed out, reduce the amount of stacks and proc the timeout effect
 		if get_duration(status) <= 0:
 			set_stacks(status, (startStacks - (startStacks * startResource.stack_consumption_percent)) - startResource.stack_consumption_flat )
-			startResource._effect_timeout(user, status_effect_json_data(status))
+			startResource._effect_timeout(user, status_effect_to_json_data(status, true))
 		
 		#If any stacks remain, reset the duration. Otherwise remove this status.
 		if get_stacks(status) > 0:
@@ -80,7 +83,7 @@ func add_status_effect(status_class: String, stack_override: int = -1, duration_
 	
 	var res: StatusEffectResource = get_resource(status_class)
 	if res is StatusEffectResource:
-		res._effect_applied(user, status_effect_json_data(status_class))
+		res._effect_applied(user, status_effect_to_json_data(status_class, true))
 	else:
 		GodotLogger.error("This status effects' resource wasn't properly set.")
 	return newStatus
@@ -120,18 +123,38 @@ func set_resource(status_class: String, resource: StatusEffectResource):
 		
 	status_effects_active[status_class]["resource"] = resource
 
+
 func get_resource(status_class: String) -> StatusEffectResource:
 	return status_effects_active.get(status_class,{}).get("resource",null)
 
-func status_effect_json_data(status_class: String) -> Dictionary:
+
+func has_status_effect(status_effect: String) -> bool:
+	return status_effects_active.has(status_effect)
+
+func status_effect_to_json_data(status_class: String, include_owner: bool) -> Dictionary:
 	if not status_effects_active.has(status_class):
 		GodotLogger.error("This status is not present at this time.")
 		return {}
 		
 	var output: Dictionary = status_effects_active.get(status_class)
-	output["owner"] = user.get_name()
+	if include_owner:
+		output["owner"] = user.get_name()
 	return output
 	
+func sync_all(id: int):
+	G.sync_rpc.
+	
+#Runs on server only
+func sync_add_effect(id: int, status_effect: String):
+	assert(G.is_server())
+	assert(has_status_effect(status_effect))
+	G.sync_rpc.statuseffectcomponent_sync_add_effect_response.rpc_id(id, status_effect, status_effect_to_json_data(status_effect, false))
+
+
+func sync_add_effect_response(status_effect: String, status_json: Dictionary):
+	add_status_effect(status_effect, status_json["stacks"], status_json["duration"])
+	
+
 func to_json() -> Dictionary:
 	var output: Dictionary
 	for status_class: String in status_effects_active:

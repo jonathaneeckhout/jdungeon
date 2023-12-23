@@ -547,3 +547,83 @@ func dialoguesynchronizer_sync_dialogue_finished(n: String):
 			. dialogue_finished
 			. emit()
 		)
+
+
+@rpc("call_remote", "any_peer", "reliable")
+func statuseffectcomponent_sync_add_effect(n: String, s: String, j: Dictionary):
+	assert(not G.is_server(), "This method is only intended for client use")
+	if not G.is_server():
+		return
+
+	var id: int = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("status_effect_component"):
+		entity.component_list["status_effect_component"].sync_add_effect(id, s, j)
+
+
+#Only server can make this RPC, runs on client
+@rpc("call_remote", "authority", "reliable")
+func statuseffectcomponent_sync_add_effect_response(n: String, s: String, j: Dictionary):
+	assert(not G.is_server(), "This method is only intended for client use")
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("status_effect_component"):
+		entity.component_list["status_effect_component"].sync_add_effect_response(s, j)
+
+
+@rpc("call_remote", "any_peer", "reliable")
+func statuseffectcomponent_sync_all(n: String):
+	assert(not G.is_server(), "This method is only intended for client use")
+	if not G.is_server():
+		return
+
+	var id: int = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("status_effect_component"):
+		entity.component_list["status_effect_component"].sync_all(id)
+
+
+#Only server can make this RPC, runs on client
+@rpc("call_remote", "authority", "reliable")
+func statuseffectcomponent_sync_all_response(n: String, d: Dictionary):
+	assert(not G.is_server(), "This method is only intended for client use")
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has("status_effect_component"):
+		entity.component_list["status_effect_component"].sync_all_response(d)
