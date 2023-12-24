@@ -485,7 +485,7 @@ func dialoguesynchronizer_sync_invoke_response(n: String, d: String):
 	if entity.get("component_list") == null:
 		return
 
-	if entity.component_list.has("class_component"):
+	if entity.component_list.has("dialogue_component"):
 		entity.component_list["dialogue_component"].sync_invoke_response(d)
 
 
