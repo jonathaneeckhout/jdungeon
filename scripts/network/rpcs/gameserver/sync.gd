@@ -550,7 +550,7 @@ func dialoguesynchronizer_sync_dialogue_finished(n: String):
 
 
 @rpc("call_remote", "any_peer", "reliable")
-func statuseffectcomponent_sync_add_effect(n: String, s: String, j: Dictionary):
+func statuseffectcomponent_sync_effect(n: String, s: String):
 	assert(not G.is_server(), "This method is only intended for client use")
 	if not G.is_server():
 		return
@@ -570,12 +570,12 @@ func statuseffectcomponent_sync_add_effect(n: String, s: String, j: Dictionary):
 		return
 
 	if entity.component_list.has("status_effect_component"):
-		entity.component_list["status_effect_component"].sync_add_effect(id, s, j)
+		entity.component_list["status_effect_component"].sync_effect(id, s)
 
 
 #Only server can make this RPC, runs on client
 @rpc("call_remote", "authority", "reliable")
-func statuseffectcomponent_sync_add_effect_response(n: String, s: String, j: Dictionary):
+func statuseffectcomponent_sync_effect_response(n: String, s: String, j: Dictionary):
 	assert(not G.is_server(), "This method is only intended for client use")
 	var entity: Node = G.world.get_entity_by_name(n)
 
@@ -586,11 +586,12 @@ func statuseffectcomponent_sync_add_effect_response(n: String, s: String, j: Dic
 		return
 
 	if entity.component_list.has("status_effect_component"):
-		entity.component_list["status_effect_component"].sync_add_effect_response(s, j)
+		entity.component_list["status_effect_component"].sync_effect_response(s, j)
+		
 
 
 @rpc("call_remote", "any_peer", "reliable")
-func statuseffectcomponent_sync_all(n: String):
+func statuseffectcomponent_sync_all(n: String, d: Dictionary):
 	assert(not G.is_server(), "This method is only intended for client use")
 	if not G.is_server():
 		return
