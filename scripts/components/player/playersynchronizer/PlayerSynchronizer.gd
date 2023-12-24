@@ -17,7 +17,9 @@ signal skill_used(where: Vector2, skill_class: String)
 ## Name of the animation of when the player has the weapon in his/her right hand
 const ATTACK_RIGHT_HAND_ANIMATION: String = "Attack_Right_Hand"
 ## Name of the animation of when the player has the weapon in his/her left hand
-const ATTACK_LEFT_HAND_ANIMATION: String = "Attack_Left_Hand"
+const ATTACK_LEFT_HAND_ANIMATIONS: Array[String] = [
+	"Attack_Left_Hand", "Attack_Left_Hand_1", "Attack_Left_Hand_2"
+]
 
 @export var stats_component: StatsSynchronizerComponent
 @export var interaction_component: PlayerInteractionComponent
@@ -374,7 +376,7 @@ func _on_direction_changed(original: bool):
 		animation_player.is_playing()
 		and (
 			animation_player.current_animation == ATTACK_RIGHT_HAND_ANIMATION
-			or animation_player.current_animation == ATTACK_LEFT_HAND_ANIMATION
+			or ATTACK_LEFT_HAND_ANIMATIONS.has(animation_player.current_animation)
 		)
 	):
 		# Keep track of how far the current animation is playing
@@ -387,7 +389,8 @@ func _on_direction_changed(original: bool):
 		if original:
 			animation_player.play(ATTACK_RIGHT_HAND_ANIMATION)
 		else:
-			animation_player.play(ATTACK_LEFT_HAND_ANIMATION)
+			var random_index = randi() % ATTACK_LEFT_HAND_ANIMATIONS.size()
+			animation_player.play(ATTACK_LEFT_HAND_ANIMATIONS[random_index])
 
 		# Set the animation back to the offset of where it was stopped
 		animation_player.seek(current_animation_position)
@@ -441,7 +444,8 @@ func _on_client_interacted(target: Node2D):
 	if _original_direction:
 		animation_player.play(ATTACK_RIGHT_HAND_ANIMATION)
 	else:
-		animation_player.play(ATTACK_LEFT_HAND_ANIMATION)
+		var random_index = randi() % ATTACK_LEFT_HAND_ANIMATIONS.size()
+		animation_player.play(ATTACK_LEFT_HAND_ANIMATIONS[random_index])
 
 	# Emit the signal that the player attacked
 	attacked.emit(_target_node.position.direction_to(mouse_global_pos))
