@@ -569,8 +569,8 @@ func statuseffectcomponent_sync_effect(n: String, s: String):
 	if entity.get("component_list") == null:
 		return
 
-	if entity.component_list.has("status_effect_component"):
-		entity.component_list["status_effect_component"].sync_effect(id, s)
+	if entity.component_list.has(StatusEffectComponent.COMPONENT_NAME):
+		entity.component_list[StatusEffectComponent.COMPONENT_NAME].sync_effect(id, s)
 
 
 #Only server can make this RPC, runs on client
@@ -585,8 +585,8 @@ func statuseffectcomponent_sync_effect_response(n: String, s: String, j: Diction
 	if entity.get("component_list") == null:
 		return
 
-	if entity.component_list.has("status_effect_component"):
-		entity.component_list["status_effect_component"].sync_effect_response(s, j)
+	if entity.component_list.has(StatusEffectComponent.COMPONENT_NAME):
+		entity.component_list[StatusEffectComponent.COMPONENT_NAME].sync_effect_response(s, j)
 		
 
 
@@ -610,8 +610,8 @@ func statuseffectcomponent_sync_all(n: String, d: Dictionary):
 	if entity.get("component_list") == null:
 		return
 
-	if entity.component_list.has("status_effect_component"):
-		entity.component_list["status_effect_component"].sync_all(id)
+	if entity.component_list.has(StatusEffectComponent.COMPONENT_NAME):
+		entity.component_list[StatusEffectComponent.COMPONENT_NAME].sync_all(id)
 
 
 #Only server can make this RPC, runs on client
@@ -626,5 +626,5 @@ func statuseffectcomponent_sync_all_response(n: String, d: Dictionary):
 	if entity.get("component_list") == null:
 		return
 
-	if entity.component_list.has("status_effect_component"):
-		entity.component_list["status_effect_component"].sync_all_response(d)
+	if entity.component_list.has(StatusEffectComponent.COMPONENT_NAME):
+		entity.component_list[StatusEffectComponent.COMPONENT_NAME].sync_all_response(d)

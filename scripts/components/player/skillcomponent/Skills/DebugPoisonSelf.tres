@@ -1,0 +1,9 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://df3gttjrd8kg5"]
+
+[sub_resource type="GDScript" id="GDScript_o0v0b"]
+script/source = "extends SkillComponentResource
+
+func _effect(information: SkillUseInfo):"
+
+[resource]
+script = SubResource("GDScript_o0v0b")

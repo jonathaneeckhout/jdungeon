@@ -107,3 +107,13 @@ func from_json(data: Dictionary) -> bool:
 	targets = found_targets
 	position_target_global = data["position_global"]
 	return true
+
+static func get_entity_component(entity: Node, component_name: String) -> Node:
+	if entity.get("component_list") is Dictionary:
+		var comp: Node = entity.component_list.get(component_name, null)
+		if comp == null:
+			GodotLogger.error("The user '{0}' lacks a '{1}' component".format([entity.get_name(), component_name]))
+		return comp
+	else:
+		GodotLogger.error("The user '{0}' does not have a component_list property, it may not be an entity.".format([entity.get_name()]))
+		return null

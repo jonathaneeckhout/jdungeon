@@ -8,7 +8,7 @@ displayed_name = "Base"
 class_registered = &"Base"
 icon_path = "res://assets/images/ui/buttons/sound_off/sound_off_black.png"
 description = "Your average hee-hoo-human. Healthy, but that's about it."
-available_skills = Array[String]([])
+available_skills = Array[String](["PoisonSelf"])
 stat_multipliers = {
 "attack_power_max": 1.0,
 "attack_power_min": 1.0,

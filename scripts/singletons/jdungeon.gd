@@ -132,6 +132,9 @@ func register_skills():
 	J.register_skill_resource(
 		"Combustion", "res://scripts/components/player/skillcomponent/Skills/Combustion.tres"
 	)
+	J.register_skill_resource(
+		"PoisonSelf", "res://scripts/components/player/skillcomponent/Skills/DebugPoisonSelf.tres"
+	)
 
 
 func register_maps():
