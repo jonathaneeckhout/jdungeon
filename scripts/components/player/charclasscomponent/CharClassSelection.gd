@@ -39,15 +39,6 @@ func _ready() -> void:
 	add_child(syncTimer)
 	syncTimer.start(1)
 
-	if not class_component:
-		(
-			GodotLogger
-			. warn(
-				"No target has been selected. Make sure to run select_target before anything is attempted."
-			)
-		)
-		return
-
 
 func select_target(class_comp: CharacterClassComponent):
 	if not is_node_ready():

@@ -15,7 +15,7 @@ enum Properties {
 @export var status_class: String
 @export var displayed_name: String = "Unnamed Status"
 @export_multiline var description: String
-@export_file var icon_path: String
+@export_file var icon_path: String = "res://icon.svg"
 
 @export_group("General Behaviour")
 ## How many stacks are removed per timeout (flat amount)

@@ -90,12 +90,12 @@ func process_statuses():
 			set_stacks(status, (startStacks - (startStacks * startResource.stack_consumption_percent)) - startResource.stack_consumption_flat )
 			startResource.effect_timeout(user, get_status_effect_data(status))
 		
-		#If any stacks remain, reset the duration. Otherwise remove this status.
-		if get_stacks(status) > 0:
-			set_duration(status, startDuration)
-		else:
-			remove_status(status)
 			
+			#If any stacks remain, reset the duration. Otherwise remove this status.	
+			if get_stacks(status) > 0:
+				set_duration(status, startResource.default_duration)
+			else:
+				remove_status(status)
 		sync_effect(user.peer_id, status)
 	
 
@@ -105,12 +105,14 @@ func add_status_effect(status_class: String, applier: Node, stack_override: int 
 	var currDuration: float
 	if duration_override >= 0:
 		currDuration = duration_override
+		newStatus.default_duration = duration_override
 	else:
 		currDuration = newStatus.default_duration
 	
 	var currStacks: int
 	if stack_override >= 0:
 		currStacks = stack_override
+		newStatus.default_stacks = stack_override
 	else:
 		currStacks = newStatus.default_stacks
 	
@@ -146,6 +148,7 @@ func remove_status(status_class: String):
 
 func set_duration(status_class: String, dur: float):
 	if not status_effects_active.has(status_class):
+		GodotLogger.error("This status is not present in this component.")
 		return
 	
 	status_effects_active[status_class]["duration"] = dur
@@ -159,6 +162,7 @@ func get_duration(status_class: String) -> float:
 
 func set_stacks(status_class: String, sta: int):
 	if not status_effects_active.has(status_class):
+		GodotLogger.error("This status is not present in this component.")
 		return
 		
 	status_effects_active[status_class]["stacks"] = sta
@@ -170,6 +174,7 @@ func get_stacks(status_class: String) -> int:
 
 func set_resource(status_class: String, resource: StatusEffectResource):
 	if not status_effects_active.has(status_class):
+		GodotLogger.error("This status is not present in this component.")
 		return
 		
 	status_effects_active[status_class]["resource"] = resource
@@ -181,6 +186,7 @@ func get_resource(status_class: String) -> StatusEffectResource:
 
 func set_applier(status_class: String, applier_name: String):
 	if not status_effects_active.has(status_class):
+		GodotLogger.error("This status is not present in this component.")
 		return
 		
 	status_effects_active[status_class]["applier"] = applier_name

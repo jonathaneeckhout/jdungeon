@@ -133,7 +133,7 @@ func _ready() -> void:
 		assert(skills[0] is SkillComponentResource)
 		# TEMP ends
 
-		skills_changed.connect(sync_skills)
+		skills_changed.connect(sync_skills.bind(_target_node.peer_id))
 
 	# Client-side logic
 	else:

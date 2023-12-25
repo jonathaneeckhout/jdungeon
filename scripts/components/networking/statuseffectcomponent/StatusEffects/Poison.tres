@@ -5,7 +5,8 @@ script/source = "extends StatusEffectResource
 
 func _effect_timeout(target: Node, json_data: Dictionary):
 	var targetStats: StatsSynchronizerComponent = get_entity_stats_component(target)
-	targetStats.hurt(json_data[\"owner\"], json_data[\"stacks\"])
+	var entity: Node = G.world.get_entity_by_name(json_data[\"applier\"])
+	targetStats.hurt(entity, json_data[\"stacks\"])
 	
 "
 
@@ -14,7 +15,7 @@ script = SubResource("GDScript_cqumv")
 status_class = "Poison"
 displayed_name = "Poison"
 description = "Deals damage every time it's duration ends equal to it's stack, then looses 20% of it's stacks. "
-icon_path = ""
+icon_path = "res://icon.svg"
 stack_consumption_flat = 0
 stack_consumption_percent = 0.2
 active_stat_modifiers = {}
