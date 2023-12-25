@@ -42,7 +42,7 @@ enum Properties {
 @export var default_stacks: int = 1
 @export var default_duration: float = 1.0
 
-## [param _json_data] contains a "owner" (Node), "stacks" (int), "duration" (float) entries.
+## [param _json_data] contains a "applier" (String), "stacks" (int), "duration" (float) entries.
 func effect_applied(target: Node, json_data: Dictionary):
 	_effect_applied(target, json_data)
 	

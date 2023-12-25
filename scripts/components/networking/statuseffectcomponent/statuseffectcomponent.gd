@@ -3,7 +3,7 @@ class_name StatusEffectComponent
 
 const COMPONENT_NAME: String = "status_effect_component"
 
-const TICK_INTERVAL:float = 0.1
+const TICK_INTERVAL:float = 0.2
 const NUMBER_FONT: Font = preload("res://assets/fonts/fenwick-woodtype/FenwickWoodtype.ttf")
 
 @export_group("Node References")
@@ -29,12 +29,17 @@ var status_tick_timer := Timer.new()
 func _ready():
 	if user.get("component_list") != null:
 		user.component_list[COMPONENT_NAME] = self
-		
+	
+	
 	status_tick_timer = Timer.new()
 	status_tick_timer.name = "TickTimer"
 	status_tick_timer.wait_time = TICK_INTERVAL
 	status_tick_timer.autostart = true
-	status_tick_timer.timeout.connect(process_statuses)
+	# If it is the server, use the timer to process statuses, otherwise use it for drawing.
+	if G.is_server():
+		status_tick_timer.timeout.connect(process_statuses)
+	else:
+		status_tick_timer.timeout.connect(queue_redraw)
 	add_child(status_tick_timer)
 
 func _draw() -> void:
@@ -61,7 +66,7 @@ func draw_status(status_class: String, pos: Vector2):
 		false
 		)
 	
-	draw_char(
+	draw_string(
 		NUMBER_FONT, 
 		pos + (Vector2(drawing_icon_size) / 2), 
 		str(get_stacks(status_class))
@@ -91,7 +96,8 @@ func process_statuses():
 		else:
 			remove_status(status)
 			
-	queue_redraw()
+		sync_effect(user.peer_id, status)
+	
 
 ## Server only
 func add_status_effect(status_class: String, applier: Node, stack_override: int = -1, duration_override: float = -1.0):
@@ -201,7 +207,7 @@ func sync_all_response(data: Dictionary):
 func sync_effect(id: int, status_class: String):
 	assert(G.is_server())
 	assert(has_status_effect(status_class))
-	G.sync_rpc.statuseffectcomponent_sync_add_effect_response.rpc_id(id, status_class, get_status_effect_data(status_class))
+	G.sync_rpc.statuseffectcomponent_sync_effect_response.rpc_id(id, user.get_name(), status_class, get_status_effect_data(status_class))
 
 
 func sync_effect_response(status_class: String, status_json: Dictionary):

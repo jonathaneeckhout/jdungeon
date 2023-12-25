@@ -24,7 +24,7 @@ var map_scenes: Dictionary = {}
 var skill_resources: Dictionary = {}
 var charclass_resources: Dictionary = {}
 var dialogue_resources: Dictionary = {}
-var status_effect_resources
+var status_effect_resources: Dictionary = {}
 
 var uuid_util: UuidUtil
 
@@ -48,6 +48,7 @@ func register_scenes():
 	register_maps()
 	register_character_classes()
 	register_dialogues()
+	register_status_effects()
 
 
 func register_enemies():
@@ -157,6 +158,10 @@ func register_dialogues():
 	J.register_dialogue_resource("MilkLady", "res://scenes/ui/dialogue/Dialogues/MilkLady.tres")
 	J.register_dialogue_resource("Fernand", "res://scenes/ui/dialogue/Dialogues/Fernand.tres")
 	J.register_dialogue_resource("FALLBACK", "res://scenes/ui/dialogue/Dialogues/FALLBACK.tres")
+
+
+func register_status_effects():
+	J.register_status_effect_resource("Poison", "res://scripts/components/networking/statuseffectcomponent/StatusEffects/Poison.tres")
 
 
 func register_player_scene(player_scene_path: String):

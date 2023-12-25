@@ -235,7 +235,7 @@ func check_server_buffer():
 	for i in range(server_buffer.size() - 1, -1, -1):
 		var entry: Dictionary = server_buffer[i]
 		if entry["timestamp"] <= G.clock:
-			assert(entry["type"] in TYPE, "This is not a valid type")
+			assert(entry["type"] in TYPE.values(), "This is not a valid type")
 			#Bonus detected
 			if entry.get("special","") == "bonus":
 				match entry["type"]:

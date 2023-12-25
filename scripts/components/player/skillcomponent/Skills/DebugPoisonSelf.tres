@@ -3,7 +3,30 @@
 [sub_resource type="GDScript" id="GDScript_o0v0b"]
 script/source = "extends SkillComponentResource
 
-func _effect(information: SkillUseInfo):"
+var status: String = \"Poison\"
+
+func _effect(information: SkillUseInfo):
+	var statusComp: StatusEffectComponent = information.get_entity_component(information.user, StatusEffectComponent.COMPONENT_NAME)
+	if not statusComp is StatusEffectComponent:
+		return
+		
+
+	statusComp.add_status_effect(status, information.user)
+	statusComp.set_stacks(status, 100)
+"
 
 [resource]
 script = SubResource("GDScript_o0v0b")
+skill_class = "PoisonSelf"
+displayed_name = "Do drugs"
+energy_usage = 0
+collision_mask = 0
+valid_entities = Array[int]([])
+cooldown = 0.0
+cast_on_select = true
+damage = 0
+hitbox_shape = [Vector2(50, 0)]
+hitbox_hits_user = false
+hitbox_rotate_shape = false
+hit_range = 1.0
+description = "All the cool kids you say?"

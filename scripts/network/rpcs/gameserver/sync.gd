@@ -591,7 +591,7 @@ func statuseffectcomponent_sync_effect_response(n: String, s: String, j: Diction
 
 
 @rpc("call_remote", "any_peer", "reliable")
-func statuseffectcomponent_sync_all(n: String, d: Dictionary):
+func statuseffectcomponent_sync_all(n: String):
 	assert(not G.is_server(), "This method is only intended for client use")
 	if not G.is_server():
 		return
