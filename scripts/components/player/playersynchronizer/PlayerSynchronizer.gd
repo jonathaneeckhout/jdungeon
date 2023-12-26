@@ -15,7 +15,9 @@ signal attacked(direction: Vector2)
 signal skill_used(where: Vector2, skill_class: String)
 
 ## Name of the animation of when the player has the weapon in his/her right hand
-const ATTACK_RIGHT_HAND_ANIMATION: String = "Attack_Right_Hand"
+const ATTACK_RIGHT_HAND_ANIMATIONS: Array[String] = [
+	"Attack_Right_Hand", "Attack_Right_Hand_1", "Attack_Right_Hand_2"
+]
 ## Name of the animation of when the player has the weapon in his/her left hand
 const ATTACK_LEFT_HAND_ANIMATIONS: Array[String] = [
 	"Attack_Left_Hand", "Attack_Left_Hand_1", "Attack_Left_Hand_2"
@@ -375,7 +377,7 @@ func _on_direction_changed(original: bool):
 	if (
 		animation_player.is_playing()
 		and (
-			animation_player.current_animation == ATTACK_RIGHT_HAND_ANIMATION
+			ATTACK_RIGHT_HAND_ANIMATIONS.has(animation_player.current_animation)
 			or ATTACK_LEFT_HAND_ANIMATIONS.has(animation_player.current_animation)
 		)
 	):
@@ -387,8 +389,11 @@ func _on_direction_changed(original: bool):
 
 		# Play the animation according to the direction the player is facing
 		if original:
-			animation_player.play(ATTACK_RIGHT_HAND_ANIMATION)
+			# find a random index for the attack animation
+			var random_index = randi() % ATTACK_RIGHT_HAND_ANIMATIONS.size()
+			animation_player.play(ATTACK_RIGHT_HAND_ANIMATIONS[random_index])
 		else:
+			# find a random index for the attack animation
 			var random_index = randi() % ATTACK_LEFT_HAND_ANIMATIONS.size()
 			animation_player.play(ATTACK_LEFT_HAND_ANIMATIONS[random_index])
 
@@ -442,7 +447,8 @@ func _on_client_interacted(target: Node2D):
 
 	# check which direction the player is facing and play the accordingly attack animation
 	if _original_direction:
-		animation_player.play(ATTACK_RIGHT_HAND_ANIMATION)
+		var random_index = randi() % ATTACK_RIGHT_HAND_ANIMATIONS.size()
+		animation_player.play(ATTACK_RIGHT_HAND_ANIMATIONS[random_index])
 	else:
 		var random_index = randi() % ATTACK_LEFT_HAND_ANIMATIONS.size()
 		animation_player.play(ATTACK_LEFT_HAND_ANIMATIONS[random_index])
