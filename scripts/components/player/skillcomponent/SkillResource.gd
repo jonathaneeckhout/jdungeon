@@ -19,6 +19,8 @@ const ENTITY_TYPES := J.ENTITY_TYPE
 
 @export var valid_entities: Array[ENTITY_TYPES] = [ENTITY_TYPES.ENEMY]
 
+@export var max_targets: int
+
 @export var cooldown: float = 0
 
 #Instantly uses the ability upon selection using the user's position as a target.
@@ -50,6 +52,10 @@ func effect(information: SkillUseInfo):
 	for target in information.targets:
 		if target.get("entity_type") is int and target.get("entity_type") in valid_entities:
 			filteredTargets.append(target)
+			
+		if filteredTargets.size() >= max_targets:
+			break
+			
 	information.targets = filteredTargets
 
 	if damage > 0:

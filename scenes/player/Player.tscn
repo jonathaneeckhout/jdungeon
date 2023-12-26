@@ -1186,10 +1186,11 @@ collision_layer = 3
 collision_mask = 5
 script = ExtResource("1_yw2vn")
 
-[node name="PersistentPlayerDataComponent" parent="." node_paths=PackedStringArray("stats", "inventory", "equipment") instance=ExtResource("13_n3v8n")]
+[node name="PersistentPlayerDataComponent" parent="." node_paths=PackedStringArray("stats", "inventory", "equipment", "character_class") instance=ExtResource("13_n3v8n")]
 stats = NodePath("../StatsSynchronizerComponent")
 inventory = NodePath("../InventorySynchronizerComponent")
 equipment = NodePath("../EquipmentSynchronizerComponent")
+character_class = NodePath("../CharacterClassComponent")
 store_interval_time = 5.0
 
 [node name="NetworkViewSynchronizerComponent" parent="." instance=ExtResource("3_sohky")]

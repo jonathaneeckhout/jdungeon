@@ -8,7 +8,7 @@ displayed_name = "Warrior"
 class_registered = &"Warrior"
 icon_path = "res://assets/images/ui/buttons/sound_off/sound_on_white.png"
 description = "It fights, it hits, it wrecks, maybe?"
-available_skills = Array[String](["HealSelf"])
+available_skills = Array[String](["HealSelf", "Defend"])
 stat_multipliers = {
 "attack_power_max": 1.5,
 "attack_power_min": 1.5,

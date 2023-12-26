@@ -17,7 +17,7 @@ const NUMBER_FONT: Font = preload("res://assets/fonts/fenwick-woodtype/FenwickWo
 ## Extra space added after every icon.
 @export var drawing_margin: Vector2 = Vector2(4,4)
 ## The size of each icon for each status effect. The size includes height and width.
-@export var drawing_icon_size: Vector2i = Vector2i.ONE * 96
+@export var drawing_icon_size: Vector2i = Vector2i.ONE * 32
 
 
 ## The format is String:Dictionary
