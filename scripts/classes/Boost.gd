@@ -45,9 +45,9 @@ func add_boost(boost: Boost):
 	defense += boost.defense
 
 
-func set_stat_boost(statName: String, value):
+func set_stat_boost(statName: String, value: int):
 	statBoostDict[statName] = value
 
 
-func get_stat_boost(statName: String, default = null):
+func get_stat_boost(statName: String, default: int = 0):
 	return statBoostDict.get(statName, default)
