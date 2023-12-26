@@ -73,6 +73,7 @@ func draw_status(status_class: String, pos: Vector2):
 		)
 	
 
+#Server only
 func process_statuses():
 	for status: String in status_effects_active:
 		var startDuration: float = get_duration(status)
@@ -96,6 +97,7 @@ func process_statuses():
 				set_duration(status, startResource.default_duration)
 			else:
 				remove_status(status)
+
 		sync_effect(user.peer_id, status)
 	
 

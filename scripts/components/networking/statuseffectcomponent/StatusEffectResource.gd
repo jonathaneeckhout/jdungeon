@@ -42,8 +42,13 @@ enum Properties {
 @export var default_stacks: int = 1
 @export var default_duration: float = 1.0
 
+## Used to keep track of the stat boost that this status effect caused, if any.
+var boost_reference := Boost.new()
+
 ## [param _json_data] contains a "applier" (String), "stacks" (int), "duration" (float) entries.
 func effect_applied(target: Node, json_data: Dictionary):
+	apply_boost(target.get_name())
+		
 	_effect_applied(target, json_data)
 	
 func _effect_applied(_target: Node, _json_data: Dictionary):
@@ -62,6 +67,8 @@ func _effect_timeout(_target: Node, _json_data: Dictionary):
 	pass
 
 func effect_removed(target: Node, json_data: Dictionary):
+	remove_boost(target.get_name())
+		
 	_effect_removed(target, json_data)
 	
 func _effect_removed(_target: Node, _json_data: Dictionary):
@@ -77,6 +84,37 @@ func get_icon() -> Texture:
 		return tex
 	else:
 		return FALLBACK_TEXTURE
+
+
+func apply_boost(target_name: String):
+	var targetStats: StatsSynchronizerComponent = G.world.get_entity_component_by_name(target_name, "stats_synchronizer")
+	if not targetStats is StatsSynchronizerComponent:
+		return
+		
+	var statBoost := Boost.new()
+	boost_reference = statBoost
+	
+	for stat: String in active_stat_bonuses:
+		statBoost.set_stat_boost(stat, active_stat_bonuses[stat])
+		
+	for stat: String in active_stat_modifiers:
+		assert(targetStats.get(stat) in StatsSynchronizerComponent.StatListCounter + StatsSynchronizerComponent.StatListPermanent, "This is not a valid stat")
+		#Example of a 1.5 modifier, with a stat at 100 and a bonus of 5:
+		#postModifierResult is set to (100 + 5) * 1.5 = 157 after rounding.
+		#postModifierResult gets -105, leaving it at 52, which equals 50% of 105 (rounded down)
+		var postModifierResult: int = (targetStats.get(stat) + statBoost.get_stat_boost(stat, 0)) * active_stat_modifiers[stat]
+		postModifierResult -= targetStats.get(stat)
+		statBoost.set_stat_boost(stat, postModifierResult)
+		
+	if not statBoost.statBoostDict.is_empty():
+		targetStats.apply_boost(statBoost)
+	
+func remove_boost(target_name: String):
+	if boost_reference:
+		var targetStats: StatsSynchronizerComponent = G.world.get_entity_component_by_name(target_name, "stats_synchronizer")
+		targetStats.remove_boost(boost_reference)
+		boost_reference = null
+	
 	
 
 func get_entity_stats_component(node: Node) -> StatsSynchronizerComponent:
