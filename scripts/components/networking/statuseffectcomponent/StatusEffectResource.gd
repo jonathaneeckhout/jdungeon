@@ -15,14 +15,15 @@ enum Properties {
 @export var status_class: String
 @export var displayed_name: String = "Unnamed Status"
 @export_multiline var description: String
-@export_file var icon_path: String = "res://icon.svg"
+@export_file("*.jpg *.png *.svg") var icon_path: String = "res://icon.svg"
 
-@export_group("General Behaviour")
+@export_group("Timeout Behaviour")
 ## How many stacks are removed per timeout (flat amount)
-@export var stack_consumption_flat: int = 0
-## The percentage of stacks that are consumed every timeout, applies before [member stack_consumption_flat].  
+@export var timeout_satck_consumption_flat: int = 0
+## The percentage of stacks that are consumed every timeout, applies before [member timeout_satck_consumption_flat].  
 ## A value of 0.5 would remove half of the stacks, 1.0 removes all of them.
-@export_range(0,1.0, 0.01) var stack_consumption_percent: float = 1.0
+@export_range(0,1.0, 0.01) var timeout_stack_consumption_percent: float = 1.0
+
 
 ## These effects are meant to automate some of the most common actions that an status effect could have.
 @export_group("Effects")
@@ -30,6 +31,7 @@ enum Properties {
 @export var active_stat_modifiers: Dictionary
 ## String:int pair with String being a stat name from [StatsSynchronizerComponent]
 @export var active_stat_bonuses: Dictionary
+
 
 ## Combine Behaviour refers to what happens when a status effect is already present in the component.
 @export_group("Combine Behaviour", "combine")
@@ -43,7 +45,7 @@ enum Properties {
 @export var default_duration: float = 1.0
 
 ## Used to keep track of the stat boost that this status effect caused, if any.
-var boost_reference := Boost.new()
+var boost_reference: Boost
 
 ## [param _json_data] contains a "applier" (String), "stacks" (int), "duration" (float) entries.
 func effect_applied(target: Node, json_data: Dictionary):

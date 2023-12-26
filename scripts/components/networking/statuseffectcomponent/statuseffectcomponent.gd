@@ -88,7 +88,7 @@ func process_statuses():
 		
 		#If it timed out, reduce the amount of stacks and proc the timeout effect
 		if get_duration(status) <= 0:
-			set_stacks(status, (startStacks - (startStacks * startResource.stack_consumption_percent)) - startResource.stack_consumption_flat )
+			set_stacks(status, (startStacks - (startStacks * startResource.timeout_stack_consumption_percent)) - startResource.timeout_satck_consumption_flat )
 			startResource.effect_timeout(user, get_status_effect_data(status))
 		
 			

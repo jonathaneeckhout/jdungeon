@@ -53,7 +53,7 @@ func update_icons():
 
 		#If it is a skill, show it's icon and store it's class
 		if index < skillList.size() and skillList[index] is SkillComponentResource:
-			currentDisplay.texture = skillList[index].icon
+			currentDisplay.texture = skillList[index].get_icon()
 			currentDisplay.skill_class = skillList[index].skill_class
 			currentDisplay.tooltip_text = (
 				skillList[index].displayed_name + "\n" + skillList[index].description

@@ -2,6 +2,7 @@ extends Resource
 
 class_name SkillComponentResource
 
+const FAILSAFE_TEXTURE: Texture = preload("res://icon.svg")
 const ENTITY_TYPES := J.ENTITY_TYPE
 
 @export var skill_class: String
@@ -10,7 +11,7 @@ const ENTITY_TYPES := J.ENTITY_TYPE
 
 @export var energy_usage: int = 0
 
-@export var icon: Texture = load("res://icon.svg")
+@export_file("*.jpg *.png *.svg") var icon_path: String = "res://icon.svg"
 
 @export_flags_2d_physics var collision_mask: int = (
 	J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS + J.PHYSICS_LAYER_ITEMS
@@ -79,3 +80,10 @@ func get_description() -> String:
 func get_description_rich() -> String:
 	GodotLogger.warn("No rich description has been defined for skill {0}.".format([skill_class]))
 	return description
+
+func get_icon() -> Texture:
+	var tex: Texture = load(icon_path)
+	if tex:
+		return tex
+	else:
+		return FAILSAFE_TEXTURE

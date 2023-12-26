@@ -29,7 +29,6 @@ func get_user_stats() -> StatsSynchronizerComponent:
 	else:
 		return null
 
-
 func get_target_stats_by_index(index: int) -> StatsSynchronizerComponent:
 	if abs(index) >= abs(targets.size()):
 		GodotLogger.error("SkillComponent.UseInfo, index out of range.")
@@ -52,6 +51,10 @@ func get_target_stats_all() -> Array[StatsSynchronizerComponent]:
 		else:
 			GodotLogger.error('Target lacks a "stats" property: ' + target.get_name())
 	return stat_arr
+
+
+func get_user_name() -> String:
+	return user.get_name()
 
 
 func get_target_names() -> Array[String]:

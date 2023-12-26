@@ -1,7 +1,7 @@
-extends Node
-
+extends Object
 class_name Boost
-## This node is used to store the boosts a certain item can give the player
+## This is used to store the boosts a player may obtain. Most common sources being items and status effects.
+## These are meant to be temporary and may be deleted at any time.
 
 #Stores an arbitrary amount of values
 var statBoostDict: Dictionary
