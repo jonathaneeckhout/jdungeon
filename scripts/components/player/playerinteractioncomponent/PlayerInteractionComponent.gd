@@ -19,6 +19,8 @@ var enemies_in_attack_range: Array[Enemy] = []
 var items_in_loot_range: Array[Item] = []
 var npcs_in_interact_range: Array[NPC] = []
 
+@onready var crosshair: Sprite2D = $Crosshair
+
 
 func _ready():
 	target_node = get_parent()
@@ -36,6 +38,8 @@ func _physics_process(_delta):
 	attack_area.position = (
 		target_node.position.direction_to(player_synchronizer.mouse_global_pos) * attack_range
 	)
+
+	crosshair.position = attack_area.position
 
 
 func _init_attack_area():
