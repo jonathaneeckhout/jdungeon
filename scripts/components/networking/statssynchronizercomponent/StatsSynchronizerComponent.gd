@@ -2,6 +2,8 @@ extends Node
 
 class_name StatsSynchronizerComponent
 
+const COMPONENT_NAME: String = "stats_synchronizer"
+
 enum TYPE {
 	HP_MAX,
 	HP,
@@ -418,6 +420,7 @@ func remove_boost(boost: Boost):
 
 	for watcher in watcher_synchronizer.watchers:
 		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
+
 
 func to_json(full: bool = false) -> Dictionary:
 	var data: Dictionary = {}

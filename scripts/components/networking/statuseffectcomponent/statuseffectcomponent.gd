@@ -2,7 +2,6 @@ extends Node2D
 class_name StatusEffectComponent
 
 const COMPONENT_NAME: String = "status_effect_component"
-
 const TICK_INTERVAL:float = 0.2
 const NUMBER_FONT: Font = preload("res://assets/fonts/fenwick-woodtype/FenwickWoodtype.ttf")
 
@@ -88,9 +87,8 @@ func process_statuses():
 		
 		#If it timed out, reduce the amount of stacks and proc the timeout effect
 		if get_duration(status) <= 0:
-			set_stacks(status, (startStacks - (startStacks * startResource.timeout_stack_consumption_percent)) - startResource.timeout_satck_consumption_flat )
 			startResource.effect_timeout(user, get_status_effect_data(status))
-		
+			set_stacks(status, (startStacks - (startStacks * startResource.timeout_stack_consumption_percent)) - startResource.timeout_satck_consumption_flat )
 			
 			#If any stacks remain, reset the duration. Otherwise remove this status.	
 			if get_stacks(status) > 0:
@@ -141,6 +139,10 @@ func add_status_effect(status_class: String, applier: Node, stack_override: int 
 		assert(get_resource(status_class) is StatusEffectResource)
 	
 	get_resource(status_class).effect_applied(user, get_status_effect_data(status_class))
+	if Global.debug_mode:
+		GodotLogger.info(
+			"Added status effect '{0}' with {1} stacks and {2} duration.".format([status_class, get_stacks(status_class), get_duration(status_class)])
+		)
 
 ## Server only
 func remove_status(status_class: String):
@@ -161,13 +163,15 @@ func get_duration(status_class: String) -> float:
 	# But safe.
 	return status_effects_active.get(status_class,{}).get("duration",0.0)
 
-
-func set_stacks(status_class: String, sta: int):
+## If [param trigger_effect] is true, _effect_stack_changed() is called on the status.
+func set_stacks(status_class: String, sta: int, trigger_effect: bool = false):
 	if not status_effects_active.has(status_class):
 		GodotLogger.error("This status is not present in this component.")
 		return
 		
 	status_effects_active[status_class]["stacks"] = sta
+	if trigger_effect:
+		get_resource(status_class)._effect_stack_change(user, get_status_effect_data(status_class))
 
 
 func get_stacks(status_class: String) -> int:
@@ -193,6 +197,7 @@ func set_applier(status_class: String, applier_name: String):
 		
 	status_effects_active[status_class]["applier"] = applier_name
 	
+	
 func get_applier(status_class: String) -> String:
 	return status_effects_active.get(status_class,{}).get("applier","")
 
@@ -214,21 +219,25 @@ func sync_all_response(data: Dictionary):
 #Runs on server only
 func sync_effect(id: int, status_class: String):
 	assert(G.is_server())
-	assert(has_status_effect(status_class))
-	G.sync_rpc.statuseffectcomponent_sync_effect_response.rpc_id(id, user.get_name(), status_class, get_status_effect_data(status_class))
+	if has_status_effect(status_class):
+		G.sync_rpc.statuseffectcomponent_sync_effect_response.rpc_id(id, user.get_name(), status_class, get_status_effect_data(status_class), false)
+	else:
+		G.sync_rpc.statuseffectcomponent_sync_effect_response.rpc_id(id, user.get_name(), status_class, get_status_effect_data(status_class), true)
 
 
-func sync_effect_response(status_class: String, status_json: Dictionary):
-	status_effects_active[status_class] = {
-		"stacks" : status_json["stacks"],
-		"duration" : status_json["duration"],
-		"applier" : status_json["applier"],
-		"resource" : J.status_effect_resources[status_class].duplicate(),
-	}
+func sync_effect_response(status_class: String, status_json: Dictionary, remove: bool):
+	if remove:
+		status_effects_active.erase(status_class)
+	else:
+		status_effects_active[status_class] = {
+			"stacks" : status_json["stacks"],
+			"duration" : status_json["duration"],
+			"applier" : status_json["applier"],
+			"resource" : J.status_effect_resources[status_class].duplicate(),
+		}
 	
 	
 ## This function creates a Dictionary with the data from the status effect for sending over the network or for passing to a status' "_effect()" method.
-## [param add_owner] is only necessary for the "_effect" methods.
 func get_status_effect_data(status_class: String) -> Dictionary:
 	if not status_effects_active.has(status_class):
 		GodotLogger.error("This status is not present in this component.")

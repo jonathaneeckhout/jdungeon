@@ -1,25 +1,19 @@
 [gd_resource type="Resource" load_steps=2 format=3 uid="uid://crqboml4548vk"]
 
-[sub_resource type="GDScript" id="GDScript_cqumv"]
-script/source = "extends StatusEffectResource
-
-func _effect_timeout(target: Node, json_data: Dictionary):
-	var targetStats: StatsSynchronizerComponent = get_entity_stats_component(target)
-	var entity: Node = G.world.get_entity_by_name(json_data[\"applier\"])
-	targetStats.hurt(entity, json_data[\"stacks\"])
-	
-"
+[ext_resource type="Script" path="res://scripts/components/networking/statuseffectcomponent/StatusEffects/DamageOverTime.gd" id="1_23kxf"]
 
 [resource]
-script = SubResource("GDScript_cqumv")
+script = ExtResource("1_23kxf")
+damage = 1
+scale_per_stack = true
+proc_on_timeout = true
 status_class = "Poison"
 displayed_name = "Poison"
 description = "Deals damage every time it's duration ends equal to it's stack, then looses 20% of it's stacks. "
 icon_path = "res://icon.svg"
-stack_consumption_flat = 0
-stack_consumption_percent = 0.2
-active_stat_modifiers = {}
-active_stat_bonuses = {}
+type = 1
+timeout_satck_consumption_flat = 0
+timeout_stack_consumption_percent = 0.2
 combine_stackable_duration = false
 combine_stack_override = true
 default_stacks = 20

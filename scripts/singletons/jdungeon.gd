@@ -162,6 +162,7 @@ func register_dialogues():
 
 func register_status_effects():
 	J.register_status_effect_resource("Poison", "res://scripts/components/networking/statuseffectcomponent/StatusEffects/Poison.tres")
+	J.register_status_effect_resource("DefenseUpPerStackFlat", "res://scripts/components/networking/statuseffectcomponent/StatusEffects/DefenseUpStatChange.tres")
 
 
 func register_player_scene(player_scene_path: String):

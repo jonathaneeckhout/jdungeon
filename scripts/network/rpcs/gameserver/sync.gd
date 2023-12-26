@@ -575,7 +575,7 @@ func statuseffectcomponent_sync_effect(n: String, s: String):
 
 #Only server can make this RPC, runs on client
 @rpc("call_remote", "authority", "reliable")
-func statuseffectcomponent_sync_effect_response(n: String, s: String, j: Dictionary):
+func statuseffectcomponent_sync_effect_response(n: String, s: String, j: Dictionary, r: bool):
 	assert(not G.is_server(), "This method is only intended for client use")
 	var entity: Node = G.world.get_entity_by_name(n)
 
@@ -586,7 +586,7 @@ func statuseffectcomponent_sync_effect_response(n: String, s: String, j: Diction
 		return
 
 	if entity.component_list.has(StatusEffectComponent.COMPONENT_NAME):
-		entity.component_list[StatusEffectComponent.COMPONENT_NAME].sync_effect_response(s, j)
+		entity.component_list[StatusEffectComponent.COMPONENT_NAME].sync_effect_response(s, j, r)
 		
 
 
