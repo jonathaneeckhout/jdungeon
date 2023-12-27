@@ -52,3 +52,10 @@ func generate_boost(stat_to_boost: String, base_stat_value: int, stacks: int) ->
 	return newBoost
 	
 	
+func get_description() -> String:
+	var change: String = "Raises" if status_effect_modifier * status_effect_bonus > 0 else "Lowers"
+	return '''{change} {stat} by 1 per stack.
+	'''.format({
+		"change" : change,
+		"stat" : stat_name_to_boost
+	})

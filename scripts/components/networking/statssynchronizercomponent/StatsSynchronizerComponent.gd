@@ -375,6 +375,12 @@ func add_experience(amount: int):
 	_sync_int_change(TYPE.EXPERIENCE, experience)
 
 
+func get_attack_damage() -> float:
+	return randi_range(
+		attack_power_min, attack_power_max
+		)
+
+
 func apply_boost(boost: Boost):
 	for statName in boost.statBoostDict:
 		if not statName in StatListAll:

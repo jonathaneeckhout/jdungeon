@@ -19,14 +19,12 @@ const ENTITY_TYPES := J.ENTITY_TYPE
 
 @export var valid_entities: Array[ENTITY_TYPES] = [ENTITY_TYPES.ENEMY]
 
-@export var max_targets: int
+@export var max_targets: int = 10
 
 @export var cooldown: float = 0
 
-#Instantly uses the ability upon selection using the user's position as a target.
+## When selected, instantly uses the ability upon selection using the user's position as a target.
 @export var cast_on_select: bool
-
-@export var damage: int = 0
 
 ## Use a single point to create a circle using the single point as radius, use more than 3 points to create a polygon
 @export var hitbox_shape: PackedVector2Array = [
@@ -57,15 +55,7 @@ func effect(information: SkillUseInfo):
 			break
 			
 	information.targets = filteredTargets
-
-	if damage > 0:
-		for stats in information.get_target_stats_all():
-			# Leave the dead alone
-			if stats.is_dead:
-				continue
-
-			stats.hurt(information.user, damage)
-
+		
 	_effect(information)
 
 
