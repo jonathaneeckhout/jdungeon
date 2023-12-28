@@ -12,8 +12,7 @@ var display_selected: SkillDisplay
 
 @onready var skill_container: HBoxContainer = $HBoxContainer
 
-const EMPTY_ICON: Texture = preload("res://assets/images/enemies/flower/scaled/Flower.png")
-
+const EMPTY_ICON: Texture = preload("res://assets/images/ui/Empty.tres")
 
 func _ready() -> void:
 	skill_component.skills_changed.connect(update_icons)
