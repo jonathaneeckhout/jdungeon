@@ -141,6 +141,26 @@ func get_entity_by_name(entity_name: String) -> Node:
 	return entity
 
 
+## A shortcut to fetch the component of an entity from it's [member component_list] property.
+func get_entity_component_by_name(entity_name: String, component_name: String) -> Node:
+	var entity: Node = get_entity_by_name(entity_name)
+	if entity.get("component_list") is Dictionary:
+		var comp: Node = entity.component_list.get(component_name, null)
+		if comp == null:
+			GodotLogger.error(
+				"The user '{0}' lacks a '{1}' component".format([entity.get_name(), component_name])
+			)
+		return comp
+	else:
+		GodotLogger.error(
+			(
+				"The user '{0}' does not have a component_list property, it may not be an entity."
+				. format([entity.get_name()])
+			)
+		)
+		return null
+
+
 func find_player_respawn_location(player_position: Vector2) -> Vector2:
 	var spots = player_respawn_locations.get_children()
 

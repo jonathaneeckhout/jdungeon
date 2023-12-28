@@ -2,6 +2,8 @@ extends Node
 
 class_name StatsSynchronizerComponent
 
+const COMPONENT_NAME: String = "stats_synchronizer"
+
 enum TYPE {
 	HP_MAX,
 	HP,
@@ -148,6 +150,8 @@ signal respawned
 
 @export var experience_worth: int = 0
 
+var active_boosts: Array[Boost]
+
 var target_node: Node
 var peer_id: int = 0
 var is_dead: bool = false
@@ -170,7 +174,7 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("component_list") != null:
-		target_node.component_list["stats_synchronizer"] = self
+		target_node.component_list[COMPONENT_NAME] = self
 
 	if target_node.get("peer_id") != null:
 		peer_id = target_node.peer_id
@@ -211,8 +215,9 @@ func _physics_process(_delta: float):
 
 func check_server_buffer():
 	for i in range(server_buffer.size() - 1, -1, -1):
-		var entry = server_buffer[i]
+		var entry: Dictionary = server_buffer[i]
 		if entry["timestamp"] <= G.clock:
+			assert(entry["type"] in TYPE.values(), "This is not a valid type")
 			match entry["type"]:
 				TYPE.HP_MAX:
 					hp_max = entry["value"]
@@ -220,6 +225,8 @@ func check_server_buffer():
 					hp = entry["value"]
 				TYPE.ENERGY_MAX:
 					energy_max = entry["value"]
+				TYPE.ENERGY_REGEN:
+					energy_regen = entry["value"]
 				TYPE.ENERGY:
 					energy = entry["value"]
 				TYPE.ATTACK_POWER_MIN:
@@ -368,9 +375,12 @@ func add_experience(amount: int):
 	_sync_int_change(TYPE.EXPERIENCE, experience)
 
 
+func get_attack_damage() -> float:
+	return randi_range(attack_power_min, attack_power_max)
+
+
 func apply_boost(boost: Boost):
 	for statName in boost.statBoostDict:
-		#If StatsSynchronizer does not have this defined, consider it arbitrary and store it as such.
 		if not statName in StatListAll:
 			GodotLogger.error("The property '{0}' is not a stat.".format([statName]))
 
@@ -385,7 +395,27 @@ func apply_boost(boost: Boost):
 				)
 			)
 
-		var newValue = get(statName) + boost.statBoostDict.get(statName)
+		var newValue = get(statName) + boost.get_stat_boost(statName)
+		self.set(statName, newValue)
+
+	active_boosts.append(boost)
+
+	var data: Dictionary = to_json(true)
+
+	if peer_id > 0:
+		G.sync_rpc.statssynchronizer_sync_response.rpc_id(peer_id, target_node.name, data)
+
+	for watcher in watcher_synchronizer.watchers:
+		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
+
+
+func remove_boost(boost: Boost):
+	if not active_boosts.has(boost):
+		GodotLogger.error("This boost does not belong to this component.")
+		return
+
+	for statName in boost.statBoostDict:
+		var newValue = get(statName) - boost.get_stat_boost(statName)
 		self.set(statName, newValue)
 
 	var data: Dictionary = to_json(true)

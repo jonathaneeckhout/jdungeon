@@ -22,6 +22,7 @@ var charClassRegisteredNameOwned: Dictionary
 @onready var classDesc: RichTextLabel = $ClassDescription
 @onready var lockedText: Label = $LockedText
 @onready var doneButton: Button = $Done
+@onready var change_skill_button: Button = $ChangeSkills
 
 
 func _ready() -> void:
@@ -29,6 +30,7 @@ func _ready() -> void:
 
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
+	change_skill_button.pressed.connect(_on_change_skills_pressed)
 
 	#Close button
 	doneButton.pressed.connect(close)
@@ -38,15 +40,6 @@ func _ready() -> void:
 	syncTimer.timeout.connect(_on_sync_timer_timeout)
 	add_child(syncTimer)
 	syncTimer.start(1)
-
-	if not class_component:
-		(
-			GodotLogger
-			. warn(
-				"No target has been selected. Make sure to run select_target before anything is attempted."
-			)
-		)
-		return
 
 
 func select_target(class_comp: CharacterClassComponent):
@@ -200,6 +193,14 @@ func _on_class_lock_changed():
 func close():
 	if is_inside_tree():
 		get_parent().remove_child(self)
+
+
+func _on_change_skills_pressed():
+	var skillSelection: SkillSelectionUI = SkillSelectionUI.PACKED_SCENE.instantiate()
+	skillSelection.select_target(class_component.user)
+	add_sibling(skillSelection)
+	skillSelection.populate_ui()
+	close()
 
 
 func _on_mouse_entered():

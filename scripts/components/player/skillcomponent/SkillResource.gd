@@ -2,6 +2,7 @@ extends Resource
 
 class_name SkillComponentResource
 
+const FAILSAFE_TEXTURE: Texture = preload("res://icon.svg")
 const ENTITY_TYPES := J.ENTITY_TYPE
 
 @export var skill_class: String
@@ -10,7 +11,7 @@ const ENTITY_TYPES := J.ENTITY_TYPE
 
 @export var energy_usage: int = 0
 
-@export var icon: Texture = load("res://icon.svg")
+@export_file("*.jpg *.png *.svg") var icon_path: String = "res://icon.svg"
 
 @export_flags_2d_physics var collision_mask: int = (
 	J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS + J.PHYSICS_LAYER_ITEMS
@@ -18,12 +19,12 @@ const ENTITY_TYPES := J.ENTITY_TYPE
 
 @export var valid_entities: Array[ENTITY_TYPES] = [ENTITY_TYPES.ENEMY]
 
+@export var max_targets: int = 10
+
 @export var cooldown: float = 0
 
-#Instantly uses the ability upon selection using the user's position as a target.
+## When selected, instantly uses the ability upon selection using the user's position as a target.
 @export var cast_on_select: bool
-
-@export var damage: int = 0
 
 ## Use a single point to create a circle using the single point as radius, use more than 3 points to create a polygon
 @export var hitbox_shape: PackedVector2Array = [
@@ -49,15 +50,11 @@ func effect(information: SkillUseInfo):
 	for target in information.targets:
 		if target.get("entity_type") is int and target.get("entity_type") in valid_entities:
 			filteredTargets.append(target)
+
+		if filteredTargets.size() >= max_targets:
+			break
+
 	information.targets = filteredTargets
-
-	if damage > 0:
-		for stats in information.get_target_stats_all():
-			# Leave the dead alone
-			if stats.is_dead:
-				continue
-
-			stats.hurt(information.user, damage)
 
 	_effect(information)
 
@@ -79,3 +76,11 @@ func get_description() -> String:
 func get_description_rich() -> String:
 	GodotLogger.warn("No rich description has been defined for skill {0}.".format([skill_class]))
 	return description
+
+
+func get_icon() -> Texture:
+	var tex: Texture = load(icon_path)
+	if tex:
+		return tex
+	else:
+		return FAILSAFE_TEXTURE
