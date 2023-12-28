@@ -50,12 +50,12 @@ func effect(information: SkillUseInfo):
 	for target in information.targets:
 		if target.get("entity_type") is int and target.get("entity_type") in valid_entities:
 			filteredTargets.append(target)
-			
+
 		if filteredTargets.size() >= max_targets:
 			break
-			
+
 	information.targets = filteredTargets
-		
+
 	_effect(information)
 
 
@@ -76,6 +76,7 @@ func get_description() -> String:
 func get_description_rich() -> String:
 	GodotLogger.warn("No rich description has been defined for skill {0}.".format([skill_class]))
 	return description
+
 
 func get_icon() -> Texture:
 	var tex: Texture = load(icon_path)

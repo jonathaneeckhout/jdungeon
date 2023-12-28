@@ -27,7 +27,7 @@ var class_whitelist: Array[String]
 var class_blacklist: Array[String]
 
 ## Max amount of simultaneous classes selected for this component
-var max_classes: int = 2
+var max_classes: int = 1
 
 ## Class changes are prevented while this is true, used by the server to filter when a player should be capable of performing a change
 var class_change_locked: bool = false:
@@ -236,8 +236,8 @@ func apply_skills():
 		for skill: String in charClass.available_skills:
 			skill_component.add_skill(skill)
 
-	skill_component.sync_skills( user.peer_id )
-	
+	skill_component.sync_skills(user.peer_id)
+
 
 func get_charclass_classes() -> Array[String]:
 	var output: Array[String] = []

@@ -5,8 +5,11 @@ extends SkillComponentResource
 @export var damage_bonus: int
 @export var damage_modifier: float = 1
 
+
 func _effect(information: SkillUseInfo):
-	var statComp: StatsSynchronizerComponent = G.world.get_entity_component_by_name(information.get_user_name(), StatsSynchronizerComponent.COMPONENT_NAME)
+	var statComp: StatsSynchronizerComponent = G.world.get_entity_component_by_name(
+		information.get_user_name(), StatsSynchronizerComponent.COMPONENT_NAME
+	)
 	var damageDealt: int
 	if add_attack_stat:
 		damageDealt = (statComp.get_attack_damage() + damage_bonus) * damage_modifier

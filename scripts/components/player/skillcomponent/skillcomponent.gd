@@ -50,7 +50,7 @@ signal skills_changed
 ## Color for the area drawn around the user when the skill is selected. Determining how far the skill can be used.
 @export var color_range: Color = Color.GREEN_YELLOW / 3
 ## Range is from -1 and upwards, does not affect polygons.
-@export var hitbox_line_thickness: float = 4
+@export var hitbox_line_thickness: float = 2
 ## Does not affect polygons.
 @export var hitbox_line_antialiasing: bool = false
 ## Only used for CircleShape2D hitboxes. Determines the definition of the drawn circle outline
@@ -260,12 +260,21 @@ func _draw_hitbox(local_point: Vector2 = to_local(player_synchronizer.mouse_glob
 	# Draw the shape if it's a circle
 	if shape is CircleShape2D:
 		draw_circle(local_point, shape.radius, color_used * 0.35)
-		draw_arc(local_point, shape.radius, 0, TAU, hitbox_circle_outline_point_count, color_used, hitbox_line_thickness, hitbox_line_antialiasing)
-	
+		draw_arc(
+			local_point,
+			shape.radius,
+			0,
+			TAU,
+			hitbox_circle_outline_point_count,
+			color_used,
+			hitbox_line_thickness,
+			hitbox_line_antialiasing
+		)
+
 	elif shape is SegmentShape2D:
 		var points: Array[Vector2] = [shape.a + local_point, shape.b + local_point]
 		draw_line(points[0], points[1], color_used, hitbox_line_thickness, hitbox_line_antialiasing)
-	
+
 	# Draw the shape if it's a convex polygon
 	elif shape is ConvexPolygonShape2D:
 		# A minimal shape should have at least 3 points
@@ -298,11 +307,9 @@ func add_skill(skill_class: String):
 	#Do not allow duplicates
 	if skill_class in get_skills_classes():
 		if Global.debug_mode:
-			GodotLogger.info(
-				"Rejected duplicate skill '{0}'".format([skill_class])
-				)
+			GodotLogger.info("Rejected duplicate skill '{0}'".format([skill_class]))
 		return
-	
+
 	var skill_found: SkillComponentResource = J.skill_resources.get(skill_class, null)
 
 	if skill_found is SkillComponentResource:
@@ -319,9 +326,11 @@ func remove_skill(skill_class: String):
 			skills_changed.emit()
 			return
 
+
 func clear_skills():
 	skills.clear()
 	skills_changed.emit()
+
 
 # Select a skill using its index
 func _select_skill_by_index(index: int):

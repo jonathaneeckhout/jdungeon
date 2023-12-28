@@ -4,8 +4,6 @@ class_name CharacterClassSelectionMenu
 
 @export var class_component: CharacterClassComponent
 
-
-
 ## These are the classes that will be presented to the player as available. Updated from [method update_allowed_classes]
 var allowed_classes: Array[String]
 
@@ -25,6 +23,7 @@ var charClassRegisteredNameOwned: Dictionary
 @onready var lockedText: Label = $LockedText
 @onready var doneButton: Button = $Done
 @onready var change_skill_button: Button = $ChangeSkills
+
 
 func _ready() -> void:
 	assert(not G.is_server(), "The server should not be creating UI elements on it's end.")
@@ -202,6 +201,7 @@ func _on_change_skills_pressed():
 	add_sibling(skillSelection)
 	skillSelection.populate_ui()
 	close()
+
 
 func _on_mouse_entered():
 	JUI.above_ui = true

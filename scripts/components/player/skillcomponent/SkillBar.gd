@@ -20,7 +20,7 @@ func _ready() -> void:
 	update_displays()
 
 
-#Only creates/removes the amount of displays, it's not necessary if the amount has not changed.
+## Only creates/removes the amount of displays, it's not necessary if the amount has not changed.
 func update_displays():
 	#Delete existing ones
 	for child in skill_container.get_children():
@@ -47,7 +47,7 @@ func update_displays():
 	update_icons()
 
 
-#Should be called anytime that the user's available skills change
+## Should be called anytime that the user's available skills change
 func update_icons():
 	var skillList: Array[SkillComponentResource] = get_skills()
 
@@ -59,7 +59,7 @@ func update_icons():
 			currentDisplay.texture = skillList[index].get_icon()
 			currentDisplay.skill_class = skillList[index].skill_class
 			currentDisplay.tooltip_text = (
-				skillList[index].displayed_name + "\n" + skillList[index].description
+				skillList[index].displayed_name + "\n" + skillList[index].get_description()
 			)
 			currentDisplay.skill_component = skill_component
 

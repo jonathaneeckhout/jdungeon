@@ -29,6 +29,7 @@ func get_user_stats() -> StatsSynchronizerComponent:
 	else:
 		return null
 
+
 func get_target_stats_by_index(index: int) -> StatsSynchronizerComponent:
 	if abs(index) >= abs(targets.size()):
 		GodotLogger.error("SkillComponent.UseInfo, index out of range.")
@@ -45,11 +46,17 @@ func get_target_stats_by_index(index: int) -> StatsSynchronizerComponent:
 func get_target_stats_all() -> Array[StatsSynchronizerComponent]:
 	var stat_arr: Array[StatsSynchronizerComponent] = []
 	for target: Node in targets:
-		var stats: StatsSynchronizerComponent = G.world.get_entity_component_by_name(target.get_name(), StatsSynchronizerComponent.COMPONENT_NAME)
+		var stats: StatsSynchronizerComponent = G.world.get_entity_component_by_name(
+			target.get_name(), StatsSynchronizerComponent.COMPONENT_NAME
+		)
 		if stats is StatsSynchronizerComponent:
 			stat_arr.append(stats)
 		else:
-			GodotLogger.error("Target '{0}' lacks a '{1}' property.".format([target.get_name(), StatsSynchronizerComponent.COMPONENT_NAME]) )
+			GodotLogger.error(
+				"Target '{0}' lacks a '{1}' property.".format(
+					[target.get_name(), StatsSynchronizerComponent.COMPONENT_NAME]
+				)
+			)
 	return stat_arr
 
 

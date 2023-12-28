@@ -142,8 +142,11 @@ func register_skills():
 	J.register_skill_resource(
 		"Cripple", "res://scripts/components/player/skillcomponent/Skills/Cripple.tres"
 	)
-	
-	
+	J.register_skill_resource(
+		"Defend", "res://scripts/components/player/skillcomponent/Skills/Defend.tres"
+	)
+
+
 func register_maps():
 	J.register_map_scene("World", "res://scenes/maps/world/World.tscn")
 	J.register_map_scene("BaseCamp", "res://scenes/maps/basecamp/BaseCamp.tscn")
@@ -159,7 +162,8 @@ func register_character_classes():
 		"Warrior", "res://scripts/components/player/charclasscomponent/classes/Warrior.tres"
 	)
 	J.register_class_resource(
-		"Hexpecialist", "res://scripts/components/player/charclasscomponent/classes/Hexpecialist.tres"
+		"Hexpecialist",
+		"res://scripts/components/player/charclasscomponent/classes/Hexpecialist.tres"
 	)
 
 
@@ -170,10 +174,31 @@ func register_dialogues():
 
 
 func register_status_effects():
-	J.register_status_effect_resource("Poison", "res://scripts/components/networking/statuseffectcomponent/StatusEffects/Poison.tres")
-	J.register_status_effect_resource("DefenseUpPerStackFlat", "res://scripts/components/networking/statuseffectcomponent/StatusEffects/DefenseUpStatChange.tres")
-	J.register_status_effect_resource("DefenseDownPerStackFlat", "res://scripts/components/networking/statuseffectcomponent/StatusEffects/DefenseDownPerStackFlat.tres")
-	J.register_status_effect_resource("AttackDownPerStackFlat", "res://scripts/components/networking/statuseffectcomponent/StatusEffects/AttackDownPerStackFlat.tres")
+	J.register_status_effect_resource(
+		"Poison",
+		"res://scripts/components/networking/statuseffectcomponent/StatusEffects/Poison.tres"
+	)
+	(
+		J
+		. register_status_effect_resource(
+			"DefenseUpPerStackFlat",
+			"res://scripts/components/networking/statuseffectcomponent/StatusEffects/DefenseUpStatChange.tres"
+		)
+	)
+	(
+		J
+		. register_status_effect_resource(
+			"DefenseDownPerStackFlat",
+			"res://scripts/components/networking/statuseffectcomponent/StatusEffects/DefenseDownPerStackFlat.tres"
+		)
+	)
+	(
+		J
+		. register_status_effect_resource(
+			"AttackDownPerStackFlat",
+			"res://scripts/components/networking/statuseffectcomponent/StatusEffects/AttackDownPerStackFlat.tres"
+		)
+	)
 
 
 func register_player_scene(player_scene_path: String):

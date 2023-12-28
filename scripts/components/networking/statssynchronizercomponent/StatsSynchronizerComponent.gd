@@ -101,7 +101,6 @@ signal respawned
 	set(val):
 		energy_regen = val
 		stats_changed.emit(TYPE.ENERGY_REGEN)
-	
 
 @export var attack_power_min: int = 0:
 	set(val):
@@ -354,6 +353,7 @@ func load_defaults():
 	defense = _default_defense
 	movement_speed = _default_movement_speed
 
+
 func calculate_experience_needed(current_level: int):
 	# TODO: Replace placeholder function to calculate experience needed to level up
 	return BASE_EXPERIENCE + (BASE_EXPERIENCE * (pow(current_level, 2) - 1))
@@ -376,9 +376,7 @@ func add_experience(amount: int):
 
 
 func get_attack_damage() -> float:
-	return randi_range(
-		attack_power_min, attack_power_max
-		)
+	return randi_range(attack_power_min, attack_power_max)
 
 
 func apply_boost(boost: Boost):
@@ -399,9 +397,9 @@ func apply_boost(boost: Boost):
 
 		var newValue = get(statName) + boost.get_stat_boost(statName)
 		self.set(statName, newValue)
-	
+
 	active_boosts.append(boost)
-	
+
 	var data: Dictionary = to_json(true)
 
 	if peer_id > 0:
@@ -410,15 +408,16 @@ func apply_boost(boost: Boost):
 	for watcher in watcher_synchronizer.watchers:
 		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
 
+
 func remove_boost(boost: Boost):
 	if not active_boosts.has(boost):
 		GodotLogger.error("This boost does not belong to this component.")
 		return
-		
+
 	for statName in boost.statBoostDict:
 		var newValue = get(statName) - boost.get_stat_boost(statName)
 		self.set(statName, newValue)
-	
+
 	var data: Dictionary = to_json(true)
 
 	if peer_id > 0:
@@ -515,38 +514,6 @@ func _sync_float_change(stat_type: TYPE, value: float):
 		)
 
 
-func _sync_bonus_change(stat_type: TYPE, value: int):
-	if not ready_done:
-		return
-
-	var timestamp: float = Time.get_unix_time_from_system()
-
-	if peer_id > 0:
-		G.sync_rpc.statssynchronizer_sync_bonus_change.rpc_id(
-			peer_id, target_node.name, timestamp, stat_type, value
-		)
-
-	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.statssynchronizer_sync_bonus_change.rpc_id(
-			watcher.peer_id, target_node.name, timestamp, stat_type, value
-		)
-
-
-func _sync_modifier_change(stat_type: TYPE, value: float):
-	if not ready_done:
-		return
-
-	var timestamp: float = Time.get_unix_time_from_system()
-
-	if peer_id > 0:
-		G.sync_rpc.statssynchronizer_sync_modifier_change.rpc_id(
-			peer_id, target_node.name, timestamp, stat_type, value
-		)
-	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.statssynchronizer_sync_modifier_change.rpc_id(
-			watcher.peer_id, target_node.name, timestamp, stat_type, value
-		)
-
 func sync_stats(id: int):
 	G.sync_rpc.statssynchronizer_sync_response.rpc_id(id, target_node.name, to_json(true))
 
@@ -554,21 +521,6 @@ func sync_stats(id: int):
 func sync_response(data: Dictionary):
 	from_json(data, true)
 
-
-#Called only by server
-func sync_int_change(timestamp: float, stat_type: TYPE, value: int):
-	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
-
-
-#Called only by server
-func sync_float_change(timestamp: float, stat_type: TYPE, value: float):
-	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
-
-func sync_bonus_change(timestamp: float, stat_type: TYPE, value: int):
-	server_buffer.append({"timestamp": timestamp, "type": stat_type, "special": "bonus", "value": value})
-
-func sync_modifier_change(timestamp: float, stat_type: TYPE, value: int):
-	server_buffer.append({"timestamp": timestamp, "type": stat_type, "special": "modifier", "value": value})
 
 #Called only by server
 func sync_hurt(timestamp: float, from: String, current_hp: int, damage: int):
