@@ -13,11 +13,10 @@ To get started with JDungeon, follow these steps:
 1. [Lore](#lore)
 2. [Screenshots](#screenshots)
 3. [Videos](#videos)
-4. [List of Features](#list-of-features)
-5. [Feature Roadmap](#feature-roadmap)
+4. [Contributor Guide](#contributing)
+5. [Development Roadmap](#development-roadmap)
 6. [Feature Requests](#feature-requests)
 7. [Install Instructions](#install-instructions)
-8. [Contributor Guide](#contributing)
 
 ## Lore
 Centuries ago the world was whole. The kingdoms were diverse, numerous, and fruitful. The world enjoyed relative peace barring the occasional border conflict. Not much is known anymore of this bright past. The histories are as fragmented as the world itself, each Shard possessing a modicum of knowledge. We don't know what happened. We don't know why. We don't know who. All we know is that the Shards drift further and faster every year. The land itself is not gone. There's no magic that can do that. But to move it? To encourage the very foundation of the earth to shift and set sail? Well, apparently that is possible. In the past there were several Rooted Shards. The last vestiges of normalcy. You could charter transport between them. The magnetic poles of each Root were set and were navigable. They didn't just blip in and out of existence. The Shard would not be persuaded. It liked where it was and it would damn well remain there. But just as water chisels away at the earth, so does time carve away bits of the soul. Now all that's left is...us. Formerly South Radix, now just Radix. You can't be "South" if there's nothing to be South of eh?
@@ -31,47 +30,20 @@ Centuries ago the world was whole. The kingdoms were diverse, numerous, and frui
 ### How to open and run the Godot project
 [![Watch the video](https://img.youtube.com/vi/RkikLTK98EQ/maxresdefault.jpg)](https://youtu.be/RkikLTK98EQ)
 
-## List of Features
+## Contributing
 
-- Gameplay
-  - Enemy system
-  - NPC system
-    - Vendor NPCs
-  - Loot drops upon defeating enemies
-  - Bag system
-  - Equipment system
-  - Players get experience upon defeating enemies
-  - Player level up when reaching a certain amount of experience
-- User Management
-  - Account creation
-  - Login system
-- AI
-  - Wander
-  - Wander and flee when attacked
-- Networking
-  - Synchronization of entities (players, enemies, NPCs, items, etc.)
-  - Synchronization of movement/velocity 
-  - Synchronization of damage
-  - Synchronization of attacks on targets
-  - Synchronization of entities deaths
-  - Synchronization of equipment
-  - Synchronization of bag
-  - Portal from one chunk to another
-- AI
-  - Wander behavior
-  - Attack and flee behavior
-- Content
-  - World map
-- UI
-  - Game menu to quit the game
-  - Rebind keys menu
-  - Configure settings menu
-  - Unstuck menu
-  - Report bug menu
-  - A check if the current version of your client matches the version of the deployed client (only for deployed instances)
+We encourage contributions from the community. If you'd like to contribute to JDungeon, please follow the guidelines in our [Contribution Guide](CONTRIBUTING.md).
 
-## Feature Roadmap
-Have a look at the current open tickets of what features are on the roadmap: https://github.com/jonathaneeckhout/jdungeon/issues 
+If you plan to contribute, have a look at the open issues on GitHub. These issues play a crucial role in helping us achieve important milestones ([current milestone we're working on](https://github.com/users/jonathaneeckhout/projects/1)) and shape the development of JDungeon. You can find the list of open issues in our [Issues](https://github.com/jonathaneeckhout/jdungeon/issues) section.
+
+This addition will provide potential contributors with a clear path to engage with the project by emphasizing the significance of the open issues in reaching project goals.
+
+## Development Roadmap
+We're thrilled to share that we're in the midst of crafting our alpha release, and we can't wait for you to join us on this exciting journey! Our primary focus at this stage is to create an experience that's not just enjoyable but also showcases the core essence of our game with a minimalistic set of content.
+
+By starting with the essentials, we aim to establish a clear and achievable goal that allows us to perfect the fundamentals. This alpha release marks the beginning of something special, and we invite you to be a part of it. Your feedback and involvement are invaluable as we fine-tune the foundations of our project.
+
+Stay tuned for more releases in the future; we have big plans ahead! If you're curious about our current development progress, you can track it in real-time on our [GitHub Alpha release project page here](https://github.com/users/jonathaneeckhout/projects/1).
 
 ## Feature Requests
 You can submit feature requests for JDungeon by opening a new issue. To do this, make sure to start the issue title with "Feature Request:" and apply the "feature request" label. Be sure to provide comprehensive details regarding the feature, its intended purpose, what it aims to achieve or resolve, and any relevant use cases. Once submitted, your feature request will undergo a review process and, if approved, will be transformed into a development task.
@@ -103,14 +75,6 @@ Now you can run the project.
 Select in 1 instance the gateway server option, next a server option and the other the client option.
 Make sure to first create your account before trying to login.
 Enjoy!
-
-## Contributing
-
-We encourage contributions from the community. If you'd like to contribute to JDungeon, please follow the guidelines in our [Contribution Guide](CONTRIBUTING.md).
-
-If you plan to contribute, have a look at the open issues on GitHub. These issues play a crucial role in helping us achieve important milestones ([current milestone we're working on](https://github.com/jonathaneeckhout/jdungeon/milestone/1)) and shape the development of JDungeon. You can find the list of open issues in our [Issues](https://github.com/jonathaneeckhout/jdungeon/issues) section.
-
-This addition will provide potential contributors with a clear path to engage with the project by emphasizing the significance of the open issues in reaching project goals.
 
 ## Support and Community
 
