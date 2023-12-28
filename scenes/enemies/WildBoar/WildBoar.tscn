@@ -364,6 +364,71 @@ tracks/13/keys = {
 "values": [0.0, -1.28771]
 }
 
+[sub_resource type="Animation" id="Animation_pdo1o"]
+resource_name = "Hurt"
+length = 0.25
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprites:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 0.376471), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton/RemoteBody:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(15, -14), Vector2(15, -14), Vector2(15, -14)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton/RemoteBody:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.406285, 0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Skeleton/RemoteBody/RemoteHead:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(-24, -9), Vector2(-24, -9), Vector2(-24, -9)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Skeleton/RemoteBody/RemoteHead:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.523598, 0.0]
+}
+
 [sub_resource type="Animation" id="Animation_e018s"]
 resource_name = "Idle"
 length = 3.0
@@ -981,6 +1046,7 @@ tracks/17/keys = {
 _data = {
 "Attack": SubResource("Animation_stwrd"),
 "Die": SubResource("Animation_oxcl7"),
+"Hurt": SubResource("Animation_pdo1o"),
 "Idle": SubResource("Animation_e018s"),
 "Move": SubResource("Animation_wvh6a"),
 "RESET": SubResource("Animation_qq2ba")
@@ -1055,6 +1121,7 @@ offset = Vector2(-28.5, -1)
 
 [node name="RightFrontHoof" type="Sprite2D" parent="Sprites"]
 position = Vector2(-22, -12)
+rotation = 0.132294
 texture = ExtResource("16_ts8jf")
 offset = Vector2(21.5, -19)
 
