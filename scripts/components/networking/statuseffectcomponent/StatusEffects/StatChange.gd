@@ -23,9 +23,6 @@ func _effect_applied(_target: Node, _json_data: Dictionary):
 			)
 		)
 	)
-	var targetStatusEffComp: StatusEffectComponent = G.world.get_entity_component_by_name(
-		_target.get_name(), StatusEffectComponent.COMPONENT_NAME
-	)
 	var targetStatsComp: StatsSynchronizerComponent = G.world.get_entity_component_by_name(
 		_target.get_name(), StatsSynchronizerComponent.COMPONENT_NAME
 	)
