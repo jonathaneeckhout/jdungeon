@@ -130,7 +130,6 @@ func _ready() -> void:
 		set_process(false)
 
 		skills_changed.connect(sync_skills.bind(_target_node.peer_id))
-		sync_skills(_target_node.peer_id)
 
 	# Client-side logic
 	else:
