@@ -129,13 +129,8 @@ func _ready() -> void:
 		# The process call is used to trigger a redraw, thus only needed on the client side
 		set_process(false)
 
-		# TEMP until classes are added
-		add_skill("HealSelf")
-		add_skill("Combustion")
-		assert(skills[0] is SkillComponentResource)
-		# TEMP ends
-
 		skills_changed.connect(sync_skills.bind(_target_node.peer_id))
+		sync_skills(_target_node.peer_id)
 
 	# Client-side logic
 	else:
