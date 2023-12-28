@@ -48,6 +48,7 @@ func _ready() -> void:
 	close_button.pressed.connect(close)
 	confirm_button.pressed.connect(save_selection)
 
+	add_child(feedbackFadeTimer)
 	feedbackFadeTimer.timeout.connect(set_text_feedback.bind(""))
 
 	var tween := feedback_label.create_tween().set_parallel(false).set_loops()
@@ -152,8 +153,11 @@ func _on_skill_button_pressed(skill_button: SkillButton):
 		#If another slot was the selected_button, remove the skill it had after transfering it.
 		elif selected_button.is_slot and skill_button.is_slot:
 			set_text_feedback(FEEDBACK_MESSAGES.SLOT_TO_SLOT_TRANSFER, feedback_duration_default)
-			skill_button.skill_class = selected_button.skill_class
-			selected_button.skill_class = ""
+			var skillToMove: String = selected_button.skill_class
+			var skillToReplace: String = skill_button.skill_class
+			
+			skill_button.skill_class = skillToMove
+			selected_button.skill_class = skillToReplace
 			selected_button = null
 
 	#If no button had been selected yet, do so.
