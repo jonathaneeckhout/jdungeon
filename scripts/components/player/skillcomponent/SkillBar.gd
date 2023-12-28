@@ -14,6 +14,7 @@ var display_selected: SkillDisplay
 
 const EMPTY_ICON: Texture = preload("res://assets/images/ui/Empty.tres")
 
+
 func _ready() -> void:
 	skill_component.skills_changed.connect(update_icons)
 	update_displays()

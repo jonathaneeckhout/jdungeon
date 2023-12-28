@@ -523,6 +523,16 @@ func sync_response(data: Dictionary):
 
 
 #Called only by server
+func sync_int_change(timestamp: float, stat_type: TYPE, value: int):
+	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
+
+
+#Called only by server
+func sync_float_change(timestamp: float, stat_type: TYPE, value: float):
+	server_buffer.append({"timestamp": timestamp, "type": stat_type, "value": value})
+
+
+#Called only by server
 func sync_hurt(timestamp: float, from: String, current_hp: int, damage: int):
 	server_buffer.append(
 		{

@@ -95,7 +95,7 @@ func process_statuses():
 				set_duration(status, startResource.default_duration)
 			else:
 				remove_status(status)
-		
+
 		if user.get("peer_id"):
 			sync_effect(user.peer_id, status)
 
