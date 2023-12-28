@@ -155,7 +155,7 @@ func _on_skill_button_pressed(skill_button: SkillButton):
 			set_text_feedback(FEEDBACK_MESSAGES.SLOT_TO_SLOT_TRANSFER, feedback_duration_default)
 			var skillToMove: String = selected_button.skill_class
 			var skillToReplace: String = skill_button.skill_class
-			
+
 			skill_button.skill_class = skillToMove
 			selected_button.skill_class = skillToReplace
 			selected_button = null

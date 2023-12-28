@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bsauq1smmlnkl"]
+[gd_scene load_steps=26 format=3 uid="uid://bsauq1smmlnkl"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Ladybug/Ladybug.gd" id="1_kxhsd"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="1_q6d72"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="7_tstyb"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="8_0qsyc"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="9_td36y"]
+[ext_resource type="PackedScene" uid="uid://cjkhsifuk2une" path="res://scripts/components/networking/statuseffectcomponent/StatusEffectComponent.tscn" id="10_cm3kp"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="10_j2kad"]
 [ext_resource type="Texture2D" uid="uid://cqg88k6138b4k" path="res://assets/images/enemies/ladybug/scaled/Back wing cover.png" id="12_7lv0i"]
 [ext_resource type="Texture2D" uid="uid://cmqj7o6ykxgdh" path="res://assets/images/enemies/ladybug/scaled/Back wing.png" id="13_said4"]
@@ -657,6 +658,10 @@ skeleton = NodePath("../Skeleton")
 [node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats") instance=ExtResource("8_0qsyc")]
 animation_player = NodePath("../AnimationPlayer")
 stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="StatusEffectComponent" parent="." node_paths=PackedStringArray("user", "stats_component") instance=ExtResource("10_cm3kp")]
+user = NodePath("..")
+stats_component = NodePath("../StatsSynchronizerComponent")
 
 [node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("9_td36y")]
 offset_top = -30.0

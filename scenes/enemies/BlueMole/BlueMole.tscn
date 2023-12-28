@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cgxevug65fx3d"]
+[gd_scene load_steps=28 format=3 uid="uid://cgxevug65fx3d"]
 
 [ext_resource type="Script" path="res://scenes/enemies/BlueMole/BlueMole.gd" id="1_0kuqc"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_7anrd"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://ix4rovrd5tqg" path="res://assets/images/enemies/bluemole/scaled/Arm1.png" id="9_82elk"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="10_h2vk6"]
 [ext_resource type="Texture2D" uid="uid://xnjigwd7ta4k" path="res://assets/images/enemies/bluemole/scaled/Arm2.png" id="10_hd4po"]
+[ext_resource type="PackedScene" uid="uid://cjkhsifuk2une" path="res://scripts/components/networking/statuseffectcomponent/StatusEffectComponent.tscn" id="10_wwyd3"]
 [ext_resource type="Texture2D" uid="uid://dqyouflmy1kq6" path="res://assets/images/enemies/bluemole/scaled/Body.png" id="11_6l74c"]
 [ext_resource type="Texture2D" uid="uid://d4bfefdngmd1y" path="res://assets/images/enemies/bluemole/scaled/Leg1.png" id="12_5o0li"]
 [ext_resource type="Texture2D" uid="uid://co2tfr6eu3uiv" path="res://assets/images/enemies/bluemole/scaled/Leg2.png" id="13_tm3ud"]
@@ -813,6 +814,10 @@ animation_player = NodePath("../AnimationPlayer")
 stats = NodePath("../StatsSynchronizerComponent")
 action_synchronizer = NodePath("../ActionSynchronizerComponent")
 update_face = NodePath("../UpdateFaceComponent")
+
+[node name="StatusEffectComponent" parent="." node_paths=PackedStringArray("user", "stats_component") instance=ExtResource("10_wwyd3")]
+user = NodePath("..")
+stats_component = NodePath("../StatsSynchronizerComponent")
 
 [node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("7_qev5w")]
 offset_top = -56.0

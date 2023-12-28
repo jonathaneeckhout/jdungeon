@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dfq5lb87meq6q"]
+[gd_scene load_steps=22 format=3 uid="uid://dfq5lb87meq6q"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Sheep/Sheep.gd" id="1_6p7b5"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_nxh3l"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_mmahp"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="7_aau1x"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="8_wd6jv"]
+[ext_resource type="PackedScene" uid="uid://cjkhsifuk2une" path="res://scripts/components/networking/statuseffectcomponent/StatusEffectComponent.tscn" id="10_ldqij"]
 [ext_resource type="Texture2D" uid="uid://djed5baiwoimr" path="res://assets/images/enemies/sheep/scaled/sheep.png" id="11_l0562"]
 
 [sub_resource type="Animation" id="Animation_itymv"]
@@ -216,6 +217,10 @@ skeleton = NodePath("../Sprite2D")
 [node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats") instance=ExtResource("8_wd6jv")]
 animation_player = NodePath("../AnimationPlayer")
 stats = NodePath("../StatsSynchronizerComponent")
+
+[node name="StatusEffectComponent" parent="." node_paths=PackedStringArray("user", "stats_component") instance=ExtResource("10_ldqij")]
+user = NodePath("..")
+stats_component = NodePath("../StatsSynchronizerComponent")
 
 [node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("5_juh1b")]
 offset_top = -30.0
