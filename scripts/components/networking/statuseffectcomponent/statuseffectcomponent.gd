@@ -29,6 +29,7 @@ func _ready():
 	if user.get("component_list") != null:
 		user.component_list[COMPONENT_NAME] = self
 	
+	stats_component.died.connect(clear_status)
 	
 	status_tick_timer = Timer.new()
 	status_tick_timer.name = "TickTimer"
@@ -148,6 +149,11 @@ func add_status_effect(status_class: String, applier: Node, stack_override: int 
 func remove_status(status_class: String):
 	get_resource(status_class).effect_removed(user, get_status_effect_data(status_class))
 	status_effects_active.erase(status_class)
+
+
+func clear_status():
+	for status: String in status_effects_active:
+		remove_status(status)
 
 
 func set_duration(status_class: String, dur: float):

@@ -175,7 +175,7 @@ func _ready():
 	target_node = get_parent()
 
 	if target_node.get("component_list") != null:
-		target_node.component_list["stats_synchronizer"] = self
+		target_node.component_list[COMPONENT_NAME] = self
 
 	if target_node.get("peer_id") != null:
 		peer_id = target_node.peer_id

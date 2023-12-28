@@ -1,6 +1,8 @@
 extends Node
 class_name CharacterClassComponent
 
+const COMPONENT_NAME: String = "class_component"
+
 const CharacterClassSelectionScene: PackedScene = preload(
 	"res://scripts/components/player/charclasscomponent/CharClassSelection.tscn"
 )

@@ -1,8 +1,11 @@
 extends Control
+class_name SkillBarUI
+
+const DEFAULT_MAX_SKILL_COUNT: int = 5
 
 @export var skill_component: SkillComponent
 
-@export var max_skills: int = 5
+@export var max_skills: int = DEFAULT_MAX_SKILL_COUNT
 
 var displays: Array[SkillDisplay]
 var display_selected: SkillDisplay

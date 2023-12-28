@@ -1446,4 +1446,3 @@ stats = NodePath("../../../../StatsSynchronizerComponent")
 [node name="SkillBar" parent="Camera2D/UILayer/GUI" node_paths=PackedStringArray("skill_component") instance=ExtResource("36_6b1sm")]
 layout_mode = 1
 skill_component = NodePath("../../../../SkillComponent")
-max_skills = null

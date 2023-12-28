@@ -6,6 +6,8 @@ class_name SkillComponent
 #TODO:
 #Prepare an UI element to check skills
 
+const COMPONENT_NAME: String = "skill_component"
+
 enum SKILL_ATTEMPT_RESULT { OK, INSUFFICIENT_ENERGY, OUT_OF_RANGE, COOLDOWN_RUNNING }
 
 const COOLDOWN_TIMER_INTERVAL: float = 0.1
@@ -171,7 +173,7 @@ func _init_target_node() -> bool:
 
 	# Register the component in the parent's component_list
 	if _target_node.get("component_list") != null:
-		_target_node.component_list["skill_component"] = self
+		_target_node.component_list[COMPONENT_NAME] = self
 
 	return true
 
@@ -314,11 +316,12 @@ func remove_skill(skill_class: String):
 	for skill in skills:
 		if skill.skill_class == skill_class:
 			skills.erase(skill)
-
 			skills_changed.emit()
-
 			return
 
+func clear_skills():
+	skills.clear()
+	skills_changed.emit()
 
 # Select a skill using its index
 func _select_skill_by_index(index: int):
