@@ -67,6 +67,7 @@ signal healed(from: String, healing: int)
 signal energy_recovered(from: String, gained: int)
 signal died
 signal respawned
+signal boosts_changed
 
 @export var watcher_synchronizer: WatcherSynchronizerComponent
 
@@ -204,7 +205,9 @@ func _ready():
 			await tree_entered
 
 		G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
-
+	
+	boosts_changed.connect(reload_boosts)
+	
 	# Make sure this line is called on server and client's side
 	ready_done = true
 
@@ -380,6 +383,13 @@ func get_attack_damage() -> float:
 
 
 func apply_boost(boost: Boost):
+	#Override any boost with an identical identifier, ignore if this boost doesn't have one.
+	if boost.identifier != Boost.NO_IDENTIFIER:
+		var existingBoost: Boost = get_boost_with_identifier(boost.identifier)
+		if existingBoost is Boost:
+			remove_boost(existingBoost)
+	
+	#Validate boost
 	for statName in boost.statBoostDict:
 		if not statName in StatListAll:
 			GodotLogger.error("The property '{0}' is not a stat.".format([statName]))
@@ -394,19 +404,20 @@ func apply_boost(boost: Boost):
 					)
 				)
 			)
-
-		var newValue = get(statName) + boost.get_stat_boost(statName)
-		self.set(statName, newValue)
-
+	
+	#Add to list
 	active_boosts.append(boost)
 
 	var data: Dictionary = to_json(true)
-
+	
 	if peer_id > 0:
 		G.sync_rpc.statssynchronizer_sync_response.rpc_id(peer_id, target_node.name, data)
 
 	for watcher in watcher_synchronizer.watchers:
 		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
+	
+	#This signal calls reload_boosts()
+	boosts_changed.emit()
 
 
 func remove_boost(boost: Boost):
@@ -414,9 +425,9 @@ func remove_boost(boost: Boost):
 		GodotLogger.error("This boost does not belong to this component.")
 		return
 
-	for statName in boost.statBoostDict:
-		var newValue = get(statName) - boost.get_stat_boost(statName)
-		self.set(statName, newValue)
+	#for statName in boost.statBoostDict:
+		#var newValue = get(statName) - boost.get_stat_boost(statName)
+		#self.set(statName, newValue)
 
 	var data: Dictionary = to_json(true)
 
@@ -425,6 +436,24 @@ func remove_boost(boost: Boost):
 
 	for watcher in watcher_synchronizer.watchers:
 		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
+	
+	boosts_changed.emit()
+
+
+func reload_boosts():
+	for stat: String in StatListPermanent:
+		var newValue: int = get("_default_" + stat)
+		
+		for boost: Boost in active_boosts:
+			newValue += boost.get_stat_boost(stat)
+
+
+func get_boost_with_identifier(identifier: String) -> Boost:
+	for boost: Boost in active_boosts:
+		if boost.identifier == identifier:
+			return boost
+			
+	return null
 
 
 func to_json(full: bool = false) -> Dictionary:

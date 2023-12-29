@@ -109,10 +109,13 @@ func get_item(item_uuid: String) -> Item:
 
 func get_boost() -> Boost:
 	var boost: Boost = Boost.new()
+	boost.identifier = "equipment"
+	
 	for equipment_slot in items:
 		var item: Item = items[equipment_slot]
 		if item != null:
-			boost.add_boost(item.boost)
+			boost.combine_boost(item.boost)
+			
 	return boost
 
 
