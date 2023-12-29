@@ -390,7 +390,7 @@ func apply_boost(boost: Boost):
 			remove_boost(existingBoost)
 	
 	#Validate boost
-	for statName in boost.statBoostDict:
+	for statName in boost.statBoostDict.keys() + boost.statBoostModifierDict.keys():
 		if not statName in StatListAll:
 			GodotLogger.error("The property '{0}' is not a stat.".format([statName]))
 
@@ -425,10 +425,6 @@ func remove_boost(boost: Boost):
 		GodotLogger.error("This boost does not belong to this component.")
 		return
 
-	#for statName in boost.statBoostDict:
-		#var newValue = get(statName) - boost.get_stat_boost(statName)
-		#self.set(statName, newValue)
-
 	var data: Dictionary = to_json(true)
 
 	if peer_id > 0:
@@ -441,11 +437,22 @@ func remove_boost(boost: Boost):
 
 
 func reload_boosts():
+	load_defaults()
+	
+	var flatValues: Dictionary = {}
+	var modifierValues: Dictionary = {}
+	
 	for stat: String in StatListPermanent:
-		var newValue: int = get("_default_" + stat)
+		flatValues[stat] = 0
+		modifierValues[stat] = 0
 		
 		for boost: Boost in active_boosts:
-			newValue += boost.get_stat_boost(stat)
+			flatValues[stat] += boost.get_stat_boost(stat)
+			modifierValues[stat] += boost.get_stat_boost_modifier(stat)
+			
+		set(stat, flatValues[stat] * modifierValues[stat])
+	
+		
 
 
 func get_boost_with_identifier(identifier: String) -> Boost:

@@ -205,13 +205,13 @@ func calculate_level_boost() -> Boost:
 	boost.hp_max = int((stats.level - 1) * PLAYER_HP_GAIN_PER_LEVEL)
 	boost.attack_power_min = int(stats.level * PLAYER_ATTACK_POWER_GAIN_PER_LEVEL)
 	boost.attack_power_max = boost.attack_power_min
-	boost.identifier = "stat_growth_per_level"
 	return boost
 
 
 func calculate_and_apply_boosts():
 	var boost: Boost = calculate_level_boost()
 	var equipment_boost: Boost = equipment.get_boost()
+	boost.identifier = "player_general"
 	
 	boost.combine_boost(equipment_boost)
 	stats.apply_boost(boost)
