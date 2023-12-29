@@ -1,6 +1,7 @@
 extends Node2D
 
 ## This component will emit particles when the target node is hit.
+## Place this component above the sprites of the target node to make it more visible.
 class_name HitPatriclesComponent
 
 ## This component is needed to know if the target node has been hit
