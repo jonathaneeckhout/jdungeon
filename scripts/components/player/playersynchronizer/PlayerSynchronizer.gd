@@ -155,6 +155,12 @@ func _physics_process(delta):
 	# Don't do anything when the player is dead
 	if stats_component.is_dead:
 		return
+		
+	# Don't do anything if the chat is active
+	if JUI.chat_active:
+		# Stops the player from walking in place
+		animation_player.play("Idle")
+		return
 
 	# Server-side logic
 	if G.is_server():
