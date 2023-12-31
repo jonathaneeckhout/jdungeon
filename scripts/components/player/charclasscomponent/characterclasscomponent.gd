@@ -203,15 +203,15 @@ func apply_stats():
 
 	var statBoost := Boost.new()
 	statBoost.identifier = "character_classes"
-	
+
 	for charClass: CharacterClassResource in classes:
-		for stat: String in StatsSynchronizerComponent.StatListWithDefaults:			
+		for stat: String in StatsSynchronizerComponent.StatListWithDefaults:
 			#Apply all multipliers and bonuses from classes for the given stat
 			statBoost.add_stat_boost(stat, charClass.get_bonus(stat))
 			statBoost.add_stat_boost_modifier(stat, charClass.get_multiplier(stat), false)
-			
+
 	stats_component.apply_boost(statBoost)
-	
+
 
 func apply_skills():
 	if not G.is_server():

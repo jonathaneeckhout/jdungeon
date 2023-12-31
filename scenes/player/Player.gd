@@ -212,7 +212,7 @@ func calculate_and_apply_boosts():
 	var boost: Boost = calculate_level_boost()
 	var equipment_boost: Boost = equipment.get_boost()
 	boost.identifier = "player_general"
-	
+
 	boost.combine_boost(equipment_boost)
 	stats.apply_boost(boost)
 

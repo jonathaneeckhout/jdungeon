@@ -193,6 +193,7 @@ func _on_class_lock_changed():
 func close():
 	if is_inside_tree():
 		get_parent().remove_child(self)
+		JUI.above_ui = false
 
 
 func _on_change_skills_pressed():

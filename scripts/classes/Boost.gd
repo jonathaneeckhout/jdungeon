@@ -47,8 +47,11 @@ func combine_boost(boost: Boost):
 	if Global.debug_mode:
 		if boost.identifier != NO_IDENTIFIER and identifier != NO_IDENTIFIER:
 			GodotLogger.info(
-				"Mixed 2 boosts with differing identifiers (Original '{0}' and incoming '{1}')".format([identifier, boost.identifier])
+				(
+					"Mixed 2 boosts with differing identifiers (Original '{0}' and incoming '{1}')"
+					. format([identifier, boost.identifier])
 				)
+			)
 	for stat: String in statBoostDict:
 		set_stat_boost(stat, boost.get_stat_boost(stat))
 
@@ -63,18 +66,18 @@ func add_stat_boost(stat_name: String, value: int):
 
 func get_stat_boost(statName: String, default: int = 0) -> int:
 	return statBoostDict.get(statName, default)
-	
-	
+
+
 func set_stat_boost_modifier(stat_name: String, value: float):
 	statBoostModifierDict[stat_name] = value
 
 
-func get_stat_boost_modifier(stat_name: String, default:float = 1) -> float:
+func get_stat_boost_modifier(stat_name: String, default: float = 1) -> float:
 	return statBoostModifierDict.get(stat_name, default)
-	
+
+
 func add_stat_boost_modifier(stat_name: String, value: float, additive: bool = false):
 	if additive:
 		set_stat_boost_modifier(stat_name, get_stat_boost_modifier(stat_name) + value)
 	else:
 		set_stat_boost_modifier(stat_name, get_stat_boost_modifier(stat_name) * value)
-	
