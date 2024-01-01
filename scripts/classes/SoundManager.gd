@@ -59,7 +59,7 @@ var registered_players: Dictionary
 func _ready() -> void:
 	if not G.is_server():
 		for streamClass: String in Streams:
-			set_registered_stream(streamClass, Streams.get(streamClass))
+			set_registered_stream( streamClass, load(Streams.get(streamClass)) )
 	
 	while player_parent == null:
 		player_parent = G.world
@@ -340,6 +340,8 @@ static func new_settings() -> StreamPlayerSettings:
 
 
 func sync_play_on_client(id: int, stream_class: String, type: CHANNEL_TYPE, json_settings: Dictionary):
+	if Global.debug_mode:
+		GodotLogger.info("Played sound '{0}' on client with id {1}".format([stream_class, str(id)]))
 	G.sync_rpc.soundmanager_sync_invoke_audio.rpc_id(id, stream_class, type, json_settings)
 
 
