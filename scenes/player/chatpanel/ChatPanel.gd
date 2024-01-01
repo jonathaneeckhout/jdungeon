@@ -35,8 +35,16 @@ func _ready():
 
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
-		input_field.grab_focus()
-		JUI.chat_active = true
+		if input_field.has_focus():
+			if input_field.text.strip_edges() == "":
+				# Input is empty and enter is pressed, release focus
+				input_field.release_focus()
+				JUI.chat_active = false
+		else:
+			# Input field doesn't have focus, grab it
+			input_field.grab_focus()
+			JUI.chat_active = true
+
 	if event.is_action_pressed("ui_cancel"):
 		input_field.release_focus()
 		# This timer is needed to prevent race conditions with other ui_cancel listeners
