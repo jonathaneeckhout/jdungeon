@@ -1,0 +1,6 @@
+Cure1-8 : https://opengameart.org/content/cure-magic
+stone_door : https://opengameart.org/content/stone-door
+bat_01-03 : https://opengameart.org/content/bat-screeches
+hit01 : https://opengameart.org/content/hit-sound-bitcrush 
+sheep_baa : https://opengameart.org/content/sheep-baa
+bear01-02 : https://opengameart.org/content/bear-growls

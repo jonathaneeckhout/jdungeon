@@ -8,7 +8,7 @@ class_name SoundManager
 ## You may use [method play_sound] or any of it's variants to play an AudioStream, [method play_sound] is the slowest.
 ## Playing example:
 ##[codeblock]
-##	var audioSettings := SoundManager.new_settings().set_position_2D(Vector2.RIGHT*500).set_max_distance(9999)
+##	var audioSettings := SoundManager.new_settings().set_position_2d(Vector2.RIGHT*500).set_max_distance(9999)
 ##	var player: AudioStreamPlayer2D = SoundManager.main_instance.play_sound_pos_2d(load("res://assets/audio/ui/login_panel/ui_click/ui_click.mp3"), audioSettings)
 ##	player.stop()
 ##[/codeblock]
@@ -20,14 +20,18 @@ class_name SoundManager
 ##	    player.start(0.2)
 ##[/codeblock]
 
+const FALLBACK_SOUND : AudioStream = preload("res://assets/audio/hit01.wav")
+
+const Streams: Dictionary = {
+	"HealSpell" : "res://assets/audio/Cure4.wav",
+	"CreatureScreech" : "res://assets/audio/bat_01.ogg",
+	"StoneMove" : "res://assets/audio/stone_door.ogg",
+}
+
 enum CHANNEL_TYPE { MONO, POSITIONAL_2D, POSITIONAL_3D }
 
 ## All AudioStreamPlayer nodes will be added as children of this node
 @export var player_parent: Node
-
-## Used in case of errors, specially if [method get_registered_stream] fails.
-## If not set, this will be null.
-@export var failsafe_stream: AudioStream = null
 
 ## Max amount of players that may be created per type.
 @export var max_channels: int = 16
@@ -52,21 +56,34 @@ var registered_audio_streams: Dictionary  #String:AudioStream
 var registered_players: Dictionary
 
 
+func _ready() -> void:
+	if not G.is_server():
+		for streamClass: String in Streams:
+			set_registered_stream(streamClass, Streams.get(streamClass))
+	
+	while player_parent == null:
+		player_parent = G.world
+		await get_tree().physics_frame
+
+
+func play_sound_by_class(stream_class: String, type: CHANNEL_TYPE, settings: StreamPlayerSettings):
+	play_sound(get_registered_stream(stream_class), type, settings)
+
+
 func play_sound(
 	stream: AudioStream,
 	type: CHANNEL_TYPE,
-	settings: StreamPlayerSettings = StreamPlayerSettings.new(),
-	identifier: String = ""
+	settings: StreamPlayerSettings = StreamPlayerSettings.new()
 ) -> Node:
 	match type:
 		CHANNEL_TYPE.MONO:
-			return play_sound_mono(stream, settings, identifier)
+			return play_sound_mono(stream, settings)
 
 		CHANNEL_TYPE.POSITIONAL_2D:
-			return play_sound_pos_2d(stream, settings, identifier)
+			return play_sound_pos_2d(stream, settings)
 
 		CHANNEL_TYPE.POSITIONAL_3D:
-			return play_sound_pos_3D(stream, settings, identifier)
+			return play_sound_pos_3d(stream, settings)
 
 	return null
 
@@ -168,24 +185,26 @@ func stop_player_from_identifier(identifier: String):
 
 
 ## Retrieves an audio stream with the given identifier as set by [method set_registered_stream]
-func get_registered_stream(streamClass: String) -> AudioStream:
-	return registered_audio_streams.get(streamClass, failsafe_stream)
+func get_registered_stream(stream_class: String) -> AudioStream:
+	if not registered_audio_streams.has(stream_class):
+		GodotLogger.warn("The stream '{0}' has not been registered.".format([stream_class]))
+	return registered_audio_streams.get(stream_class, FALLBACK_SOUND)
 
 
 ## Stores an audio stream under an identifier, to retrieve with [method get_registered_stream].
-func set_registered_stream(streamClass: String, stream: AudioStream):
-	registered_audio_streams[streamClass] = stream
+func set_registered_stream(stream_class: String, stream: AudioStream):
+	registered_audio_streams[stream_class] = stream
 
 
-## Fetches the first available AudioStreamPlayer or creates one if [param allowNew] is true
-func get_available_channel(type: CHANNEL_TYPE, allowNew: bool = true) -> Node:
+## Fetches the first available AudioStreamPlayer or creates one if [param allow_new] is true
+func get_available_channel(type: CHANNEL_TYPE, allow_new: bool = true) -> Node:
 	match type:
 		CHANNEL_TYPE.MONO:
 			for player in channels_mono:
 				if not player.playing:
 					return player
 
-			if allowNew:
+			if allow_new:
 				return add_channel(CHANNEL_TYPE.MONO)
 
 		CHANNEL_TYPE.POSITIONAL_2D:
@@ -193,7 +212,7 @@ func get_available_channel(type: CHANNEL_TYPE, allowNew: bool = true) -> Node:
 				if not player.playing:
 					return player
 
-			if allowNew:
+			if allow_new:
 				return add_channel(CHANNEL_TYPE.POSITIONAL_2D)
 
 		CHANNEL_TYPE.POSITIONAL_3D:
@@ -201,11 +220,15 @@ func get_available_channel(type: CHANNEL_TYPE, allowNew: bool = true) -> Node:
 				if not player.playing:
 					return player
 
-			if allowNew:
+			if allow_new:
 				return add_channel(CHANNEL_TYPE.POSITIONAL_3D)
 
 	GodotLogger.error("Something went wrong when trying to add a channel.")
 	return null
+
+
+func play_sound_mono_by_class(stream_class: String, settings: StreamPlayerSettings):
+	play_sound_mono(get_registered_stream(stream_class), settings)
 
 
 func play_sound_mono(
@@ -228,16 +251,19 @@ func play_sound_mono(
 
 	player.finished.connect(on_player_finished.bind(player, settings))
 
-	if identifier != "":
-		registered_players[identifier] = player
+	if settings.identifier != "":
+		registered_players[settings.identifier] = player
 
 	return player
 
 
+func play_sound_pos_2d_by_class(stream_class: String, settings: StreamPlayerSettings):
+	play_sound_pos_2d(get_registered_stream(stream_class), settings)
+
+
 func play_sound_pos_2d(
 	stream: AudioStream,
-	settings: StreamPlayerSettings = StreamPlayerSettings.new(),
-	identifier = ""
+	settings: StreamPlayerSettings = StreamPlayerSettings.new()
 ) -> AudioStreamPlayer2D:
 	var player: AudioStreamPlayer2D = get_available_channel(CHANNEL_TYPE.POSITIONAL_2D)
 
@@ -252,21 +278,24 @@ func play_sound_pos_2d(
 	player.volume_db = settings.volume
 	player.attenuation = settings.attenuation
 	player.max_distance = settings.max_distance
-	player.position = settings.position_2D
+	player.global_position = settings.position_2d
 	player.play(settings.seek)
 
 	player.finished.connect(on_player_finished.bind(player, settings))
 
-	if identifier != "":
-		registered_players[identifier] = player
+	if settings.identifier != "":
+		registered_players[settings.identifier] = player
 
 	return player
 
 
-func play_sound_pos_3D(
+func play_sound_pos_3d_by_class(stream_class: String, settings: StreamPlayerSettings):
+	play_sound_pos_3d(get_registered_stream(stream_class), settings)
+
+
+func play_sound_pos_3d(
 	stream: AudioStream,
-	settings: StreamPlayerSettings = StreamPlayerSettings.new(),
-	identifier = ""
+	settings: StreamPlayerSettings = StreamPlayerSettings.new()
 ) -> AudioStreamPlayer3D:
 	var player: AudioStreamPlayer3D = get_available_channel(CHANNEL_TYPE.POSITIONAL_3D)
 
@@ -281,13 +310,13 @@ func play_sound_pos_3D(
 	player.volume_db = settings.volume
 	player.attenuation = settings.attenuation
 	player.max_distance = settings.max_distance
-	player.position = settings.position_3D
+	player.global_position = settings.position_3d
 	player.play(settings.seek)
 
 	player.finished.connect(on_player_finished.bind(player, settings))
 
-	if identifier != "":
-		registered_players[identifier] = player
+	if settings.identifier != "":
+		registered_players[settings.identifier] = player
 
 	return player
 
@@ -310,14 +339,22 @@ static func new_settings() -> StreamPlayerSettings:
 	return StreamPlayerSettings.new()
 
 
+func sync_play_on_client(id: int, stream_class: String, type: CHANNEL_TYPE, json_settings: Dictionary):
+	G.sync_rpc.soundmanager_sync_invoke_audio.rpc_id(id, stream_class, type, json_settings)
+
+
 class StreamPlayerSettings:
 	extends Object
 
+	const JSON_Keys: Array[String] = ["position_2d", "position_3d", "bus", "seek", "volume", "pitch_scale", "attenuation", "max_distance", "loop", "identifier"]
+
+	var identifier: String
+
 	## Position for 2D players, in global coordinates
-	var position_2D: Vector2
+	var position_2d: Vector2
 
 	## Position for 3D players, in global coordinates
-	var position_3D: Vector3
+	var position_3d: Vector3
 
 	## The Audio bus used, falls back to Master if invalid
 	var bus: StringName = &"Master"
@@ -340,12 +377,16 @@ class StreamPlayerSettings:
 	## If true, the sound will start playing again upon finishing, respects the "seek" property
 	var loop: bool = false
 
-	func set_position_2D(value: Vector2):
-		position_2D = value
+	func set_identifier(ident: String):
+		identifier = ident
 		return self
 
-	func set_position_3D(value: Vector3):
-		position_3D = value
+	func set_position_2d(value: Vector2):
+		position_2d = value
+		return self
+
+	func set_position_3d(value: Vector3):
+		position_3d = value
 		return self
 
 	func set_bus(value: StringName) -> StreamPlayerSettings:
@@ -374,4 +415,21 @@ class StreamPlayerSettings:
 
 	func set_loop(value: bool) -> StreamPlayerSettings:
 		loop = value
+		return self
+
+	func to_json() -> Dictionary:
+		var output: Dictionary = {}
+		
+		for key: String in JSON_Keys:
+			var value = get(key)
+			if get_script().get_property_default_value(key) != value:
+				output[key] = value
+			
+		return output
+		
+	func from_json(data: Dictionary) -> StreamPlayerSettings:
+		for key: String in data:
+			assert(key in JSON_Keys)
+			set(key, data[key]) 
+			
 		return self
