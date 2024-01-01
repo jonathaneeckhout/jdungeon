@@ -29,6 +29,7 @@ text = "Entity"
 horizontal_alignment = 1
 
 [node name="HPBar" type="ProgressBar" parent="."]
+modulate = Color(1, 1, 1, 0.501961)
 layout_mode = 0
 offset_left = -32.0
 offset_top = -48.0
@@ -40,6 +41,7 @@ metadata/_edit_lock_ = true
 
 [node name="EnergyBar" type="ProgressBar" parent="."]
 visible = false
+modulate = Color(1, 1, 1, 0.501961)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = -0.187
