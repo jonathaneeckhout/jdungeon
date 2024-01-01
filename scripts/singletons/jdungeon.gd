@@ -34,8 +34,8 @@ var audio: SoundManager = SoundManager.new()
 func _ready():
 	uuid_util = load("res://scripts/utilities/uuid/uuid.gd").new()
 
-	audio.player_parent = self
 	audio.main_instance = audio
+	add_child(audio)
 
 
 func register_scenes():
@@ -199,6 +199,11 @@ func register_status_effects():
 			"res://scripts/components/networking/statuseffectcomponent/StatusEffects/AttackDownPerStackFlat.tres"
 		)
 	)
+	
+func register_audio_streams():
+	audio.set_registered_stream("HealSpell", preload("res://assets/audio/Cure4.wav"))
+	audio.set_registered_stream("CreatureScreech", preload("res://assets/audio/bat_01.ogg"))
+	audio.set_registered_stream("StoneMove", preload("res://assets/audio/stone_door.ogg"))
 
 
 func register_player_scene(player_scene_path: String):

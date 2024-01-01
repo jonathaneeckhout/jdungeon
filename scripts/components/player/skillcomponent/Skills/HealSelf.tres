@@ -1,25 +1,19 @@
-[gd_resource type="Resource" load_steps=3 format=3 uid="uid://mq5y2j0cfrku"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://mq5y2j0cfrku"]
 
-[ext_resource type="Texture2D" uid="uid://bjys5tgpmnp62" path="res://assets/images/spells/heal/Heal.png" id="1_llcs6"]
-
-[sub_resource type="GDScript" id="GDScript_fecn7"]
-script/source = "extends SkillComponentResource
-
-func _effect(info: SkillUseInfo):
-	info.get_user_stats().heal(info.user.get_name(), 20)
-"
+[ext_resource type="Script" path="res://scripts/components/player/skillcomponent/Skills/HealSelf.gd" id="1_bhffi"]
 
 [resource]
-script = SubResource("GDScript_fecn7")
+script = ExtResource("1_bhffi")
+healing_amount = 20
 skill_class = "HealSelf"
 displayed_name = "Heal Self"
 energy_usage = 25
-icon = ExtResource("1_llcs6")
+icon_path = "res://icon.svg"
 collision_mask = 31
 valid_entities = Array[int]([0])
+max_targets = 10
 cooldown = 5.0
 cast_on_select = true
-damage = 0
 hitbox_shape = [Vector2(50, 0)]
 hitbox_hits_user = false
 hitbox_rotate_shape = false

@@ -597,3 +597,13 @@ func statuseffectcomponent_sync_all_response(n: String, d: Dictionary):
 
 	if entity.component_list.has(StatusEffectComponent.COMPONENT_NAME):
 		entity.component_list[StatusEffectComponent.COMPONENT_NAME].sync_all_response(d)
+
+
+@rpc("call_remote", "authority", "reliable")
+func soundmanager_sync_invoke_audio(c: String, t:SoundManager.CHANNEL_TYPE, s: Dictionary):
+	assert(not G.is_server(), "This method is only intended for client use")
+	var settings := SoundManager.new_settings().from_json(s)
+	
+	SoundManager.main_instance.play_sound_by_class(c, t, settings)
+	if Global.debug_mode:
+		GodotLogger.info("Played sound {0} at {1}".format([c, s.get("position_2d", Vector2.INF)]))
