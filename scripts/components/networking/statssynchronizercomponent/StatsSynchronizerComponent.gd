@@ -71,6 +71,7 @@ signal boosts_changed
 
 @export var watcher_synchronizer: WatcherSynchronizerComponent
 
+@export_group("Stats")
 @export var hp_max: int = 100:
 	set(val):
 		hp_max = val
@@ -160,13 +161,14 @@ var is_dead: bool = false
 var server_buffer: Array[Dictionary] = []
 var ready_done: bool = false
 
-var _default_hp_max: int = 100
-var _default_energy_max: int = 100
-var _default_energy_regen: int = 5
-var _default_attack_power_min: int = 0
-var _default_attack_power_max: int = 5
-var _default_defense: int = 0
-var _default_movement_speed: float = 300
+@export_group("Stat Defaults")
+@export var _default_hp_max: int = 100
+@export var _default_energy_max: int = 100
+@export var _default_energy_regen: int = 5
+@export var _default_attack_power_min: int = 0
+@export var _default_attack_power_max: int = 5
+@export var _default_defense: int = 0
+@export var _default_movement_speed: float = 300
 
 var energy_regen_timer: Timer
 
@@ -382,6 +384,7 @@ func get_attack_damage() -> float:
 	return randi_range(attack_power_min, attack_power_max)
 
 
+## Adds the [Boost] object to be applied on the stats and synchronizes the addition.
 func apply_boost(boost: Boost):
 	#Override any boost with an identical identifier, ignore if this boost doesn't have one.
 	if boost.identifier != Boost.NO_IDENTIFIER:
@@ -423,6 +426,7 @@ func apply_boost(boost: Boost):
 	boosts_changed.emit()
 
 
+## Attempts to remove a boost per reference. 
 func remove_boost(boost: Boost):
 	if not active_boosts.has(boost):
 		GodotLogger.warn("This boost does not belong to this component.")
@@ -441,20 +445,25 @@ func remove_boost(boost: Boost):
 	boosts_changed.emit()
 
 
+## Loads the default stats and re-applies every stored [Boost]
 func reload_boosts():
 	load_defaults()
 
 	var flatValues: Dictionary = {}
 	var modifierValues: Dictionary = {}
-
+	
+	#Start iterating trough stats to boost them
 	for stat: String in StatListPermanent:
-		flatValues[stat] = get(stat)
-		modifierValues[stat] = 1
+		#Prepare the flat and modifier values that the stat will be set-to and multiplied for.
+		flatValues[stat] = get(stat) #The base value is the current (defaulted) value of the stat 
+		modifierValues[stat] = 1 #The base for modifiers is 1, since it will be multiplied by other modifiers.
 
 		for boost: Boost in active_boosts:
+			#Store the bonuses of the boost added to the flat amount, as well as the modifiers
 			flatValues[stat] += boost.get_stat_boost(stat)
 			modifierValues[stat] *= boost.get_stat_boost_modifier(stat)
-
+		
+		#Set the stat to the flat value multiplied by the modifier
 		set(stat, flatValues[stat] * modifierValues[stat])
 
 	if Global.debug_mode:
@@ -472,6 +481,7 @@ func reload_boosts():
 		GodotLogger.info(debugLog)
 
 
+## Attempts to get a reference to a [Boost] with the given identifier, if it exists.
 func get_boost_with_identifier(identifier: String) -> Boost:
 	for boost: Boost in active_boosts:
 		if boost.identifier == identifier:
