@@ -386,32 +386,32 @@ func get_attack_damage() -> float:
 
 ## Adds the [Boost] object to be applied on the stats and synchronizes the addition.
 func apply_boost(boost: Boost):
-	#Override any boost with an identical identifier, ignore if this boost doesn't have one.
+	# Override any boost with an identical identifier, ignore if this boost doesn't have one.
 	if boost.identifier != Boost.NO_IDENTIFIER:
-		var existingBoost: Boost = get_boost_with_identifier(boost.identifier)
-		if existingBoost is Boost:
-			remove_boost(existingBoost)
+		var existing_boost: Boost = get_boost_with_identifier(boost.identifier)
+		if existing_boost is Boost:
+			remove_boost(existing_boost)
 
-	#Validate boost
-	for statName in boost.statBoostDict.keys() + boost.statBoostModifierDict.keys():
-		if not statName in StatListAll:
-			GodotLogger.error("The property '{0}' is not a stat.".format([statName]))
+	# Validate boost
+	for stat_name in boost.stat_boost_dict.keys() + boost.stat_boost_modifier_dict.keys():
+		if not stat_name in StatListAll:
+			GodotLogger.error("The property '{0}' is not a stat.".format([stat_name]))
 
 		if (
-			typeof(boost.get_stat_boost(statName)) != TYPE_INT
-			and typeof(boost.get_stat_boost(statName)) != TYPE_FLOAT
+			typeof(boost.get_stat_boost(stat_name)) != TYPE_INT
+			and typeof(boost.get_stat_boost(stat_name)) != TYPE_FLOAT
 		):
 			(
 				GodotLogger
 				. warn(
 					(
 						"The value type of the boost ({0}) must be type 1 or 2. This could cause unexpected behaviour."
-						. format([typeof(boost.get_stat_boost(statName)), typeof(get(statName))])
+						. format([typeof(boost.get_stat_boost(stat_name)), typeof(get(stat_name))])
 					)
 				)
 			)
 
-	#Add to list
+	# Add to list
 	active_boosts.append(boost)
 
 	var data: Dictionary = to_json(true)
@@ -422,7 +422,7 @@ func apply_boost(boost: Boost):
 	for watcher in watcher_synchronizer.watchers:
 		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
 
-	#This signal calls reload_boosts()
+	# This signal calls reload_boosts()
 	boosts_changed.emit()
 
 
@@ -449,36 +449,36 @@ func remove_boost(boost: Boost):
 func reload_boosts():
 	load_defaults()
 
-	var flatValues: Dictionary = {}
-	var modifierValues: Dictionary = {}
+	var flat_values: Dictionary = {}
+	var modifier_values: Dictionary = {}
 	
 	#Start iterating trough stats to boost them
 	for stat: String in StatListPermanent:
-		#Prepare the flat and modifier values that the stat will be set-to and multiplied for.
-		flatValues[stat] = get(stat) #The base value is the current (defaulted) value of the stat 
-		modifierValues[stat] = 1 #The base for modifiers is 1, since it will be multiplied by other modifiers.
+		# Prepare the flat and modifier values that the stat will be set-to and multiplied for.
+		flat_values[stat] = get(stat) #The base value is the current (defaulted) value of the stat 
+		modifier_values[stat] = 1 #The base for modifiers is 1, since it will be multiplied by other modifiers.
 
 		for boost: Boost in active_boosts:
-			#Store the bonuses of the boost added to the flat amount, as well as the modifiers
-			flatValues[stat] += boost.get_stat_boost(stat)
-			modifierValues[stat] *= boost.get_stat_boost_modifier(stat)
+			# Store the bonuses of the boost added to the flat amount, as well as the modifiers
+			flat_values[stat] += boost.get_stat_boost(stat)
+			modifier_values[stat] *= boost.get_stat_boost_modifier(stat)
 		
-		#Set the stat to the flat value multiplied by the modifier
-		set(stat, flatValues[stat] * modifierValues[stat])
+		# Set the stat to the flat value multiplied by the modifier
+		set(stat, flat_values[stat] * modifier_values[stat])
 
 	if Global.debug_mode:
-		var debugLog: String = "Boosts applied with these results: \n"
+		var debug_log: String = "Boosts applied with these results: \n"
 
-		for statName: String in StatListPermanent + StatListCounter:
-			debugLog += "{0}: {1} | Flat boost: {2} | Modifier boost: {3} \n".format(
+		for stat_name: String in StatListPermanent + StatListCounter:
+			debug_log += "{0}: {1} | Flat boost: {2} | Modifier boost: {3} \n".format(
 				[
-					statName,
-					get(statName),
-					flatValues.get(statName, 0 as int),
-					modifierValues.get(statName, 0.0 as float)
+					stat_name,
+					get(stat_name),
+					flat_values.get(stat_name, 0 as int),
+					modifier_values.get(stat_name, 0.0 as float)
 				]
 			)
-		GodotLogger.info(debugLog)
+		GodotLogger.info(debug_log)
 
 
 ## Attempts to get a reference to a [Boost] with the given identifier, if it exists.
@@ -495,17 +495,17 @@ func get_boost_with_identifier(identifier: String) -> Boost:
 
 func to_json(full: bool = false) -> Dictionary:
 	var data: Dictionary = {}
-	for statName in StatListCounter:
-		data[statName] = get(statName)
+	for stat_name in StatListCounter:
+		data[stat_name] = get(stat_name)
 
 	if data.size() != StatListCounter.size():
 		GodotLogger.error("Discrepancy in the amount of stats, StatListCounter may be at fault.")
 
 	if full:
 		var dictForMerge: Dictionary = {}
-		#Fill the dict with the permanent stats
-		for statName in StatListPermanent:
-			dictForMerge[statName] = get(statName)
+		# Fill the dict with the permanent stats
+		for stat_name in StatListPermanent:
+			dictForMerge[stat_name] = get(stat_name)
 
 		data.merge(dictForMerge)
 
@@ -518,27 +518,27 @@ func to_json(full: bool = false) -> Dictionary:
 
 
 func from_json(data: Dictionary, full: bool = false) -> bool:
-	#Validation
-	for statName in StatListCounter:
-		if not statName in data:
-			GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
+	# Validation
+	for stat_name in StatListCounter:
+		if not stat_name in data:
+			GodotLogger.warn('Failed to load stats from data, missing "%s" key' % stat_name)
 			return false
 
 	if full:
-		for statName in StatListPermanent:
-			if not statName in data:
-				GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
+		for stat_name in StatListPermanent:
+			if not stat_name in data:
+				GodotLogger.warn('Failed to load stats from data, missing "%s" key' % stat_name)
 				return false
 
-	#Actually load the data
-	for statName in StatListCounter:
-		self.set(statName, data.get(statName))
+	# Actually load the data
+	for stat_name in StatListCounter:
+		self.set(stat_name, data.get(stat_name))
 
 	experience_needed = calculate_experience_needed(level)
 
 	if full:
-		for statName in StatListPermanent:
-			self.set(statName, data.get(statName))
+		for stat_name in StatListPermanent:
+			self.set(stat_name, data.get(stat_name))
 
 	loaded.emit()
 
