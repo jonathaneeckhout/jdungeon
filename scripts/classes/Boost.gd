@@ -53,10 +53,10 @@ func combine_boost(boost: Boost):
 					. format([identifier, boost.identifier])
 				)
 			)
-			
+
 	for stat: String in stat_boost_dict:
 		add_stat_boost(stat, boost.get_stat_boost(stat))
-		
+
 	for stat: String in stat_boost_modifier_dict:
 		add_stat_boost_modifier(stat, boost.get_stat_boost_modifier(stat))
 

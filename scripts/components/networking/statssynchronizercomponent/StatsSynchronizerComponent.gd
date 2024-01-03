@@ -426,7 +426,7 @@ func apply_boost(boost: Boost):
 	boosts_changed.emit()
 
 
-## Attempts to remove a boost per reference. 
+## Attempts to remove a boost per reference.
 func remove_boost(boost: Boost):
 	if not active_boosts.has(boost):
 		GodotLogger.warn("This boost does not belong to this component.")
@@ -451,18 +451,20 @@ func reload_boosts():
 
 	var flat_values: Dictionary = {}
 	var modifier_values: Dictionary = {}
-	
-	#Start iterating trough stats to boost them
+
+	# Start iterating trough stats to boost them
 	for stat: String in StatListPermanent:
 		# Prepare the flat and modifier values that the stat will be set-to and multiplied for.
-		flat_values[stat] = get(stat) #The base value is the current (defaulted) value of the stat 
-		modifier_values[stat] = 1 #The base for modifiers is 1, since it will be multiplied by other modifiers.
+		# The base value is the current (defaulted) value of the stat
+		flat_values[stat] = get(stat)
+		# The base for modifiers is 1, since it will be multiplied by other modifiers.
+		modifier_values[stat] = 1
 
 		for boost: Boost in active_boosts:
 			# Store the bonuses of the boost added to the flat amount, as well as the modifiers
 			flat_values[stat] += boost.get_stat_boost(stat)
 			modifier_values[stat] *= boost.get_stat_boost_modifier(stat)
-		
+
 		# Set the stat to the flat value multiplied by the modifier
 		set(stat, flat_values[stat] * modifier_values[stat])
 
