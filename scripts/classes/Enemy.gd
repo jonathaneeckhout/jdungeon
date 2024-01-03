@@ -10,6 +10,7 @@ var component_list: Dictionary = {}
 
 @onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
 @onready var hurtbox: Area2D = $HurtArea
+@onready var position_synchronizer: PositionSynchronizerComponent = $PositionSynchronizerComponent
 
 
 func _init():

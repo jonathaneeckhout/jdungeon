@@ -74,7 +74,7 @@ func _ready():
 		set_process_input(false)
 
 		# Connect to the interacted signal to handle interactions
-		interacted.connect(_on_server_interacted)
+		# interacted.connect(_on_server_interacted)
 
 	# Client-side logic
 	else:
@@ -365,6 +365,38 @@ func server_sync_interact(target_name: String):
 	interacted.emit(target)
 
 
+func server_handle_attack_request(timestamp: float, enemies: Array):
+	# Don't do anything if the attack timer is running, this means your attack is still on timeout
+	if !_attack_timer.is_stopped():
+		return
+
+	for enemy_name in enemies:
+		var enemy: Node2D = G.world.enemies.get_node_or_null(enemy_name)
+
+		if enemy == null:
+			continue
+
+		# The dead shall not be touched again
+		if enemy.stats.is_dead:
+			continue
+
+		if (
+			enemy.get("position_synchronizer")
+			and enemy.position_synchronizer.is_colliding_with_circle(
+				timestamp,
+				_target_node.position + interaction_component.attack_area.position,
+				interaction_component.attack_radius
+			)
+		):
+			# Generate a random damage between the player's min and max attack power
+			var damage: int = randi_range(
+				stats_component.attack_power_min, stats_component.attack_power_max
+			)
+
+			# This is the call that actually hurts the enemy
+			enemy.stats.hurt(_target_node, damage)
+
+
 # Emulate a right click when a skill is instantly used when selected
 func _on_client_skill_instant_used(_skill: SkillComponentResource):
 	_client_handle_right_click(_target_node.global_position)
@@ -464,3 +496,10 @@ func _on_client_interacted(target: Node2D):
 
 	# Start the timer so that the player needs to wait for this timer to stop before performing another attack
 	_attack_timer.start(stats_component.attack_speed)
+
+	var hit_enemies: Array[String] = []
+
+	for enemy in interaction_component.enemies_in_attack_range:
+		hit_enemies.append(enemy.name)
+
+	G.sync_rpc.playersynchronizer_request_attack.rpc_id(1, G.clock, hit_enemies)
