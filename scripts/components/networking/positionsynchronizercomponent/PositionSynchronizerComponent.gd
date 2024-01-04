@@ -140,12 +140,12 @@ func _extrapolate(extrapolation_factor: float, parameter: String) -> Vector2:
 
 func is_colliding_with_circle(timestamp: float, pos: Vector2, radius: float) -> bool:
 	var target_timestamp: float = timestamp - INTERPOLATION_OFFSET
-	var target_pos: Vector2 = _get_position_closest_to_timestamp(target_timestamp)
+	var target_pos: Vector2 = get_position_closest_to_timestamp(target_timestamp)
 
-	return target_pos.distance_to(pos) < radius + 64
+	return target_pos.distance_to(pos) < radius
 
 
-func _get_position_closest_to_timestamp(timestamp: float) -> Vector2:
+func get_position_closest_to_timestamp(timestamp: float) -> Vector2:
 	var closest_pos: Vector2 = _target_node.position
 	var diff: float = Time.get_unix_time_from_system() - timestamp
 

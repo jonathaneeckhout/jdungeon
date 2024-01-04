@@ -370,10 +370,15 @@ func server_handle_attack_request(timestamp: float, enemies: Array):
 	if !_attack_timer.is_stopped():
 		return
 
+	# Loop over the enemies
 	for enemy_name in enemies:
+		# Get the enemies by their name
 		var enemy: Node2D = G.world.enemies.get_node_or_null(enemy_name)
 
+		# If the enemy doesn't exist, ignore and continue
 		if enemy == null:
+			GodotLogger.warn("Enemy with name=[%s] does not exist" % enemy_name)
+
 			continue
 
 		# The dead shall not be touched again
@@ -384,8 +389,8 @@ func server_handle_attack_request(timestamp: float, enemies: Array):
 			enemy.get("position_synchronizer")
 			and enemy.position_synchronizer.is_colliding_with_circle(
 				timestamp,
-				_target_node.position + interaction_component.attack_area.position,
-				interaction_component.attack_radius
+				_target_node.position,
+				interaction_component.attack_radius + interaction_component.attack_range
 			)
 		):
 			# Generate a random damage between the player's min and max attack power
