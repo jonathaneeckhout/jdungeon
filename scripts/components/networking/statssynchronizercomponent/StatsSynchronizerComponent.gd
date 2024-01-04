@@ -463,7 +463,10 @@ func reload_boosts():
 		for boost: Boost in active_boosts:
 			# Store the bonuses of the boost added to the flat amount, as well as the modifiers
 			flat_values[stat] += boost.get_stat_boost(stat)
-			modifier_values[stat] *= boost.get_stat_boost_modifier(stat)
+			
+			# Ignore modifiers of 1.
+			if boost.get_stat_boost_modifier(stat) != 1:
+				modifier_values[stat] *= boost.get_stat_boost_modifier(stat)
 
 		# Set the stat to the flat value multiplied by the modifier
 		set(stat, flat_values[stat] * modifier_values[stat])

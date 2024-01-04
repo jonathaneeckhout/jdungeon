@@ -15,33 +15,33 @@ var stat_boost_modifier_dict: Dictionary
 
 var hp_max: int = 0:
 	set(val):
-		stat_boost_dict["hp_max"] = val
+		set_stat_boost("hp_max", val)
 	get:
-		return stat_boost_dict.get("hp_max", 0 as int)
+		return get_stat_boost("hp_max")
 
 var hp: int = 0:
 	set(val):
-		stat_boost_dict["hp"] = val
+		set_stat_boost("hp", val)
 	get:
-		return stat_boost_dict.get("hp", 0 as int)
+		return get_stat_boost("hp")
 
 var attack_power_min: int = 0:
 	set(val):
-		stat_boost_dict["attack_power_min"] = val
+		set_stat_boost("attack_power_min", val)
 	get:
-		return stat_boost_dict.get("attack_power_min", 0 as int)
+		return get_stat_boost("attack_power_min")
 
 var attack_power_max: int = 0:
 	set(val):
-		stat_boost_dict["attack_power_max"] = val
+		set_stat_boost("attack_power_max", val)
 	get:
-		return stat_boost_dict.get("attack_power_max", 0 as int)
+		return get_stat_boost("attack_power_max")
 
 var defense: int = 0:
 	set(val):
-		stat_boost_dict["defense"] = val
+		set_stat_boost("defense", val)
 	get:
-		return stat_boost_dict.get("defense", 0 as int)
+		return get_stat_boost("defense")
 
 
 func combine_boost(boost: Boost):
@@ -54,10 +54,10 @@ func combine_boost(boost: Boost):
 				)
 			)
 
-	for stat: String in stat_boost_dict:
+	for stat: String in boost.stat_boost_dict:
 		add_stat_boost(stat, boost.get_stat_boost(stat))
 
-	for stat: String in stat_boost_modifier_dict:
+	for stat: String in boost.stat_boost_modifier_dict:
 		add_stat_boost_modifier(stat, boost.get_stat_boost_modifier(stat))
 
 
