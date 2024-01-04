@@ -1,15 +1,16 @@
-extends Node2D
+extends CharacterBody2D
 class_name Projectile2D
 
 signal hit_body(body: PhysicsBody2D)
 
+var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PROJECTILE
+var projectile_class: String = ""
+
+@export var sync: bool = true
 @export_group("Physics")
 @export var shape: Shape2D
 @export var move_speed: float = 100
 @export var max_collisions: int = 1
-@export_flags_2d_physics var collision_mask: int = 0
-
-var excluded_rids: Array[RID]
 
 var moving: bool = false:
 	set(val):
@@ -18,10 +19,16 @@ var moving: bool = false:
 
 var collision_count: int = 0
 
-var direct_space: PhysicsDirectSpaceState2D
 
-func _enter_tree() -> void:
-	direct_space = get_world_2d().direct_space_state
+func _init() -> void:
+	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
+	collision_layer = J.PHYSICS_LAYER_PROJECTILE
+	collision_mask = 0
+
+
+func _ready() -> void:
+	if sync:
+		pass
 
 
 func _physics_process(delta: float) -> void:
@@ -31,35 +38,22 @@ func _physics_process(delta: float) -> void:
 	assert(shape is Shape2D)
 		
 	var motion: Vector2 = get_motion()
-	var shape_cast_params := PhysicsShapeQueryParameters2D.new()
-	shape_cast_params.collision_mask = collision_mask
-	shape_cast_params.shape = shape
-	shape_cast_params.motion = motion
-	shape_cast_params.exclude = excluded_rids
-	shape_cast_params.transform.origin = transform.origin
 	
-	var collisions: Array[Dictionary] = direct_space.intersect_shape(shape_cast_params)
-	
-	var can_continue: bool = process_collisions(collisions)
-	position += motion
-	
-	if not can_continue:
-		moving = false
-		queue_free()
+	process_collisions(motion)
 	
 	
-func process_collisions(collisions: Array[Dictionary]) -> bool:
-	for collision: Dictionary in collisions:
+func process_collisions(motion: Vector2):
+	var current_motion: Vector2 = motion
+	
+	while current_motion.length() > 0 and collision_count < max_collisions:
+		var collision: KinematicCollision2D = move_and_collide(current_motion)
 		
-		if collision_count >= max_collisions:
-			return false
-			
-		var collider: Node = collision.get("collider", null)
-		if collider is PhysicsBody2D:
-			hit_body.emit(collider)
+		if collision.get_collider() is PhysicsBody2D:
+			hit_body.emit(collision.get_collider())
 			collision_count += 1
+		
+		current_motion = collision.get_remainder()
 	
-	return true
 
 func get_motion() -> Vector2:
 	return Vector2.RIGHT * move_speed
@@ -76,25 +70,26 @@ func set_moving(enable: bool = true) -> Projectile2D:
 	
 	
 func add_collision_mask_bit(bit: int) -> Projectile2D:
-	collision_mask = collision_mask | J.PHYSICS_LAYER_ENEMIES
+	set_collision_layer_value(bit, true)
 	return self
 
 	
 func remove_collision_mask_bit(bit: int) -> Projectile2D:
-	collision_mask = collision_mask | ~J.PHYSICS_LAYER_PLAYERS
+	set_collision_layer_value(bit, false)
 	return self
 
 
-func add_rid_to_ignored(rid: RID) -> Projectile2D:
-	excluded_rids.append(rid)
+func add_node_to_ignored(node: Node) -> Projectile2D:
+	add_collision_exception_with(node)
 	return self
 	
 	
-func remove_rid_from_ignored(rid: RID) -> Projectile2D:
-	excluded_rids.erase(rid)
+func remove_node_from_ignored(node: Node) -> Projectile2D:
+	remove_collision_exception_with(node)
 	return self
 
 
-func clear_ignored_rid() -> Projectile2D:
-	excluded_rids.clear()
+func clear_ignored_nodes() -> Projectile2D:
+	for body: PhysicsBody2D in get_collision_exceptions():
+		remove_node_from_ignored(body)
 	return self
