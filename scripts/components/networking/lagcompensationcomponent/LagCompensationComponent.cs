@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 public partial class LagCompensationComponent : Node2D
 {
-	// Area to detect the collision
+	// The Collision shape used for collision
 	[Export]
-	public Area2D HurtArea { get; set; }
+	public CollisionShape2D HurtBox { get; set; }
 
 	// The window size of how long an element should stay in the positionBuffer
 	public const double PositionBufferTimeWindow = 1.0;
@@ -23,9 +23,6 @@ public partial class LagCompensationComponent : Node2D
 
 	// The buffer containing all the positions inside the PositionBufferTimeWindow
 	private List<PositionElement> positionBuffer;
-
-	// The Collision shape used for collision
-	private CollisionShape2D HurtBox = null;
 
 	// The current supported collision shapes for lag compensation
 	private enum HurtBoxShape { Circle, Capsule };
@@ -68,9 +65,6 @@ public partial class LagCompensationComponent : Node2D
 
 		// Init the list
 		positionBuffer = new List<PositionElement> { };
-
-		// Check which shape the hurtbox is
-		HurtBox = HurtArea.GetNode<CollisionShape2D>("HurtBox");
 
 		// Get the radius if the shape is a circle
 		if (HurtBox.Shape is CircleShape2D)
