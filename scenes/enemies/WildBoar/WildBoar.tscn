@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://bv8wlx0nq04pc"]
+[gd_scene load_steps=33 format=3 uid="uid://bv8wlx0nq04pc"]
 
 [ext_resource type="Script" path="res://scenes/enemies/WildBoar/WildBoar.gd" id="1_p2524"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_6ui5c"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://brgjwvmht3tob" path="res://assets/images/enemies/boar/scaled/opened_eyes.png" id="19_5salc"]
 [ext_resource type="Texture2D" uid="uid://b84rerloofiny" path="res://assets/images/enemies/boar/scaled/rear_r_hoof.png" id="20_1vgai"]
 [ext_resource type="Texture2D" uid="uid://43y6b1fwws5k" path="res://assets/images/enemies/boar/scaled/snout.png" id="21_oivx0"]
+[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.tscn" id="22_5wt1x"]
 [ext_resource type="Texture2D" uid="uid://bi7hq3q4u0myf" path="res://assets/images/enemies/boar/scaled/tail.png" id="22_tk5li"]
 
 [sub_resource type="Animation" id="Animation_stwrd"]
@@ -1082,6 +1083,9 @@ script = ExtResource("1_p2524")
 
 [node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_8lf5i")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HitArea") instance=ExtResource("22_5wt1x")]
+HitArea = NodePath("../HurtArea")
 
 [node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_5s61a")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")

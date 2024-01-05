@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://cgxevug65fx3d"]
+[gd_scene load_steps=31 format=3 uid="uid://cgxevug65fx3d"]
 
 [ext_resource type="Script" path="res://scenes/enemies/BlueMole/BlueMole.gd" id="1_0kuqc"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_7anrd"]
@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://co2tfr6eu3uiv" path="res://assets/images/enemies/bluemole/scaled/Leg2.png" id="13_tm3ud"]
 [ext_resource type="Texture2D" uid="uid://dlfyjrvttoahx" path="res://assets/images/enemies/bluemole/scaled/Shovel.png" id="14_x18vp"]
 [ext_resource type="PackedScene" uid="uid://olha5mwr7hcr" path="res://scripts/components/common/hitparticlescomponent/HitParticlesComponent.tscn" id="19_ox7m0"]
+[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.tscn" id="20_cfx77"]
 
 [sub_resource type="Animation" id="Animation_avu8m"]
 resource_name = "Attack"
@@ -961,6 +962,9 @@ script = ExtResource("1_0kuqc")
 [node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_x6msg")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HitArea") instance=ExtResource("20_cfx77")]
+HitArea = NodePath("../HurtArea")
+
 [node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_332co")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 hp_max = 30
@@ -1006,39 +1010,32 @@ stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 modulate = Color(1, 1, 1, 0.937745)
 
 [node name="RightArm" type="Sprite2D" parent="Sprites"]
-position = Vector2(-5.46532, -23.6184)
-rotation = 1.00094
+position = Vector2(-8, -22)
 texture = ExtResource("10_hd4po")
 offset = Vector2(5, 7)
 
 [node name="RightLeg" type="Sprite2D" parent="Sprites"]
-position = Vector2(-7.32546, -4.68324)
-rotation = 0.564144
+position = Vector2(-7, -3)
 texture = ExtResource("13_tm3ud")
 offset = Vector2(3, -14)
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(4, -6)
-rotation = 0.150506
 texture = ExtResource("11_6l74c")
 offset = Vector2(-6, -11)
 
 [node name="LeftLeg" type="Sprite2D" parent="Sprites"]
-position = Vector2(7.50496, -2.43416)
-rotation = -0.0759445
-scale = Vector2(1, 1)
+position = Vector2(8, -3)
 texture = ExtResource("12_5o0li")
 offset = Vector2(-12, -14)
 
 [node name="Shovel" type="Sprite2D" parent="Sprites"]
-position = Vector2(7.29021, -14.923)
-rotation = 0.773608
+position = Vector2(10, -14)
 texture = ExtResource("14_x18vp")
 offset = Vector2(-14, -2)
 
 [node name="LeftArm" type="Sprite2D" parent="Sprites"]
-position = Vector2(12.1813, -19.9308)
-rotation = 0.773608
+position = Vector2(10, -21)
 texture = ExtResource("9_82elk")
 offset = Vector2(-14, 6)
 

@@ -378,17 +378,19 @@ func server_handle_attack_request(timestamp: float, enemies: Array):
 		# If the enemy doesn't exist, ignore and continue
 		if enemy == null:
 			GodotLogger.warn("Enemy with name=[%s] does not exist" % enemy_name)
-
 			continue
 
 		# The dead shall not be touched again
 		if enemy.stats.is_dead:
 			continue
 
+		# If the enemy collided with the target_node's attack area deal damage
+		# TODO: now the target can still hit all enemies 360 degrees around him/her. Add aim.
 		if (
-			enemy.get("position_synchronizer")
-			and enemy.position_synchronizer.is_colliding_with_circle(
-				timestamp,
+			enemy.get("lag_compensation")
+			# TODO: fetch the interpolation offset from the positionsynchronizer
+			and enemy.lag_compensation.IsCircleCollidingWithTargetAtTimestamp(
+				timestamp - 0.1,
 				_target_node.position,
 				interaction_component.attack_radius + interaction_component.attack_range
 			)

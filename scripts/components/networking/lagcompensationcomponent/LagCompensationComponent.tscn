@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpybc5oxieo6i"]
+
+[ext_resource type="Script" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.cs" id="1_agt3b"]
+
+[node name="LagCompensationComponent" type="Node2D"]
+script = ExtResource("1_agt3b")

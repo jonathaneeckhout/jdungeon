@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dfq5lb87meq6q"]
+[gd_scene load_steps=23 format=3 uid="uid://dfq5lb87meq6q"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Sheep/Sheep.gd" id="1_6p7b5"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_nxh3l"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="8_wd6jv"]
 [ext_resource type="PackedScene" uid="uid://cjkhsifuk2une" path="res://scripts/components/networking/statuseffectcomponent/StatusEffectComponent.tscn" id="10_ldqij"]
 [ext_resource type="Texture2D" uid="uid://djed5baiwoimr" path="res://assets/images/enemies/sheep/scaled/sheep.png" id="11_l0562"]
+[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.tscn" id="14_ikli0"]
 
 [sub_resource type="Animation" id="Animation_itymv"]
 resource_name = "Die"
@@ -194,6 +195,9 @@ script = ExtResource("1_6p7b5")
 
 [node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_umoon")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HitArea") instance=ExtResource("14_ikli0")]
+HitArea = NodePath("../HurtArea")
 
 [node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_ho1ox")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")

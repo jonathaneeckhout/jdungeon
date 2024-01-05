@@ -11,6 +11,7 @@ var component_list: Dictionary = {}
 @onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
 @onready var hurtbox: Area2D = $HurtArea
 @onready var position_synchronizer: PositionSynchronizerComponent = $PositionSynchronizerComponent
+@onready var lag_compensation: Node2D = $LagCompensationComponent
 
 
 func _init():
