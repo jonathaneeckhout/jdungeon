@@ -23,6 +23,9 @@ const ATTACK_LEFT_HAND_ANIMATIONS: Array[String] = [
 	"Attack_Left_Hand", "Attack_Left_Hand_1", "Attack_Left_Hand_2"
 ]
 
+## TODO: fetch the interpolation offset from the positionsynchronizer
+const INTERPOLATION_OFFSET: float = 0.1
+
 @export var stats_component: StatsSynchronizerComponent
 @export var interaction_component: PlayerInteractionComponent
 @export var action_synchronizer: ActionSynchronizerComponent
@@ -388,9 +391,8 @@ func server_handle_attack_request(timestamp: float, enemies: Array):
 		# TODO: now the target can still hit all enemies 360 degrees around him/her. Add aim.
 		if (
 			enemy.get("lag_compensation")
-			# TODO: fetch the interpolation offset from the positionsynchronizer
 			and enemy.lag_compensation.IsCircleCollidingWithTargetAtTimestamp(
-				timestamp - 0.1,
+				timestamp - INTERPOLATION_OFFSET,
 				_target_node.position,
 				interaction_component.attack_radius + interaction_component.attack_range
 			)
