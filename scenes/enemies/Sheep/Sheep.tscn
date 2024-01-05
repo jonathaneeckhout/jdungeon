@@ -247,9 +247,7 @@ blend_times = [&"Move", &"Idle", 0.5]
 shape = SubResource("CircleShape2D_lcaik")
 
 [node name="HurtArea" type="Area2D" parent="."]
-position = Vector2(-44, -20)
-rotation = 1.5708
 
 [node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
-position = Vector2(19, -43)
+rotation = 1.5708
 shape = SubResource("CapsuleShape2D_uo2bt")

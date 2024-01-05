@@ -24,6 +24,9 @@ public partial class LagCompensationComponent : Node2D
 	// The buffer containing all the positions inside the PositionBufferTimeWindow
 	private List<PositionElement> positionBuffer;
 
+	// The Collision shape used for collision
+	private CollisionShape2D HurtBox = null;
+
 	// The current supported collision shapes for lag compensation
 	private enum HurtBoxShape { Circle, Capsule };
 
@@ -67,18 +70,18 @@ public partial class LagCompensationComponent : Node2D
 		positionBuffer = new List<PositionElement> { };
 
 		// Check which shape the hurtbox is
-		CollisionShape2D hurtBox = HurtArea.GetNode<CollisionShape2D>("HurtBox");
+		HurtBox = HurtArea.GetNode<CollisionShape2D>("HurtBox");
 
 		// Get the radius if the shape is a circle
-		if (hurtBox.Shape is CircleShape2D)
+		if (HurtBox.Shape is CircleShape2D)
 		{
-			hurtBoxRadius = (hurtBox.Shape as CircleShape2D).Radius;
+			hurtBoxRadius = (HurtBox.Shape as CircleShape2D).Radius;
 		}
 		// Get the radius and the height if it's a capsule
-		else if (hurtBox.Shape is CapsuleShape2D)
+		else if (HurtBox.Shape is CapsuleShape2D)
 		{
-			hurtBoxRadius = (hurtBox.Shape as CapsuleShape2D).Radius;
-			hurtBoxHeight = (hurtBox.Shape as CapsuleShape2D).Height;
+			hurtBoxRadius = (HurtBox.Shape as CapsuleShape2D).Radius;
+			hurtBoxHeight = (HurtBox.Shape as CapsuleShape2D).Height;
 		}
 		else
 		{
@@ -126,14 +129,17 @@ public partial class LagCompensationComponent : Node2D
 
 		bool colliding = false;
 
+		// Calculate the actual position of the collisionshape as it can have an offset
+		Vector2 collisionShapePostion = elementAtTimestamp.Position + HurtBox.Position;
+
 		// Check the collision according to the shape of the HurtBox
 		switch (hurtBoxShape)
 		{
 			case HurtBoxShape.Circle:
-				colliding = checkCircleCollision(elementAtTimestamp.Position, circlePosition, circleRadius);
+				colliding = checkCircleCollision(collisionShapePostion, circlePosition, circleRadius);
 				break;
 			case HurtBoxShape.Capsule:
-				colliding = checkCapsuleCollision(elementAtTimestamp.Position, circlePosition, circleRadius);
+				colliding = checkCapsuleCollision(collisionShapePostion, circlePosition, circleRadius);
 				break;
 		}
 
@@ -183,11 +189,25 @@ public partial class LagCompensationComponent : Node2D
 	}
 
 	// Check the collision between a circle and a capsule
-	// A limitation is that the capsule should not be rotated or the simple Y check does not work
+	// A limitation is that the capsule should not be rotated or only 90 degree or the simple Y check does not work
 	private bool checkCapsuleCollision(Vector2 targetNodePosition, Vector2 circlePosition, float circleRadius)
 	{
-		// Calculate the distance between the circle's center and the capsule's central line
-		float distanceToLine = Math.Abs(targetNodePosition.Y - circlePosition.Y);
+
+		float distanceToLine = 0.0f;
+		// Calculate the distance between the circle's center and the capsule's central line according to the rotation
+		if (HurtBox.RotationDegrees == 0.0f)
+		{
+			distanceToLine = Math.Abs(targetNodePosition.Y - circlePosition.Y);
+		}
+		else if (Math.Abs(HurtBox.RotationDegrees) - 90f < 0.0001f)
+		{
+			distanceToLine = Math.Abs(targetNodePosition.X - circlePosition.Y);
+		}
+		else
+		{
+			logger.Call("warn", "HurtBox has an invalid rotation");
+			return false;
+		}
 
 		// Calculate the distance between the circle's center and the closest point on the capsule's central line
 		float distanceToClosestPoint = distanceToLine - hurtBoxHeight / 2;
