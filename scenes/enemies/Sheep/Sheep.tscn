@@ -196,8 +196,8 @@ script = ExtResource("1_6p7b5")
 [node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_umoon")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
-[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HitArea") instance=ExtResource("14_ikli0")]
-HitArea = NodePath("../HurtArea")
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HurtArea") instance=ExtResource("14_ikli0")]
+HurtArea = NodePath("../HurtArea")
 
 [node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_ho1ox")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
