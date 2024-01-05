@@ -1,8 +1,9 @@
-[gd_scene load_steps=28 format=3 uid="uid://drmaubupv57n1"]
+[gd_scene load_steps=29 format=3 uid="uid://drmaubupv57n1"]
 
 [ext_resource type="Script" path="res://scenes/enemies/MoldedDruvar/MoldedDruvar.gd" id="1_ba1y1"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_82l3i"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_evc6g"]
+[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.tscn" id="4_1c17k"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_q10uy"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="5_305lq"]
 [ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/networking/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="5_aextl"]
@@ -641,6 +642,9 @@ script = ExtResource("1_ba1y1")
 [node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_evc6g")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HurtArea") instance=ExtResource("4_1c17k")]
+HurtArea = NodePath("../HurtArea")
+
 [node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_q10uy")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 hp_max = 85
@@ -756,10 +760,9 @@ libraries = {
 shape = SubResource("CircleShape2D_hetrj")
 
 [node name="HurtArea" type="Area2D" parent="."]
-position = Vector2(-44, -20)
 
 [node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
-position = Vector2(40, -26)
+position = Vector2(-5, -50)
 shape = SubResource("CapsuleShape2D_ov0s8")
 
 [node name="AggroRadius" type="Area2D" parent="."]

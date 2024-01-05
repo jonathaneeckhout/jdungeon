@@ -1,8 +1,9 @@
-[gd_scene load_steps=30 format=3 uid="uid://d4b7x1k03s5hr"]
+[gd_scene load_steps=31 format=3 uid="uid://d4b7x1k03s5hr"]
 
 [ext_resource type="Script" path="res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.gd" id="1_j7ilt"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_q5nxg"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_pqihx"]
+[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.tscn" id="4_7kflj"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_ybnvc"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="5_5ijne"]
 [ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/networking/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="5_75v1y"]
@@ -789,6 +790,9 @@ script = ExtResource("1_j7ilt")
 
 [node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_pqihx")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HurtArea") instance=ExtResource("4_7kflj")]
+HurtArea = NodePath("../HurtArea")
 
 [node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_ybnvc")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")

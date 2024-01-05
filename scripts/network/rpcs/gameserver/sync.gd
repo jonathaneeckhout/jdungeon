@@ -53,6 +53,27 @@ func playersynchronizer_sync_interact(t: String):
 		user.player.component_list["player_synchronizer"].server_sync_interact(t)
 
 
+@rpc("call_remote", "any_peer", "reliable")
+func playersynchronizer_request_attack(t: float, e: Array):
+	if not G.is_server():
+		return
+
+	var id = multiplayer.get_remote_sender_id()
+
+	var user: G.User = G.get_user_by_id(id)
+	if user == null:
+		return
+
+	if not user.logged_in:
+		return
+
+	if user.player == null:
+		return
+
+	if user.player.component_list.has("player_synchronizer"):
+		user.player.component_list["player_synchronizer"].server_handle_attack_request(t, e)
+
+
 @rpc("call_remote", "authority", "unreliable")
 func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
 	var entity: Node = G.world.get_entity_by_name(n)
