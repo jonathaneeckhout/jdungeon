@@ -29,7 +29,7 @@ func _ready():
 		return
 
 
-func launch_projectile(target_global_pos: Vector2, projectile_class: String, misc: Dictionary):
+func launch_projectile(target_global_pos: Vector2, projectile_class: String, misc: Dictionary = {}):
 	var projectile: Projectile2D = create_projectile_node(projectile_class)
 
 	if not projectile.is_misc_data_valid(misc):
@@ -106,7 +106,7 @@ func sync_launch_to_client_response(json_data: Dictionary):
 func launch_to_json(
 	target_global_pos: Vector2, projectile_class: String, misc: Dictionary
 ) -> Dictionary:
-	var output: Dictionary
+	var output: Dictionary = {}
 
 	output["target_global_pos"] = target_global_pos
 	output["projectile_class"] = projectile_class

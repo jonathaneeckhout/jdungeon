@@ -20,4 +20,4 @@ hitbox_shape = [Vector2(50, 0)]
 hitbox_hits_user = false
 hitbox_rotate_shape = false
 hit_range = 100.0
-description = "Thoust gaze shan't rest upon this."
+description = "Deal damage equal to your attack to the target."

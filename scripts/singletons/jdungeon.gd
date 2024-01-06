@@ -150,6 +150,9 @@ func register_skills():
 	J.register_skill_resource(
 		"BasicAttack", "res://scripts/components/player/skillcomponent/Skills/BasicAttack.tres"
 	)
+	J.register_skill_resource(
+		"LaunchArrow", "res://scripts/components/player/skillcomponent/Skills/LaunchArrow.tres"
+	)
 
 
 func register_maps():
@@ -169,6 +172,10 @@ func register_character_classes():
 	J.register_class_resource(
 		"Hexpecialist",
 		"res://scripts/components/player/charclasscomponent/classes/Hexpecialist.tres"
+	)
+	J.register_class_resource(
+		"Ranger",
+		"res://scripts/components/player/charclasscomponent/classes/Ranger.tres"
 	)
 
 
