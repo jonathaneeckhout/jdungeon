@@ -6,7 +6,7 @@ enum HURTBOXSHAPE { Circle, Capsule }
 ## The window size of how long an element should stay in the positionBuffer
 const POSITION_BUFFER_TIME_WINDOW: float = 1.0
 
-@export var HurtBox: CollisionShape2D = null
+@export var hurt_box: CollisionShape2D = null
 
 # The node on which this component will work on
 var _target_node: Node = null
@@ -37,13 +37,16 @@ func _ready():
 	if _target_node.get("component_list") != null:
 		_target_node.component_list["lag_compensation"] = self
 
-	if HurtBox.shape is CircleShape2D:
+	if hurt_box.shape is CircleShape2D:
 		_hurtbox_shape = HURTBOXSHAPE.Circle
-		_hurtbox_radius = HurtBox.shape.radius
-	elif HurtBox.shape is CapsuleShape2D:
+
+		_hurtbox_radius = hurt_box.shape.radius
+
+	elif hurt_box.shape is CapsuleShape2D:
 		_hurtbox_shape = HURTBOXSHAPE.Capsule
-		_hurtbox_radius = HurtBox.shape.radius
-		_hurtbox_height = HurtBox.shape.height
+
+		_hurtbox_radius = hurt_box.shape.radius
+		_hurtbox_height = hurt_box.shape.height
 	else:
 		GodotLogger.error("The lag compensation hurtbox is using an unsupported shape")
 
@@ -75,7 +78,7 @@ func IsCircleCollidingWithTargetAtTimestamp(
 	var colliding: bool = false
 
 	# Calculate the actual position of the collisionshape as it can have an offset
-	var collision_shape_postion: Vector2 = element_at_timestamp.position + HurtBox.position
+	var collision_shape_postion: Vector2 = element_at_timestamp.position + hurt_box.position
 
 	# Check the collision according to the shape of the HurtBox
 	match _hurtbox_shape:
@@ -106,10 +109,10 @@ func check_capsule_collision(
 	var distance_to_line: float = 0.0
 
 	# Calculate the distance between the circle's center and the capsule's central line according to the rotation
-	if HurtBox.rotation_degrees == 0.0:
+	if hurt_box.rotation_degrees == 0.0:
 		distance_to_line = abs(targetNodePosition.y - circle_position.y)
-	elif abs(HurtBox.rotation_degrees) - 90.0 < 0.1:
-		distance_to_line = abs(targetNodePosition.x - circle_position.y)
+	elif abs(hurt_box.rotation_degrees) - 90.0 < 0.1:
+		distance_to_line = abs(targetNodePosition.x - circle_position.x)
 	else:
 		GodotLogger.warn("HurtBox has an invalid rotation")
 		return false

@@ -1220,8 +1220,8 @@ position = Vector2(0, -27)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_28ggr")
 
-[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("_hurtBox") instance=ExtResource("22_5wt1x")]
-_hurtBox = NodePath("../HurtArea/HurtBox")
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("hurt_box") instance=ExtResource("22_5wt1x")]
+hurt_box = NodePath("../HurtArea/HurtBox")
 
 [node name="AggroArea" type="Area2D" parent="."]
 visible = false
