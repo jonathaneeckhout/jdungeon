@@ -7,7 +7,7 @@ public partial class LagCompensationComponent : Node2D
 {
 	// The Collision shape used for collision
 	[Export]
-	public CollisionShape2D HurtBox { get; set; }
+	private CollisionShape2D _hurtBox;
 
 	// The window size of how long an element should stay in the positionBuffer
 	public const double PositionBufferTimeWindow = 1.0;
@@ -67,17 +67,17 @@ public partial class LagCompensationComponent : Node2D
 		positionBuffer = new List<PositionElement> { };
 
 		// Get the radius if the shape is a circle
-		if (HurtBox.Shape is CircleShape2D)
+		if (_hurtBox.Shape is CircleShape2D)
 		{
 			hurtBoxShape = HurtBoxShape.Circle;
-			hurtBoxRadius = (HurtBox.Shape as CircleShape2D).Radius;
+			hurtBoxRadius = (_hurtBox.Shape as CircleShape2D).Radius;
 		}
 		// Get the radius and the height if it's a capsule
-		else if (HurtBox.Shape is CapsuleShape2D)
+		else if (_hurtBox.Shape is CapsuleShape2D)
 		{
 			hurtBoxShape = HurtBoxShape.Capsule;
-			hurtBoxRadius = (HurtBox.Shape as CapsuleShape2D).Radius;
-			hurtBoxHeight = (HurtBox.Shape as CapsuleShape2D).Height;
+			hurtBoxRadius = (_hurtBox.Shape as CapsuleShape2D).Radius;
+			hurtBoxHeight = (_hurtBox.Shape as CapsuleShape2D).Height;
 		}
 		else
 		{
@@ -126,7 +126,7 @@ public partial class LagCompensationComponent : Node2D
 		bool colliding = false;
 
 		// Calculate the actual position of the collisionshape as it can have an offset
-		Vector2 collisionShapePostion = elementAtTimestamp.Position + HurtBox.Position;
+		Vector2 collisionShapePostion = elementAtTimestamp.Position + _hurtBox.Position;
 
 		// Check the collision according to the shape of the HurtBox
 		switch (hurtBoxShape)
@@ -189,15 +189,15 @@ public partial class LagCompensationComponent : Node2D
 	private bool checkCapsuleCollision(Vector2 targetNodePosition, Vector2 circlePosition, float circleRadius)
 	{
 
-		float distanceToLine = 0.0f;
+		float distanceToLine;
 		// Calculate the distance between the circle's center and the capsule's central line according to the rotation
-		if (HurtBox.RotationDegrees == 0.0f)
+		if (_hurtBox.RotationDegrees == 0.0f)
 		{
 			distanceToLine = Math.Abs(targetNodePosition.Y - circlePosition.Y);
 		}
-		else if (Math.Abs(HurtBox.RotationDegrees) - 90f < 0.0001f)
+		else if (Math.Abs(_hurtBox.RotationDegrees) - 90f < 0.1f)
 		{
-			distanceToLine = Math.Abs(targetNodePosition.X - circlePosition.Y);
+			distanceToLine = Math.Abs(targetNodePosition.X - circlePosition.X);
 		}
 		else
 		{

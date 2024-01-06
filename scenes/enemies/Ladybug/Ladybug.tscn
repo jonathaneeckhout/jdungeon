@@ -747,5 +747,5 @@ visible = false
 position = Vector2(0, -10)
 shape = SubResource("CapsuleShape2D_qhkmw")
 
-[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HurtBox") instance=ExtResource("19_bayn0")]
-HurtBox = NodePath("../HurtArea/HurtBox")
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("_hurtBox") instance=ExtResource("19_bayn0")]
+_hurtBox = NodePath("../HurtArea/HurtBox")

@@ -37,12 +37,11 @@ func _ready():
 	if _target_node.get("component_list") != null:
 		_target_node.component_list["lag_compensation"] = self
 
-	# TODO: check why capsule collision is not working
 	if HurtBox.shape is CircleShape2D:
-		# _hurtbox_shape = HURTBOXSHAPE.Circle
+		_hurtbox_shape = HURTBOXSHAPE.Circle
 		_hurtbox_radius = HurtBox.shape.radius
 	elif HurtBox.shape is CapsuleShape2D:
-		# _hurtbox_shape = HURTBOXSHAPE.Capsule
+		_hurtbox_shape = HURTBOXSHAPE.Capsule
 		_hurtbox_radius = HurtBox.shape.radius
 		_hurtbox_height = HurtBox.shape.height
 	else:
@@ -109,7 +108,7 @@ func check_capsule_collision(
 	# Calculate the distance between the circle's center and the capsule's central line according to the rotation
 	if HurtBox.rotation_degrees == 0.0:
 		distance_to_line = abs(targetNodePosition.y - circle_position.y)
-	elif abs(HurtBox.rotation_degrees) - 90.0 < 0.0001:
+	elif abs(HurtBox.rotation_degrees) - 90.0 < 0.1:
 		distance_to_line = abs(targetNodePosition.x - circle_position.y)
 	else:
 		GodotLogger.warn("HurtBox has an invalid rotation")

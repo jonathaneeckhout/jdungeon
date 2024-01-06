@@ -913,8 +913,8 @@ metadata/_edit_lock_ = true
 position = Vector2(0, -38)
 shape = SubResource("CapsuleShape2D_7ctfm")
 
-[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HurtBox") instance=ExtResource("4_7kflj")]
-HurtBox = NodePath("../HurtArea/HurtBox")
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("_hurtBox") instance=ExtResource("4_7kflj")]
+_hurtBox = NodePath("../HurtArea/HurtBox")
 
 [node name="AggroArea" type="Area2D" parent="."]
 collision_layer = 0

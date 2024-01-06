@@ -249,5 +249,5 @@ shape = SubResource("CircleShape2D_lcaik")
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_uo2bt")
 
-[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HurtBox") instance=ExtResource("14_ikli0")]
-HurtBox = NodePath("../HurtArea/HurtBox")
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("_hurtBox") instance=ExtResource("14_ikli0")]
+_hurtBox = NodePath("../HurtArea/HurtBox")
