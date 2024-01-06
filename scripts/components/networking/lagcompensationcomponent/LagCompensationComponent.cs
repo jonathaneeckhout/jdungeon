@@ -69,11 +69,13 @@ public partial class LagCompensationComponent : Node2D
 		// Get the radius if the shape is a circle
 		if (HurtBox.Shape is CircleShape2D)
 		{
+			hurtBoxShape = HurtBoxShape.Circle;
 			hurtBoxRadius = (HurtBox.Shape as CircleShape2D).Radius;
 		}
 		// Get the radius and the height if it's a capsule
 		else if (HurtBox.Shape is CapsuleShape2D)
 		{
+			hurtBoxShape = HurtBoxShape.Capsule;
 			hurtBoxRadius = (HurtBox.Shape as CapsuleShape2D).Radius;
 			hurtBoxHeight = (HurtBox.Shape as CapsuleShape2D).Height;
 		}
