@@ -63,6 +63,11 @@ func process_collisions(motion: Vector2):
 
 	while current_motion.length() > 0 and collision_count < max_collisions:
 		var collision: KinematicCollision2D = move_and_collide(current_motion)
+		
+		if collision == null:
+			# This is a currently reported bug where sometimes move_and_collide may return null: https://github.com/godotengine/godot/issues/76222
+			GodotLogger.error("Failed at retrieving collision result. Possible engine bug.")
+			continue
 
 		if collision.get_collider() is Node2D:
 			hit_object.emit(collision.get_collider())

@@ -48,6 +48,7 @@ func register_scenes():
 	register_items()
 	register_skills()
 	register_maps()
+	register_projectiles()
 	register_character_classes()
 	register_dialogues()
 	register_status_effects()
@@ -262,4 +263,3 @@ func register_status_effect_resource(status_class: String, status_res_path: Stri
 
 func register_projectile_scene(projectile_class: String, projectile_scene_path: String):
 	projectile_scenes[projectile_class] = load(projectile_scene_path)
-	assert(projectile_class == projectile_scenes[projectile_class].projectile_class)

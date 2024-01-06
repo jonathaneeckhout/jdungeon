@@ -13,7 +13,6 @@ const MAX_PROJECTILE_LIFESPAN: float = 40.0
 const MAX_COLLISION_LIFESPAN: float = 10.0
 
 @export var watcher_component: WatcherSynchronizerComponent
-@export var skill_component: SkillComponent
 
 var target_node: Node
 

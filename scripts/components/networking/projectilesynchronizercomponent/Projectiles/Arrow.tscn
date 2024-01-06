@@ -9,6 +9,9 @@ b = Vector2(210, 0)
 [node name="Arrow" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_eav8f")
+projectile_class = "Arrow"
+skill_class = "BasicAttack"
+move_speed = 40.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 1.5708
