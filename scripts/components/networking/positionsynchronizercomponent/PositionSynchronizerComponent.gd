@@ -4,11 +4,7 @@ class_name PositionSynchronizerComponent
 const INTERPOLATION_OFFSET: float = 0.1
 const INTERPOLATION_INDEX: float = 2
 
-## Constant indication how long the position should be stored in the position buffer
-const POSITION_BUFFER_TIME_WINDOW: float = 1.0
-
 @export var watcher_synchronizer: WatcherSynchronizerComponent
-@export var network_visible_area_size: float = 32.0
 
 var _target_node: Node
 

@@ -25,13 +25,14 @@ var npcs_in_interact_range: Array[NPC] = []
 func _ready():
 	target_node = get_parent()
 
-	_init_attack_area()
-
 	if G.is_server():
 		_init_loot_area()
 		_init_npc_interact_area()
+		set_physics_process(false)
 	elif not G.is_own_player(target_node):
 		queue_free()
+	else:
+		_init_attack_area()
 
 
 func _physics_process(_delta):

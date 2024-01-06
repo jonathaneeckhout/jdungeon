@@ -77,7 +77,6 @@ func _ready():
 		set_process_input(false)
 
 		# Connect to the interacted signal to handle interactions
-		# interacted.connect(_on_server_interacted)
 
 	# Client-side logic
 	else:
@@ -191,9 +190,7 @@ func _physics_process(delta):
 		mouse_global_pos = _target_node.get_global_mouse_position()
 
 		# Sync this input back to the server
-		G.sync_rpc.playersynchronizer_sync_input.rpc_id(
-			1, _current_frame, direction, delta, mouse_global_pos
-		)
+		G.sync_rpc.playersynchronizer_sync_input.rpc_id(1, _current_frame, direction, delta)
 
 		# Remove any input that is older than the timestamp of the last synced frame
 		while _input_buffer.size() > 0 and _input_buffer[0]["cf"] <= _last_sync_frame:
@@ -320,13 +317,12 @@ func client_sync_pos(c: int, p: Vector2, v: Vector2):
 
 
 ## sync the player's inputs towards the server
-func server_sync_input(frame: int, direction: Vector2, timestamp: float, mouse_pos: Vector2):
+func server_sync_input(frame: int, direction: Vector2, timestamp: float):
 	# Ignore older frames
 	if frame < _current_frame:
 		return
 
 	_current_frame = frame
-	mouse_global_pos = mouse_pos
 
 	# Store the inputs in a input buffer
 	_input_buffer.append({"dir": direction, "dt": timestamp})
@@ -446,40 +442,6 @@ func _on_direction_changed(original: bool):
 
 		# Set the animation back to the offset of where it was stopped
 		animation_player.seek(current_animation_position)
-
-
-func _on_server_interacted(target: Node2D):
-	# Only handle the case of you hitting air (null) or the target is an enemy
-	# The case to hit air allows you to miss hits or just perform swings around you
-	if target != null and target.entity_type != J.ENTITY_TYPE.ENEMY:
-		return
-
-	# Don't do anything if the attack timer is running, this means your attack is still on timeout
-	if !_attack_timer.is_stopped():
-		return
-
-	# Check which enemy the player managed to hit
-	for enemy in interaction_component.enemies_in_attack_range:
-		# The dead shall not be touched again
-		if enemy.stats.is_dead:
-			continue
-
-		# Generate a random damage between the player's min and max attack power
-		var damage: int = randi_range(
-			stats_component.attack_power_min, stats_component.attack_power_max
-		)
-
-		# This is the call that actually hurts the enemy
-		enemy.stats.hurt(_target_node, damage)
-
-	# Synchronize to other players that the player attacked
-	action_synchronizer.attack(_target_node.position.direction_to(mouse_global_pos))
-
-	# Emit the signal that the player attacked
-	attacked.emit(_target_node.position.direction_to(mouse_global_pos))
-
-	# Start the timer so that the player needs to wait for this timer to stop before performing another attack
-	_attack_timer.start(stats_component.attack_speed)
 
 
 func _on_client_interacted(target: Node2D):

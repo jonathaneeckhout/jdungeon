@@ -12,7 +12,7 @@ func playersynchronizer_sync_pos(c: int, p: Vector2, v: Vector2):
 
 
 @rpc("call_remote", "any_peer", "reliable")
-func playersynchronizer_sync_input(c: int, d: Vector2, t: float, m: Vector2):
+func playersynchronizer_sync_input(c: int, d: Vector2, t: float):
 	if not G.is_server():
 		return
 
@@ -29,7 +29,7 @@ func playersynchronizer_sync_input(c: int, d: Vector2, t: float, m: Vector2):
 		return
 
 	if user.player.component_list.has("player_synchronizer"):
-		user.player.component_list["player_synchronizer"].server_sync_input(c, d, t, m)
+		user.player.component_list["player_synchronizer"].server_sync_input(c, d, t)
 
 
 @rpc("call_remote", "any_peer", "reliable")

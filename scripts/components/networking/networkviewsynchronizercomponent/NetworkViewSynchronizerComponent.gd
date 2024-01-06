@@ -37,12 +37,12 @@ func _ready():
 		return
 
 	if G.is_server():
-		var cs_network_view_circle = CircleShape2D.new()
-		cs_network_view_circle.radius = network_sync_area_size
+		var cs_network_view_square = RectangleShape2D.new()
+		cs_network_view_square.size = Vector2(2048, 1208)
 
 		var cs_body_network_view_area = CollisionShape2D.new()
 		cs_body_network_view_area.name = "BodyNetworkViewAreaCollisionShape2D"
-		cs_body_network_view_area.shape = cs_network_view_circle
+		cs_body_network_view_area.shape = cs_network_view_square
 
 		var body_network_view_area = Area2D.new()
 		body_network_view_area.name = "BodyNetworkViewArea"

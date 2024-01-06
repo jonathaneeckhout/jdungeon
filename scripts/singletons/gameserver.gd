@@ -6,8 +6,6 @@ signal client_connected(connected: bool)
 # TODO: place this signal in another file
 signal shop_opened(vendor_name: String)
 
-const SERVER_FPS: int = 10
-const CLIENT_FPS: int = 60
 const CLOCK_SYNC_TIME: float = 0.5
 
 var mode: MODE = MODE.CLIENT
