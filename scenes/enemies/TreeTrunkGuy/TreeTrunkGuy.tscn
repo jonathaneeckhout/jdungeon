@@ -791,9 +791,6 @@ script = ExtResource("1_j7ilt")
 [node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_pqihx")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
-[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HurtBox") instance=ExtResource("4_7kflj")]
-HurtBox = NodePath("../HurtArea/HurtBox")
-
 [node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_ybnvc")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 hp_max = 50
@@ -915,6 +912,9 @@ metadata/_edit_lock_ = true
 [node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
 position = Vector2(0, -38)
 shape = SubResource("CapsuleShape2D_7ctfm")
+
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HurtBox") instance=ExtResource("4_7kflj")]
+HurtBox = NodePath("../HurtArea/HurtBox")
 
 [node name="AggroArea" type="Area2D" parent="."]
 collision_layer = 0

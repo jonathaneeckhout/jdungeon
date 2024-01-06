@@ -196,9 +196,6 @@ script = ExtResource("1_6p7b5")
 [node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_umoon")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
-[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HurtBox") instance=ExtResource("14_ikli0")]
-HurtBox = NodePath("../HurtArea/HurtBox")
-
 [node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_ho1ox")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 hp_max = 20
@@ -251,3 +248,6 @@ shape = SubResource("CircleShape2D_lcaik")
 [node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_uo2bt")
+
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("HurtBox") instance=ExtResource("14_ikli0")]
+HurtBox = NodePath("../HurtArea/HurtBox")
