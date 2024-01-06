@@ -55,7 +55,7 @@ func _physics_process(_delta: float) -> void:
 
 	var motion: Vector2 = get_motion()
 
-	process_collisions(motion)
+	process_collisions(motion * _delta)
 
 
 func process_collisions(motion: Vector2):
@@ -85,6 +85,7 @@ func get_motion() -> Vector2:
 
 
 func launch(global_pos: Vector2):
+	collision_count = 0
 	set_launch_target(global_pos)
 	set_moving(true)
 
