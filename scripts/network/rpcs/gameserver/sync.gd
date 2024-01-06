@@ -631,6 +631,10 @@ func projectilesynchronizer_sync_launch(n: String, d: Dictionary):
 
 	if entity.get("component_list") == null:
 		return
-		
+
 	if entity.component_list.has(ProjectileSynchronizerComponent.COMPONENT_NAME):
-		entity.component_list[ProjectileSynchronizerComponent.COMPONENT_NAME].sync_launch_to_client_response(d)
+		(
+			entity
+			. component_list[ProjectileSynchronizerComponent.COMPONENT_NAME]
+			. sync_launch_to_client_response(d)
+		)

@@ -28,7 +28,6 @@ var charclass_resources: Dictionary = {}
 var dialogue_resources: Dictionary = {}
 var status_effect_resources: Dictionary = {}
 
-
 var uuid_util: UuidUtil
 
 var audio: SoundManager = SoundManager.new()
@@ -208,8 +207,10 @@ func register_status_effects():
 
 
 func register_projectiles():
-	J.register_projectile_scene("Arrow", "res://scripts/components/networking/projectilesynchronizercomponent/Projectiles/Arrow.tscn")
-
+	J.register_projectile_scene(
+		"Arrow",
+		"res://scripts/components/networking/projectilesynchronizercomponent/Projectiles/Arrow.tscn"
+	)
 
 
 func register_player_scene(player_scene_path: String):

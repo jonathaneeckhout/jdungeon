@@ -20,7 +20,6 @@ const NO_SKILL: String = ""
 @export var ignore_terrain: bool = false
 @export var ignore_same_entity_type: bool = true
 
-
 var target_global_pos: Vector2
 
 var moving: bool = false:
@@ -37,6 +36,7 @@ var misc: Dictionary
 
 var required_misc_keys: Array[String]
 
+
 func _init() -> void:
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
 	collision_layer = J.PHYSICS_LAYER_PROJECTILE
@@ -52,30 +52,30 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if not moving:
 		return
-		
+
 	var motion: Vector2 = get_motion()
-	
+
 	process_collisions(motion)
-	
-	
+
+
 func process_collisions(motion: Vector2):
 	var current_motion: Vector2 = motion
-	
+
 	while current_motion.length() > 0 and collision_count < max_collisions:
 		var collision: KinematicCollision2D = move_and_collide(current_motion)
-		
+
 		if collision.get_collider() is Node2D:
 			hit_object.emit(collision.get_collider())
 			collision_count += 1
-		
+
 		current_motion = collision.get_remainder()
-	
-	
+
+
 ## This function may be overriden to change how the projectile moves
 func get_motion() -> Vector2:
 	# Extend the target to ensure it keeps moving.
 	target_global_pos = global_position.direction_to(target_global_pos) * move_speed * 2
-	
+
 	return global_position.direction_to(target_global_pos) * move_speed
 
 
@@ -87,18 +87,18 @@ func launch(global_pos: Vector2):
 func set_launch_target(global_pos: Vector2) -> Projectile2D:
 	target_global_pos = global_pos
 	return self
-	
+
 
 func set_moving(enable: bool = true) -> Projectile2D:
 	moving = enable
 	return self
-	
-	
+
+
 func add_collision_mask_bit(bit: int) -> Projectile2D:
 	set_collision_layer_value(bit, true)
 	return self
 
-	
+
 func remove_collision_mask_bit(bit: int) -> Projectile2D:
 	set_collision_layer_value(bit, false)
 	return self
@@ -107,8 +107,8 @@ func remove_collision_mask_bit(bit: int) -> Projectile2D:
 func add_node_to_ignored(node: Node) -> Projectile2D:
 	add_collision_exception_with(node)
 	return self
-	
-	
+
+
 func remove_node_from_ignored(node: Node) -> Projectile2D:
 	remove_collision_exception_with(node)
 	return self
@@ -124,16 +124,15 @@ func set_lifespan(new_span: float) -> Projectile2D:
 	# If the timer is already running, update it.
 	if lifespan_timer.is_inside_tree():
 		lifespan_timer.start(new_span)
-		
+
 	lifespan = new_span
 	return self
-	
+
 
 func set_misc_data(key: String, data) -> Projectile2D:
 	misc[key] = data
 	return self
-	
-	
+
+
 func is_misc_data_valid(misc_data: Dictionary = misc) -> bool:
 	return misc_data.has_all(required_misc_keys)
-		
