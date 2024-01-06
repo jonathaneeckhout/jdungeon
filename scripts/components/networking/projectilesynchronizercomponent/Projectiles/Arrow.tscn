@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://ciba40tryx4n3"]
+
+[ext_resource type="Script" path="res://scripts/components/networking/projectilesynchronizercomponent/Projectile2D.gd" id="1_eav8f"]
+[ext_resource type="Texture2D" uid="uid://doxo5puhh40dw" path="res://assets/images/projectile/basicarrow/BasicArrow.png" id="2_bm8j2"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_l0reg"]
+b = Vector2(210, 0)
+
+[node name="Arrow" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_eav8f")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+texture = ExtResource("2_bm8j2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("SegmentShape2D_l0reg")

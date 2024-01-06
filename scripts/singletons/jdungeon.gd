@@ -22,10 +22,12 @@ var enemy_scenes: Dictionary = {}
 var npc_scenes: Dictionary = {}
 var item_scenes: Dictionary = {}
 var map_scenes: Dictionary = {}
+var projectile_scenes: Dictionary = {}
 var skill_resources: Dictionary = {}
 var charclass_resources: Dictionary = {}
 var dialogue_resources: Dictionary = {}
 var status_effect_resources: Dictionary = {}
+
 
 var uuid_util: UuidUtil
 
@@ -146,6 +148,9 @@ func register_skills():
 	J.register_skill_resource(
 		"Defend", "res://scripts/components/player/skillcomponent/Skills/Defend.tres"
 	)
+	J.register_skill_resource(
+		"BasicAttack", "res://scripts/components/player/skillcomponent/Skills/BasicAttack.tres"
+	)
 
 
 func register_maps():
@@ -202,6 +207,11 @@ func register_status_effects():
 	)
 
 
+func register_projectiles():
+	J.register_projectile_scene("Arrow", "res://scripts/components/networking/projectilesynchronizercomponent/Projectiles/Arrow.tscn")
+
+
+
 func register_player_scene(player_scene_path: String):
 	player_scene = load(player_scene_path)
 
@@ -240,3 +250,8 @@ func register_dialogue_resource(dialogue_class: String, dialogue_res_path: Strin
 func register_status_effect_resource(status_class: String, status_res_path: String):
 	status_effect_resources[status_class] = load(status_res_path)
 	assert(status_class == status_effect_resources[status_class].status_class)
+
+
+func register_projectile_scene(projectile_class: String, projectile_scene_path: String):
+	projectile_scenes[projectile_class] = load(projectile_scene_path)
+	assert(projectile_class == projectile_scenes[projectile_class].projectile_class)

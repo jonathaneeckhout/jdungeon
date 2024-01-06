@@ -618,3 +618,19 @@ func statuseffectcomponent_sync_all_response(n: String, d: Dictionary):
 
 	if entity.component_list.has(StatusEffectComponent.COMPONENT_NAME):
 		entity.component_list[StatusEffectComponent.COMPONENT_NAME].sync_all_response(d)
+
+
+#Only server can make this RPC, runs on client
+@rpc("call_remote", "authority", "reliable")
+func projectilesynchronizer_sync_launch(n: String, d: Dictionary):
+	assert(not G.is_server(), "This method is only intended for client use")
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+		
+	if entity.component_list.has(ProjectileSynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[ProjectileSynchronizerComponent.COMPONENT_NAME].sync_launch_to_client_response(d)
