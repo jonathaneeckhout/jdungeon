@@ -51,8 +51,9 @@ func _ready():
 		add_class("Base")
 
 	#Re-apply stats anytime a class changes.
-	classes_changed.connect(apply_stats)
-	classes_changed.connect(apply_skills)
+	if G.is_server():
+		classes_changed.connect(apply_stats)
+		classes_changed.connect(apply_skills)
 
 	#This line should stay commented until there's a system to detect when a player should be allowed to change classes
 	#class_change_locked = true
@@ -193,31 +194,23 @@ func replace_classes(newClasses: Array[String]):
 			add_class(charclass)
 
 
-## Applies bonuses and multipliers to the character's StatsSynchronizerComponent
+## Applies bonuses and multipliers to the character's StatsSynchronizerComponent as a Boost object
 func apply_stats():
-	#If the stats are not ready, wait another frame.
+	#If the stats are not ready, queue this for the next frame.
 	if not stats_component.ready_done:
 		get_tree().physics_frame.connect(apply_stats)
 		return
 
-	var statsDict: Dictionary = {}
+	var statBoost := Boost.new()
+	statBoost.identifier = "character_classes"
 
-	#Reset character stats before applying the stats from the classes
-	stats_component.load_defaults()
+	for charClass: CharacterClassResource in classes:
+		for stat: String in StatsSynchronizerComponent.StatListWithDefaults:
+			#Apply all multipliers and bonuses from classes for the given stat
+			statBoost.add_stat_boost(stat, charClass.get_bonus(stat))
+			statBoost.add_stat_boost_modifier(stat, charClass.get_multiplier(stat), false)
 
-	for stat: String in StatsSynchronizerComponent.StatListWithDefaults:
-		statsDict[stat] = stats_component.get("_default_" + stat)
-
-		#Apply all multipliers from classes for the given stat
-		for charClass: CharacterClassResource in classes:
-			statsDict[stat] *= charClass.get_multiplier(stat)
-
-		#Apply all bonuses from classes
-		for charClass: CharacterClassResource in classes:
-			statsDict[stat] += charClass.get_bonus(stat)
-
-	for statName: String in statsDict:
-		stats_component.set(statName, statsDict[statName])
+	stats_component.apply_boost(statBoost)
 
 
 func apply_skills():

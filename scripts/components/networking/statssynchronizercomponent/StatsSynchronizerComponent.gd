@@ -67,9 +67,11 @@ signal healed(from: String, healing: int)
 signal energy_recovered(from: String, gained: int)
 signal died
 signal respawned
+signal boosts_changed
 
 @export var watcher_synchronizer: WatcherSynchronizerComponent
 
+@export_group("Stats")
 @export var hp_max: int = 100:
 	set(val):
 		hp_max = val
@@ -159,13 +161,14 @@ var is_dead: bool = false
 var server_buffer: Array[Dictionary] = []
 var ready_done: bool = false
 
-var _default_hp_max: int = hp_max
-var _default_energy_max: int = energy_max
-var _default_energy_regen: int = energy_regen
-var _default_attack_power_min: int = attack_power_min
-var _default_attack_power_max: int = attack_power_max
-var _default_defense: int = defense
-var _default_movement_speed: float = movement_speed
+@export_group("Stat Defaults")
+@export var _default_hp_max: int = 100
+@export var _default_energy_max: int = 100
+@export var _default_energy_regen: int = 5
+@export var _default_attack_power_min: int = 0
+@export var _default_attack_power_max: int = 5
+@export var _default_defense: int = 0
+@export var _default_movement_speed: float = 300
 
 var energy_regen_timer: Timer
 
@@ -204,6 +207,8 @@ func _ready():
 			await tree_entered
 
 		G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
+
+	boosts_changed.connect(reload_boosts)
 
 	# Make sure this line is called on server and client's side
 	ready_done = true
@@ -379,25 +384,34 @@ func get_attack_damage() -> float:
 	return randi_range(attack_power_min, attack_power_max)
 
 
+## Adds the [Boost] object to be applied on the stats and synchronizes the addition.
 func apply_boost(boost: Boost):
-	for statName in boost.statBoostDict:
-		if not statName in StatListAll:
-			GodotLogger.error("The property '{0}' is not a stat.".format([statName]))
+	# Override any boost with an identical identifier, ignore if this boost doesn't have one.
+	if boost.identifier != Boost.NO_IDENTIFIER:
+		var existing_boost: Boost = get_boost_with_identifier(boost.identifier)
+		if existing_boost is Boost:
+			remove_boost(existing_boost)
 
-		if typeof(boost.get_stat_boost(statName)) != typeof(get(statName)):
+	# Validate boost
+	for stat_name in boost.stat_boost_dict.keys() + boost.stat_boost_modifier_dict.keys():
+		if not stat_name in StatListAll:
+			GodotLogger.error("The property '{0}' is not a stat.".format([stat_name]))
+
+		if (
+			typeof(boost.get_stat_boost(stat_name)) != TYPE_INT
+			and typeof(boost.get_stat_boost(stat_name)) != TYPE_FLOAT
+		):
 			(
 				GodotLogger
 				. warn(
 					(
-						"The value type of the boost ({0}) is different from the stat it is meant to alter ({1}). This could cause unexpected behaviour."
-						. format([typeof(boost.get_stat_boost(statName)), typeof(get(statName))])
+						"The value type of the boost ({0}) must be type 1 or 2. This could cause unexpected behaviour."
+						. format([typeof(boost.get_stat_boost(stat_name)), typeof(get(stat_name))])
 					)
 				)
 			)
 
-		var newValue = get(statName) + boost.get_stat_boost(statName)
-		self.set(statName, newValue)
-
+	# Add to list
 	active_boosts.append(boost)
 
 	var data: Dictionary = to_json(true)
@@ -408,15 +422,17 @@ func apply_boost(boost: Boost):
 	for watcher in watcher_synchronizer.watchers:
 		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
 
+	# This signal calls reload_boosts()
+	boosts_changed.emit()
 
+
+## Attempts to remove a boost per reference.
 func remove_boost(boost: Boost):
 	if not active_boosts.has(boost):
-		GodotLogger.error("This boost does not belong to this component.")
+		GodotLogger.warn("This boost does not belong to this component.")
 		return
 
-	for statName in boost.statBoostDict:
-		var newValue = get(statName) - boost.get_stat_boost(statName)
-		self.set(statName, newValue)
+	active_boosts.erase(boost)
 
 	var data: Dictionary = to_json(true)
 
@@ -426,20 +442,75 @@ func remove_boost(boost: Boost):
 	for watcher in watcher_synchronizer.watchers:
 		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
 
+	boosts_changed.emit()
+
+
+## Loads the default stats and re-applies every stored [Boost]
+func reload_boosts():
+	load_defaults()
+
+	var flat_values: Dictionary = {}
+	var modifier_values: Dictionary = {}
+
+	# Start iterating trough stats to boost them
+	for stat: String in StatListPermanent:
+		# Prepare the flat and modifier values that the stat will be set-to and multiplied for.
+		# The base value is the current (defaulted) value of the stat
+		flat_values[stat] = get(stat)
+		# The base for modifiers is 1, since it will be multiplied by other modifiers.
+		modifier_values[stat] = 1
+
+		for boost: Boost in active_boosts:
+			# Store the bonuses of the boost added to the flat amount, as well as the modifiers
+			flat_values[stat] += boost.get_stat_boost(stat)
+
+			# Ignore modifiers of 1.
+			if boost.get_stat_boost_modifier(stat) != 1:
+				modifier_values[stat] *= boost.get_stat_boost_modifier(stat)
+
+		# Set the stat to the flat value multiplied by the modifier
+		set(stat, flat_values[stat] * modifier_values[stat])
+
+	if Global.debug_mode:
+		var debug_log: String = "Boosts applied with these results: \n"
+
+		for stat_name: String in StatListPermanent + StatListCounter:
+			debug_log += "{0}: {1} | Flat boost: {2} | Modifier boost: {3} \n".format(
+				[
+					stat_name,
+					get(stat_name),
+					flat_values.get(stat_name, 0 as int),
+					modifier_values.get(stat_name, 0.0 as float)
+				]
+			)
+		GodotLogger.info(debug_log)
+
+
+## Attempts to get a reference to a [Boost] with the given identifier, if it exists.
+func get_boost_with_identifier(identifier: String) -> Boost:
+	for boost: Boost in active_boosts:
+		if boost.identifier == identifier:
+			return boost
+
+	if Global.debug_mode:
+		GodotLogger.warn("Could not find boost with identifier '{0}'".format([identifier]))
+
+	return null
+
 
 func to_json(full: bool = false) -> Dictionary:
 	var data: Dictionary = {}
-	for statName in StatListCounter:
-		data[statName] = get(statName)
+	for stat_name in StatListCounter:
+		data[stat_name] = get(stat_name)
 
 	if data.size() != StatListCounter.size():
 		GodotLogger.error("Discrepancy in the amount of stats, StatListCounter may be at fault.")
 
 	if full:
 		var dictForMerge: Dictionary = {}
-		#Fill the dict with the permanent stats
-		for statName in StatListPermanent:
-			dictForMerge[statName] = get(statName)
+		# Fill the dict with the permanent stats
+		for stat_name in StatListPermanent:
+			dictForMerge[stat_name] = get(stat_name)
 
 		data.merge(dictForMerge)
 
@@ -452,27 +523,27 @@ func to_json(full: bool = false) -> Dictionary:
 
 
 func from_json(data: Dictionary, full: bool = false) -> bool:
-	#Validation
-	for statName in StatListCounter:
-		if not statName in data:
-			GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
+	# Validation
+	for stat_name in StatListCounter:
+		if not stat_name in data:
+			GodotLogger.warn('Failed to load stats from data, missing "%s" key' % stat_name)
 			return false
 
 	if full:
-		for statName in StatListPermanent:
-			if not statName in data:
-				GodotLogger.warn('Failed to load stats from data, missing "%s" key' % statName)
+		for stat_name in StatListPermanent:
+			if not stat_name in data:
+				GodotLogger.warn('Failed to load stats from data, missing "%s" key' % stat_name)
 				return false
 
-	#Actually load the data
-	for statName in StatListCounter:
-		self.set(statName, data.get(statName))
+	# Actually load the data
+	for stat_name in StatListCounter:
+		self.set(stat_name, data.get(stat_name))
 
 	experience_needed = calculate_experience_needed(level)
 
 	if full:
-		for statName in StatListPermanent:
-			self.set(statName, data.get(statName))
+		for stat_name in StatListPermanent:
+			self.set(stat_name, data.get(stat_name))
 
 	loaded.emit()
 

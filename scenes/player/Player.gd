@@ -210,10 +210,11 @@ func calculate_level_boost() -> Boost:
 
 func calculate_and_apply_boosts():
 	var boost: Boost = calculate_level_boost()
-
+	boost.identifier = "player_level"
 	var equipment_boost: Boost = equipment.get_boost()
-	boost.add_boost(equipment_boost)
+	equipment_boost.identifier = "player_equipment"
 
+	stats.apply_boost(equipment_boost)
 	stats.apply_boost(boost)
 
 
