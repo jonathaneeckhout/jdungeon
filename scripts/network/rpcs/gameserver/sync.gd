@@ -147,12 +147,12 @@ func playersynchronizer_request_attack(t: float, e: Array):
 
 
 func positionsynchronizer_queue_sync(
-	player: int, entity: String, timestamp: float, position: Vector2, velocity: Vector2
+	player: int, entity: String, timestamp: float, position: Vector2
 ):
 	if player in sync_buffer:
-		sync_buffer[player].append([entity, timestamp, position, velocity])
+		sync_buffer[player].append([entity, timestamp, position])
 	else:
-		sync_buffer[player] = [[entity, timestamp, position, velocity]]
+		sync_buffer[player] = [[entity, timestamp, position]]
 
 
 @rpc("call_remote", "authority", "unreliable")
@@ -170,9 +170,7 @@ func positionsynchronizer_sync(e: Array):
 			return
 
 		if entity.component_list.has("position_synchronizer"):
-			entity.component_list["position_synchronizer"].sync(
-				synced_entity[1], synced_entity[2], synced_entity[3]
-			)
+			entity.component_list["position_synchronizer"].sync(synced_entity[1], synced_entity[2])
 
 
 #Called by client, runs on server
