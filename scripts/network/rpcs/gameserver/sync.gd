@@ -2,8 +2,12 @@ extends Node
 
 class_name SyncRPC
 
+const MAX_ENTITIES_PER_SYNC: int = 24
+
 ## Network metrics
 var metrics: Dictionary = {}
+
+var sync_buffer: Dictionary = {}
 
 
 func _ready():
@@ -44,6 +48,18 @@ func _ready():
 		metrics["statuseffectcomponent_sync_effect_response"] = 0
 		metrics["statuseffectcomponent_sync_all"] = 0
 		metrics["statuseffectcomponent_sync_all_response"] = 0
+
+
+func _process(_delta):
+	for player in sync_buffer:
+		for i in range(0, sync_buffer[player].size(), MAX_ENTITIES_PER_SYNC):
+			var batch_size = min(MAX_ENTITIES_PER_SYNC, sync_buffer[player].size() - i)
+			var batch = sync_buffer[player].slice(i, i + batch_size)
+
+			# Process the current batch
+			positionsynchronizer_sync.rpc_id(player, batch)
+
+	sync_buffer.clear()
 
 
 @rpc("call_remote", "authority", "unreliable")
@@ -130,21 +146,33 @@ func playersynchronizer_request_attack(t: float, e: Array):
 		user.player.component_list["player_synchronizer"].server_handle_attack_request(t, e)
 
 
+func positionsynchronizer_queue_sync(
+	player: int, entity: String, timestamp: float, position: Vector2, velocity: Vector2
+):
+	if player in sync_buffer:
+		sync_buffer[player].append([entity, timestamp, position, velocity])
+	else:
+		sync_buffer[player] = [[entity, timestamp, position, velocity]]
+
+
 @rpc("call_remote", "authority", "unreliable")
-func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
+func positionsynchronizer_sync(e: Array):
 	if Global.env_network_profiling:
 		metrics["positionsynchronizer_sync"] += 1
 
-	var entity: Node = G.world.get_entity_by_name(n)
+	for synced_entity in e:
+		var entity: Node = G.world.get_entity_by_name(synced_entity[0])
 
-	if entity == null:
-		return
+		if entity == null:
+			return
 
-	if entity.get("component_list") == null:
-		return
+		if entity.get("component_list") == null:
+			return
 
-	if entity.component_list.has("position_synchronizer"):
-		entity.component_list["position_synchronizer"].sync(t, p, v)
+		if entity.component_list.has("position_synchronizer"):
+			entity.component_list["position_synchronizer"].sync(
+				synced_entity[1], synced_entity[2], synced_entity[3]
+			)
 
 
 #Called by client, runs on server

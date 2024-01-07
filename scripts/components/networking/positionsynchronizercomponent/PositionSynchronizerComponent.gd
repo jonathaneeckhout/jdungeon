@@ -37,7 +37,7 @@ func _physics_process(_delta):
 
 		# Sync your position to every entity that is watching you
 		for watcher in watcher_synchronizer.watchers:
-			G.sync_rpc.positionsynchronizer_sync.rpc_id(
+			G.sync_rpc.positionsynchronizer_queue_sync(
 				watcher.peer_id,
 				_target_node.name,
 				timestamp,
