@@ -182,9 +182,8 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_lcaik"]
 radius = 16.0
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_uo2bt"]
-radius = 24.0
-height = 64.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_8xw10"]
+radius = 32.0
 
 [node name="Sheep" type="CharacterBody2D"]
 motion_mode = 1
@@ -247,7 +246,7 @@ shape = SubResource("CircleShape2D_lcaik")
 
 [node name="HurtBox" type="CollisionShape2D" parent="HurtArea"]
 rotation = 1.5708
-shape = SubResource("CapsuleShape2D_uo2bt")
+shape = SubResource("CircleShape2D_8xw10")
 
 [node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("hurt_box") instance=ExtResource("14_ikli0")]
 hurt_box = NodePath("../HurtArea/HurtBox")
