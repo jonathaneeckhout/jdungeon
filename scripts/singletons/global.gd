@@ -3,6 +3,7 @@ extends Node
 signal debug_mode_toggled(newStats: bool)
 
 var env_debug: bool = false
+var env_network_profiling: bool = false
 var env_audio_mute: bool = false
 var env_version_file: String = ""
 var env_starter_server: String = ""
@@ -163,6 +164,10 @@ func load_common_env_variables() -> bool:
 	env_debug = env.get_value("DEBUG") == "true"
 
 	GodotLogger.info("DEBUG=[%s]" % str(env_debug))
+
+	env_network_profiling = env.get_value("NETWORK_PROFILING") == "true"
+
+	GodotLogger.info("NETWORK_PROFILING=[%s]" % str(env_network_profiling))
 
 	env_run_as_gateway = env.get_value("RUN_AS_GATEWAY") == "true"
 	env_run_as_server = env.get_value("RUN_AS_SERVER") == "true"

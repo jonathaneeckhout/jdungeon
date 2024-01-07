@@ -2,8 +2,55 @@ extends Node
 
 class_name SyncRPC
 
+## Network metrics
+var metrics: Dictionary = {}
+
+
+func _ready():
+	if Global.env_network_profiling:
+		metrics["playersynchronizer_sync_pos"] = 0
+		metrics["playersynchronizer_sync_input"] = 0
+		metrics["playersynchronizer_sync_interact"] = 0
+		metrics["playersynchronizer_request_attack"] = 0
+		metrics["positionsynchronizer_sync"] = 0
+		metrics["statssynchronizer_sync_stats"] = 0
+		metrics["statssynchronizer_sync_response"] = 0
+		metrics["playersynchronizer_request_attack"] = 0
+		metrics["statssynchronizer_sync_int_change"] = 0
+		metrics["statssynchronizer_sync_float_change"] = 0
+		metrics["statssynchronizer_sync_hurt"] = 0
+		metrics["statssynchronizer_sync_heal"] = 0
+		metrics["statssynchronizer_sync_energy_recovery"] = 0
+		metrics["networkviewsynchronizer_add_player"] = 0
+		metrics["networkviewsynchronizer_remove_player"] = 0
+		metrics["networkviewsynchronizer_add_enemy"] = 0
+		metrics["networkviewsynchronizer_remove_enemy"] = 0
+		metrics["networkviewsynchronizer_add_npc"] = 0
+		metrics["networkviewsynchronizer_remove_npc"] = 0
+		metrics["networkviewsynchronizer_add_item"] = 0
+		metrics["networkviewsynchronizer_remove_item"] = 0
+		metrics["networkviewsynchronizer_sync_bodies_in_view"] = 0
+		metrics["actionsynchronizer_sync_attack"] = 0
+		metrics["actionsynchronizer_sync_skill_use"] = 0
+		metrics["skillcomponent_sync_skills"] = 0
+		metrics["skillcomponent_sync_response"] = 0
+		metrics["playersynchronizer_sync_skill_use"] = 0
+		metrics["characterclasscomponent_sync_all"] = 0
+		metrics["characterclasscomponent_sync_response"] = 0
+		metrics["characterclasscomponent_sync_class_change"] = 0
+		metrics["dialoguesynchronizer_sync_invoke_response"] = 0
+		metrics["dialoguesynchronizer_sync_dialogue_finished"] = 0
+		metrics["statuseffectcomponent_sync_effect"] = 0
+		metrics["statuseffectcomponent_sync_effect_response"] = 0
+		metrics["statuseffectcomponent_sync_all"] = 0
+		metrics["statuseffectcomponent_sync_all_response"] = 0
+
+
 @rpc("call_remote", "authority", "unreliable")
 func playersynchronizer_sync_pos(c: int, p: Vector2, v: Vector2):
+	if Global.env_network_profiling:
+		metrics["playersynchronizer_sync_pos"] += 1
+
 	if G.client_player == null:
 		return
 
@@ -13,6 +60,9 @@ func playersynchronizer_sync_pos(c: int, p: Vector2, v: Vector2):
 
 @rpc("call_remote", "any_peer", "reliable")
 func playersynchronizer_sync_input(c: int, d: Vector2, t: float):
+	if Global.env_network_profiling:
+		metrics["playersynchronizer_sync_input"] += 1
+
 	if not G.is_server():
 		return
 
@@ -34,6 +84,9 @@ func playersynchronizer_sync_input(c: int, d: Vector2, t: float):
 
 @rpc("call_remote", "any_peer", "reliable")
 func playersynchronizer_sync_interact(t: String):
+	if Global.env_network_profiling:
+		metrics["playersynchronizer_sync_interact"] += 1
+
 	if not G.is_server():
 		return
 
@@ -55,6 +108,9 @@ func playersynchronizer_sync_interact(t: String):
 
 @rpc("call_remote", "any_peer", "reliable")
 func playersynchronizer_request_attack(t: float, e: Array):
+	if Global.env_network_profiling:
+		metrics["playersynchronizer_request_attack"] += 1
+
 	if not G.is_server():
 		return
 
@@ -76,6 +132,9 @@ func playersynchronizer_request_attack(t: float, e: Array):
 
 @rpc("call_remote", "authority", "unreliable")
 func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
+	if Global.env_network_profiling:
+		metrics["positionsynchronizer_sync"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -91,6 +150,9 @@ func positionsynchronizer_sync(n: String, t: float, p: Vector2, v: Vector2):
 #Called by client, runs on server
 @rpc("call_remote", "any_peer", "reliable")
 func statssynchronizer_sync_stats(n: String):
+	if Global.env_network_profiling:
+		metrics["statssynchronizer_sync_stats"] += 1
+
 	if not G.is_server():
 		return
 
@@ -114,6 +176,9 @@ func statssynchronizer_sync_stats(n: String):
 
 @rpc("call_remote", "authority", "reliable")
 func statssynchronizer_sync_response(n: String, d: Dictionary):
+	if Global.env_network_profiling:
+		metrics["statssynchronizer_sync_response"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -130,6 +195,9 @@ func statssynchronizer_sync_response(n: String, d: Dictionary):
 func statssynchronizer_sync_int_change(
 	n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: int
 ):
+	if Global.env_network_profiling:
+		metrics["statssynchronizer_sync_int_change"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -146,6 +214,9 @@ func statssynchronizer_sync_int_change(
 func statssynchronizer_sync_float_change(
 	n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: float
 ):
+	if Global.env_network_profiling:
+		metrics["statssynchronizer_sync_float_change"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -160,6 +231,9 @@ func statssynchronizer_sync_float_change(
 
 @rpc("call_remote", "authority", "reliable")
 func statssynchronizer_sync_hurt(n: String, t: float, f: String, c: int, d: int):
+	if Global.env_network_profiling:
+		metrics["statssynchronizer_sync_hurt"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -174,6 +248,9 @@ func statssynchronizer_sync_hurt(n: String, t: float, f: String, c: int, d: int)
 
 @rpc("call_remote", "authority", "reliable")
 func statssynchronizer_sync_heal(n: String, t: float, f: String, c: int, h: int):
+	if Global.env_network_profiling:
+		metrics["statssynchronizer_sync_heal"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -188,6 +265,9 @@ func statssynchronizer_sync_heal(n: String, t: float, f: String, c: int, h: int)
 
 @rpc("call_remote", "authority", "reliable")
 func statssynchronizer_sync_energy_recovery(n: String, t: float, f: String, e: int, r: int):
+	if Global.env_network_profiling:
+		metrics["statssynchronizer_sync_energy_recovery"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -202,6 +282,9 @@ func statssynchronizer_sync_energy_recovery(n: String, t: float, f: String, e: i
 
 @rpc("call_remote", "authority", "reliable")
 func networkviewsynchronizer_add_player(n: String, u: String, p: Vector2):
+	if Global.env_network_profiling:
+		metrics["networkviewsynchronizer_add_player"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -216,6 +299,9 @@ func networkviewsynchronizer_add_player(n: String, u: String, p: Vector2):
 
 @rpc("call_remote", "authority", "reliable")
 func networkviewsynchronizer_remove_player(n: String, u: String):
+	if Global.env_network_profiling:
+		metrics["networkviewsynchronizer_remove_player"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -230,6 +316,9 @@ func networkviewsynchronizer_remove_player(n: String, u: String):
 
 @rpc("call_remote", "authority", "reliable")
 func networkviewsynchronizer_add_enemy(n: String, en: String, ec: String, p: Vector2):
+	if Global.env_network_profiling:
+		metrics["networkviewsynchronizer_add_enemy"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -244,6 +333,9 @@ func networkviewsynchronizer_add_enemy(n: String, en: String, ec: String, p: Vec
 
 @rpc("call_remote", "authority", "reliable")
 func networkviewsynchronizer_remove_enemy(n: String, en: String):
+	if Global.env_network_profiling:
+		metrics["networkviewsynchronizer_remove_enemy"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -258,6 +350,9 @@ func networkviewsynchronizer_remove_enemy(n: String, en: String):
 
 @rpc("call_remote", "authority", "reliable")
 func networkviewsynchronizer_add_npc(n: String, nn: String, nc: String, p: Vector2):
+	if Global.env_network_profiling:
+		metrics["networkviewsynchronizer_add_npc"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -272,6 +367,9 @@ func networkviewsynchronizer_add_npc(n: String, nn: String, nc: String, p: Vecto
 
 @rpc("call_remote", "authority", "reliable")
 func networkviewsynchronizer_remove_npc(n: String, nn: String):
+	if Global.env_network_profiling:
+		metrics["networkviewsynchronizer_remove_npc"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -286,6 +384,9 @@ func networkviewsynchronizer_remove_npc(n: String, nn: String):
 
 @rpc("call_remote", "authority", "reliable")
 func networkviewsynchronizer_add_item(n: String, iu: String, ic: String, p: Vector2):
+	if Global.env_network_profiling:
+		metrics["networkviewsynchronizer_add_item"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -300,6 +401,9 @@ func networkviewsynchronizer_add_item(n: String, iu: String, ic: String, p: Vect
 
 @rpc("call_remote", "authority", "reliable")
 func networkviewsynchronizer_remove_item(n: String, iu: String):
+	if Global.env_network_profiling:
+		metrics["networkviewsynchronizer_remove_item"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -314,6 +418,9 @@ func networkviewsynchronizer_remove_item(n: String, iu: String):
 
 @rpc("call_remote", "any_peer", "reliable")
 func networkviewsynchronizer_sync_bodies_in_view():
+	if Global.env_network_profiling:
+		metrics["networkviewsynchronizer_sync_bodies_in_view"] += 1
+
 	if not G.is_server():
 		return
 
@@ -335,6 +442,9 @@ func networkviewsynchronizer_sync_bodies_in_view():
 
 @rpc("call_remote", "authority", "reliable")
 func actionsynchronizer_sync_attack(n: String, t: float, d: Vector2):
+	if Global.env_network_profiling:
+		metrics["actionsynchronizer_sync_attack"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -349,6 +459,9 @@ func actionsynchronizer_sync_attack(n: String, t: float, d: Vector2):
 
 @rpc("call_remote", "authority", "reliable")
 func actionsynchronizer_sync_skill_use(n: String, t: float, p: Vector2, s: String):
+	if Global.env_network_profiling:
+		metrics["actionsynchronizer_sync_skill_use"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -364,6 +477,9 @@ func actionsynchronizer_sync_skill_use(n: String, t: float, p: Vector2, s: Strin
 #Server only
 @rpc("call_remote", "any_peer", "reliable")
 func skillcomponent_sync_skills(n: String):
+	if Global.env_network_profiling:
+		metrics["skillcomponent_sync_skills"] += 1
+
 	if not G.is_server():
 		return
 
@@ -388,6 +504,9 @@ func skillcomponent_sync_skills(n: String):
 #Client only
 @rpc("call_remote", "authority", "reliable")
 func skillcomponent_sync_response(n: String, d: Dictionary):
+	if Global.env_network_profiling:
+		metrics["skillcomponent_sync_response"] += 1
+
 	var entity: Node = G.world.get_entity_by_name(n)
 
 	if entity == null:
@@ -402,6 +521,9 @@ func skillcomponent_sync_response(n: String, d: Dictionary):
 
 @rpc("call_remote", "any_peer", "reliable")
 func playersynchronizer_sync_skill_use(p: Vector2, s: String):
+	if Global.env_network_profiling:
+		metrics["playersynchronizer_sync_skill_use"] += 1
+
 	if not G.is_server():
 		return
 
@@ -424,6 +546,9 @@ func playersynchronizer_sync_skill_use(p: Vector2, s: String):
 #Only client can make this RPC, runs on server
 @rpc("call_remote", "any_peer", "reliable")
 func characterclasscomponent_sync_all(n: String):
+	if Global.env_network_profiling:
+		metrics["characterclasscomponent_sync_all"] += 1
+
 	if not G.is_server():
 		return
 
@@ -448,6 +573,9 @@ func characterclasscomponent_sync_all(n: String):
 #Only server can make this RPC, runs on client
 @rpc("call_remote", "authority", "reliable")
 func characterclasscomponent_sync_response(n: String, d: Dictionary):
+	if Global.env_network_profiling:
+		metrics["characterclasscomponent_sync_response"] += 1
+
 	assert(not G.is_server(), "This method is only intended for client use")
 	var entity: Node = G.world.get_entity_by_name(n)
 
@@ -464,6 +592,9 @@ func characterclasscomponent_sync_response(n: String, d: Dictionary):
 #Only client can make this RPC, runs on server
 @rpc("call_remote", "any_peer", "reliable")
 func characterclasscomponent_sync_class_change(n: String, c: Array):
+	if Global.env_network_profiling:
+		metrics["characterclasscomponent_sync_class_change"] += 1
+
 	if not G.is_server():
 		return
 
@@ -497,6 +628,9 @@ func characterclasscomponent_sync_class_change(n: String, c: Array):
 #Only server can make this RPC, runs on client
 @rpc("call_remote", "authority", "reliable")
 func dialoguesynchronizer_sync_invoke_response(n: String, d: String):
+	if Global.env_network_profiling:
+		metrics["dialoguesynchronizer_sync_invoke_response"] += 1
+
 	assert(not G.is_server(), "This method is only intended for client use")
 	var entity: Node = G.world.get_entity_by_name(n)
 
@@ -513,6 +647,9 @@ func dialoguesynchronizer_sync_invoke_response(n: String, d: String):
 #Only client can make this RPC, runs on server
 @rpc("call_remote", "any_peer", "reliable")
 func dialoguesynchronizer_sync_dialogue_finished(n: String):
+	if Global.env_network_profiling:
+		metrics["dialoguesynchronizer_sync_dialogue_finished"] += 1
+
 	if not G.is_server():
 		return
 
@@ -542,6 +679,9 @@ func dialoguesynchronizer_sync_dialogue_finished(n: String):
 
 @rpc("call_remote", "any_peer", "reliable")
 func statuseffectcomponent_sync_effect(n: String, s: String):
+	if Global.env_network_profiling:
+		metrics["statuseffectcomponent_sync_effect"] += 1
+
 	assert(not G.is_server(), "This method is only intended for client use")
 	if not G.is_server():
 		return
@@ -567,6 +707,9 @@ func statuseffectcomponent_sync_effect(n: String, s: String):
 #Only server can make this RPC, runs on client
 @rpc("call_remote", "authority", "reliable")
 func statuseffectcomponent_sync_effect_response(n: String, s: String, j: Dictionary, r: bool):
+	if Global.env_network_profiling:
+		metrics["statuseffectcomponent_sync_effect_response"] += 1
+
 	assert(not G.is_server(), "This method is only intended for client use")
 	var entity: Node = G.world.get_entity_by_name(n)
 
@@ -582,6 +725,9 @@ func statuseffectcomponent_sync_effect_response(n: String, s: String, j: Diction
 
 @rpc("call_remote", "any_peer", "reliable")
 func statuseffectcomponent_sync_all(n: String):
+	if Global.env_network_profiling:
+		metrics["statuseffectcomponent_sync_all"] += 1
+
 	assert(not G.is_server(), "This method is only intended for client use")
 	if not G.is_server():
 		return
@@ -607,6 +753,9 @@ func statuseffectcomponent_sync_all(n: String):
 #Only server can make this RPC, runs on client
 @rpc("call_remote", "authority", "reliable")
 func statuseffectcomponent_sync_all_response(n: String, d: Dictionary):
+	if Global.env_network_profiling:
+		metrics["statuseffectcomponent_sync_all_response"] += 1
+
 	assert(not G.is_server(), "This method is only intended for client use")
 	var entity: Node = G.world.get_entity_by_name(n)
 

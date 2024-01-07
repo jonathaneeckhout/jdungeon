@@ -643,5 +643,6 @@ func sync_energy_recovery(timestamp: float, from: String, current_energy: int, r
 func _on_energy_regen_timer_timeout():
 	if not ready_done:
 		return
-
-	energy_recovery(target_node.get_name(), energy_regen)
+	
+	if energy != energy_max:
+		energy_recovery(target_node.get_name(), energy_regen)

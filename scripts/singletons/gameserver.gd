@@ -216,7 +216,7 @@ func _on_client_disconnected():
 
 
 func _on_clock_sync_timer_timeout():
-	if multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+	if multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
 		clock_rpc.get_latency.rpc_id(1, Time.get_unix_time_from_system())
 
 
