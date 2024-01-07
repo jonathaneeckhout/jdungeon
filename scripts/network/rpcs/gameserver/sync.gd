@@ -63,7 +63,7 @@ func _process(_delta):
 
 
 @rpc("call_remote", "authority", "unreliable")
-func playersynchronizer_sync_pos(c: int, p: Vector2, v: Vector2):
+func playersynchronizer_sync_pos(c: int, p: Vector2):
 	if Global.env_network_profiling:
 		metrics["playersynchronizer_sync_pos"] += 1
 
@@ -71,7 +71,7 @@ func playersynchronizer_sync_pos(c: int, p: Vector2, v: Vector2):
 		return
 
 	if G.client_player.component_list.has("player_synchronizer"):
-		G.client_player.component_list["player_synchronizer"].client_sync_pos(c, p, v)
+		G.client_player.component_list["player_synchronizer"].client_sync_pos(c, p)
 
 
 @rpc("call_remote", "any_peer", "reliable")

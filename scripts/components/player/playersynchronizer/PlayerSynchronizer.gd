@@ -48,8 +48,6 @@ var _input_buffer: Array[Dictionary] = []
 var _last_sync_frame: int = 0
 # This variable keeps track of the last position received from the server
 var _last_sync_position: Vector2 = Vector2.ZERO
-# This variable keeps track of the last velocity received from the server
-var _last_sync_velocity: Vector2 = Vector2.ZERO
 # Query parameters used to query which target is under the mouse
 var _point_params: PhysicsPointQueryParameters2D = null
 # Timer to keep track of the timeout between two attacks
@@ -169,9 +167,9 @@ func _physics_process(delta):
 		# Handle the player's inputs
 		_server_handle_inputs(delta)
 
-		# Sync the position and velocity back to the player
+		# Sync the position back to the player
 		G.sync_rpc.playersynchronizer_sync_pos.rpc_id(
-			_target_node.peer_id, _current_frame, _target_node.position, _target_node.velocity
+			_target_node.peer_id, _current_frame, _target_node.position
 		)
 	# Client-side logic
 	else:
@@ -196,9 +194,8 @@ func _physics_process(delta):
 		while _input_buffer.size() > 0 and _input_buffer[0]["cf"] <= _last_sync_frame:
 			_input_buffer.remove_at(0)
 
-		# Set the current position and velocity the last synced values received from the server. These will be used for further client-side predictions
+		# Set the current position the last synced values received from the server. These will be used for further client-side predictions
 		_target_node.position = _last_sync_position
-		_target_node.velocity = _last_sync_velocity
 
 		# Perform you inputs on the last benchmark values to predict the player's position
 		for input in _input_buffer:
@@ -305,7 +302,7 @@ func _client_update_animation():
 
 
 ## Sync the position and velocity received from the server
-func client_sync_pos(c: int, p: Vector2, v: Vector2):
+func client_sync_pos(c: int, p: Vector2):
 	# Ignore older frames. This might happen due to the fact that network packets can be received in any order (udp)
 	if c < _last_sync_frame:
 		return
@@ -313,7 +310,6 @@ func client_sync_pos(c: int, p: Vector2, v: Vector2):
 	# Buffer the values received in variables so they can be used in the next physics tick
 	_last_sync_frame = c
 	_last_sync_position = p
-	_last_sync_velocity = v
 
 
 ## sync the player's inputs towards the server
