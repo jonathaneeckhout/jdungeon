@@ -4,6 +4,11 @@ class_name SyncRPC
 
 const MAX_ENTITIES_PER_SYNC: int = 24
 
+const UNRELIABLE_CHANNEL = 1
+const ENTITY_SYNC_CHANNEL = 2
+const ENTITY_STATS_CHANNEL = 3
+const PLAYER_INPUT_CHANNEL = 4
+
 ## Network metrics
 var metrics: Dictionary = {}
 
@@ -11,6 +16,9 @@ var sync_buffer: Dictionary = {}
 
 
 func _ready():
+	if not G.is_server():
+		set_process(false)
+
 	if Global.env_network_profiling:
 		metrics["playersynchronizer_sync_pos"] = 0
 		metrics["playersynchronizer_sync_input"] = 0
@@ -62,7 +70,7 @@ func _process(_delta):
 	sync_buffer.clear()
 
 
-@rpc("call_remote", "authority", "unreliable")
+@rpc("call_remote", "authority", "unreliable", UNRELIABLE_CHANNEL)
 func playersynchronizer_sync_pos(c: int, p: Vector2):
 	if Global.env_network_profiling:
 		metrics["playersynchronizer_sync_pos"] += 1
@@ -74,7 +82,7 @@ func playersynchronizer_sync_pos(c: int, p: Vector2):
 		G.client_player.component_list["player_synchronizer"].client_sync_pos(c, p)
 
 
-@rpc("call_remote", "any_peer", "reliable")
+@rpc("call_remote", "any_peer", "reliable", PLAYER_INPUT_CHANNEL)
 func playersynchronizer_sync_input(c: int, d: Vector2, t: float):
 	if Global.env_network_profiling:
 		metrics["playersynchronizer_sync_input"] += 1
@@ -98,7 +106,7 @@ func playersynchronizer_sync_input(c: int, d: Vector2, t: float):
 		user.player.component_list["player_synchronizer"].server_sync_input(c, d, t)
 
 
-@rpc("call_remote", "any_peer", "reliable")
+@rpc("call_remote", "any_peer", "reliable", PLAYER_INPUT_CHANNEL)
 func playersynchronizer_sync_interact(t: String):
 	if Global.env_network_profiling:
 		metrics["playersynchronizer_sync_interact"] += 1
@@ -122,7 +130,7 @@ func playersynchronizer_sync_interact(t: String):
 		user.player.component_list["player_synchronizer"].server_sync_interact(t)
 
 
-@rpc("call_remote", "any_peer", "reliable")
+@rpc("call_remote", "any_peer", "reliable", PLAYER_INPUT_CHANNEL)
 func playersynchronizer_request_attack(t: float, e: Array):
 	if Global.env_network_profiling:
 		metrics["playersynchronizer_request_attack"] += 1
@@ -155,7 +163,7 @@ func positionsynchronizer_queue_sync(
 		sync_buffer[player] = [[entity, timestamp, position]]
 
 
-@rpc("call_remote", "authority", "unreliable")
+@rpc("call_remote", "authority", "unreliable", UNRELIABLE_CHANNEL)
 func positionsynchronizer_sync(e: Array):
 	if Global.env_network_profiling:
 		metrics["positionsynchronizer_sync"] += 1
@@ -174,7 +182,7 @@ func positionsynchronizer_sync(e: Array):
 
 
 #Called by client, runs on server
-@rpc("call_remote", "any_peer", "reliable")
+@rpc("call_remote", "any_peer", "reliable", ENTITY_STATS_CHANNEL)
 func statssynchronizer_sync_stats(n: String):
 	if Global.env_network_profiling:
 		metrics["statssynchronizer_sync_stats"] += 1
@@ -200,7 +208,7 @@ func statssynchronizer_sync_stats(n: String):
 		entity.component_list["stats_synchronizer"].sync_stats(id)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_STATS_CHANNEL)
 func statssynchronizer_sync_response(n: String, d: Dictionary):
 	if Global.env_network_profiling:
 		metrics["statssynchronizer_sync_response"] += 1
@@ -217,7 +225,7 @@ func statssynchronizer_sync_response(n: String, d: Dictionary):
 		entity.component_list["stats_synchronizer"].sync_response(d)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_STATS_CHANNEL)
 func statssynchronizer_sync_int_change(
 	n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: int
 ):
@@ -236,7 +244,7 @@ func statssynchronizer_sync_int_change(
 		entity.component_list["stats_synchronizer"].sync_int_change(t, s, v)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_STATS_CHANNEL)
 func statssynchronizer_sync_float_change(
 	n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: float
 ):
@@ -255,7 +263,7 @@ func statssynchronizer_sync_float_change(
 		entity.component_list["stats_synchronizer"].sync_float_change(t, s, v)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_STATS_CHANNEL)
 func statssynchronizer_sync_hurt(n: String, t: float, f: String, c: int, d: int):
 	if Global.env_network_profiling:
 		metrics["statssynchronizer_sync_hurt"] += 1
@@ -272,7 +280,7 @@ func statssynchronizer_sync_hurt(n: String, t: float, f: String, c: int, d: int)
 		entity.component_list["stats_synchronizer"].sync_hurt(t, f, c, d)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_STATS_CHANNEL)
 func statssynchronizer_sync_heal(n: String, t: float, f: String, c: int, h: int):
 	if Global.env_network_profiling:
 		metrics["statssynchronizer_sync_heal"] += 1
@@ -289,7 +297,7 @@ func statssynchronizer_sync_heal(n: String, t: float, f: String, c: int, h: int)
 		entity.component_list["stats_synchronizer"].sync_heal(t, f, c, h)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_STATS_CHANNEL)
 func statssynchronizer_sync_energy_recovery(n: String, t: float, f: String, e: int, r: int):
 	if Global.env_network_profiling:
 		metrics["statssynchronizer_sync_energy_recovery"] += 1
@@ -306,7 +314,7 @@ func statssynchronizer_sync_energy_recovery(n: String, t: float, f: String, e: i
 		entity.component_list["stats_synchronizer"].sync_energy_recovery(t, f, e, r)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_SYNC_CHANNEL)
 func networkviewsynchronizer_add_player(n: String, u: String, p: Vector2):
 	if Global.env_network_profiling:
 		metrics["networkviewsynchronizer_add_player"] += 1
@@ -323,7 +331,7 @@ func networkviewsynchronizer_add_player(n: String, u: String, p: Vector2):
 		entity.component_list["networkview_synchronizer"].add_player(u, p)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_SYNC_CHANNEL)
 func networkviewsynchronizer_remove_player(n: String, u: String):
 	if Global.env_network_profiling:
 		metrics["networkviewsynchronizer_remove_player"] += 1
@@ -340,7 +348,7 @@ func networkviewsynchronizer_remove_player(n: String, u: String):
 		entity.component_list["networkview_synchronizer"].remove_player(u)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_SYNC_CHANNEL)
 func networkviewsynchronizer_add_enemy(n: String, en: String, ec: String, p: Vector2):
 	if Global.env_network_profiling:
 		metrics["networkviewsynchronizer_add_enemy"] += 1
@@ -357,7 +365,7 @@ func networkviewsynchronizer_add_enemy(n: String, en: String, ec: String, p: Vec
 		entity.component_list["networkview_synchronizer"].add_enemy(en, ec, p)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_SYNC_CHANNEL)
 func networkviewsynchronizer_remove_enemy(n: String, en: String):
 	if Global.env_network_profiling:
 		metrics["networkviewsynchronizer_remove_enemy"] += 1
@@ -374,7 +382,7 @@ func networkviewsynchronizer_remove_enemy(n: String, en: String):
 		entity.component_list["networkview_synchronizer"].remove_enemy(en)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_SYNC_CHANNEL)
 func networkviewsynchronizer_add_npc(n: String, nn: String, nc: String, p: Vector2):
 	if Global.env_network_profiling:
 		metrics["networkviewsynchronizer_add_npc"] += 1
@@ -391,7 +399,7 @@ func networkviewsynchronizer_add_npc(n: String, nn: String, nc: String, p: Vecto
 		entity.component_list["networkview_synchronizer"].add_npc(nn, nc, p)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_SYNC_CHANNEL)
 func networkviewsynchronizer_remove_npc(n: String, nn: String):
 	if Global.env_network_profiling:
 		metrics["networkviewsynchronizer_remove_npc"] += 1
@@ -408,7 +416,7 @@ func networkviewsynchronizer_remove_npc(n: String, nn: String):
 		entity.component_list["networkview_synchronizer"].remove_npc(nn)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_SYNC_CHANNEL)
 func networkviewsynchronizer_add_item(n: String, iu: String, ic: String, p: Vector2):
 	if Global.env_network_profiling:
 		metrics["networkviewsynchronizer_add_item"] += 1
@@ -425,7 +433,7 @@ func networkviewsynchronizer_add_item(n: String, iu: String, ic: String, p: Vect
 		entity.component_list["networkview_synchronizer"].add_item(iu, ic, p)
 
 
-@rpc("call_remote", "authority", "reliable")
+@rpc("call_remote", "authority", "reliable", ENTITY_SYNC_CHANNEL)
 func networkviewsynchronizer_remove_item(n: String, iu: String):
 	if Global.env_network_profiling:
 		metrics["networkviewsynchronizer_remove_item"] += 1
@@ -442,7 +450,7 @@ func networkviewsynchronizer_remove_item(n: String, iu: String):
 		entity.component_list["networkview_synchronizer"].remove_item(iu)
 
 
-@rpc("call_remote", "any_peer", "reliable")
+@rpc("call_remote", "any_peer", "reliable", ENTITY_SYNC_CHANNEL)
 func networkviewsynchronizer_sync_bodies_in_view():
 	if Global.env_network_profiling:
 		metrics["networkviewsynchronizer_sync_bodies_in_view"] += 1

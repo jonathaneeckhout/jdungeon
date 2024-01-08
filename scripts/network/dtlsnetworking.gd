@@ -8,7 +8,7 @@ func server_init(
 ) -> ENetMultiplayerPeer:
 	var server: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 
-	var error = server.create_server(port, max_clients)
+	var error = server.create_server(port, max_clients, 8)
 	if error != OK:
 		GodotLogger.error("Failed to create server")
 		return null
@@ -73,7 +73,7 @@ func server_get_tls_options(cert_path: String, key_path: String) -> TLSOptions:
 func client_connect(address: String, port: int) -> ENetMultiplayerPeer:
 	var client: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 
-	var error: int = client.create_client(address, port)
+	var error: int = client.create_client(address, port, 8)
 	if error != OK:
 		GodotLogger.warn(
 			"Failed to create client. Error code {0} ({1})".format([error, error_string(error)])

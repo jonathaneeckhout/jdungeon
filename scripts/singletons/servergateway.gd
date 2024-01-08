@@ -192,10 +192,14 @@ func _on_client_connection_failed():
 	GodotLogger.warn("Gateway server's connection failed")
 	server_connected.emit(false)
 
+	client_cleanup()
+
 
 func _on_client_disconnected():
 	GodotLogger.info("Gateway server's server disconnected")
 	server_connected.emit(false)
+
+	client_cleanup()
 
 
 func _on_check_cookie_timer_timeout():
