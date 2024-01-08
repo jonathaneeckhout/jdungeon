@@ -11,7 +11,7 @@ extends Node
 # JUI -> Singleton to keep track of some ui related stuff
 
 ## FPS used on the gameserver side
-const SERVER_FPS: int = 10
+const SERVER_FPS: int = 20
 
 ## FPS used on the client-side
 const CLIENT_FPS: int = 60

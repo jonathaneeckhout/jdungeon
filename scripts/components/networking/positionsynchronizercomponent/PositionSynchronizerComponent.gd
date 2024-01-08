@@ -25,10 +25,6 @@ func _ready():
 		GodotLogger.error("_target_node does not have the position variable")
 		return
 
-	if _target_node.get("velocity") == null:
-		GodotLogger.error("_target_node does not have the velocity variable")
-		return
-
 
 func _physics_process(_delta):
 	# Handle server-side code
@@ -37,12 +33,8 @@ func _physics_process(_delta):
 
 		# Sync your position to every entity that is watching you
 		for watcher in watcher_synchronizer.watchers:
-			G.sync_rpc.positionsynchronizer_sync.rpc_id(
-				watcher.peer_id,
-				_target_node.name,
-				timestamp,
-				_target_node.position,
-				_target_node.velocity
+			G.sync_rpc.positionsynchronizer_queue_sync(
+				watcher.peer_id, _target_node.name, timestamp, _target_node.position
 			)
 	# Handle client-side code
 	else:
@@ -64,8 +56,6 @@ func _calculate_position():
 	if _server_buffer.size() > INTERPOLATION_INDEX:
 		var interpolation_factor = _calculate_interpolation_factor(render_time)
 		_target_node.position = _interpolate(interpolation_factor, "position")
-		_target_node.velocity = _interpolate(interpolation_factor, "velocity")
-
 	# If you don't have enough recent sync messages, extrapolate to get smooth movement visualization
 	elif (
 		_server_buffer.size() > INTERPOLATION_INDEX - 1
@@ -73,7 +63,6 @@ func _calculate_position():
 	):
 		var extrapolation_factor = _calculate_extrapolation_factor(render_time)
 		_target_node.position = _extrapolate(extrapolation_factor, "position")
-		_target_node.velocity = _extrapolate(extrapolation_factor, "velocity")
 
 
 func _calculate_interpolation_factor(render_time: float) -> float:
@@ -117,10 +106,10 @@ func _extrapolate(extrapolation_factor: float, parameter: String) -> Vector2:
 
 
 ## This function stores the latest received sync information for this entity. This information is later used to smoothly inter or extrapolate the position of the entity.
-func sync(timestamp: float, pos: Vector2, vec: Vector2):
+func sync(timestamp: float, pos: Vector2):
 	# Ignore older syncs
 	if timestamp < _last_sync_timestamp:
 		return
 
 	_last_sync_timestamp = timestamp
-	_server_buffer.append({"timestamp": timestamp, "position": pos, "velocity": vec})
+	_server_buffer.append({"timestamp": timestamp, "position": pos})
