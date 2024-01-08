@@ -154,6 +154,9 @@ func register_skills():
 	J.register_skill_resource(
 		"LaunchArrow", "res://scripts/components/player/skillcomponent/Skills/LaunchArrow.tres"
 	)
+	J.register_skill_resource(
+		"SetTrap", "res://scripts/components/player/skillcomponent/Skills/SetTrap.tres"
+	)
 
 
 func register_maps():
@@ -218,6 +221,10 @@ func register_projectiles():
 	J.register_projectile_scene(
 		"Arrow",
 		"res://scripts/components/networking/projectilesynchronizercomponent/Projectiles/Arrow.tscn"
+	)
+	J.register_projectile_scene(
+		"Trap",
+		"res://scripts/components/networking/projectilesynchronizercomponent/Projectiles/Trap.tscn"
 	)
 
 

@@ -11,7 +11,7 @@ const NO_SKILL: String = ""
 @export var projectile_class: String = ""
 @export var skill_class: String = NO_SKILL
 @export var lifespan: float = 12.0
-
+@export var instance_limit: int = 10
 @export var collision_scene: PackedScene
 
 @export_group("Physics")
@@ -37,16 +37,12 @@ var misc: Dictionary
 
 var required_misc_keys: Array[String]
 
+var _owner_entity: Node2D
+
 
 func _init() -> void:
 	collision_layer = J.PHYSICS_LAYER_PROJECTILE
 	collision_mask = J.PHYSICS_LAYER_ENEMIES
-
-
-func _ready() -> void:
-	add_child(lifespan_timer)
-	lifespan_timer.timeout.connect(queue_free)
-	lifespan_timer.start(lifespan)
 
 
 func _physics_process(_delta: float) -> void:
@@ -101,16 +97,18 @@ func process_collisions(motion: Vector2):
 
 ## This function may be overriden to change how the projectile moves
 func get_motion() -> Vector2:
-	# Extend the target to ensure it keeps moving.
-	target_global_pos = global_position.direction_to(target_global_pos) * move_speed * 2
-
-	return global_position.direction_to(target_global_pos) * move_speed
+	return Vector2.RIGHT * move_speed
 
 
 func launch(global_pos: Vector2):
 	collision_count = 0
 	set_launch_target(global_pos)
 	set_moving(true)
+	
+	_launch(global_pos)
+
+func _launch(_global_pos: Vector2):
+	pass
 
 
 func set_launch_target(global_pos: Vector2) -> Projectile2D:
@@ -123,13 +121,13 @@ func set_moving(enable: bool = true) -> Projectile2D:
 	return self
 
 
-func add_collision_mask_bit(bit: int) -> Projectile2D:
-	set_collision_layer_value(bit, true)
+func add_collision_mask(mask: int) -> Projectile2D:
+	collision_mask = collision_mask | mask
 	return self
 
 
-func remove_collision_mask_bit(bit: int) -> Projectile2D:
-	set_collision_layer_value(bit, false)
+func remove_collision_mask(mask: int) -> Projectile2D:
+	collision_mask = collision_mask & ~mask
 	return self
 
 

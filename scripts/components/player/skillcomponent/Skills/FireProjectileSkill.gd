@@ -10,4 +10,4 @@ func effect(information: SkillUseInfo):
 	if not user_projectile_synchronizer is ProjectileSynchronizerComponent:
 		return
 		
-	user_projectile_synchronizer.launch_projectile(information.position_target_global, projectile_class, {})
+	user_projectile_synchronizer.launch_projectile(information.position_target_global, projectile_class)
