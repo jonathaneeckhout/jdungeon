@@ -167,6 +167,7 @@ func create_projectile_node(projectile_class: String) -> Projectile2D:
 
 
 func show_collision(global_pos: Vector2, projectile_class: String):
+	assert(not G.is_server())
 	var projectile_scene: Projectile2D = J.projectile_scenes[projectile_class].duplicate().instantiate()
 	
 	if not projectile_scene.collision_scene is PackedScene:
@@ -175,6 +176,12 @@ func show_collision(global_pos: Vector2, projectile_class: String):
 	var projectile_coll_scene_instance: Node = projectile_scene.collision_scene.duplicate().instantiate()
 	G.world.add_child(projectile_coll_scene_instance)
 	projectile_coll_scene_instance.global_position = global_pos
+	
+	if projectile_coll_scene_instance is CPUParticles2D or projectile_coll_scene_instance is GPUParticles2D:
+		projectile_coll_scene_instance.emitting = true
+	elif Global.debug_mode:
+		GodotLogger.warn("This scene does not contain a CPUParticles2D nor a GPUParticles2D node, its activation cannot be controlled from here.")
+		
 
 	# Ensure it doesn't linger for TOO long.
 	get_tree().create_timer(MAX_COLLISION_LIFESPAN).timeout.connect(
