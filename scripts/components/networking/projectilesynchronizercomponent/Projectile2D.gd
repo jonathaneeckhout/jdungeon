@@ -60,42 +60,44 @@ func process_collisions(motion: Vector2):
 	var current_motion: Vector2 = motion
 	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	var shape_params := PhysicsShapeQueryParameters2D.new()
-	
+
 	shape_params.collision_mask = collision_mask
 	shape_params.motion = current_motion
 	shape_params.shape = $CollisionShape2D.shape
 	shape_params.transform = transform
 	for excepted: PhysicsBody2D in get_collision_exceptions():
 		shape_params.exclude.append(excepted.get_rid())
-	
+
 	var collisions: Array[Dictionary] = space_state.intersect_shape(shape_params, max_collisions)
 	for coll: Dictionary in collisions:
 		if coll.get("collider") is Node2D:
 			hit_object.emit(coll.get("collider"))
 			collision_count += 1
-			
+
 			if collision_count > max_collisions:
 				collision_mask = 0
 				collision_layer = 0
 				queue_free.call_deferred()
 				break
-	
+
 	position += current_motion
-	
+
 	# The followiong code has been temporarily disabled due to an engine bug (https://github.com/godotengine/godot/issues/76222)
 	#while current_motion.length() > 0 and collision_count < max_collisions:
-		#
-		#var collision: KinematicCollision2D = move_and_collide(current_motion)
-		#
-		#if collision == null:
-			#GodotLogger.error("Failed at retrieving collision result. Possible engine bug.")
-			#continue
+	#
+	#var collision: KinematicCollision2D = move_and_collide(current_motion)
+	#
+	#if collision == null:
+	#GodotLogger.error("Failed at retrieving collision result. Possible engine bug.")
+	#continue
+
+
 #
-		#if collision.get_collider() is Node2D:
-			#hit_object.emit(collision.get_collider())
-			#collision_count += 1
+#if collision.get_collider() is Node2D:
+#hit_object.emit(collision.get_collider())
+#collision_count += 1
 #
-		#current_motion = collision.get_remainder()
+#current_motion = collision.get_remainder()
 
 
 ## This function may be overriden to change how the projectile moves
@@ -107,8 +109,9 @@ func launch(global_pos: Vector2):
 	collision_count = 0
 	set_launch_target(global_pos)
 	set_moving(true)
-	
+
 	_launch()
+
 
 func _launch():
 	pass

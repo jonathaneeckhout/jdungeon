@@ -178,8 +178,7 @@ func register_character_classes():
 		"res://scripts/components/player/charclasscomponent/classes/Hexpecialist.tres"
 	)
 	J.register_class_resource(
-		"Ranger",
-		"res://scripts/components/player/charclasscomponent/classes/Ranger.tres"
+		"Ranger", "res://scripts/components/player/charclasscomponent/classes/Ranger.tres"
 	)
 
 

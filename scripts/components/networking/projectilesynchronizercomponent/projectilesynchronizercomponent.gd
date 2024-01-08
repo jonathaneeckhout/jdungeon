@@ -20,6 +20,7 @@ var target_node: Node
 ## This keeps a list of instances of projectiles of a specific class, from a specific entity. used to limit the amount of projectiles per entity.
 var instance_tracker: Dictionary
 
+
 func _ready():
 	target_node = get_parent()
 
@@ -36,13 +37,13 @@ func launch_projectile(target_global_pos: Vector2, projectile_class: String):
 	var projectiles_in_group: Array[Node] = get_tree().get_nodes_in_group(
 		get_projectile_group(
 			target_node.get_name(), target_node.get("entity_type"), projectile_class
-			)
-	) 		
+		)
+	)
 	if projectiles_in_group.size() > projectile.instance_limit:
 		var projectile_arr: Array[Projectile2D] = []
 		projectile_arr.assign(projectiles_in_group)
 		var oldest_projectile: Projectile2D = get_oldest_projectile(projectile_arr)
-		
+
 		if is_instance_valid(oldest_projectile):
 			oldest_projectile.queue_free()
 
@@ -53,7 +54,7 @@ func launch_projectile(target_global_pos: Vector2, projectile_class: String):
 		projectile.remove_collision_mask(J.PHYSICS_LAYER_WORLD)
 	else:
 		projectile.add_collision_mask(J.PHYSICS_LAYER_WORLD)
-		
+
 	if projectile.collide_with_other_projectiles:
 		projectile.add_collision_mask(J.PHYSICS_LAYER_PROJECTILE)
 
@@ -71,12 +72,13 @@ func launch_projectile(target_global_pos: Vector2, projectile_class: String):
 	# Set position and add to tree
 	G.world.add_child(projectile)
 	projectile.global_position = target_node.global_position
-	
+
 	projectile.launch(target_global_pos)
-	
 
 	# Delete the projectile if it lives for longer than its lifespan or the maximum allowed lifespawn.
-	var projectile_timer: SceneTreeTimer = get_tree().create_timer(min(MAX_PROJECTILE_LIFESPAN, projectile.lifespan))
+	var projectile_timer: SceneTreeTimer = get_tree().create_timer(
+		min(MAX_PROJECTILE_LIFESPAN, projectile.lifespan)
+	)
 	projectile_timer.timeout.connect(projectile.queue_free)
 
 	if Global.debug_mode:
@@ -94,17 +96,19 @@ func launch_projectile(target_global_pos: Vector2, projectile_class: String):
 	# If the server is launching the projectile, sync it.
 	if G.is_server():
 		projectile.hit_object.connect(_on_projectile_hit_object.bind(projectile))
-		
+
 		for client_id: int in get_clients_in_range():
 			sync_launch_to_client(client_id, target_global_pos, projectile_class)
-			
+
 			if Global.debug_mode:
-				GodotLogger.info("Synched projectile '{0}' with peer '{1}'".format([projectile_class, str(target_node.peer_id)]))
+				GodotLogger.info(
+					"Synched projectile '{0}' with peer '{1}'".format(
+						[projectile_class, str(target_node.peer_id)]
+					)
+				)
 
 
-func sync_launch_to_client(
-	id: int, target_global_pos: Vector2, projectile_class: String
-):
+func sync_launch_to_client(id: int, target_global_pos: Vector2, projectile_class: String):
 	var json_data: Dictionary = launch_to_json(target_global_pos, projectile_class)
 	G.sync_rpc.projectilesynchronizer_sync_launch.rpc_id(id, target_node.get_name(), json_data)
 
@@ -113,9 +117,7 @@ func sync_launch_to_client_response(json_data: Dictionary):
 	launch_from_json(json_data)
 
 
-func launch_to_json(
-	target_global_pos: Vector2, projectile_class: String
-) -> Dictionary:
+func launch_to_json(target_global_pos: Vector2, projectile_class: String) -> Dictionary:
 	var output: Dictionary = {}
 
 	output["target_global_pos"] = target_global_pos
@@ -132,9 +134,7 @@ func launch_from_json(data: Dictionary):
 	launch_projectile(data["target_global_pos"], data["projectile_class"])
 
 
-func sync_collision_to_client(
-	id: int, target_global_pos: Vector2, projectile_class: String
-):
+func sync_collision_to_client(id: int, target_global_pos: Vector2, projectile_class: String):
 	var json_data: Dictionary = collision_to_json(target_global_pos, projectile_class)
 	G.sync_rpc.projectilesynchronizer_sync_collision.rpc_id(id, target_node.get_name(), json_data)
 
@@ -143,14 +143,12 @@ func sync_collision_to_client_response(json_data: Dictionary):
 	collision_from_json(json_data)
 
 
-func collision_to_json(
-		target_global_pos: Vector2, projectile_class: String
-) -> Dictionary:
+func collision_to_json(target_global_pos: Vector2, projectile_class: String) -> Dictionary:
 	var output: Dictionary = {}
-	
+
 	output["target_global_pos"] = target_global_pos
 	output["projectile_class"] = projectile_class
-	
+
 	return output
 
 
@@ -168,20 +166,31 @@ func create_projectile_node(projectile_class: String) -> Projectile2D:
 
 func show_collision(global_pos: Vector2, projectile_class: String):
 	assert(not G.is_server())
-	var projectile_scene: Projectile2D = J.projectile_scenes[projectile_class].duplicate().instantiate()
-	
+	var projectile_scene: Projectile2D = (
+		J.projectile_scenes[projectile_class].duplicate().instantiate()
+	)
+
 	if not projectile_scene.collision_scene is PackedScene:
 		return
-		
-	var projectile_coll_scene_instance: Node = projectile_scene.collision_scene.duplicate().instantiate()
+
+	var projectile_coll_scene_instance: Node = (
+		projectile_scene.collision_scene.duplicate().instantiate()
+	)
 	G.world.add_child(projectile_coll_scene_instance)
 	projectile_coll_scene_instance.global_position = global_pos
-	
-	if projectile_coll_scene_instance is CPUParticles2D or projectile_coll_scene_instance is GPUParticles2D:
+
+	if (
+		projectile_coll_scene_instance is CPUParticles2D
+		or projectile_coll_scene_instance is GPUParticles2D
+	):
 		projectile_coll_scene_instance.emitting = true
 	elif Global.debug_mode:
-		GodotLogger.warn("This scene does not contain a CPUParticles2D nor a GPUParticles2D node, its activation cannot be controlled from here.")
-		
+		(
+			GodotLogger
+			. warn(
+				"This scene does not contain a CPUParticles2D nor a GPUParticles2D node, its activation cannot be controlled from here."
+			)
+		)
 
 	# Ensure it doesn't linger for TOO long.
 	get_tree().create_timer(MAX_COLLISION_LIFESPAN).timeout.connect(
@@ -210,10 +219,10 @@ func _on_projectile_hit_object(object: Node2D, projectile: Projectile2D):
 		skill_usage_info.position_target_global = hit_entity.global_position
 
 		skill_used.effect(skill_usage_info)
-		
+
 	for client_id: int in get_clients_in_range():
 		sync_collision_to_client(client_id, projectile.position, projectile.projectile_class)
-	
+
 	projectile_hit_object.emit(object)
 	projectile_hit_entity.emit(hit_entity)
 
@@ -224,7 +233,7 @@ func get_clients_in_range() -> Array[int]:
 		var target_id: int = entity.get("peer_id")
 		if target_id is int:
 			target_ids.append(target_id)
-	
+
 	return target_ids
 
 
@@ -239,10 +248,10 @@ func get_projectile_count(group: String) -> int:
 func get_oldest_projectile(projectiles: Array[Projectile2D]) -> Projectile2D:
 	if projectiles.is_empty():
 		return null
-		
+
 	var oldest_projectile: Projectile2D = projectiles.back()
 	for projectile: Projectile2D in projectiles:
 		if projectile.creation_time < oldest_projectile.creation_time:
 			oldest_projectile = projectile
-	
+
 	return oldest_projectile
