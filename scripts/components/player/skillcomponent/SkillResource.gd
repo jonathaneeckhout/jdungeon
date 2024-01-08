@@ -87,4 +87,4 @@ func get_icon() -> Texture:
 
 
 func set_all_entities_as_valid():
-	valid_entities = J.ENTITY_TYPE.values()
+	valid_entities.assign(J.ENTITY_TYPE.values())

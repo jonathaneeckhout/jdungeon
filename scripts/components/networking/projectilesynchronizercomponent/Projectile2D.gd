@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends StaticBody2D
 class_name Projectile2D
 ## Projectiles are created and controlled by a [ProjectileSynchronizerComponent]
 ## Projectiles may specify a [member skill_class], which will trigger the skill using any hit objects as the targets.
@@ -17,6 +17,7 @@ const NO_SKILL: String = ""
 @export_group("Physics")
 @export var move_speed: float = 100
 @export var max_collisions: int = 1
+@export var collide_with_other_projectiles: bool = false
 @export var ignore_terrain: bool = false
 @export var ignore_same_entity_type: bool = true
 
@@ -38,9 +39,8 @@ var required_misc_keys: Array[String]
 
 
 func _init() -> void:
-	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
 	collision_layer = J.PHYSICS_LAYER_PROJECTILE
-	collision_mask = J.PHYSICS_LAYER_ENEMIES | J.PHYSICS_LAYER_PLAYERS
+	collision_mask = J.PHYSICS_LAYER_ENEMIES
 
 
 func _ready() -> void:
@@ -59,21 +59,44 @@ func _physics_process(_delta: float) -> void:
 
 
 func process_collisions(motion: Vector2):
+	if collision_count > max_collisions:
+		collision_mask = 0
+		collision_layer = 0
+		queue_free.call_deferred()
+	
 	var current_motion: Vector2 = motion
-
-	while current_motion.length() > 0 and collision_count < max_collisions:
-		var collision: KinematicCollision2D = move_and_collide(current_motion)
-		
-		if collision == null:
-			# This is a currently reported bug where sometimes move_and_collide may return null: https://github.com/godotengine/godot/issues/76222
-			GodotLogger.error("Failed at retrieving collision result. Possible engine bug.")
-			continue
-
-		if collision.get_collider() is Node2D:
-			hit_object.emit(collision.get_collider())
+	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	var shape_params := PhysicsShapeQueryParameters2D.new()
+	
+	shape_params.collision_mask = collision_mask
+	shape_params.motion = motion
+	shape_params.shape = $CollisionShape2D.shape
+	shape_params.transform = transform
+	for excepted: PhysicsBody2D in get_collision_exceptions():
+		shape_params.exclude.append(excepted.get_rid())
+	
+	var collisions: Array[Dictionary] = space_state.intersect_shape(shape_params, max_collisions)
+	for coll: Dictionary in collisions:
+		if coll.get("collider") is Node2D:
+			hit_object.emit(coll.get("collider"))
 			collision_count += 1
-
-		current_motion = collision.get_remainder()
+	
+	position += motion
+	
+	# The followiong code has been temporarily disabled due to an engine bug (https://github.com/godotengine/godot/issues/76222)
+	#while current_motion.length() > 0 and collision_count < max_collisions:
+		#
+		#var collision: KinematicCollision2D = move_and_collide(current_motion)
+		#
+		#if collision == null:
+			#GodotLogger.error("Failed at retrieving collision result. Possible engine bug.")
+			#continue
+#
+		#if collision.get_collider() is Node2D:
+			#hit_object.emit(collision.get_collider())
+			#collision_count += 1
+#
+		#current_motion = collision.get_remainder()
 
 
 ## This function may be overriden to change how the projectile moves

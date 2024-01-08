@@ -6,8 +6,7 @@
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_l0reg"]
 b = Vector2(210, 0)
 
-[node name="Arrow" type="CharacterBody2D"]
-motion_mode = 1
+[node name="Arrow" type="StaticBody2D"]
 script = ExtResource("1_eav8f")
 projectile_class = "Arrow"
 skill_class = "BasicAttack"

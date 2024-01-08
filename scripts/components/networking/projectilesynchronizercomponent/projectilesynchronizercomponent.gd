@@ -43,6 +43,9 @@ func launch_projectile(target_global_pos: Vector2, projectile_class: String, mis
 
 	if projectile.ignore_terrain:
 		projectile.remove_collision_mask_bit(J.PHYSICS_LAYER_WORLD)
+		
+	if projectile.collide_with_other_projectiles:
+		projectile.add_collision_mask_bit(J.PHYSICS_LAYER_PROJECTILE)
 
 	if projectile.ignore_same_entity_type:
 		match target_node.entity_type:
@@ -56,8 +59,8 @@ func launch_projectile(target_global_pos: Vector2, projectile_class: String, mis
 				GodotLogger.warn("Cannot determine the type of entity that fired this projectile.")
 
 	# Set position and add to tree
-	projectile.global_position = target_node.global_position
 	G.world.add_child(projectile)
+	projectile.global_position = target_node.global_position
 
 	for key: String in projectile.misc:
 		projectile.set_misc_data(key, misc[key])
@@ -83,19 +86,21 @@ func launch_projectile(target_global_pos: Vector2, projectile_class: String, mis
 	if G.is_server():
 		projectile.hit_object.connect(_on_projectile_hit_object.bind(projectile))
 
-		for entity: Node in watcher_component.watchers:
+		for entity: Node in watcher_component.watchers + [target_node]:
 			var target_id: int = entity.get("peer_id")
 			if target_id is int:
 				sync_launch_to_client(
 					target_node.peer_id, target_global_pos, projectile_class, misc
 				)
+				if Global.debug_mode:
+					GodotLogger.info("Synched projectile '{0}' with peer '{1}'".format([projectile_class, str(target_node.peer_id)]))
 
 
 func sync_launch_to_client(
 	id: int, target_global_pos: Vector2, projectile_class: String, misc: Dictionary
 ):
 	var json_data: Dictionary = launch_to_json(target_global_pos, projectile_class, misc)
-	G.sync_rpc.projectilesynchronizer_sync_launch.rpc_id(id, json_data)
+	G.sync_rpc.projectilesynchronizer_sync_launch.rpc_id(id, target_node.get_name(), json_data)
 
 
 func sync_launch_to_client_response(json_data: Dictionary):
