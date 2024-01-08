@@ -8,7 +8,7 @@ displayed_name = "Ranger"
 class_registered = &"Ranger"
 icon_path = "res://assets/images/equipment/weapons/expertbow/ExpertBow.png"
 description = "Despite the name, range is not the only thing they have."
-available_skills = Array[String](["LaunchArrow"])
+available_skills = Array[String](["LaunchArrow", "SetTrap"])
 stat_multipliers = {
 "attack_power_max": 1.1,
 "attack_power_min": 1.1,

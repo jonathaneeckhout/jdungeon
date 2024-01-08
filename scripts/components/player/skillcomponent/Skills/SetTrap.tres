@@ -17,5 +17,5 @@ cast_on_select = false
 hitbox_shape = [Vector2(50, 0)]
 hitbox_hits_user = false
 hitbox_rotate_shape = false
-hit_range = 80.0
+hit_range = 150.0
 description = "Places down a harmful trap."

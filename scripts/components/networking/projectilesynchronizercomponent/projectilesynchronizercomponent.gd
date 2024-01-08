@@ -122,10 +122,10 @@ func launch_to_json(
 func add_track_instance(entity: String, type: J.ENTITY_TYPE, projectile_node: Projectile2D):
 	assert(G.is_server())
 	var max_instances: int = projectile_node.instance_limit
-	if not instance_tracker.has(entity+str(type)):
-		instance_tracker[entity+str(type)] = []
+	if not instance_tracker.has(entity+str(type)+projectile_node.projectile_class):
+		instance_tracker[entity+str(type)+projectile_node.projectile_class] = []
 	
-	var oldest_projectile: Projectile2D = instance_tracker[entity+str(type)].front()
+	var oldest_projectile: Projectile2D = instance_tracker.get(entity+str(type)+projectile_node.projectile_class, []).front()
 	# If the limit was exceeded and the oldest entity is not currently being deleted, do so.
 	if get_track_instance_count(entity, type, projectile_node) > projectile_node.instance_limit:
 		remove_track_instance(entity, type, oldest_projectile)
