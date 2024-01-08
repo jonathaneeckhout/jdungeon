@@ -12,28 +12,39 @@ var target_node: Node
 
 var original_scale: Vector2 = Vector2.ONE
 var last_scale: Vector2 = Vector2.ONE
+var _prev_pos: Vector2 = Vector2.ZERO
 
 
 func _ready():
+	# Disable the physics process until the ready function is done
+	set_physics_process(false)
+
 	# This component should not run on the server
 	if G.is_server():
-		set_physics_process(false)
 		queue_free()
 		return
 
 	target_node = get_parent()
 	original_scale = skeleton.scale
 	last_scale = original_scale
+	_prev_pos = target_node.position
 
 	if player_synchronizer and target_node.get("peer_id") != null and G.is_own_player(target_node):
 		player_synchronizer.attacked.connect(_on_attacked)
 	if action_synchronizer:
 		action_synchronizer.attacked.connect(_on_attacked)
 
+	# Enable the physics process now the ready function is done
+	set_physics_process(true)
+
 
 func _physics_process(_delta):
-	if not target_node.velocity.is_zero_approx():
-		update_face_direction(target_node.velocity.x)
+	var direction: Vector2 = target_node.position - _prev_pos
+
+	_prev_pos = target_node.position
+
+	if not direction.is_zero_approx():
+		update_face_direction(direction.x)
 
 
 func update_face_direction(direction: float):
