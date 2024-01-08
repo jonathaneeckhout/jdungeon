@@ -33,12 +33,26 @@ func _ready():
 
 func launch_projectile(target_global_pos: Vector2, projectile_class: String):
 	var projectile: Projectile2D = create_projectile_node(projectile_class)
+	var projectiles_in_group: Array[Node] = get_tree().get_nodes_in_group(
+		get_projectile_group(
+			target_node.get_name(), target_node.get("entity_type"), projectile_class
+			)
+	) 		
+	if projectiles_in_group.size() > projectile.instance_limit:
+		var projectile_arr: Array[Projectile2D] = []
+		projectile_arr.assign(projectiles_in_group)
+		var oldest_projectile: Projectile2D = get_oldest_projectile(projectile_arr)
+		
+		if is_instance_valid(oldest_projectile):
+			oldest_projectile.queue_free()
 
 	# Do not hit owner
 	projectile.add_collision_exception_with(target_node)
 
 	if projectile.ignore_terrain:
 		projectile.remove_collision_mask(J.PHYSICS_LAYER_WORLD)
+	else:
+		projectile.add_collision_mask(J.PHYSICS_LAYER_WORLD)
 		
 	if projectile.collide_with_other_projectiles:
 		projectile.add_collision_mask(J.PHYSICS_LAYER_PROJECTILE)
@@ -81,20 +95,11 @@ func launch_projectile(target_global_pos: Vector2, projectile_class: String):
 	if G.is_server():
 		projectile.hit_object.connect(_on_projectile_hit_object.bind(projectile))
 		
-		#Also remove the tracking once this is over
-		projectile_timer.timeout.connect(remove_track_instance.bind(target_node.get_name(), target_node.get("entity_type"), projectile))
-		
-		add_track_instance(target_node.get_name(), target_node.get("entity_type"), projectile)
-		
-		
-		for entity: Node in watcher_component.watchers + [target_node]:
-			var target_id: int = entity.get("peer_id")
-			if target_id is int:
-				sync_launch_to_client(
-					target_node.peer_id, target_global_pos, projectile_class
-				)
-				if Global.debug_mode:
-					GodotLogger.info("Synched projectile '{0}' with peer '{1}'".format([projectile_class, str(target_node.peer_id)]))
+		for client_id: int in get_clients_in_range():
+			sync_launch_to_client(client_id, target_global_pos, projectile_class)
+			
+			if Global.debug_mode:
+				GodotLogger.info("Synched projectile '{0}' with peer '{1}'".format([projectile_class, str(target_node.peer_id)]))
 
 
 func sync_launch_to_client(
@@ -119,48 +124,62 @@ func launch_to_json(
 	return output
 
 
-func add_track_instance(entity: String, type: J.ENTITY_TYPE, projectile_node: Projectile2D):
-	assert(G.is_server())
-	var max_instances: int = projectile_node.instance_limit
-	if not instance_tracker.has(entity+str(type)+projectile_node.projectile_class):
-		instance_tracker[entity+str(type)+projectile_node.projectile_class] = []
-	
-	var oldest_projectile: Projectile2D = instance_tracker.get(entity+str(type)+projectile_node.projectile_class, []).front()
-	# If the limit was exceeded and the oldest entity is not currently being deleted, do so.
-	if get_track_instance_count(entity, type, projectile_node) > projectile_node.instance_limit:
-		remove_track_instance(entity, type, oldest_projectile)
-		
-	if is_instance_valid(oldest_projectile):
-		oldest_projectile.queue_free()
-		
-		
-	instance_tracker[entity+str(type)+projectile_node.projectile_class].append(projectile_node)
-	
-
-func get_track_instance_count(entity: String, type: J.ENTITY_TYPE, projectile_node: Projectile2D) -> int:
-	assert(G.is_server())
-	if instance_tracker.get(entity+str(type)+projectile_node.projectile_class, []).is_empty():
-		GodotLogger.warn("There are no projectiles with key '{0}' being tracked by this component.".format([entity+str(type)+projectile_node.projectile_class]))
-		
-	var count: int = instance_tracker.get(entity+str(type)+projectile_node.projectile_class, []).size()
-	return count
-
-
-func remove_track_instance(entity: String, type: J.ENTITY_TYPE, projectile_node: Projectile2D):
-	assert(G.is_server())
-	instance_tracker.get(entity+str(type)+projectile_node.projectile_class, []).erase(projectile_node)
-
-
 func launch_from_json(data: Dictionary):
-	for key: String in ["target_global_pos", "projectile_class", "misc"]:
+	for key: String in ["target_global_pos", "projectile_class"]:
 		if not key in data:
-			GodotLogger.error("Missing '{0}' key for this projectile sync")
+			GodotLogger.error("Missing '{0}' key for this projectile sync".format([key]))
 
 	launch_projectile(data["target_global_pos"], data["projectile_class"])
 
 
+func sync_collision_to_client(
+	id: int, target_global_pos: Vector2, projectile_class: String
+):
+	var json_data: Dictionary = collision_to_json(target_global_pos, projectile_class)
+	G.sync_rpc.projectilesynchronizer_sync_collision.rpc_id(id, target_node.get_name(), json_data)
+
+
+func sync_collision_to_client_response(json_data: Dictionary):
+	collision_from_json(json_data)
+
+
+func collision_to_json(
+		target_global_pos: Vector2, projectile_class: String
+) -> Dictionary:
+	var output: Dictionary = {}
+	
+	output["target_global_pos"] = target_global_pos
+	output["projectile_class"] = projectile_class
+	
+	return output
+
+
+func collision_from_json(data: Dictionary):
+	for key: String in ["target_global_pos", "projectile_class"]:
+		if not key in data:
+			GodotLogger.error("Missing '{0}' key for this projectile sync".format([key]))
+
+	show_collision(data["target_global_pos"], data["projectile_class"])
+
+
 func create_projectile_node(projectile_class: String) -> Projectile2D:
 	return J.projectile_scenes[projectile_class].duplicate().instantiate()
+
+
+func show_collision(global_pos: Vector2, projectile_class: String):
+	var projectile_scene: Projectile2D = J.projectile_scenes[projectile_class].duplicate().instantiate()
+	
+	if not projectile_scene.collision_scene is PackedScene:
+		return
+		
+	var projectile_coll_scene_instance: Node = projectile_scene.collision_scene.duplicate().instantiate()
+	G.world.add_child(projectile_coll_scene_instance)
+	projectile_coll_scene_instance.global_position = global_pos
+
+	# Ensure it doesn't linger for TOO long.
+	get_tree().create_timer(MAX_COLLISION_LIFESPAN).timeout.connect(
+		projectile_coll_scene_instance.queue_free
+	)
 
 
 func _on_projectile_hit_object(object: Node2D, projectile: Projectile2D):
@@ -184,16 +203,39 @@ func _on_projectile_hit_object(object: Node2D, projectile: Projectile2D):
 		skill_usage_info.position_target_global = hit_entity.global_position
 
 		skill_used.effect(skill_usage_info)
-
-	if projectile.collision_scene:
-		var coll_scene_instance: Node2D = projectile.collision_scene.duplicate().instantiate()
-		projectile.add_sibling(coll_scene_instance)
-		coll_scene_instance.global_position = projectile.global_position
-
-		# Ensure it doesn't linger for TOO long.
-		get_tree().create_timer(MAX_COLLISION_LIFESPAN).timeout.connect(
-			coll_scene_instance.queue_free
-		)
-
+		
+	for client_id: int in get_clients_in_range():
+		sync_collision_to_client(client_id, projectile.position, projectile.projectile_class)
+	
 	projectile_hit_object.emit(object)
 	projectile_hit_entity.emit(hit_entity)
+
+
+func get_clients_in_range() -> Array[int]:
+	var target_ids: Array[int] = []
+	for entity: Node in watcher_component.watchers + [target_node]:
+		var target_id: int = entity.get("peer_id")
+		if target_id is int:
+			target_ids.append(target_id)
+	
+	return target_ids
+
+
+func get_projectile_group(entity: String, type: J.ENTITY_TYPE, projectile_class: String) -> String:
+	return Projectile2D.NODE_GROUP_BASE + entity + str(type) + projectile_class
+
+
+func get_projectile_count(group: String) -> int:
+	return get_tree().get_nodes_in_group(group).size()
+
+
+func get_oldest_projectile(projectiles: Array[Projectile2D]) -> Projectile2D:
+	if projectiles.is_empty():
+		return null
+		
+	var oldest_projectile: Projectile2D = projectiles.back()
+	for projectile: Projectile2D in projectiles:
+		if projectile.creation_time < oldest_projectile.creation_time:
+			oldest_projectile = projectile
+	
+	return oldest_projectile

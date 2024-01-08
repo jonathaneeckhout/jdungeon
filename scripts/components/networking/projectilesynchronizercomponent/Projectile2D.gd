@@ -5,8 +5,10 @@ class_name Projectile2D
 ## By default projectiles only hit players and enemies.
 
 signal hit_object(object: Node2D)
+signal collisions_exceeded
 
 const NO_SKILL: String = ""
+const NODE_GROUP_BASE: String = "_ProjectileGroup"
 
 @export var projectile_class: String = ""
 @export var skill_class: String = NO_SKILL
@@ -23,6 +25,8 @@ const NO_SKILL: String = ""
 
 var target_global_pos: Vector2
 
+var creation_time: float = Time.get_unix_time_from_system()
+
 var moving: bool = false:
 	set(val):
 		moving = val
@@ -36,8 +40,6 @@ var lifespan_timer := Timer.new()
 var misc: Dictionary
 
 var required_misc_keys: Array[String]
-
-var _owner_entity: Node2D
 
 
 func _init() -> void:
@@ -55,17 +57,12 @@ func _physics_process(_delta: float) -> void:
 
 
 func process_collisions(motion: Vector2):
-	if collision_count > max_collisions:
-		collision_mask = 0
-		collision_layer = 0
-		queue_free.call_deferred()
-	
 	var current_motion: Vector2 = motion
 	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	var shape_params := PhysicsShapeQueryParameters2D.new()
 	
 	shape_params.collision_mask = collision_mask
-	shape_params.motion = motion
+	shape_params.motion = current_motion
 	shape_params.shape = $CollisionShape2D.shape
 	shape_params.transform = transform
 	for excepted: PhysicsBody2D in get_collision_exceptions():
@@ -76,8 +73,14 @@ func process_collisions(motion: Vector2):
 		if coll.get("collider") is Node2D:
 			hit_object.emit(coll.get("collider"))
 			collision_count += 1
+			
+			if collision_count > max_collisions:
+				collision_mask = 0
+				collision_layer = 0
+				queue_free.call_deferred()
+				break
 	
-	position += motion
+	position += current_motion
 	
 	# The followiong code has been temporarily disabled due to an engine bug (https://github.com/godotengine/godot/issues/76222)
 	#while current_motion.length() > 0 and collision_count < max_collisions:
@@ -105,9 +108,9 @@ func launch(global_pos: Vector2):
 	set_launch_target(global_pos)
 	set_moving(true)
 	
-	_launch(global_pos)
+	_launch()
 
-func _launch(_global_pos: Vector2):
+func _launch():
 	pass
 
 
