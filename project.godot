@@ -181,7 +181,6 @@ locale/translations=PackedStringArray("res://assets/translation/en_US.en.transla
 2d_physics/layer_4="NPCs"
 2d_physics/layer_5="Items"
 2d_physics/layer_6="Networking"
-2d_physics/layer_7="Projectiles"
 2d_physics/layer_8="Passable Entity"
 
 [rendering]
