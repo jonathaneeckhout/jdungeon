@@ -43,6 +43,7 @@ project/assembly_name="Jdungeon"
 
 enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/logger/plugin.cfg")
 
+
 [gui]
 
 timers/tooltip_delay_sec=0.05
@@ -168,6 +169,7 @@ locale/translations=PackedStringArray("res://assets/translation/en_US.en.transla
 2d_physics/layer_4="NPCs"
 2d_physics/layer_5="Items"
 2d_physics/layer_6="Networking"
+2d_physics/layer_8="Passable Entity"
 
 [rendering]
 
