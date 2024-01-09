@@ -39,7 +39,7 @@ func _ready():
 
 func _on_died():
 	despawn_timer.start()
-	
+
 	if target_node is CollisionObject2D:
 		target_node.collision_layer = J.PHYSICS_LAYER_PASSABLE_ENTITIES
 		target_node.collision_mask = 0
