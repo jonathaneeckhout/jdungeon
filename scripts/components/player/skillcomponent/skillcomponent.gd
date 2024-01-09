@@ -207,7 +207,8 @@ func _draw():
 		return
 
 	# The hitbox shape should be bigger than 0 to be able to draw it
-	assert(_skill_current.hitbox_shape.size() > 0)
+	if _skill_current.hitbox_shape.is_empty():
+		return
 
 	# Draw the range of the skill
 	if Global.debug_mode:
@@ -463,7 +464,10 @@ func _get_targets_under_current_skill(global_pos: Vector2) -> Array[Node]:
 ## Fetch the collision shape of the current selected skill
 func get_collision_shape(user_rotation: float) -> Shape2D:
 	var shape: Shape2D
-	assert(_skill_current.hitbox_shape.size() > 0)
+	if _skill_current.hitbox_shape.is_empty():
+		shape = CircleShape2D.new()
+		shape.radius = 0
+		return shape
 
 	# If it is only 1 point, treat it as a circle
 	if _skill_current.hitbox_shape.size() == 1:
