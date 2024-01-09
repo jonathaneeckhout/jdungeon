@@ -34,14 +34,12 @@ func _ready():
 
 func launch_projectile(target_global_pos: Vector2, projectile_class: String):
 	var projectile: Projectile2D = create_projectile_node(projectile_class)
-	
+
 	# Handle instance limit
-	var projectile_group_name: String = 		get_projectile_group(
-			target_node.get_name(), target_node.get("entity_type"), projectile_class
-			)
-	var projectiles_in_group: Array[Node] = get_tree().get_nodes_in_group(
-				projectile_group_name
-			)
+	var projectile_group_name: String = get_projectile_group(
+		target_node.get_name(), target_node.get("entity_type"), projectile_class
+	)
+	var projectiles_in_group: Array[Node] = get_tree().get_nodes_in_group(projectile_group_name)
 	if projectiles_in_group.size() >= projectile.instance_limit:
 		var projectile_arr: Array[Projectile2D] = []
 		projectile_arr.assign(projectiles_in_group)
@@ -50,7 +48,7 @@ func launch_projectile(target_global_pos: Vector2, projectile_class: String):
 		if is_instance_valid(oldest_projectile):
 			oldest_projectile.remove_from_group(projectile_group_name)
 			oldest_projectile.queue_free()
-	
+
 	projectile.add_to_group(projectile_group_name)
 
 	# Do not hit owner
