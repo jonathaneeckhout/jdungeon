@@ -74,7 +74,7 @@ func process_collisions(motion: Vector2):
 			hit_object.emit(coll.get("collider"))
 			collision_count += 1
 
-			if collision_count > max_collisions:
+			if collision_count >= max_collisions:
 				collision_mask = 0
 				collision_layer = 0
 				queue_free.call_deferred()
