@@ -102,6 +102,10 @@ func flee():
 	if not fleeing:
 		return
 
+	# The _attacker could not be found, it likely despawned.
+	if not is_instance_valid(_attacker):
+		return
+
 	# Calculate the speed while fleeing
 	var flee_speed: float = _stats_component.movement_speed * _flee_speed_boost
 
