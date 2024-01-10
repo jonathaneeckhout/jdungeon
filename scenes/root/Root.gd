@@ -86,7 +86,7 @@ func parse_cmd_arguments():
 
 func start_gateway() -> bool:
 	set_game_icon(GAME_ICONS.pick_random(), GATEWAY_SUB_ICON)
-	
+
 	GodotLogger._prefix = "GatewayServer"
 
 	GodotLogger.info("Running as Gateway")
@@ -126,7 +126,7 @@ func start_gateway() -> bool:
 
 func start_server() -> bool:
 	set_game_icon(GAME_ICONS.pick_random(), SERVER_SUB_ICON)
-	
+
 	# Set the prefix for all the logs on this instance
 	GodotLogger._prefix = "GameServer"
 
@@ -218,7 +218,7 @@ func _server_get_map() -> String:
 
 func start_client() -> bool:
 	set_game_icon(GAME_ICONS.pick_random())
-	
+
 	GodotLogger._prefix = "Client"
 
 	GodotLogger.info("Running as client")
@@ -281,21 +281,21 @@ func start_client() -> bool:
 func set_game_icon(icon: Texture, sub_icon: Texture = null):
 	var image: Image = icon.get_image()
 	image.resize(64, 64)
-	
+
 	if sub_icon is Texture:
 		var sub_image: Image = sub_icon.get_image()
 		sub_image.resize(32, 32)
-		
-		var initial_pos := Vector2i(32,32)
-		
+
+		var initial_pos := Vector2i(32, 32)
+
 		for width: int in sub_image.get_width():
 			for height: int in sub_image.get_height():
 				var pixel_pos := Vector2i(width, height)
-				
+
 				#Ignore empty pixels
 				if sub_image.get_pixelv(pixel_pos).a < 0.1:
 					continue
-					
+
 				image.set_pixelv(initial_pos + pixel_pos, sub_image.get_pixelv(pixel_pos))
 
 	DisplayServer.set_icon(image)
