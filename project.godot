@@ -43,6 +43,19 @@ project/assembly_name="Jdungeon"
 
 enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/logger/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://addons/": "gray",
+"res://assets/": "yellow",
+"res://data/": "gray",
+"res://docker/": "pink",
+"res://documentation/": "gray",
+"res://scenes/": "blue",
+"res://scripts/": "purple",
+"res://test/": "pink"
+}
+
 [gui]
 
 timers/tooltip_delay_sec=0.05
