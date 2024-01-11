@@ -14,7 +14,7 @@ const ENTITY_TYPES := J.ENTITY_TYPE
 @export_file("*.jpg *.png *.svg") var icon_path: String = "res://icon.svg"
 
 @export_flags_2d_physics var collision_mask: int = (
-	J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS + J.PHYSICS_LAYER_ITEMS
+	J.PHYSICS_LAYER_PLAYERS | J.PHYSICS_LAYER_ENEMIES | J.PHYSICS_LAYER_NPCS | J.PHYSICS_LAYER_ITEMS
 )
 
 @export var valid_entities: Array[ENTITY_TYPES] = [ENTITY_TYPES.ENEMY]
@@ -84,3 +84,7 @@ func get_icon() -> Texture:
 		return tex
 	else:
 		return FAILSAFE_TEXTURE
+
+
+func set_all_entities_as_valid():
+	valid_entities.assign(J.ENTITY_TYPE.values())

@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://cloh3hx8jfl61"]
+
+[ext_resource type="Texture2D" uid="uid://bmhwkrtajgg1k" path="res://assets/images/particles/MiniPuff.png" id="1_kyxro"]
+
+[sub_resource type="Gradient" id="Gradient_gglau"]
+offsets = PackedFloat32Array(0, 0.58, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="Puff" type="CPUParticles2D"]
+emitting = false
+amount = 4
+one_shot = true
+explosiveness = 1.0
+texture = ExtResource("1_kyxro")
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 30.0
+initial_velocity_max = 60.0
+angle_min = -720.0
+angle_max = 720.0
+scale_amount_min = 0.3
+scale_amount_max = 0.6
+color_ramp = SubResource("Gradient_gglau")
