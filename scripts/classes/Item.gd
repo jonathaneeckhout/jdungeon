@@ -22,6 +22,7 @@ var expire_timer: Timer
 
 var drop_rate: float = 0.0
 
+var amount_max: int = 10
 var amount: int = 1
 var price: int = 0
 var value: int = 0
@@ -97,6 +98,11 @@ func use(player: Player) -> bool:
 			return false
 
 	return false
+
+
+func change_amount(ch_amount: int):
+	amount += ch_amount
+	pass
 
 
 func to_json() -> Dictionary:

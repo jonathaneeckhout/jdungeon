@@ -618,3 +618,110 @@ func statuseffectcomponent_sync_all_response(n: String, d: Dictionary):
 
 	if entity.component_list.has(StatusEffectComponent.COMPONENT_NAME):
 		entity.component_list[StatusEffectComponent.COMPONENT_NAME].sync_all_response(d)
+
+
+@rpc("call_remote", "any_peer", "reliable")
+func inventorysynchronizercomponent_sync_inventory(n: String):
+	assert(not G.is_server(), "This method is only intended for client use")
+	if not G.is_server():
+		return
+
+	var id: int = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has(InventorySynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[InventorySynchronizerComponent.COMPONENT_NAME].sync_inventory(id)
+
+
+#Only server can make this RPC, runs on client
+@rpc("call_remote", "authority", "reliable")
+func inventorysynchronizercomponent_sync_inventory_response(n: String, d: Dictionary):
+	assert(not G.is_server(), "This method is only intended for client use")
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has(InventorySynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[InventorySynchronizerComponent.COMPONENT_NAME].sync_inventory_response(d)
+
+
+# Only server can make this RPC, runs on client
+# This method has no client-called counterpart since clients cannot ask for specific items.
+@rpc("call_remote", "authority", "reliable")
+func inventorysynchronizercomponent_sync_item_response(n: String, d: Dictionary):
+	assert(not G.is_server(), "This method is only intended for client use")
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has(InventorySynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[InventorySynchronizerComponent.COMPONENT_NAME].sync_item_response(d)
+
+
+# Only server can make this RPC, runs on client
+# This method has no client-called counterpart since clients cannot ask for gold specifically.
+@rpc("call_remote", "authority", "reliable")
+func inventorysynchronizercomponent_sync_gold_response(n: String, a: int):
+	assert(not G.is_server(), "This method is only intended for client use")
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has(InventorySynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[InventorySynchronizerComponent.COMPONENT_NAME].sync_gold_response(a)
+
+
+# This method has no response counterpart since clients do not need to know about item use results.
+@rpc("call_remote", "any_peer", "reliable")
+func inventorysynchronizercomponent_invoke_use_item(n: String, u: String, a: int):
+	assert(G.is_server())
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has(InventorySynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[InventorySynchronizerComponent.COMPONENT_NAME].use_item(u, a)
+
+
+# This method has no response counterpart since clients do not need to know about item use results.
+@rpc("call_remote", "any_peer", "reliable")
+func inventorysynchronizercomponent_sync_drop_item(n: String, u: String, a: int):
+	assert(G.is_server())
+	var entity: Node = G.world.get_entity_by_name(n)
+
+	if entity == null:
+		return
+
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has(InventorySynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[InventorySynchronizerComponent.COMPONENT_NAME].drop_item(u, a)
+
