@@ -217,8 +217,7 @@ func change_gold(amount: int):
 	if not G.is_server():
 		return
 
-	gold += amount
-	sync_gold.rpc_id(target_node.peer_id, gold, amount)
+	set_gold(gold + amount)
 
 
 func to_json() -> Dictionary:
