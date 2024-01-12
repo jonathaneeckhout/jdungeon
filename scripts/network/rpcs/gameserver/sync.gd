@@ -622,9 +622,7 @@ func statuseffectcomponent_sync_all_response(n: String, d: Dictionary):
 
 @rpc("call_remote", "any_peer", "reliable")
 func inventorysynchronizercomponent_sync_inventory(n: String):
-	assert(not G.is_server(), "This method is only intended for client use")
-	if not G.is_server():
-		return
+	assert(G.is_server(), "This method is only intended for client use")
 
 	var id: int = multiplayer.get_remote_sender_id()
 

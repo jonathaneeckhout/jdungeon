@@ -93,7 +93,7 @@ func _on_shop_item_bought(player_id: int, item_uuid: String):
 		GodotLogger.error("player does not have the inventory variable")
 		return
 
-	if player.inventory.remove_gold(shop_item["price"]):
+	if player.inventory.change_gold(-shop_item["price"]):
 		var new_item: Item = J.item_scenes[shop_item["item_class"]].instantiate()
 		new_item.uuid = J.uuid_util.v4()
 		new_item.item_class = shop_item["item_class"]

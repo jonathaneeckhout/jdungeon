@@ -165,7 +165,7 @@ func use_item(item_uuid: String, amount: int = 1) -> bool:
 	if not item is Item:
 		return false
 	
-	var items_used: int
+	var items_used: int = 0
 	
 	if item.amount < amount:
 		GodotLogger.warn("Tried to use more of an item than there is available")
@@ -238,14 +238,16 @@ func from_json(data: Dictionary) -> bool:
 				.format([inv_key])
 				)
 			return false
-	
-	for item_key: String in ITEM_JSON_KEYS:
-		if not item_key in data.get("items",[]):
-			GodotLogger.warn(
-				"Failed to load inventory from data, missing '{0} key for item."
-				.format([item_key])
-				)
-			return false
+			
+	# If there's items
+	if not data.get("items", []).is_empty():
+		for item_key: String in ITEM_JSON_KEYS:
+			if not item_key in data.get("items",[]):
+				GodotLogger.warn(
+					"Failed to load inventory from data, missing '{0} key for item."
+					.format([item_key])
+					)
+				return false
 			
 	var gold_change: int = gold - data["gold"]
 	gold = data["gold"]
@@ -282,7 +284,7 @@ func sync_item_response(item_dict: Dictionary):
 	item_from_json(item_dict)
 
 func item_to_json(item: Item) -> Dictionary:
-	var output: Dictionary
+	var output: Dictionary = {}
 	
 	for item_key: String in ITEM_JSON_KEYS:
 		output[item_key] = item.get(item_key)
@@ -338,6 +340,11 @@ func sync_gold_response(amount: int):
 	var change_amount: int = gold - amount
 	gold = amount
 	gold_changed.emit(gold, change_amount)
+
+
+func client_invoke_sync_inventory():
+	assert(not G.is_server())
+	G.sync_rpc.inventorysynchronizercomponent_sync_inventory.rpc_id(1, target_node.get_name())
 
 
 func client_invoke_use_item(item_uuid: String, amount: int = 1):

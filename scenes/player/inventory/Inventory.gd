@@ -48,14 +48,13 @@ func _input(event):
 		if visible:
 			hide()
 		else:
-			player.inventory.sync_inventory.rpc_id(1)
+			player.inventory.client_invoke_sync_inventory()
 			show()
 
 
 func register_signals():
 	player.inventory.loaded.connect(_on_inventory_loaded)
-	player.inventory.gold_added.connect(_on_gold_added)
-	player.inventory.gold_removed.connect(_on_gold_removed)
+	player.inventory.gold_changed.connect(_on_gold_changed)
 
 	player.inventory.item_added.connect(_on_item_added)
 	player.inventory.item_removed.connect(_on_item_removed)
@@ -108,11 +107,7 @@ func _on_inventory_loaded():
 		place_item_at_free_slot(item)
 
 
-func _on_gold_added(total: int, _amount: int):
-	gold = total
-
-
-func _on_gold_removed(total: int, _amount: int):
+func _on_gold_changed(total: int, _amount: int):
 	gold = total
 
 

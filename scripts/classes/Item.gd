@@ -2,6 +2,8 @@ extends StaticBody2D
 
 class_name Item
 
+signal amount_changed
+
 enum MODE { LOOT, ITEMSLOT }
 
 enum ITEM_TYPE { EQUIPMENT, CONSUMABLE, CURRENCY }
@@ -23,7 +25,11 @@ var expire_timer: Timer
 var drop_rate: float = 0.0
 
 var amount_max: int = 10
-var amount: int = 1
+var amount: int = 1:
+	set(val):
+		amount = val
+		amount_changed.emit()
+		
 var price: int = 0
 var value: int = 0
 
@@ -61,6 +67,10 @@ func _ready():
 		expire_timer.wait_time = expire_time
 		expire_timer.timeout.connect(_on_expire_timer_timeout)
 		add_child(expire_timer)
+
+
+func get_icon() -> Texture:
+	return $Icon.texture
 
 
 func start_expire_timer():
