@@ -98,7 +98,7 @@ func use(player: Player) -> bool:
 				player.stats.heal(self.name, boost.hp)
 				return true
 		ITEM_TYPE.EQUIPMENT:
-			if player.equipment and player.equipment.equip_item(self):
+			if player.equipment and player.equipment.equip_item(uuid):
 				return true
 			else:
 				GodotLogger.info("%s could not equip item %s" % [player.name, item_class])

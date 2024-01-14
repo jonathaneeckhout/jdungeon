@@ -59,7 +59,7 @@ func _ready():
 	if not is_inside_tree():
 		await tree_entered
 		
-	G.sync_rpc.inventorysynchronizercomponent_sync_inventory.rpc_id(1, target_node.get_name())
+	client_invoke_sync_inventory()
 	
 
 ## Tries to merge an item into the inventory. Items from the same class get stacked togheter.
@@ -95,8 +95,8 @@ func add_item(item: Item) -> bool:
 		# Set the amount it should have
 		set_item_amount(existing_item.uuid, amount_to_add)
 		assert(item.get_parent() == null, "The item should be an orphan by now.")
-		
-		sync_item(target_node.peer_id, existing_item.uuid)
+		item_added.emit(item.uuid, item.item_class)
+		sync_item(existing_item.uuid)
 		
 		# If anything's left, add it as another item.
 		if amount_overflow > 0:
@@ -107,8 +107,9 @@ func add_item(item: Item) -> bool:
 		
 	else:
 		items.append(item)
+		item_added.emit(item.uuid, item.item_class)
 		assert(item.amount > 0)
-		sync_item(target_node.peer_id, item.uuid)
+		sync_item(item.uuid)
 
 	return true
 
@@ -122,7 +123,7 @@ func set_item_amount(item_uuid: String, amount: int):
 		remove_item(item_uuid)
 	
 	item_amount_changed.emit(item.item_uuid, item.item_class, amount)
-	sync_item(target_node.peer_id, item_uuid)
+	sync_item(item_uuid)
 	
 
 
@@ -150,6 +151,7 @@ func get_item(item_uuid: String) -> Item:
 	return null
 
 
+## Returns the first instance of an item of this class
 func get_item_by_class(item_class: String) -> Item:
 	for item: Item in items:
 		if item.item_class == item_class:
@@ -158,6 +160,7 @@ func get_item_by_class(item_class: String) -> Item:
 	return null
 
 
+@rpc("call_remote","any_peer","reliable")
 func use_item(item_uuid: String, amount: int = 1) -> bool:
 	assert(G.is_server())
 	
@@ -168,7 +171,8 @@ func use_item(item_uuid: String, amount: int = 1) -> bool:
 	var items_used: int = 0
 	
 	if item.amount < amount:
-		GodotLogger.warn("Tried to use more of an item than there is available")
+		GodotLogger.warn("Tried to use more of an item than there is available. {0} in the stack, attempted to use {1}"
+		.format([item.amount, amount]))
 		return false
 		
 	# Attempt to use the proposed number of items
@@ -181,11 +185,12 @@ func use_item(item_uuid: String, amount: int = 1) -> bool:
 			break
 			
 	if items_used > 0:
-		sync_item(target_node.peer_id, item_uuid)
+		sync_item(item_uuid)
 
 	return true
 
 
+@rpc("call_remote","any_peer","reliable")
 func drop_item(item_uuid: String, amount: int):
 	assert(G.is_server())
 	var item: Item = get_item(item_uuid)
@@ -204,18 +209,17 @@ func drop_item(item_uuid: String, amount: int):
 
 
 func set_gold(amount: int) -> bool:
-	if not G.is_server():
-		return false
+	assert(G.is_server())
 
 	var previous_gold_amount: int = gold
 	gold = amount
-	sync_gold.rpc_id(target_node.peer_id, gold, gold - previous_gold_amount)
+	gold_changed.emit(gold, gold - previous_gold_amount)
+	sync_gold()
 	return true
 
 
 func change_gold(amount: int):
-	if not G.is_server():
-		return
+	assert(G.is_server())
 
 	set_gold(gold + amount)
 
@@ -260,25 +264,50 @@ func from_json(data: Dictionary) -> bool:
 	return true
 
 
-func sync_inventory(id: int):
+@rpc("call_remote", "any_peer", "reliable")
+func sync_inventory():
 	assert(G.is_server())
-	G.sync_rpc.inventorysynchronizercomponent_sync_inventory_response.rpc_id(id, target_node.get_name(), to_json())
+	
+	var id: int = multiplayer.get_remote_sender_id()
+	
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+	
+	if id == target_node.peer_id:
+		sync_inventory_response.rpc_id(id, to_json())
+	else:
+		GodotLogger.warn("A sync attempt came from a different peer than the one that owns this entity. Owned by: {0} | Called by: {1}".format([str(target_node.peer_id), id]))
 
 
+@rpc("call_remote", "authority", "reliable")
 func sync_inventory_response(inventory: Dictionary):
 	from_json(inventory)
 
 
-func sync_item(id: int, item_uuid: String):
+@rpc("call_remote", "any_peer", "reliable")
+func sync_item(item_uuid: String):
 	assert(G.is_server())
+	
+	var id: int = multiplayer.get_remote_sender_id()
+	
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+	
 	var item: Item = get_item(item_uuid)
+	
 	if not item is Item:
 		GodotLogger.warn("There's no item with uuid '{0}' in this inventory, cannot sync.".format([item_uuid]))
 		return
+		
+	if id == target_node.peer_id:
+		sync_item_response.rpc_id(id, item_to_json(item))
+	else:
+		GodotLogger.warn("A sync attempt came from a different peer than the one that owns this entity. Owned by: {0} | Called by: {1}".format([str(target_node.peer_id), id]))
 
-	G.sync_rpc.inventorysynchronizercomponent_sync_item_response.rpc_id(id, target_node.get_name(), item_to_json(item))
 
-
+@rpc("call_remote","authority","reliable")
 func sync_item_response(item_dict: Dictionary):
 	item_from_json(item_dict)
 
@@ -299,7 +328,6 @@ func item_from_json(data: Dictionary) -> bool:
 			)
 			return false
 	
-	assert(not G.is_server())
 	var item_uuid: String = data["uuid"]
 	var item_class: String = data["item_class"]
 	var amount: int = data["amount"]
@@ -330,11 +358,23 @@ func item_from_json(data: Dictionary) -> bool:
 	return true
 	
 
-func sync_gold(id: int):
+@rpc("call_remote","any_peer","reliable")
+func sync_gold():
 	assert(G.is_server())
-	G.sync_rpc.inventorysynchronizercomponent_sync_gold_response.rpc_id(id, target_node.get_name(), gold)
+	
+	var id: int = multiplayer.get_remote_sender_id()
+	
+	# Only allow logged in players
+	if not G.is_user_logged_in(id):
+		return
+		
+	if id == target_node.peer_id:
+		sync_gold_response.rpc_id(id, gold)
+	else:
+		GodotLogger.warn("A sync attempt came from a different peer than the one that owns this entity. Owned by: {0} | Called by: {1}".format([str(target_node.peer_id), id]))
 
 
+@rpc("call_remote","authority","reliable")
 func sync_gold_response(amount: int):
 	var change_amount: int = gold - amount
 	gold = amount
@@ -343,13 +383,14 @@ func sync_gold_response(amount: int):
 
 func client_invoke_sync_inventory():
 	assert(not G.is_server())
-	G.sync_rpc.inventorysynchronizercomponent_sync_inventory.rpc_id(1, target_node.get_name())
+	sync_inventory.rpc_id(1)
 
 
 func client_invoke_use_item(item_uuid: String, amount: int = 1):
 	assert(not G.is_server())
-	G.sync_rpc.inventorysynchronizercomponent_sync_use_item.rpc_id(1, item_uuid, amount)
+	use_item.rpc_id(1, item_uuid, amount)
+
 
 func client_invoke_drop_item(item_uuid: String, amount: int = 1):
 	assert(not G.is_server())
-	G.sync_rpc.inventorysynchronizercomponent_sync_drop_item.rpc_id(1, item_uuid, amount)
+	drop_item.rpc_id(1, item_uuid, amount)
