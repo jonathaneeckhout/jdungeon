@@ -96,7 +96,7 @@ func add_item(item: Item) -> bool:
 		set_item_amount(existing_item.uuid, amount_to_add)
 		assert(item.get_parent() == null, "The item should be an orphan by now.")
 		item_added.emit(item.uuid, item.item_class)
-		sync_item(existing_item.uuid)
+		sync_item_response.rpc_id(target_node.peer_id, existing_item.uuid)
 		
 		# If anything's left, add it as another item.
 		if amount_overflow > 0:
@@ -109,7 +109,7 @@ func add_item(item: Item) -> bool:
 		items.append(item)
 		item_added.emit(item.uuid, item.item_class)
 		assert(item.amount > 0)
-		sync_item(item.uuid)
+		sync_item_response.rpc_id(target_node.peer_id, item.uuid)
 
 	return true
 
@@ -123,7 +123,8 @@ func set_item_amount(item_uuid: String, amount: int):
 		remove_item(item_uuid)
 	
 	item_amount_changed.emit(item.item_uuid, item.item_class, amount)
-	sync_item(item_uuid)
+	
+	sync_item_response.rpc_id(target_node.peer_id, item_uuid)
 	
 
 
@@ -185,7 +186,7 @@ func use_item(item_uuid: String, amount: int = 1) -> bool:
 			break
 			
 	if items_used > 0:
-		sync_item(item_uuid)
+		sync_item_response.rpc_id(target_node.peer_id, item_uuid)
 
 	return true
 
@@ -214,7 +215,7 @@ func set_gold(amount: int) -> bool:
 	var previous_gold_amount: int = gold
 	gold = amount
 	gold_changed.emit(gold, gold - previous_gold_amount)
-	sync_gold()
+	sync_gold_response.rpc_id(target_node.peer_id)
 	return true
 
 
