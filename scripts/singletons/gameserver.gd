@@ -221,7 +221,7 @@ func _on_clock_sync_timer_timeout():
 
 
 class User:
-	extends Object
+	extends RefCounted
 	var username: String = ""
 	var logged_in: bool = false
 	var connected_time: float = Time.get_unix_time_from_system()
