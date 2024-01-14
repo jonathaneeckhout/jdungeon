@@ -99,6 +99,10 @@ func _on_died():
 		animation_player.stop()
 		animation_player.play(die_animation)
 
+	if target_node is CollisionObject2D:
+		target_node.collision_layer = J.PHYSICS_LAYER_PASSABLE_ENTITIES
+		target_node.collision_mask = 0
+
 
 func _on_respawned():
 	dead = false

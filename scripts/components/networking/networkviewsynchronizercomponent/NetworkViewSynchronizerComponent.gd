@@ -52,6 +52,7 @@ func _ready():
 			+ J.PHYSICS_LAYER_ENEMIES
 			+ J.PHYSICS_LAYER_NPCS
 			+ J.PHYSICS_LAYER_ITEMS
+			+ J.PHYSICS_LAYER_PASSABLE_ENTITIES
 		)
 		body_network_view_area.add_child(cs_body_network_view_area)
 
