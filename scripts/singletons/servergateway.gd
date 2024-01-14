@@ -213,7 +213,7 @@ func _on_check_cookie_timer_timeout():
 
 
 class Server:
-	extends Object
+	extends RefCounted
 	var name: String = ""
 	var address: String = ""
 	var peer_id: int = 0
@@ -224,7 +224,7 @@ class Server:
 
 
 class User:
-	extends Object
+	extends RefCounted
 	var username: String = ""
 	var cookie: String = ""
 	# Used to check how long the cookie is valid

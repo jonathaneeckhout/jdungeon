@@ -1,4 +1,4 @@
-extends Object
+extends RefCounted
 class_name Boost
 ## This is used to store the boosts a player may obtain. Most common sources being items and status effects.
 ## These are meant to be temporary and may be deleted at any time.

@@ -156,6 +156,6 @@ func get_closest_target_position_to_timestamp(timestamp: float) -> PositionEleme
 
 
 class PositionElement:
-	extends Object
+	extends RefCounted
 	var timestamp: float
 	var position: Vector2

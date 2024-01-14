@@ -311,7 +311,7 @@ static func new_settings() -> StreamPlayerSettings:
 
 
 class StreamPlayerSettings:
-	extends Object
+	extends RefCounted
 
 	## Position for 2D players, in global coordinates
 	var position_2D: Vector2
