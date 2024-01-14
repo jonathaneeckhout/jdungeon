@@ -64,6 +64,7 @@ func equip_item(item_uuid: String) -> bool:
 		unequip_item(items[item.equipment_slot].uuid)
 
 	items[item.equipment_slot] = item
+	item_added.emit(item.uuid, item.item_class)
 	sync_equip_item_response(target_node.peer_id, item.uuid)
 
 	return true
@@ -82,7 +83,8 @@ func unequip_item(item_uuid: String) -> Item:
 		inventory_synchronizer.add_item(item)
 	else:
 		GodotLogger.warn("Player does not have a inventory, item will be lost")
-
+		
+	item_removed.emit(item.uuid)
 	return item
 
 

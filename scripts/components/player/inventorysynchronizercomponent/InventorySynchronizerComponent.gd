@@ -215,7 +215,7 @@ func set_gold(amount: int) -> bool:
 	var previous_gold_amount: int = gold
 	gold = amount
 	gold_changed.emit(gold, gold - previous_gold_amount)
-	sync_gold_response.rpc_id(target_node.peer_id)
+	sync_gold_response.rpc_id(target_node.peer_id, gold)
 	return true
 
 
