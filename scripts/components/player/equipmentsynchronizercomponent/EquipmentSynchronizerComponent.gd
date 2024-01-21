@@ -49,10 +49,11 @@ func _ready():
 	client_invoke_sync_equipment()
 
 
+## Look for the item in the inventory and equip it
 func equip_item(item_uuid: String) -> bool:
 	assert(G.is_server())
 	
-	var item: Item = get_item(item_uuid)
+	var item: Item = inventory_synchronizer.get_item(item_uuid)
 	if not item is Item:
 		return false
 	
@@ -65,11 +66,17 @@ func equip_item(item_uuid: String) -> bool:
 
 	items[item.equipment_slot] = item
 	item_added.emit(item.uuid, item.item_class)
-	sync_equip_item_response(target_node.peer_id, item.uuid)
+	
+	sync_equip_item_response.rpc_id(target_node.peer_id, item_uuid)
+
+	for watcher in watcher_synchronizer.watchers:
+		assert(watcher.peer_id != target_node.peer_id, "The watcher Array contains the caller of this rpc. It will call this method twice.")
+		sync_equip_item_response.rpc_id(watcher.peer_id, item_uuid)
 
 	return true
 
 
+## Look for item in equipment slots to unequip it
 func unequip_item(item_uuid: String) -> Item:
 	assert(G.is_server())
 	
@@ -85,13 +92,20 @@ func unequip_item(item_uuid: String) -> Item:
 		GodotLogger.warn("Player does not have a inventory, item will be lost")
 		
 	item_removed.emit(item.uuid)
+	
+	sync_equip_item_response.rpc_id(target_node.peer_id, item_uuid)
+
+	for watcher in watcher_synchronizer.watchers:
+		assert(watcher.peer_id != target_node.peer_id, "The watcher Array contains the caller of this rpc. It will call this method twice.")
+		sync_equip_item_response.rpc_id(watcher.peer_id, item_uuid)
+	
 	return item
 
 
 func get_item(item_uuid: String) -> Item:
 	for equipment_slot in items:
 		var item: Item = items[equipment_slot]
-		if item != null and item.uuid == item_uuid:
+		if item is Item and item.uuid == item_uuid:
 			return item
 	
 	GodotLogger.error(
@@ -190,18 +204,13 @@ func sync_equip_item(item_uuid: String):
 	if id != target_node.peer_id:	
 		GodotLogger.warn("A sync attempt came from a different peer than the one that owns this entity. Owned by: {0} | Called by: {1}".format([str(target_node.peer_id), id]))	
 		return
-		
-	if not equip_item(item_uuid):
-		return
 	
-	sync_equip_item_response.rpc_id(id, item_uuid)
-
-	for watcher in watcher_synchronizer.watchers:
-		sync_equip_item_response.rpc_id(watcher.peer_id, item_uuid)
+	equip_item(item_uuid)
 
 
 @rpc("call_remote", "authority", "reliable")
 func sync_equip_item_response(item_uuid: String, item_class: String):
+	
 	var item: Item = J.item_scenes[item_class].instantiate()
 	item.uuid = item_uuid
 	item.item_class = item_class
@@ -226,17 +235,7 @@ func sync_unequip_item(item_uuid: String) -> Item:
 		GodotLogger.warn("A sync attempt came from a different peer than the one that owns this entity. Owned by: {0} | Called by: {1}".format([str(target_node.peer_id), id]))	
 		return
 		
-	var item: Item = unequip_item(item_uuid)
-	if not item is Item:
-		GodotLogger.warn("Could not unequip item, sync attempt aborted.")
-		return
-	
-	sync_unequip_item_response.rpc_id(id, item.uuid)
-
-	for watcher in watcher_synchronizer.watchers:
-		sync_unequip_item_response.rpc_id(watcher.peer_id, item.uuid)
-
-	return item
+	unequip_item(item_uuid)
 
 
 @rpc("call_remote", "authority", "reliable")
@@ -253,8 +252,10 @@ func sync_unequip_item_response(item_uuid: String):
 func client_invoke_sync_equipment():
 	sync_equipment.rpc_id(1)
 	
+	
 func client_invoke_equip_item(item_uuid: String):
-	equip_item.rpc_id(1, item_uuid)
+	sync_unequip_item.rpc_id(1, item_uuid)
+
 
 func client_invoke_unequip_item(item_uuid: String):
-	unequip_item.rpc_id(1, item_uuid)
+	sync_equip_item.rpc_id(1, item_uuid)
