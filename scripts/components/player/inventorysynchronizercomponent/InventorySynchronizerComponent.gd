@@ -161,7 +161,6 @@ func get_item_by_class(item_class: String) -> Item:
 	return null
 
 
-@rpc("call_remote","any_peer","reliable")
 func use_item(item_uuid: String, amount: int = 1) -> bool:
 	assert(G.is_server())
 	
@@ -260,7 +259,6 @@ func from_json(data: Dictionary) -> bool:
 	gold = data["gold"]
 	gold_changed.emit(gold, gold_change)
 	
-	items = []
 	for item_data: Dictionary in data.get("items"):
 		item_from_json(item_data)
 
@@ -316,6 +314,45 @@ func sync_item(item_uuid: String):
 func sync_item_response(item_dict: Dictionary):
 	item_from_json(item_dict)
 
+
+@rpc("call_remote","any_peer","reliable")
+func sync_use_item(item_uuid: String, amount: int):
+	assert(G.is_server())
+	
+	var id: int = multiplayer.get_remote_sender_id()
+	
+	# Only allow logged in players or the server
+	if not G.is_user_logged_in(id) or id == 0:
+		GodotLogger.warn("Client was not logged in, cannot sync.")
+		return
+		
+	# Only allow clients to sync their own entity
+	if id != target_node.peer_id:	
+		GodotLogger.warn("A sync attempt came from a different peer than the one that owns this entity. Owned by: {0} | Called by: {1}".format([str(target_node.peer_id), id]))	
+		return
+	
+	use_item(item_uuid, amount)
+
+
+@rpc("call_remote","any_peer","reliable")
+func sync_drop_item(item_uuid: String, amount: int):
+	assert(G.is_server())
+	
+	var id: int = multiplayer.get_remote_sender_id()
+	
+	# Only allow logged in players or the server
+	if not G.is_user_logged_in(id) or id == 0:
+		GodotLogger.warn("Client was not logged in, cannot sync.")
+		return
+		
+	# Only allow clients to sync their own entity
+	if id != target_node.peer_id:	
+		GodotLogger.warn("A sync attempt came from a different peer than the one that owns this entity. Owned by: {0} | Called by: {1}".format([str(target_node.peer_id), id]))	
+		return
+	
+	drop_item(item_uuid, amount)
+
+
 func item_to_json(item: Item) -> Dictionary:
 	var output: Dictionary = {}
 	
@@ -325,6 +362,8 @@ func item_to_json(item: Item) -> Dictionary:
 	return output
 	
 func item_from_json(data: Dictionary) -> bool:
+	assert(not data.is_empty())
+	
 	for item_key: String in ITEM_JSON_KEYS:
 		if not item_key in data:
 			GodotLogger.warn(
@@ -393,9 +432,9 @@ func client_invoke_sync_inventory():
 
 func client_invoke_use_item(item_uuid: String, amount: int = 1):
 	assert(not G.is_server())
-	use_item.rpc_id(1, item_uuid, amount)
+	sync_use_item.rpc_id(1, item_uuid, amount)
 
 
 func client_invoke_drop_item(item_uuid: String, amount: int = 1):
 	assert(not G.is_server())
-	drop_item.rpc_id(1, item_uuid, amount)
+	sync_drop_item.rpc_id(1, item_uuid, amount)
