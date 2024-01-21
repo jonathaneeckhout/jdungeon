@@ -146,8 +146,8 @@ func get_item(item_uuid: String) -> Item:
 			return item
 	
 	GodotLogger.error(
-		"Could not find an item with uuid '{0}'"
-		.format([item_uuid])
+		"Could not find an item with uuid '{0}' in '{1}' inventory."
+		.format([item_uuid, target_node.get_name()])
 		)
 	return null
 
@@ -252,6 +252,9 @@ func from_json(data: Dictionary) -> bool:
 					.format([item_key])
 					)
 				return false
+				
+	elif Global.debug_mode:
+		GodotLogger.warn("The inventory was devoid of items, is this ok? \n" + str(data))
 			
 	var gold_change: int = gold - data["gold"]
 	gold = data["gold"]
@@ -273,6 +276,7 @@ func sync_inventory():
 	
 	# Only allow logged in players
 	if not G.is_user_logged_in(id):
+		GodotLogger.warn("Client was not logged in, cannot sync.")
 		return
 	
 	if id == target_node.peer_id:

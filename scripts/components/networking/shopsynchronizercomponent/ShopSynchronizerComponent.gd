@@ -102,7 +102,12 @@ func _on_shop_item_bought(player_id: int, item_uuid: String):
 		# Couldn't add the item to the player's inventory, return the gold to the player.
 		if not player.inventory.add_item(new_item):
 			player.inventory.change_gold(shop_item["price"])
-
+	
+	if Global.debug_mode:
+		GodotLogger.info(
+			"Player '{0}' bought '{1}' for '{2}' gold"
+			.format([target_node.get_name(), shop_item["item_class"], shop_item["price"]])
+			)
 
 @rpc("call_remote", "authority", "reliable")
 func sync_shop(shop: Dictionary):
@@ -116,10 +121,11 @@ func buy_shop_item(item_uuid: String):
 	if not G.is_server():
 		return
 
-	var id = multiplayer.get_remote_sender_id()
+	var id: int = multiplayer.get_remote_sender_id()
 
 	# Only allow logged in players
 	if not G.is_user_logged_in(id):
+		GodotLogger.warn("Client was not logged in, cannot sync.")
 		return
 
 	shop_item_bought.emit(id, item_uuid)

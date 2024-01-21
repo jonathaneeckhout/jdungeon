@@ -2,16 +2,16 @@ extends Panel
 
 class_name Inventory
 
-const SIZE = Vector2(6, 6)
+const SIZE := Vector2(6, 6)
 
 var gold := 0:
 	set(amount):
 		gold = amount
 		$VBoxContainer/GoldValue.text = str(amount)
 
-var panels = []
+var panels: Array[Array] = []
 var mouse_above_this_panel: InventoryPanel
-var location_cache = {}
+var location_cache: Dictionary = {}
 
 @onready var player: Player = $"../../../../"
 
@@ -102,9 +102,14 @@ func _on_inventory_loaded():
 	clear_all_panels()
 
 	gold = player.inventory.gold
-
+	
+	assert(player.inventory.items is Array[Item])
 	for item in player.inventory.items:
-		place_item_at_free_slot(item)
+		if not place_item_at_free_slot(item):
+			GodotLogger.error(
+				"Could not place item of class '{0}' in the inventory"
+				.format([item.item_class])
+				)
 
 
 func _on_gold_changed(total: int, _amount: int):
@@ -115,6 +120,10 @@ func _on_item_added(item_uuid: String, _item_class: String):
 	var item: Item = player.inventory.get_item(item_uuid)
 
 	if not item:
+		GodotLogger.warn(
+			"Could not find item of class '{0}' on the client side, cannot add it."
+			.format([_item_class])
+			)
 		return
 
 	place_item_at_free_slot(item)
@@ -127,3 +136,8 @@ func _on_item_removed(item_uuid: String):
 			if panel.item and panel.item.uuid == item_uuid:
 				panel.item = null
 				return
+	
+		GodotLogger.warn(
+			"Could not find item with uuid '{0}' on the client side, cannot remove it."
+			.format([item_uuid])
+			)

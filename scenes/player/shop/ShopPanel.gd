@@ -10,7 +10,7 @@ extends Panel
 
 var grid_pos: Vector2
 
-@onready var shop = $"../.."
+@onready var shop: Node = $"../.."
 
 var price: int = 0
 
@@ -21,8 +21,11 @@ func _ready():
 
 
 func _gui_input(event: InputEvent):
-	if event.is_action_pressed("j_right_click") and shop.shop_synchronizer != null:
-		shop.shop_synchronizer.buy_shop_item.rpc_id(1, item.uuid)
+	if event.is_action_pressed("j_right_click"):
+		if shop.get("shop_synchronizer") is ShopSynchronizerComponent:
+			shop.shop_synchronizer.buy_shop_item.rpc_id(1, item.uuid)
+		else:
+			GodotLogger.error("This shop has a null shop_synchronizer or lacks the property.")
 
 
 func _on_mouse_entered():

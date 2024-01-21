@@ -160,6 +160,7 @@ func sync_equipment():
 
 	# Only allow logged in players
 	if not G.is_user_logged_in(id):
+		GodotLogger.warn("Client was not logged in, cannot sync.")
 		return
 
 	if id == target_node.peer_id:
@@ -173,14 +174,16 @@ func sync_equipment_response(equipment: Dictionary):
 	from_json(equipment)
 
 
+## RPC'd by client to request equipping on the server side.
 @rpc("call_remote","any_peer","reliable")
 func sync_equip_item(item_uuid: String):
 	assert(G.is_server())
 	
 	var id: int = multiplayer.get_remote_sender_id()
 	
-	# Only allow logged in players
-	if not G.is_user_logged_in(id):
+	# Only allow logged in players or the server
+	if not G.is_user_logged_in(id) or id == 0:
+		GodotLogger.warn("Client was not logged in, cannot sync.")
 		return
 		
 	# Only allow clients to sync their own entity
@@ -238,10 +241,13 @@ func sync_unequip_item(item_uuid: String) -> Item:
 
 @rpc("call_remote", "authority", "reliable")
 func sync_unequip_item_response(item_uuid: String):
+	assert(not G.is_server())
 	var item: Item = get_item(item_uuid)
 	if item:
 		items[item.equipment_slot] = null
 		item_removed.emit(item_uuid)
+	else:
+		GodotLogger.warn("Could not find item on the client side.")
 	
 	
 func client_invoke_sync_equipment():
