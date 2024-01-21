@@ -5,18 +5,18 @@
 [ext_resource type="PackedScene" uid="uid://cloh3hx8jfl61" path="res://scenes/projectiles/collision_scenes/Puff.tscn" id="2_mvj3j"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_l0reg"]
-a = Vector2(-10, 0)
-b = Vector2(55, 0)
+b = Vector2(26, 0)
 
 [node name="Arrow" type="StaticBody2D"]
 script = ExtResource("1_hrrne")
 projectile_class = "Arrow"
 skill_class = "BasicAttack"
 collision_scene = ExtResource("2_mvj3j")
-move_speed = 400.0
+move_speed = 850.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 1.5708
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_1i1lo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
