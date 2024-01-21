@@ -61,6 +61,7 @@ func process_collisions(motion: Vector2):
 	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	var shape_params := PhysicsShapeQueryParameters2D.new()
 
+	shape_params.collide_with_areas = true
 	shape_params.collision_mask = collision_mask
 	shape_params.motion = current_motion
 	shape_params.shape = $CollisionShape2D.shape
