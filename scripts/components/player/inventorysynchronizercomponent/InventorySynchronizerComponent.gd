@@ -66,16 +66,22 @@ func _ready():
 ## Returns a bool depending on wether it is successful or not.
 func add_item(item: Item) -> bool:
 	assert(G.is_server())
+	if Global.debug_mode:
+		GodotLogger.info("Adding item '{1}' to player '{0}'.".format([target_node.get_name(), str(item.name)]))
 	
 	#If it is currency, add its amount as gold.
 	if item.item_type == Item.ITEM_TYPE.CURRENCY:
 		change_gold(item.amount)
+		if Global.debug_mode:
+			GodotLogger.info("Adding {1} gold to player '{0}'.".format([target_node.get_name(), str(item.amount)]))		
 		return true
 
 	item.collision_layer = 0
 
 	if items.size() >= size:
 		status_message.emit(InventoryStatusMessages.CANNOT_ADD_ITEM_INVENTORY_FULL)
+		if Global.debug_mode:
+			GodotLogger.info("Cannot add item, inventory full.")
 		return false
 	
 	# If the item exists, add to it the amount from the item being added. The item being added will be discarded.
@@ -86,20 +92,26 @@ func add_item(item: Item) -> bool:
 		var amount_to_add: int = item.amount + existing_item.amount
 		
 		# Get the overflow of the amount
-		var amount_overflow: int = max(amount_to_add - existing_item.max_amount, 0)
+		var amount_overflow: int = max(amount_to_add - existing_item.amount_max, 0)
 		assert(amount_overflow >= 0)
 		
 		# Correct the amount to add
-		amount_to_add = min(amount_to_add, existing_item.amount_max)
+		amount_to_add = amount_to_add - amount_overflow
 
 		# Set the amount it should have
+		if Global.debug_mode:
+			GodotLogger.info("Stacking item '{0}' of {1} amount to player '{0}'.".format([str(item.name), str(amount_to_add)]))
 		set_item_amount(existing_item.uuid, amount_to_add)
 		assert(item.get_parent() == null, "The item should be an orphan by now.")
 		item_added.emit(item.uuid, item.item_class)
-		sync_item_response.rpc_id(target_node.peer_id, existing_item.uuid)
+		
+		if G.is_server():
+			sync_item_response.rpc_id( target_node.peer_id, item_to_json(existing_item) )
 		
 		# If anything's left, add it as another item.
 		if amount_overflow > 0:
+			if Global.debug_mode:
+				GodotLogger.info("Stack was full, allocating {0} overflown item(s).".format([str(amount_overflow)]))
 			# The item's amount is reduced to the overflow amount
 			item.amount = amount_overflow
 			assert(item.amount > 0)
@@ -109,35 +121,44 @@ func add_item(item: Item) -> bool:
 		items.append(item)
 		item_added.emit(item.uuid, item.item_class)
 		assert(item.amount > 0)
-		sync_item_response.rpc_id(target_node.peer_id, item.uuid)
-
+		
+		if G.is_server():
+			sync_item_response.rpc_id(target_node.peer_id, item_to_json(item))
+	
+	if not get_item_by_class(item.item_class):
+		GodotLogger.warn("Item was not been added.")
+		
 	return true
 
 
 func set_item_amount(item_uuid: String, amount: int):
 	var item: Item = get_item(item_uuid)
 	assert(amount >= 0, "Cannot have a negative amount of '{0}', set to 0 to remove it.".format([amount]))
-	item.amount = min(amount)
+	item.amount = amount
 	
 	if item.amount <= 0:
 		remove_item(item_uuid)
 	
+	if G.is_server():
+		sync_item_response.rpc_id( target_node.peer_id, item_to_json(item) )
+	
 	item_amount_changed.emit(item.item_uuid, item.item_class, amount)
-	
-	sync_item_response.rpc_id(target_node.peer_id, item_uuid)
-	
 
 
-func remove_item(item_uuid: String):
-	if not G.is_server():
-		return false
+func remove_item(item_uuid: String) -> Item:
 	
 	var item: Item = get_item(item_uuid)
 	
 	if item != null:
 		items.erase(item)
-		sync_item.rpc_id(target_node.peer_id, item_uuid, 0)
-		return item
+		
+		if G.is_server():
+			sync_item.rpc_id(target_node.peer_id, item_uuid, 0)
+	else:
+		GodotLogger.warn("The item could not be found in '{0}' this inventory.".format([target_node.get_name()]))
+			
+	return item
+	
 
 
 func get_item(item_uuid: String) -> Item:
@@ -157,7 +178,9 @@ func get_item_by_class(item_class: String) -> Item:
 	for item: Item in items:
 		if item.item_class == item_class:
 			return item
+	
 
+	GodotLogger.warn("Could not find item of class '{0}'.".format([item_class]))
 	return null
 
 
@@ -185,7 +208,7 @@ func use_item(item_uuid: String, amount: int = 1) -> bool:
 			break
 			
 	if items_used > 0:
-		sync_item_response.rpc_id(target_node.peer_id, item_uuid)
+		sync_item_response.rpc_id( target_node.peer_id, item_to_json( get_item(item_uuid) ) )
 
 	return true
 
@@ -195,6 +218,7 @@ func drop_item(item_uuid: String, amount: int):
 	assert(G.is_server())
 	var item: Item = get_item(item_uuid)
 	if not item:
+		GodotLogger.warn("Could not drop item with uuid '{0}'.".format([item_uuid]))
 		return
 
 	set_item_amount(item_uuid, item.amount - amount)
@@ -377,6 +401,9 @@ func item_from_json(data: Dictionary) -> bool:
 	var amount: int = data["amount"]
 	
 	var item: Item = get_item(item_uuid)
+	
+	if Global.debug_mode:
+		GodotLogger.info("Adding item from JSON. \n" + str(data))
 	
 	# If adding an item.
 	if amount > 0:

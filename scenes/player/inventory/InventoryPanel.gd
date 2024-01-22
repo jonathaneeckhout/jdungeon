@@ -19,10 +19,9 @@ func _ready():
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 
-
 func _draw():
 	if item is Item:
-		var font_height: int = 32
+		var font_height: int = 14
 		draw_string(DEFAULT_FONT, Vector2(0, size.y - font_height), str(item.amount),HORIZONTAL_ALIGNMENT_CENTER, -1, font_height)
 
 func _gui_input(event: InputEvent):

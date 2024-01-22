@@ -221,7 +221,7 @@ func sync_equip_item_response(item_uuid: String, item_class: String):
 
 
 @rpc("call_remote","any_peer","reliable")
-func sync_unequip_item(item_uuid: String) -> Item:
+func sync_unequip_item(item_uuid: String):
 	assert(G.is_server())
 	
 	var id: int = multiplayer.get_remote_sender_id()

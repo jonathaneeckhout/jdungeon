@@ -70,6 +70,9 @@ func swap_items(from: Panel, to: Panel):
 
 	to.item = from.item
 	from.item = temp_item
+	
+	to.queue_redraw()
+	from.queue_redraw()
 
 
 func place_item_at_free_slot(item: Item) -> bool:
@@ -79,6 +82,7 @@ func place_item_at_free_slot(item: Item) -> bool:
 			var panel: InventoryPanel = get_panel_at_pos(pos)
 			if panel.item == null:
 				panel.item = item
+				panel.queue_redraw()
 				return true
 	return false
 
@@ -88,6 +92,7 @@ func clear_all_panels():
 		for y in range(SIZE.y):
 			var panel: InventoryPanel = panels[x][y]
 			panel.item = null
+			panel.queue_redraw()
 
 
 func _on_mouse_entered():

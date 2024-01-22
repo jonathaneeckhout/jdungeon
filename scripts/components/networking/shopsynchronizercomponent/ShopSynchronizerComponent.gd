@@ -40,10 +40,13 @@ func add_item(item_class: String, price: int) -> bool:
 	return true
 
 
-func get_item(item_uuid: String):
-	for item in inventory:
+func get_item(item_uuid: String) -> Dictionary:
+	for item: Dictionary in inventory:
 		if item["uuid"] == item_uuid:
 			return item
+			
+	GodotLogger.error("Could not get item in shop.")
+	return {}
 
 
 func to_json() -> Dictionary:
@@ -81,27 +84,38 @@ func open_shop(peer_id: int):
 
 
 func _on_shop_item_bought(player_id: int, item_uuid: String):
-	var player = G.world.get_player_by_peer_id(player_id)
+	if Global.debug_mode:
+		GodotLogger.info("Player '{0}' attempted to buy item.".format([str(player_id)]))
+	
+	var player: Node = G.world.get_player_by_peer_id(player_id)
 	if player == null:
+		GodotLogger.warn("Could not find player with id {0}.".format([str(player_id)]))
 		return
 
-	var shop_item = get_item(item_uuid)
-	if !shop_item:
+	var shop_item: Dictionary = get_item(item_uuid)
+	if shop_item.is_empty():
+		GodotLogger.warn("Could not find item in the shop.")
 		return
 
 	if player.get("inventory") == null:
-		GodotLogger.error("player does not have the inventory variable")
+		GodotLogger.error("Player does not have the inventory property")
+		return
+	
+	if player.inventory.gold < shop_item["price"]:
+		GodotLogger.info("Refused to sell item, not enough gold on player.")
 		return
 	
 	# Subtract the gold from the player
-	if player.inventory.change_gold(-shop_item["price"]):
-		var new_item: Item = J.item_scenes[shop_item["item_class"]].instantiate()
-		new_item.uuid = J.uuid_util.v4()
-		new_item.item_class = shop_item["item_class"]
+	player.inventory.change_gold(-shop_item["price"])
+	var new_item: Item = J.item_scenes[shop_item["item_class"]].instantiate()
+	new_item.uuid = J.uuid_util.v4()
+	new_item.item_class = shop_item["item_class"]
 
+	
+	if not player.inventory.add_item(new_item):
 		# Couldn't add the item to the player's inventory, return the gold to the player.
-		if not player.inventory.add_item(new_item):
-			player.inventory.change_gold(shop_item["price"])
+		GodotLogger.info("Failed to add item to the player's '{0}' inventory.".format([str(player.get_name())]))
+		player.inventory.change_gold(shop_item["price"])
 	
 	if Global.debug_mode:
 		GodotLogger.info(
