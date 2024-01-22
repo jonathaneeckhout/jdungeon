@@ -65,6 +65,8 @@ func equip_item(item_uuid: String) -> bool:
 		unequip_item(items[item.equipment_slot].uuid)
 
 	items[item.equipment_slot] = item
+	inventory_synchronizer.remove_item(item.uuid)
+	
 	item_added.emit(item.uuid, item.item_class)
 	
 	sync_equip_item_response.rpc_id(target_node.peer_id, item_uuid)

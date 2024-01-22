@@ -142,7 +142,7 @@ func set_item_amount(item_uuid: String, amount: int):
 	if G.is_server():
 		sync_item_response.rpc_id( target_node.peer_id, item_to_json(item) )
 	
-	item_amount_changed.emit(item.item_uuid, item.item_class, amount)
+	item_amount_changed.emit(item.uuid, item.item_class, amount)
 
 
 func remove_item(item_uuid: String) -> Item:
@@ -171,6 +171,13 @@ func get_item(item_uuid: String) -> Item:
 		.format([item_uuid, target_node.get_name()])
 		)
 	return null
+
+
+func has_item(item_uuid: String) -> bool:
+	for item: Item in items:
+		if item.uuid == item_uuid:
+			return true
+	return false
 
 
 ## Returns the first instance of an item of this class
@@ -208,7 +215,7 @@ func use_item(item_uuid: String, amount: int = 1) -> bool:
 			break
 			
 	if items_used > 0:
-		sync_item_response.rpc_id( target_node.peer_id, item_to_json( get_item(item_uuid) ) )
+		sync_item_response.rpc_id( target_node.peer_id, item_to_json( item ) )
 
 	return true
 
@@ -400,7 +407,10 @@ func item_from_json(data: Dictionary) -> bool:
 	var item_class: String = data["item_class"]
 	var amount: int = data["amount"]
 	
-	var item: Item = get_item(item_uuid)
+	var item: Item
+	
+	if has_item(item_uuid):
+		item = get_item(item_uuid)
 	
 	if Global.debug_mode:
 		GodotLogger.info("Adding item from JSON. \n" + str(data))

@@ -25,4 +25,4 @@ var grid_pos: Vector2
 func _gui_input(event: InputEvent):
 	if event.is_action_pressed("j_right_click"):
 		if item:
-			equipment.player.equipment.remove_equipment_item.rpc_id(1, item.uuid)
+			equipment.player.equipment.sync_unequip_item.rpc_id(1, item.uuid)
