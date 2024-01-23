@@ -203,11 +203,21 @@ func show_collision(global_pos: Vector2, projectile_class: String):
 
 
 func _on_projectile_hit_object(object: Node2D, projectile: Projectile2D):
-	# Try to get an entity with the object's name, as to confirm it is one.
-	var hit_entity: Node2D = G.world.get_entity_by_name(object.get_name())
+	var obj_hit: Node2D = object
 
+	#If it touched a HurtBox, get the entity that owns it.
+	if obj_hit.get_name() == "HurtArea" and get_parent():
+		obj_hit = obj_hit.get_parent()
+
+	var hit_entity: Node2D = null
+
+	# Try to get an entity with the object's name if it is a CharacterBody2D, as to confirm it is one.
+	if obj_hit is CharacterBody2D:
+		hit_entity = G.world.get_entity_by_name(obj_hit.get_name())
+
+	#If no entity was found, just report the object hit
 	if hit_entity == null:
-		projectile_hit_object.emit(object)
+		projectile_hit_object.emit(obj_hit)
 		return
 
 	# If the projectile has a skill defined, use it.
@@ -227,7 +237,7 @@ func _on_projectile_hit_object(object: Node2D, projectile: Projectile2D):
 	for client_id: int in get_clients_in_range():
 		sync_collision_to_client(client_id, projectile.position, projectile.projectile_class)
 
-	projectile_hit_object.emit(object)
+	projectile_hit_object.emit(obj_hit)
 	projectile_hit_entity.emit(hit_entity)
 
 
