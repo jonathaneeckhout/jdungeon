@@ -2,7 +2,7 @@ extends StaticBody2D
 
 class_name Item
 
-signal amount_changed
+signal amount_changed(this: Item, new_amount: int)
 
 enum MODE { LOOT, ITEMSLOT }
 
@@ -28,7 +28,9 @@ var amount_max: int = 10
 var amount: int = 1:
 	set(val):
 		amount = val
-		amount_changed.emit()
+			
+		amount_changed.emit(self, amount)
+		
 		
 var price: int = 0
 var value: int = 0
@@ -97,6 +99,9 @@ func use(player: Player) -> bool:
 			if boost.hp > 0:
 				player.stats.heal(self.name, boost.hp)
 				return true
+			
+			amount -= 1
+			
 		ITEM_TYPE.EQUIPMENT:
 			if player.equipment and player.equipment.equip_item(uuid):
 				return true
@@ -115,17 +120,35 @@ func change_amount(ch_amount: int):
 	pass
 
 
-func to_json() -> Dictionary:
+func to_json() -> Dictionary:	
 	return {"uuid": uuid, "item_class": item_class, "amount": amount}
 
 
 func from_json(data: Dictionary) -> bool:
+	for item_key: String in ["uuid","item_class","amount"]:
+		if not item_key in data:
+			GodotLogger.warn(
+			"Failed to load item from data, missing '{0} key."
+			.format([item_key])
+			)
+			return false
+			
+	if data["amount"] < 1:
+		GodotLogger.warn("Refused to receive item of class '{0}' from JSON with an amount of 0 or lower.".format([item_class]))
+		return false
+	
 	uuid = data["uuid"]
 	item_class = data["item_class"]
 	amount = data["amount"]
+	
 
+	
 	return true
 
+static func instance_from_json(data: Dictionary) -> Item:
+	var new_item := Item.new()
+	new_item.from_json(data)
+	return new_item
 
 func _on_expire_timer_timeout():
 	queue_free()

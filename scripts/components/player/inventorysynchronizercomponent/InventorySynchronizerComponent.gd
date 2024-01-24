@@ -77,7 +77,8 @@ func add_item(item: Item) -> bool:
 		return true
 
 	item.collision_layer = 0
-
+	
+	#Inventory full
 	if items.size() >= size:
 		status_message.emit(InventoryStatusMessages.CANNOT_ADD_ITEM_INVENTORY_FULL)
 		if Global.debug_mode:
@@ -101,12 +102,14 @@ func add_item(item: Item) -> bool:
 		# Set the amount it should have
 		if Global.debug_mode:
 			GodotLogger.info("Stacking item '{0}' of {1} amount to player '{0}'.".format([str(item.name), str(amount_to_add)]))
-		set_item_amount(existing_item.uuid, amount_to_add)
+			
+		existing_item.amount += amount_to_add
+		
 		assert(item.get_parent() == null, "The item should be an orphan by now.")
 		item_added.emit(item.uuid, item.item_class)
 		
 		if G.is_server():
-			sync_item_response.rpc_id( target_node.peer_id, item_to_json(existing_item) )
+			sync_item_response.rpc_id( target_node.peer_id, existing_item.to_json() )
 		
 		# If anything's left, add it as another item.
 		if amount_overflow > 0:
@@ -116,33 +119,23 @@ func add_item(item: Item) -> bool:
 			item.amount = amount_overflow
 			assert(item.amount > 0)
 			add_item(item)
-		
+			
+	#There's nothing to stack, add another item.
 	else:
 		items.append(item)
 		item_added.emit(item.uuid, item.item_class)
 		assert(item.amount > 0)
 		
 		if G.is_server():
-			sync_item_response.rpc_id(target_node.peer_id, item_to_json(item))
+			sync_item_response.rpc_id(target_node.peer_id, item.to_json())
 	
+	item.amount_changed.connect(on_item_amount_changed)
+	
+	#Failsafe
 	if not get_item_by_class(item.item_class):
-		GodotLogger.warn("Item was not been added.")
+		GodotLogger.warn("Item was not added.")
 		
 	return true
-
-
-func set_item_amount(item_uuid: String, amount: int):
-	var item: Item = get_item(item_uuid)
-	assert(amount >= 0, "Cannot have a negative amount of '{0}', set to 0 to remove it.".format([amount]))
-	item.amount = amount
-	
-	if item.amount <= 0:
-		remove_item(item_uuid)
-	
-	if G.is_server():
-		sync_item_response.rpc_id( target_node.peer_id, item_to_json(item) )
-	
-	item_amount_changed.emit(item.uuid, item.item_class, amount)
 
 
 func remove_item(item_uuid: String) -> Item:
@@ -151,6 +144,9 @@ func remove_item(item_uuid: String) -> Item:
 	
 	if item != null:
 		items.erase(item)
+		
+		if item.amount_changed.is_connected(on_item_amount_changed):
+			item.amount_changed.disconnect(on_item_amount_changed)
 		
 		if G.is_server():
 			sync_item.rpc_id(target_node.peer_id, item_uuid, 0)
@@ -208,14 +204,13 @@ func use_item(item_uuid: String, amount: int = 1) -> bool:
 	# Attempt to use the proposed number of items
 	for use_count: int in amount:
 		if item and item.use(target_node):
-			set_item_amount(item_uuid, item.amount - 1)
 			items_used += 1
 		else:
 			status_message.emit(InventoryStatusMessages.CANNOT_USE_ITEM)
 			break
 			
 	if items_used > 0:
-		sync_item_response.rpc_id( target_node.peer_id, item_to_json( item ) )
+		sync_item_response.rpc_id( target_node.peer_id, item.to_json() )
 
 	return true
 
@@ -228,7 +223,7 @@ func drop_item(item_uuid: String, amount: int):
 		GodotLogger.warn("Could not drop item with uuid '{0}'.".format([item_uuid]))
 		return
 
-	set_item_amount(item_uuid, item.amount - amount)
+	item.amount -= amount
 
 	var random_x = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
 	var random_y = randi_range(-J.DROP_RANGE, J.DROP_RANGE)
@@ -291,7 +286,7 @@ func from_json(data: Dictionary) -> bool:
 	gold_changed.emit(gold, gold_change)
 	
 	for item_data: Dictionary in data.get("items"):
-		item_from_json(item_data)
+		Item.instance_from_json(item_data)
 
 	loaded.emit()
 	return true
@@ -336,7 +331,7 @@ func sync_item(item_uuid: String):
 		return
 		
 	if id == target_node.peer_id:
-		sync_item_response.rpc_id(id, item_to_json(item))
+		sync_item_response.rpc_id(id, item.to_json())
 	else:
 		GodotLogger.warn("A sync attempt came from a different peer than the one that owns this entity. Owned by: {0} | Called by: {1}".format([str(target_node.peer_id), id]))
 
@@ -382,61 +377,6 @@ func sync_drop_item(item_uuid: String, amount: int):
 		return
 	
 	drop_item(item_uuid, amount)
-
-
-func item_to_json(item: Item) -> Dictionary:
-	var output: Dictionary = {}
-	
-	for item_key: String in ITEM_JSON_KEYS:
-		output[item_key] = item.get(item_key)
-		
-	return output
-	
-func item_from_json(data: Dictionary) -> bool:
-	assert(not data.is_empty())
-	
-	for item_key: String in ITEM_JSON_KEYS:
-		if not item_key in data:
-			GodotLogger.warn(
-			"Failed to load item from data, missing '{0} key."
-			.format([item_key])
-			)
-			return false
-	
-	var item_uuid: String = data["uuid"]
-	var item_class: String = data["item_class"]
-	var amount: int = data["amount"]
-	
-	var item: Item
-	
-	if has_item(item_uuid):
-		item = get_item(item_uuid)
-	
-	if Global.debug_mode:
-		GodotLogger.info("Adding item from JSON. \n" + str(data))
-	
-	# If adding an item.
-	if amount > 0:
-		#If the player does not have this item on their end, create it.
-		if item == null:
-			item = J.item_scenes[item_class].duplicate().instantiate()
-			assert(item.item_class == item_class)
-			
-			item.uuid = item_uuid
-			item.collision_layer = 0
-			items.append(item)
-		
-		# Change the amount
-		item.amount = amount
-		item_added.emit(item_uuid, item_class)
-	
-	#If the amount is less than 1, then it is being removed
-	else:
-		items.erase(item)
-		item_removed.emit(item_uuid)
-	
-	item_amount_changed.emit(item_uuid, item_class, amount)
-	return true
 	
 
 @rpc("call_remote","any_peer","reliable")
@@ -475,3 +415,18 @@ func client_invoke_use_item(item_uuid: String, amount: int = 1):
 func client_invoke_drop_item(item_uuid: String, amount: int = 1):
 	assert(not G.is_server())
 	sync_drop_item.rpc_id(1, item_uuid, amount)
+
+
+func on_item_amount_changed(item: Item, new_amount: int):
+	assert(new_amount >= 0, "Cannot have a negative amount of '{0}', set to 0 to remove it.".format([new_amount]))
+	item.amount = new_amount
+	
+	if item.amount <= 0:
+		remove_item(item.uuid)
+	
+	if G.is_server():
+		sync_item_response.rpc_id( target_node.peer_id, item.to_json() )
+	
+	item_amount_changed.emit(item.uuid, item.item_class, item.amount)
+	
+		
