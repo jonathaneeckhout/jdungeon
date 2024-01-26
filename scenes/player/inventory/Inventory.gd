@@ -12,7 +12,7 @@ var gold := 0:
 		gold = amount
 		$VBoxContainer/GoldValue.text = str(amount)
 
-var panels = []
+var panels: Array[Array] = []
 var mouse_above_this_panel: InventoryPanel
 var location_cache = {}
 
@@ -60,6 +60,7 @@ func register_signals():
 
 	inventory_synchronizer.item_added.connect(_on_item_added)
 	inventory_synchronizer.item_removed.connect(_on_item_removed)
+	inventory_synchronizer.inventory_redraw_required.connect(_on_redraw_required)
 
 
 func get_panel_at_pos(pos: Vector2) -> InventoryPanel:
@@ -133,3 +134,9 @@ func _on_item_removed(item_uuid: String):
 			if panel.item and panel.item.uuid == item_uuid:
 				panel.item = null
 				return
+
+
+func _on_redraw_required():
+	for row: Array in panels:
+		for panel: InventoryPanel in row:
+			panel.queue_redraw()

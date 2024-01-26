@@ -38,6 +38,10 @@ func remove_item(peer_id: int, item_uuid: String):
 	_remove_item.rpc_id(peer_id, item_uuid)
 
 
+func change_item_amount(peer_id: int, item_uuid: String, amount: int):
+	_change_item_amount.rpc_id(peer_id, item_uuid, amount)
+
+
 func add_gold(peer_id: int, total: int, amount: int):
 	_add_gold.rpc_id(peer_id, total, amount)
 
@@ -125,6 +129,22 @@ func _remove_item(u: String):
 			. client_player
 			. component_list[InventorySynchronizerComponent.COMPONENT_NAME]
 			. client_remove_item(u)
+		)
+
+
+@rpc("call_remote", "authority", "reliable")
+func _change_item_amount(u: String, a: int):
+	if _multiplayer_connection.client_player == null:
+		return
+
+	if _multiplayer_connection.client_player.component_list.has(
+		InventorySynchronizerComponent.COMPONENT_NAME
+	):
+		(
+			_multiplayer_connection
+			. client_player
+			. component_list[InventorySynchronizerComponent.COMPONENT_NAME]
+			. client_change_item_amount(u, a)
 		)
 
 
