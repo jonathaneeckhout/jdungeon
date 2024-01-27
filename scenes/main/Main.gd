@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 const GAME_ICONS: Array[Texture] = [
 	preload("res://assets/images/enemies/boar/scaled/example.png"),
@@ -13,13 +13,13 @@ const GATEWAY_SUB_ICON: Texture = preload("res://assets/images/ui/cursors/TalkCu
 @export var config: ConfigResource = null
 
 ## The prefix used for every log line on the client
-@export var gateway_logging_prefix: String = "Gateway:"
+@export var gateway_logging_prefix: String = "Gateway"
 
 ## The prefix used for every log line on the client
-@export var server_logging_prefix: String = "Server:"
+@export var server_logging_prefix: String = "Server"
 
 ## The prefix used for every log line on the client
-@export var client_logging_prefix: String = "Client:"
+@export var client_logging_prefix: String = "Client"
 
 @onready var _gateway_server: WebsocketMultiplayerConnection = %GatewayServer
 

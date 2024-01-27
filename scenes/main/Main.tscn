@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dd2r6bxk2js2g" path="res://components/connection/ServerFSM/ServerFSMRPC.tscn" id="4_ejj7u"]
 [ext_resource type="PackedScene" uid="uid://dcur4xolp0oia" path="res://components/connection/ServerFSM/ServerFSM.tscn" id="5_uiu1q"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node"]
 script = ExtResource("1_et6n2")
 config = ExtResource("2_xw268")
 
@@ -23,6 +23,11 @@ unique_name_in_owner = true
 
 [node name="ServerClient" parent="Connections" instance=ExtResource("3_ns7hw")]
 unique_name_in_owner = true
+
+[node name="ServerFsm" parent="." node_paths=PackedStringArray("_server_gateway_client", "_server_client_server") instance=ExtResource("5_uiu1q")]
+unique_name_in_owner = true
+_server_gateway_client = NodePath("../Connections/GatewayServer")
+_server_client_server = NodePath("../Connections/ServerClient")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -73,8 +78,3 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "3 - Run as Client"
 alignment = 0
-
-[node name="ServerFsm" parent="." node_paths=PackedStringArray("_server_gateway_client", "_server_client_server") instance=ExtResource("5_uiu1q")]
-unique_name_in_owner = true
-_server_gateway_client = NodePath("../Connections/GatewayServer")
-_server_client_server = NodePath("../Connections/ServerClient")

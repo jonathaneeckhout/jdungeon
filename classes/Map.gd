@@ -4,8 +4,81 @@ class_name Map
 
 @export var multiplayer_connection: MultiplayerConnection = null
 
-## The scene used for this map
-@export var player_scene: Resource = null
+@export var map_to_sync: Node2D
+@export var enemies_to_sync: Node2D
+@export var npcs_to_sync: Node2D
+@export var player_respawn_locations: Node2D
+@export var portals_to_sync: Node2D
+
+var players: Node2D
+var enemies: Node2D
+var npcs: Node2D
+var items: Node2D
+var enemy_respawns: Node2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	multiplayer_connection.map = self
+
+	var synced_entities = Node2D.new()
+	synced_entities.name = "SyncedEntities"
+	synced_entities.y_sort_enabled = true
+	add_child(synced_entities)
+
+	players = Node2D.new()
+	players.name = "Players"
+	players.y_sort_enabled = true
+	synced_entities.add_child(players)
+
+	enemies = Node2D.new()
+	enemies.name = "Enemies"
+	enemies.y_sort_enabled = true
+	synced_entities.add_child(enemies)
+
+	npcs = Node2D.new()
+	npcs.name = "NPCs"
+	npcs.y_sort_enabled = true
+	synced_entities.add_child(npcs)
+
+	items = Node2D.new()
+	items.name = "Items"
+	items.y_sort_enabled = true
+	synced_entities.add_child(items)
+
+	# Remove map from entities to make sure it takes part of the ysort mechanics
+	map_to_sync.get_parent().remove_child(map_to_sync)
+	synced_entities.add_child(map_to_sync)
+	map_to_sync.name = "Map"
+
+	portals_to_sync.get_parent().remove_child(portals_to_sync)
+	synced_entities.add_child(portals_to_sync)
+	portals_to_sync.name = "Portals"
+
+	load_enemies()
+	load_npcs()
+
+
+func load_enemies():
+	for enemy in enemies_to_sync.get_children():
+		enemy.get_parent().remove_child(enemy)
+
+		if multiplayer_connection.is_server():
+			enemy.name = str(enemy.get_instance_id())
+			enemies.add_child(enemy)
+
+	enemies_to_sync.queue_free()
+
+
+func load_npcs():
+	for npc in npcs_to_sync.get_children():
+		npc.get_parent().remove_child(npc)
+
+		if multiplayer_connection.is_server():
+			npc.name = str(npc.get_instance_id())
+			npcs.add_child(npc)
+
+	npcs_to_sync.queue_free()
 
 # @export var respawn_locations: Node3D = null
 
@@ -18,7 +91,6 @@ class_name Map
 # var client_decorations: Node = null
 
 # var _player_spawn_synchronizer: PlayerSpawnerSynchronizer = null
-
 
 # func _ready():
 # 	multiplayer_connection.map = self
@@ -40,7 +112,6 @@ class_name Map
 # 	client_decorations.name = "ClientDecorations"
 # 	add_child(client_decorations)
 
-
 # func map_init() -> bool:
 # 	# Common code
 # 	_player_spawn_synchronizer = (multiplayer_connection.component_list.get_component(
@@ -61,7 +132,6 @@ class_name Map
 # 		_player_spawn_synchronizer.client_player_removed.connect(_on_client_player_removed)
 # 	return true
 
-
 # func get_random_spawn_location():
 # 	# Get how many respawn locations there are in this map
 # 	var number_of_respawn_location: int = respawn_locations.get_child_count()
@@ -77,11 +147,9 @@ class_name Map
 # 	# Return the position of this random respawn location
 # 	return random_spawn_location.position
 
-
 # ## Return an player by it's name if it doesn't exist it will return null
 # func get_player_by_name(player_name: String) -> Player:
 # 	return players.get_node_or_null(player_name)
-
 
 # func _on_server_player_added(username: String, peer_id: int):
 # 	# Fetch the user from the connection list
@@ -107,7 +175,6 @@ class_name Map
 # 		new_player.peer_id, new_player.name, new_player.position, true
 # 	)
 
-
 # func _on_server_player_removed(username: String):
 # 	# Try to get the player with the given username
 # 	var player: Player = players.get_node_or_null(username)
@@ -123,7 +190,6 @@ class_name Map
 
 # 	# Queue the player for deletions
 # 	player.queue_free()
-
 
 # func _on_client_player_added(username: String, pos: Vector3, own_player: bool):
 # 	if players.has_node(username):
@@ -142,7 +208,6 @@ class_name Map
 
 # 	# Add the player to the world
 # 	players.add_child(new_player)
-
 
 # func _on_client_player_removed(username: String):
 # 	# Try to get the player with the given username
