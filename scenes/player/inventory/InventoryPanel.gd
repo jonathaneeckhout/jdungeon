@@ -6,11 +6,20 @@ const DEFAULT_FONT: Font = preload("res://addons/gut/fonts/LobsterTwo-Regular.tt
 
 @export var item: Item:
 	set(new_item):
+		if item is Item and item.amount_changed.is_connected(on_item_amount_changed):
+				item.amount_changed.disconnect(on_item_amount_changed)
+				
 		item = new_item
-		if item:
+		
+		if item is Item:
+			if not item.amount_changed.is_connected(on_item_amount_changed):
+				item.amount_changed.connect(on_item_amount_changed)		
 			$TextureRect.texture = item.get_node("Icon").texture
 		else:
+			
 			$TextureRect.texture = null
+			
+		queue_redraw()
 
 @onready var inventory: Inventory = $"../.."
 @onready var drag_panel = $"../../DragPanel"
@@ -42,6 +51,9 @@ func _ready():
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 
+
+
+	
 
 func _draw():
 	if item is Item:
@@ -86,3 +98,7 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	inventory.mouse_above_this_panel = null
+
+
+func on_item_amount_changed(item: Item, amount: int):
+	queue_redraw()

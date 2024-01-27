@@ -7,3 +7,4 @@ func _init():
 	item_class = "HealthPotion"
 	item_type = ITEM_TYPE.CONSUMABLE
 	boost.hp = 25
+	amount_max = 6
