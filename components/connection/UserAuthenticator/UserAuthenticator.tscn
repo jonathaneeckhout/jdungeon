@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://54dubbwkcos4"]
+
+[ext_resource type="Script" path="res://components/connection/UserAuthenticator/UserAuthenticator.gd" id="1_263am"]
+
+[node name="UserAuthenticator" type="Node"]
+script = ExtResource("1_263am")

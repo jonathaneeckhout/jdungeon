@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dcur4xolp0oia"]
+
+[ext_resource type="Script" path="res://components/connection/ServerFSM/ServerFSM.gd" id="1_7xjjv"]
+
+[node name="ServerFsm" type="Node"]
+script = ExtResource("1_7xjjv")

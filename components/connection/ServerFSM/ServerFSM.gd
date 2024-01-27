@@ -7,10 +7,16 @@ class_name ServerFSM
 ## CONNECT: Try to connect and authenticate to the gateway server
 ## STARTL: Start the gameserver
 ## RUNNING: The gameserver is operational and running
-enum STATES { INIT, CONNECT, RUNNING, START }
+enum STATES { IDLE, INIT, CONNECT, RUNNING, START }
 
 ## The time before the server tries to reconnect to the gateway server
 const RETRY_TIME: int = 10.0
+
+@export var _server_gateway_client: WebsocketMultiplayerConnection = null
+
+@export var _server_client_server: WebsocketMultiplayerConnection = null
+
+@export var config: Resource = null
 
 ## The current state in which the fsm is in
 @export var state: STATES = STATES.INIT
@@ -18,8 +24,10 @@ const RETRY_TIME: int = 10.0
 ## The name of the map that will be used on the server
 var map_name: String = ""
 
+var _server_fsm_rpc: ServerFSMRPC = null
+
 # The world for the server
-var _world: World = null
+var _map: Map = null
 
 # Timer used to retry the connection towards the gateway server
 var _retry_timer: Timer
@@ -29,6 +37,14 @@ var _init_done: bool = false
 
 
 func _ready():
+	# Get the ClockSynchronizer component.
+	_server_fsm_rpc = _server_gateway_client.component_list.get_component(
+		ServerFSMRPC.COMPONENT_NAME
+	)
+
+	# Ensure the ServerFSMRPC component is present
+	assert(_server_fsm_rpc != null, "Failed to get ServerFSMRPC component")
+
 	# Create and add the retry timer
 	_retry_timer = Timer.new()
 	_retry_timer.name = "RetryTimer"
@@ -39,9 +55,13 @@ func _ready():
 	add_child(_retry_timer)
 
 	# Connect to the server connected signal to know if the connection succeeded
-	S.server_connected.connect(_on_server_connected)
+	_server_gateway_client.client_connected.connect(_on_gateway_client_connected)
 
 	# Trigger the fsm, starting with the INIT state
+	_fsm.call_deferred(STATES.IDLE)
+
+
+func start():
 	_fsm.call_deferred(STATES.INIT)
 
 
@@ -54,6 +74,8 @@ func _fsm(new_state: STATES):
 		state = new_state
 
 	match state:
+		STATES.IDLE:
+			pass
 		STATES.INIT:
 			_handle_init()
 
@@ -70,7 +92,7 @@ func _fsm(new_state: STATES):
 # Handle the INIT state
 func _handle_init():
 	# Init the client side for the gateway server
-	if not S.client_init():
+	if not _server_gateway_client.websocket_client_init():
 		GodotLogger.error("Failed to init the client for the gateway server, quitting")
 
 		# Stop the game if init fails
@@ -78,19 +100,20 @@ func _handle_init():
 		return
 
 	# Init the gameserver server-side
-	if not G.server_init():
+	if not _server_client_server.websocket_server_init():
 		GodotLogger.error("Failed to init gameserver, quitting")
 
 		# Stop the game if init fails
 		get_tree().quit()
 		return
 
+	# TODO: rework this
 	# Instantiate the world scene
-	_world = J.map_scenes[map_name].instantiate()
-	# Set the name
-	_world.name = map_name
-	# Add it to the Root scene (which is the parent of this script)
-	get_parent().add_child(_world)
+	# _world = J.map_scenes[map_name].instantiate()
+	# # Set the name
+	# _world.name = map_name
+	# # Add it to the Root scene (which is the parent of this script)
+	# get_parent().add_child(_world)
 
 	# Set the flag used to check if the init is done
 	_init_done = true
@@ -119,11 +142,12 @@ func _handle_connect():
 
 func _handle_start():
 	# Start the gameserver server
-	if not G.server_start(
-		Global.env_server_port,
-		Global.env_server_max_peers,
-		Global.env_server_crt,
-		Global.env_server_key
+	if not _server_client_server.websocket_server_start(
+		config.server_client_server_port,
+		config.server_client_server_bind_address,
+		config.use_tls,
+		config.server_client_certh_path,
+		config.server_client_key_path
 	):
 		GodotLogger.error("Failed to start DTLS gameserver, quitting")
 
@@ -137,52 +161,38 @@ func _handle_start():
 
 # Handle the RUNNING state
 func _handle_state_running():
-	GodotLogger.info("Server successfully started on port %d" % Global.env_server_port)
+	GodotLogger.info("Server successfully started on port %d" % config.server_client_server_port)
 
 
 # Connect to the gateway server
 func _connect_to_gateway() -> bool:
 	# Try to connect to the gateway server
-	if !S.client_connect(Global.env_gateway_address, Global.env_gateway_server_port):
-		GodotLogger.warn(
-			(
-				"Could not connect to gateway=[%s] on port=[%d]"
-				% [Global.env_gateway_address, Global.env_gateway_server_port]
-			)
-		)
+	if !_server_gateway_client.websocket_client_start(config.server_gateway_client_address):
+		GodotLogger.warn("Could not connect to gateway=[%s]" % config.server_gateway_client_address)
+
 		return false
 
 	# Wait until you receive the server_connected signal
-	if !await S.server_connected:
-		GodotLogger.warn(
-			(
-				"Could not connect to gateway=[%s] on port=[%d]"
-				% [Global.env_gateway_address, Global.env_gateway_server_port]
-			)
-		)
+	if !await _server_gateway_client.client_connected:
+		GodotLogger.warn("Could not connect to gateway=[%s]" % config.server_gateway_client_address)
 		return false
 
-	GodotLogger.info(
-		(
-			"Connected to gateway=[%s] on port=[%d]"
-			% [Global.env_gateway_address, Global.env_gateway_server_port]
-		)
-	)
+	GodotLogger.info("Connected to gateway=[%s]" % config.server_gateway_client_address)
 
+	# TODO: rework this
 	# Get the portal information from the world
-	var portals_info: Dictionary = _world.get_portal_information()
+	# var portals_info: Dictionary = _world.get_portal_information()
+	var portals_info: Dictionary = {}
 
 	# Register the server at the gateway server
-	S.server_rpc.register_server.rpc_id(
-		1, _world.name, Global.env_server_address, Global.env_server_port, portals_info
-	)
+	_server_fsm_rpc.register_server(map_name, config.client_server_client_address, portals_info)
 
 	# If it failed, disconnect.
-	if not await S.server_rpc.server_registered:
+	if not await _server_fsm_rpc.server_registered:
 		GodotLogger.warn("Failed to register to the gateway server")
 
 		# Disconnect from the gateway server
-		S.client_disconnect()
+		_server_gateway_client.websocket_client_disconnect()
 
 		return false
 
@@ -192,6 +202,8 @@ func _connect_to_gateway() -> bool:
 ## Converts the state enum value to a string value
 func state_to_string(to_string_state: STATES) -> String:
 	match to_string_state:
+		STATES.IDLE:
+			return "Idle"
 		STATES.INIT:
 			return "Init"
 		STATES.CONNECT:
@@ -209,7 +221,7 @@ func _on__retry_timer_timeout():
 	_fsm.call_deferred(STATES.CONNECT)
 
 
-func _on_server_connected(connected: bool):
+func _on_gateway_client_connected(connected: bool):
 	if state == STATES.RUNNING and not connected:
 		GodotLogger.info("Disconnected from gateway server, starting retry timer")
 

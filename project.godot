@@ -11,19 +11,14 @@ config_version=5
 [application]
 
 config/name="Jdungeon"
-run/main_scene="res://scenes/root/Root.tscn"
-config/features=PackedStringArray("4.2", "C#", "GL Compatibility")
+run/main_scene="res://scenes/main/Main.tscn"
+config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GodotLogger="*res://addons/logger/logger.gd"
-Global="*res://scripts/singletons/global.gd"
 J="*res://scripts/singletons/jdungeon.gd"
-G="*res://scripts/singletons/gameserver.gd"
-C="*res://scripts/singletons/clientgateway.gd"
-S="*res://scripts/singletons/servergateway.gd"
-JUI="*res://scripts/singletons/jui.gd"
 
 [debug]
 
@@ -48,6 +43,7 @@ enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/logger/pl
 folder_colors={
 "res://addons/": "gray",
 "res://assets/": "yellow",
+"res://components/": "green",
 "res://data/": "gray",
 "res://docker/": "pink",
 "res://documentation/": "gray",

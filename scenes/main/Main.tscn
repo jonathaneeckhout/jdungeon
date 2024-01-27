@@ -1,0 +1,80 @@
+[gd_scene load_steps=7 format=3 uid="uid://dhlwuon2arb14"]
+
+[ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
+[ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
+[ext_resource type="Resource" uid="uid://chbdptl7ubxyj" path="res://resources/DevelopmentConfigResource.tres" id="2_xw268"]
+[ext_resource type="PackedScene" uid="uid://bldyf3iyb7r6n" path="res://components/connection/WebsocketMultiplayerConnection/WebsocketMultiplayerConnection.tscn" id="3_ns7hw"]
+[ext_resource type="PackedScene" uid="uid://dd2r6bxk2js2g" path="res://components/connection/ServerFSM/ServerFSMRPC.tscn" id="4_ejj7u"]
+[ext_resource type="PackedScene" uid="uid://dcur4xolp0oia" path="res://components/connection/ServerFSM/ServerFSM.tscn" id="5_uiu1q"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_et6n2")
+config = ExtResource("2_xw268")
+
+[node name="Connections" type="Node" parent="."]
+
+[node name="GatewayServer" parent="Connections" instance=ExtResource("3_ns7hw")]
+unique_name_in_owner = true
+
+[node name="SFR" parent="Connections/GatewayServer" instance=ExtResource("4_ejj7u")]
+
+[node name="GatewayClient" parent="Connections" instance=ExtResource("3_ns7hw")]
+unique_name_in_owner = true
+
+[node name="ServerClient" parent="Connections" instance=ExtResource("3_ns7hw")]
+unique_name_in_owner = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="SelectRunMode" type="Control" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Background" type="TextureRect" parent="UI/SelectRunMode"]
+layout_mode = 0
+offset_right = 1922.0
+offset_bottom = 1080.0
+texture = ExtResource("2_56s56")
+
+[node name="PanelContainer" type="PanelContainer" parent="UI/SelectRunMode"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 863.0
+offset_top = 469.5
+offset_right = 1017.0
+offset_bottom = 570.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/SelectRunMode/PanelContainer"]
+layout_mode = 2
+
+[node name="RunAsGatewayButton" type="Button" parent="UI/SelectRunMode/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "1 - Run as Gateway"
+alignment = 0
+
+[node name="RunAsServerButton" type="Button" parent="UI/SelectRunMode/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "2 - Run as Server"
+alignment = 0
+
+[node name="RunAsClientButton" type="Button" parent="UI/SelectRunMode/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "3 - Run as Client"
+alignment = 0
+
+[node name="ServerFsm" parent="." node_paths=PackedStringArray("_server_gateway_client", "_server_client_server") instance=ExtResource("5_uiu1q")]
+unique_name_in_owner = true
+_server_gateway_client = NodePath("../Connections/GatewayServer")
+_server_client_server = NodePath("../Connections/ServerClient")
