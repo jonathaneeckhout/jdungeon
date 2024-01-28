@@ -30,12 +30,17 @@ var original_direction: bool = true
 func _ready():
 	target_node = get_parent()
 
-	if G.is_server():
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
+	if target_node.multiplayer_connection.is_server():
 		queue_free()
 		return
 
 	# This component only handles other players
-	if target_node.get("peer_id") != null and G.is_own_player(target_node):
+	if (
+		target_node.get("peer_id") != null
+		and target_node.multiplayer_connection.is_own_player(target_node)
+	):
 		queue_free()
 		return
 

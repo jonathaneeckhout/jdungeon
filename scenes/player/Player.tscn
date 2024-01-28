@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://scripts/components/player/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="10_6gj4a"]
 [ext_resource type="PackedScene" uid="uid://bvkfby4kxvrh4" path="res://scripts/components/player/playerinteractioncomponent/PlayerInteractionComponent.tscn" id="10_76mfl"]
 [ext_resource type="PackedScene" uid="uid://cj1os37u6hrpv" path="res://scripts/components/player/playersynchronizer/PlayerSynchronizer.tscn" id="10_bajlk"]
-[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="11_2wc1v"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="11_2wc1v"]
 [ext_resource type="PackedScene" uid="uid://cka62nlyw5gm5" path="res://scripts/components/player/equipmentsynchronizercomponent/EquipmentSynchronizerComponent.tscn" id="12_5ivre"]
 [ext_resource type="PackedScene" uid="uid://uord7b0pb5jt" path="res://scenes/player/inventory/Inventory.tscn" id="12_cqvu1"]
 [ext_resource type="PackedScene" uid="uid://bqsq7rd0h4l03" path="res://scripts/components/player/skillcomponent/SkillComponent.tscn" id="12_hce3e"]

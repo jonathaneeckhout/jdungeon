@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="4_jq4vr"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="6_7nn8c"]
 [ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://scripts/components/networking/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="7_b43t0"]
-[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="7_kfsbv"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="7_kfsbv"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="9_3kap7"]
 [ext_resource type="Texture2D" uid="uid://d3bki65r7slmw" path="res://assets/images/npcs/milklady/scaled/milklady_whole.png" id="11_lg4rx"]
 [ext_resource type="Texture2D" uid="uid://gwalcp3d24vg" path="res://assets/images/npcs/milklady/scaled/milklady_right_arm.png" id="12_ky2ex"]

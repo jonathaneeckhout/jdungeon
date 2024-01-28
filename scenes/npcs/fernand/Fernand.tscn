@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_1rkqu"]
 [ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="5_ogec5"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="6_cwl5p"]
-[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="7_tx6ks"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="7_tx6ks"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="8_yx887"]
 [ext_resource type="Texture2D" uid="uid://copwvxy8ippdm" path="res://assets/images/npcs/oldman/scaled/Body.png" id="9_5x3o0"]
 [ext_resource type="Texture2D" uid="uid://db4to6tp1m2mg" path="res://assets/images/npcs/oldman/scaled/Forearm.png" id="10_7ascr"]
