@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://bsauq1smmlnkl"]
+[gd_scene load_steps=26 format=3 uid="uid://bsauq1smmlnkl"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Ladybug/Ladybug.gd" id="1_kxhsd"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="1_q6d72"]
@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="7_tstyb"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="8_0qsyc"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://components/common/interfacecomponent/InterfaceComponent.tscn" id="9_td36y"]
-[ext_resource type="PackedScene" uid="uid://cjkhsifuk2une" path="res://scripts/components/networking/statuseffectcomponent/StatusEffectComponent.tscn" id="10_cm3kp"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="10_j2kad"]
 [ext_resource type="Texture2D" uid="uid://cqg88k6138b4k" path="res://assets/images/enemies/ladybug/scaled/Back wing cover.png" id="12_7lv0i"]
 [ext_resource type="Texture2D" uid="uid://cmqj7o6ykxgdh" path="res://assets/images/enemies/ladybug/scaled/Back wing.png" id="13_said4"]
@@ -646,8 +645,10 @@ stats_component = NodePath("../StatsSynchronizerComponent")
 max_wander_distance = 512.0
 flee_speed_boost = 1.5
 
-[node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("5_liyjx")]
-stats = NodePath("../StatsSynchronizerComponent")
+[node name="LootComponent" parent="." instance=ExtResource("5_liyjx")]
+stats = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":Resource("res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.gd"),"watcher_synchronizer":Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":false,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":Resource("res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.gd"),"network_visible_area_size":1.0)
+,"hp_max":20,"hp":20,"energy_max":100,"energy":null,"energy_regen":10,"attack_power_min":0,"attack_power_max":5,"attack_speed":0.8,"attack_range":64.0,"defense":0,"movement_speed":128.0,"level":1,"experience":0,"experience_needed":100,"experience_worth":10,"_default_hp_max":100,"_default_energy_max":100,"_default_energy_regen":5,"_default_attack_power_min":0,"_default_attack_power_max":5,"_default_defense":0,"_default_movement_speed":300.0)
+
 
 [node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_hxky4")]
 stats = NodePath("../StatsSynchronizerComponent")
@@ -658,10 +659,6 @@ skeleton = NodePath("../Skeleton")
 [node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats") instance=ExtResource("8_0qsyc")]
 animation_player = NodePath("../AnimationPlayer")
 stats = NodePath("../StatsSynchronizerComponent")
-
-[node name="StatusEffectComponent" parent="." node_paths=PackedStringArray("user", "stats_component") instance=ExtResource("10_cm3kp")]
-user = NodePath("..")
-stats_component = NodePath("../StatsSynchronizerComponent")
 
 [node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("9_td36y")]
 offset_top = -30.0

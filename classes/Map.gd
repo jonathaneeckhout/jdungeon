@@ -108,6 +108,7 @@ func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn
 	respawn.enemy_class = enemy_class
 	respawn.respawn_position = respawn_position
 	respawn.respawn_time = respawn_time
+	respawn.map = self
 
 	enemy_respawns.add_child(respawn)
 

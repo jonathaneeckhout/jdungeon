@@ -5,6 +5,7 @@ class_name EnemyRespawn
 var enemy_class: String
 var respawn_position: Vector2
 var respawn_time: float
+var map: Map = null
 
 
 func _ready():
@@ -22,6 +23,6 @@ func _on_respawn_timer_timeout():
 	enemy.name = str(enemy.get_instance_id())
 	enemy.position = respawn_position
 
-	G.world.enemies.add_child(enemy)
+	map.enemies.add_child(enemy)
 
 	queue_free()
