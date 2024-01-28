@@ -107,13 +107,12 @@ func _handle_init():
 		get_tree().quit()
 		return
 
-	# TODO: rework this
 	# Instantiate the world scene
-	# _world = J.map_scenes[map_name].instantiate()
-	# # Set the name
-	# _world.name = map_name
-	# # Add it to the Root scene (which is the parent of this script)
-	# get_parent().add_child(_world)
+	_map = J.map_scenes[map_name].instantiate()
+	# Set the name
+	_map.name = map_name
+	# Add it to the Root scene (which is the parent of this script)
+	get_parent().add_child(_map)
 
 	# Set the flag used to check if the init is done
 	_init_done = true

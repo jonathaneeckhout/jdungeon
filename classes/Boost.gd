@@ -45,15 +45,6 @@ var defense: int = 0:
 
 
 func combine_boost(boost: Boost):
-	if Global.debug_mode:
-		if boost.identifier != NO_IDENTIFIER and identifier != NO_IDENTIFIER:
-			GodotLogger.info(
-				(
-					"Mixed 2 boosts with differing identifiers (Original '{0}' and incoming '{1}')"
-					. format([identifier, boost.identifier])
-				)
-			)
-
 	for stat: String in boost.stat_boost_dict:
 		add_stat_boost(stat, boost.get_stat_boost(stat))
 

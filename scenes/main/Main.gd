@@ -44,7 +44,7 @@ func _start_gateway():
 	GodotLogger.info("Running as Gateway")
 
 	%ServerClient.queue_free()
-	
+
 	%ServerFsm.queue_free()
 
 	%SelectRunMode.queue_free()
@@ -106,7 +106,12 @@ func _start_server():
 
 	%SelectRunMode.queue_free()
 
+	# Register all the scenes so that they can accesses via the J singleton in the rest of the project
+	J.register_scenes()
+
 	%ServerFsm.config = config
+	# Hardcore this value for now
+	%ServerFsm.map_name = "BaseCamp"
 	%ServerFsm.start()
 
 
@@ -121,10 +126,13 @@ func _start_client():
 	GodotLogger.info("Running as client")
 
 	%GatewayServer.queue_free()
-	
+
 	%ServerFsm.queue_free()
 
 	%SelectRunMode.queue_free()
+
+	# Register all the scenes so that they can accesses via the J singleton in the rest of the project
+	J.register_scenes()
 
 
 func _set_game_icon(icon: Texture, sub_icon: Texture = null):
