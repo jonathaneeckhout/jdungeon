@@ -11,6 +11,7 @@ func _ready():
 	npcs_to_sync = $Entities/NPCs
 	player_respawn_locations = $PlayerRespawnLocations
 	portals_to_sync = $Portals
+	areas_to_sync = $MapAreas
 
 	super()
 

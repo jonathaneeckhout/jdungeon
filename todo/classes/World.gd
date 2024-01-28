@@ -2,17 +2,20 @@ extends Node2D
 
 class_name World
 
-@export var map_to_sync: Node2D
-@export var enemies_to_sync: Node2D
-@export var npcs_to_sync: Node2D
-@export var player_respawn_locations: Node2D
-@export var portals_to_sync: Node2D
+@onready var map_to_sync: Node2D = $Entities/Map
+@onready var enemies_to_sync: Node2D = $Entities/Enemies
+@onready var npcs_to_sync: Node2D = $Entities/NPCs
+@onready var player_respawn_locations: Node2D = $PlayerRespawnLocations
+@onready var portals_to_sync: Node2D = $Portals
+@onready var areas_to_sync: Node2D = $MapAreas
+
 
 var players: Node2D
 var enemies: Node2D
 var npcs: Node2D
 var items: Node2D
 var enemy_respawns: Node2D
+var areas: Node2D
 
 var players_by_id = {}
 
@@ -43,6 +46,10 @@ func _ready():
 	items.name = "Items"
 	items.y_sort_enabled = true
 	synced_entities.add_child(items)
+	
+	areas = Node2D.new()
+	areas.name = "Areas"
+	synced_entities.add_child(areas)
 
 	if G.is_server():
 		G.player_rpc.player_logged_in.connect(_on_player_logged_in)
@@ -67,10 +74,11 @@ func _ready():
 
 	portals_to_sync.get_parent().remove_child(portals_to_sync)
 	synced_entities.add_child(portals_to_sync)
-	portals_to_sync.name = "Portals"
+	portals_to_sync.name = "Portals"	
 
 	load_enemies()
 	load_npcs()
+	load_areas()
 
 
 func load_enemies():
@@ -89,6 +97,15 @@ func load_npcs():
 
 		if G.is_server():
 			npcs.add_child(npc)
+
+
+func load_areas():
+	for area: MapArea2D in areas_to_sync.get_children():
+		area.name = str(area.get_instance_id())
+		area.get_parent().remove_child(area)
+		
+		areas.add_child(area)
+			
 
 
 func get_portal_information() -> Dictionary:
