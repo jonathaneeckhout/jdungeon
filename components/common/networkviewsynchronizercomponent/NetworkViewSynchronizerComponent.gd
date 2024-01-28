@@ -22,21 +22,36 @@ signal item_removed(item_uuid: String)
 var target_node: Node
 var bodies_in_view: Array[Node2D] = []
 
-var delay_timer: Timer
+# Reference to the NetworkViewSynchronizerRPC component for RPC calls.
+var _network_view_synchronizer_rpc: NetworkViewSynchronizerRPC = null
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	target_node = get_parent()
 
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	if target_node.get("component_list") != null:
 		target_node.component_list["networkview_synchronizer"] = self
+
+	# Get the NetworkViewSynchronizerRPC component.
+	_network_view_synchronizer_rpc = (
+		target_node
+		. multiplayer_connection
+		. component_list
+		. get_component(NetworkViewSynchronizerRPC.COMPONENT_NAME)
+	)
+
+	assert(
+		_network_view_synchronizer_rpc != null, "Failed to get NetworkViewSynchronizerRPC component"
+	)
 
 	if target_node.get("peer_id") == null:
 		GodotLogger.error("target_node does not have the peer_id variable")
 		return
 
-	if G.is_server():
+	if target_node.multiplayer_connection.is_server():
 		var cs_network_view_square = RectangleShape2D.new()
 		cs_network_view_square.size = Vector2(2048, 1208)
 
@@ -61,15 +76,20 @@ func _ready():
 		body_network_view_area.body_entered.connect(_on_body_network_view_area_body_entered)
 		body_network_view_area.body_exited.connect(_on_body_network_view_area_body_exited)
 
-	elif G.is_own_player(target_node):
-		# This timer is needed to give the client some time to setup its multiplayer connection
-		delay_timer = Timer.new()
-		delay_timer.name = "DelayTimer"
-		delay_timer.wait_time = 0.1
-		delay_timer.autostart = true
-		delay_timer.one_shot = true
-		delay_timer.timeout.connect(_on_delay_timer_timeout)
-		add_child(delay_timer)
+	elif target_node.multiplayer_connection.is_own_player(target_node):
+		# Wait until the connection is ready to synchronize stats.
+		if not target_node.multiplayer_connection.multiplayer_api.has_multiplayer_peer():
+			await target_node.multiplayer_connection.multiplayer_api.connected_to_server
+
+		# Wait an additional frame so others can get set.
+		await get_tree().process_frame
+
+		# Some entities take a bit to get added to the tree, do not update them until then.
+		if not is_inside_tree():
+			await tree_entered
+
+		# Synchronize bodies in view.
+		_network_view_synchronizer_rpc.sync_bodies_in_view()
 
 
 func handle_body(body: Node2D):
@@ -79,7 +99,7 @@ func handle_body(body: Node2D):
 				GodotLogger.info("Body does not contain username")
 				return
 
-			G.sync_rpc.networkviewsynchronizer_add_player.rpc_id(
+			_network_view_synchronizer_rpc.add_player(
 				target_node.peer_id, target_node.name, body.username, body.position
 			)
 			player_added.emit(body.username, body.position)
@@ -88,7 +108,7 @@ func handle_body(body: Node2D):
 				GodotLogger.info("Body does not contain enemy_class")
 				return
 
-			G.sync_rpc.networkviewsynchronizer_add_enemy.rpc_id(
+			_network_view_synchronizer_rpc.add_enemy(
 				target_node.peer_id, target_node.name, body.name, body.enemy_class, body.position
 			)
 			enemy_added.emit(body.name, body.enemy_class, body.position)
@@ -97,7 +117,7 @@ func handle_body(body: Node2D):
 				GodotLogger.info("Body does not contain npc_class")
 				return
 
-			G.sync_rpc.networkviewsynchronizer_add_npc.rpc_id(
+			_network_view_synchronizer_rpc.add_npc(
 				target_node.peer_id, target_node.name, body.name, body.npc_class, body.position
 			)
 			npc_added.emit(body.name, body.npc_class, body.position)
@@ -107,7 +127,7 @@ func handle_body(body: Node2D):
 				GodotLogger.info("Body does not contain item_class")
 				return
 
-			G.sync_rpc.networkviewsynchronizer_add_item.rpc_id(
+			_network_view_synchronizer_rpc.add_item(
 				target_node.peer_id, target_node.name, body.name, body.item_class, body.position
 			)
 			item_added.emit(body.name, body.item_class, body.position)
@@ -151,33 +171,28 @@ func _on_body_network_view_area_body_exited(body: Node2D):
 						return
 
 					player_removed.emit(body.username)
-					G.sync_rpc.networkviewsynchronizer_remove_player.rpc_id(
+					_network_view_synchronizer_rpc.remove_player(
 						target_node.peer_id, target_node.name, body.username
 					)
 				J.ENTITY_TYPE.ENEMY:
 					enemy_removed.emit(body.name)
-					G.sync_rpc.networkviewsynchronizer_remove_enemy.rpc_id(
+					_network_view_synchronizer_rpc.remove_enemy(
 						target_node.peer_id, target_node.name, body.name
 					)
 				J.ENTITY_TYPE.NPC:
 					npc_removed.emit(body.name)
-					G.sync_rpc.networkviewsynchronizer_remove_npc.rpc_id(
+					_network_view_synchronizer_rpc.remove_npc(
 						target_node.peer_id, target_node.name, body.name
 					)
 				J.ENTITY_TYPE.ITEM:
 					item_removed.emit(body.name)
-					G.sync_rpc.networkviewsynchronizer_remove_item.rpc_id(
+					_network_view_synchronizer_rpc.remove_item(
 						target_node.peer_id, target_node.name, body.name
 					)
 
 		bodies_in_view.erase(body)
 
 		body_exited.emit(body)
-
-
-func _on_delay_timer_timeout():
-	G.sync_rpc.networkviewsynchronizer_sync_bodies_in_view.rpc_id(1)
-	delay_timer.queue_free()
 
 
 func add_player(username: String, pos: Vector2):
