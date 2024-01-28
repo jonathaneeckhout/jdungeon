@@ -50,6 +50,8 @@ func _input(event):
 		if visible:
 			hide()
 		else:
+			update_inventory()
+			player.inventory.sync_inventory.rpc_id(1)
 			show()
 
 
@@ -68,12 +70,69 @@ func get_panel_at_pos(pos: Vector2) -> InventoryPanel:
 	return $GridContainer.get_node(panel_path)
 
 
+func get_panels(occupied_only: bool) -> Array[InventoryPanel]:
+	var output: Array[InventoryPanel] = []
+	var temp_arr: Array = []		
+	
+	if occupied_only:
+		for row: Array in panels:
+			for panel: InventoryPanel in row:
+				if panel.item is Item:
+					temp_arr.append(panel)
+	else:
+		for row: Array in panels:
+			temp_arr += row
+	
+	output.assign(temp_arr)
+	return output
+
+
 func swap_items(from: Panel, to: Panel):
 	var temp_item: Item = to.item
 
 	to.item = from.item
 	from.item = temp_item
 
+
+func update_inventory():
+	var occupied_panels: Array[InventoryPanel] = get_panels(true)
+	var panel_item_uuid_dictionary: Dictionary = {}
+	var panels_with_invalid_items: Dictionary = {}
+	
+	#Ensure all panels have an item
+	assert(
+		occupied_panels.all( 
+			func(panel_occupied: InventoryPanel):
+				return panel_occupied.item is Item
+				)
+		)
+	
+	#Store the uuid of the item that each panel has to accelerate the rest of the update.
+	for panel: InventoryPanel in occupied_panels:
+		panel_item_uuid_dictionary[panel.item.uuid] = panel
+	
+	#All panels are assumed invalid until proven otherwise.
+	panels_with_invalid_items = panel_item_uuid_dictionary.duplicate()
+		
+	#Check every inventory item
+	for inv_item: Item in player.inventory.items:
+		
+		#Unmark as invalid those who have been found in the inventory
+		panels_with_invalid_items.erase(inv_item.uuid)
+		
+		#No item with this uuid has been found in the displayed inventory, add it.
+		if not inv_item.uuid in panel_item_uuid_dictionary.keys():
+			place_item_at_free_slot(inv_item)
+		
+		else:
+			#Item found, update it.
+			panel_item_uuid_dictionary[inv_item.uuid].item = inv_item
+			panel_item_uuid_dictionary[inv_item.uuid].queue_redraw()
+			
+	#Clear any panels with items that are NOT in the inventory
+	for item_uuid: String in panels_with_invalid_items:
+		panels_with_invalid_items[item_uuid].item = null
+		
 
 func place_item_at_free_slot(item: Item) -> bool:
 	for y in range(SIZE.y):
@@ -82,6 +141,7 @@ func place_item_at_free_slot(item: Item) -> bool:
 			var panel: InventoryPanel = get_panel_at_pos(pos)
 			if panel.item == null:
 				panel.item = item
+				panel.queue_redraw()
 				return true
 	return false
 
