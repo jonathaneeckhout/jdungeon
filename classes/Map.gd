@@ -55,6 +55,11 @@ func _ready():
 	synced_entities.add_child(portals_to_sync)
 	portals_to_sync.name = "Portals"
 
+	if multiplayer_connection.is_server():
+		enemy_respawns = Node2D.new()
+		enemy_respawns.name = "EnemyRespawns"
+		synced_entities.add_child(enemy_respawns)
+
 	_load_enemies()
 	_load_npcs()
 
@@ -96,6 +101,15 @@ func get_entity_by_name(entity_name: String) -> Node:
 
 	entity = items.get_node_or_null(entity_name)
 	return entity
+
+
+func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn_time: float):
+	var respawn: EnemyRespawn = EnemyRespawn.new()
+	respawn.enemy_class = enemy_class
+	respawn.respawn_position = respawn_position
+	respawn.respawn_time = respawn_time
+
+	enemy_respawns.add_child(respawn)
 
 # @export var respawn_locations: Node3D = null
 

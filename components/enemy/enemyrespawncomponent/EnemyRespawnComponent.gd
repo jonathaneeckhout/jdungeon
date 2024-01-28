@@ -15,6 +15,8 @@ var spawn_position: Vector2
 func _ready():
 	target_node = get_parent()
 
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	if target_node.get("position") == null:
 		GodotLogger.error("target_node does not have the position variable")
 		return
@@ -23,7 +25,7 @@ func _ready():
 		GodotLogger.error("target_node does not have the enemy_class variable")
 		return
 
-	if not G.is_server():
+	if not target_node.multiplayer_connection.is_server():
 		return
 
 	spawn_position = target_node.position
@@ -47,6 +49,8 @@ func _on_died():
 
 func _on_despawn_timer_timeout():
 	if should_respawn:
-		G.world.queue_enemy_respawn(target_node.enemy_class, spawn_position, respawn_time)
+		target_node.multiplayer_connection.map.queue_enemy_respawn(
+			target_node.enemy_class, spawn_position, respawn_time
+		)
 
 	target_node.queue_free()

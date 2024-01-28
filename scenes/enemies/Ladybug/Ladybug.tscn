@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="3_hr36v"]
 [ext_resource type="PackedScene" uid="uid://d2ippv4gqf6as" path="res://scripts/components/behaviors/fleeandwanderbehaviorcomponent/FleeAndWanderBehaviorCopmonent.tscn" id="4_2pd3h"]
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://scripts/components/enemy/lootcomponent/LootComponent.tscn" id="5_liyjx"]
-[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_hxky4"]
+[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_hxky4"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="7_tstyb"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="8_0qsyc"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="9_td36y"]
