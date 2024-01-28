@@ -47,7 +47,10 @@ func add_npc(peer_id: int, entity_name: String, npc_name: String, npc_class: Str
 func remove_npc(peer_id: int, entity_name: String, npc_name: String):
 	_remove_npc.rpc_id(peer_id, entity_name, npc_name)
 
-func add_item(peer_id: int, entity_name: String, item_name: String, item_class: String, pos: Vector2):
+
+func add_item(
+	peer_id: int, entity_name: String, item_name: String, item_class: String, pos: Vector2
+):
 	_add_item.rpc_id(peer_id, entity_name, item_name, item_class, pos)
 
 
