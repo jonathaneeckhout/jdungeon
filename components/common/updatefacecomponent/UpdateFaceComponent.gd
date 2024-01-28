@@ -19,17 +19,24 @@ func _ready():
 	# Disable the physics process until the ready function is done
 	set_physics_process(false)
 
+	target_node = get_parent()
+
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	# This component should not run on the server
-	if G.is_server():
+	if target_node.multiplayer_connection.is_server():
 		queue_free()
 		return
 
-	target_node = get_parent()
 	original_scale = skeleton.scale
 	last_scale = original_scale
 	_prev_pos = target_node.position
 
-	if player_synchronizer and target_node.get("peer_id") != null and G.is_own_player(target_node):
+	if (
+		player_synchronizer
+		and target_node.get("peer_id") != null
+		and target_node.multiplayer_connection.is_own_player(target_node)
+	):
 		player_synchronizer.attacked.connect(_on_attacked)
 	if action_synchronizer:
 		action_synchronizer.attacked.connect(_on_attacked)
