@@ -650,3 +650,6 @@ func _on_energy_regen_timer_timeout():
 
 	if energy != energy_max:
 		energy_recovery(target_node.get_name(), energy_regen)
+	
+	if hp != hp_max and MapArea2D.is_rule_active_at(target_node.global_position, MapArea2D.Rules.SAFE):
+		heal(target_node.get_name(), hp_max * 0.05)
