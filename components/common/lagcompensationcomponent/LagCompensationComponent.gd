@@ -28,8 +28,10 @@ func _ready():
 	# Get the parent node
 	_target_node = get_parent()
 
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	# This component should only run on the server-side
-	if !G.is_server():
+	if not _target_node.multiplayer_connection.is_server():
 		queue_free()
 		return
 

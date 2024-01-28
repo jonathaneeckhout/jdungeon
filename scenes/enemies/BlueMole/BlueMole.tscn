@@ -18,7 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://co2tfr6eu3uiv" path="res://assets/images/enemies/bluemole/scaled/Leg2.png" id="13_tm3ud"]
 [ext_resource type="Texture2D" uid="uid://dlfyjrvttoahx" path="res://assets/images/enemies/bluemole/scaled/Shovel.png" id="14_x18vp"]
 [ext_resource type="PackedScene" uid="uid://olha5mwr7hcr" path="res://components/common/hitparticlescomponent/HitParticlesComponent.tscn" id="19_ox7m0"]
-[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.tscn" id="20_cfx77"]
+[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://components/common/lagcompensationcomponent/LagCompensationComponent.tscn" id="20_cfx77"]
 
 [sub_resource type="Animation" id="Animation_avu8m"]
 resource_name = "Attack"
@@ -1078,9 +1078,8 @@ visible = false
 position = Vector2(0, -27)
 shape = SubResource("CapsuleShape2D_jt1yq")
 
-[node name="LagCompensationComponent" parent="." instance=ExtResource("20_cfx77")]
-hurt_box = Object(CollisionShape2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":false,"top_level":false,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, -27),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"shape":SubResource("CapsuleShape2D_jt1yq"),"disabled":false,"one_way_collision":false,"one_way_collision_margin":1.0,"script":null)
-
+[node name="LagCompensationComponent" parent="." node_paths=PackedStringArray("hurt_box") instance=ExtResource("20_cfx77")]
+hurt_box = NodePath("../HurtArea/HurtBox")
 
 [node name="AggroArea" type="Area2D" parent="."]
 visible = false

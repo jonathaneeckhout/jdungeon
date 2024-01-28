@@ -18,7 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://i4vljsobr55n" path="res://assets/images/enemies/ladybug/scaled/Front wing .png" id="15_c82sp"]
 [ext_resource type="Texture2D" uid="uid://d4aqsuh5byrfw" path="res://assets/images/enemies/ladybug/scaled/Front wing cover.png" id="16_ojdru"]
 [ext_resource type="Texture2D" uid="uid://ddmucq5q8m31c" path="res://assets/images/enemies/ladybug/scaled/Head.png" id="17_q6yn7"]
-[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.tscn" id="19_bayn0"]
+[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://components/common/lagcompensationcomponent/LagCompensationComponent.tscn" id="19_bayn0"]
 
 [sub_resource type="Animation" id="Animation_xb7x5"]
 resource_name = "Die"

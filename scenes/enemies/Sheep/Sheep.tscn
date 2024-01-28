@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="8_wd6jv"]
 [ext_resource type="PackedScene" uid="uid://cjkhsifuk2une" path="res://scripts/components/networking/statuseffectcomponent/StatusEffectComponent.tscn" id="10_ldqij"]
 [ext_resource type="Texture2D" uid="uid://djed5baiwoimr" path="res://assets/images/enemies/sheep/scaled/sheep.png" id="11_l0562"]
-[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.tscn" id="14_ikli0"]
+[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://components/common/lagcompensationcomponent/LagCompensationComponent.tscn" id="14_ikli0"]
 
 [sub_resource type="Animation" id="Animation_itymv"]
 resource_name = "Die"
