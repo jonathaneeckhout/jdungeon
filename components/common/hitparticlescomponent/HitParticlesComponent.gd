@@ -15,13 +15,15 @@ var _target_node: Node = null
 
 
 func _ready():
+	_target_node = get_parent()
+
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	# This component should not run on the server
-	if G.is_server():
+	if _target_node.multiplayer_connection.is_server():
 		set_physics_process(false)
 		queue_free()
 		return
-
-	_target_node = get_parent()
 
 	# The position is needed to calculate the angle of the particles
 	if _target_node.get("position") == null:
@@ -34,7 +36,7 @@ func _ready():
 
 func _on_got_hurt(from: String, _damage: int):
 	# Fetch the attacker using the name
-	var attacker = G.world.get_entity_by_name(from)
+	var attacker = _target_node.multiplayer_connection.map.get_entity_by_name(from)
 
 	# Only emit the particles if the attacker exist
 	if attacker != null:

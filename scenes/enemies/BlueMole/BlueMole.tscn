@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://cgxevug65fx3d"]
+[gd_scene load_steps=30 format=3 uid="uid://cgxevug65fx3d"]
 
 [ext_resource type="Script" path="res://scenes/enemies/BlueMole/BlueMole.gd" id="1_0kuqc"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_7anrd"]
@@ -7,18 +7,17 @@
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="5_luahv"]
 [ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="6_lv1v7"]
 [ext_resource type="PackedScene" uid="uid://d3pv4rqlo3xh7" path="res://components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.tscn" id="7_7litw"]
-[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="7_qev5w"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://components/common/interfacecomponent/InterfaceComponent.tscn" id="7_qev5w"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="8_pycdl"]
-[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="8_uad3u"]
+[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="8_uad3u"]
 [ext_resource type="Texture2D" uid="uid://ix4rovrd5tqg" path="res://assets/images/enemies/bluemole/scaled/Arm1.png" id="9_82elk"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="9_ot5ev"]
 [ext_resource type="Texture2D" uid="uid://xnjigwd7ta4k" path="res://assets/images/enemies/bluemole/scaled/Arm2.png" id="10_hd4po"]
-[ext_resource type="PackedScene" uid="uid://cjkhsifuk2une" path="res://scripts/components/networking/statuseffectcomponent/StatusEffectComponent.tscn" id="10_j4oql"]
 [ext_resource type="Texture2D" uid="uid://dqyouflmy1kq6" path="res://assets/images/enemies/bluemole/scaled/Body.png" id="11_6l74c"]
 [ext_resource type="Texture2D" uid="uid://d4bfefdngmd1y" path="res://assets/images/enemies/bluemole/scaled/Leg1.png" id="12_5o0li"]
 [ext_resource type="Texture2D" uid="uid://co2tfr6eu3uiv" path="res://assets/images/enemies/bluemole/scaled/Leg2.png" id="13_tm3ud"]
 [ext_resource type="Texture2D" uid="uid://dlfyjrvttoahx" path="res://assets/images/enemies/bluemole/scaled/Shovel.png" id="14_x18vp"]
-[ext_resource type="PackedScene" uid="uid://olha5mwr7hcr" path="res://scripts/components/common/hitparticlescomponent/HitParticlesComponent.tscn" id="19_ox7m0"]
+[ext_resource type="PackedScene" uid="uid://olha5mwr7hcr" path="res://components/common/hitparticlescomponent/HitParticlesComponent.tscn" id="19_ox7m0"]
 [ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.tscn" id="20_cfx77"]
 
 [sub_resource type="Animation" id="Animation_avu8m"]
@@ -992,22 +991,13 @@ stats = NodePath("../StatsSynchronizerComponent")
 action_synchronizer = NodePath("../ActionSynchronizerComponent")
 update_face = NodePath("../UpdateFaceComponent")
 
-[node name="StatusEffectComponent" parent="." instance=ExtResource("10_j4oql")]
-user = Object(CharacterBody2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":false,"top_level":false,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"disable_mode":0,"collision_layer":1,"collision_mask":1,"collision_priority":1.0,"input_pickable":false,"motion_mode":0,"up_direction":Vector2(0, -1),"velocity":Vector2(0, 0),"slide_on_ceiling":true,"max_slides":4,"wall_min_slide_angle":0.261799,"floor_stop_on_slope":true,"floor_constant_speed":false,"floor_block_on_wall":true,"floor_max_angle":0.785398,"floor_snap_length":1.0,"platform_on_leave":0,"platform_floor_layers":4294967295,"platform_wall_layers":0,"safe_margin":0.08,"script":ExtResource("1_0kuqc"),"multiplayer_connection":null)
-
-stats_component = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":Resource("res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.gd"),"watcher_synchronizer":Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":false,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":Resource("res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.gd"),"network_visible_area_size":1.0)
-,"hp_max":30,"hp":30,"energy_max":100,"energy":null,"energy_regen":10,"attack_power_min":4,"attack_power_max":8,"attack_speed":0.8,"attack_range":64.0,"defense":0,"movement_speed":200.0,"level":1,"experience":0,"experience_needed":100,"experience_worth":30,"_default_hp_max":100,"_default_energy_max":100,"_default_energy_regen":5,"_default_attack_power_min":0,"_default_attack_power_max":5,"_default_defense":0,"_default_movement_speed":300.0)
-
-
 [node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("7_qev5w")]
 offset_top = -56.0
 offset_bottom = -16.0
 stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
-[node name="FloatingTextComponent" parent="." instance=ExtResource("8_uad3u")]
-stats_synchronizer = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":Resource("res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.gd"),"watcher_synchronizer":Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":false,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":Resource("res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.gd"),"network_visible_area_size":1.0)
-,"hp_max":30,"hp":30,"energy_max":100,"energy":null,"energy_regen":10,"attack_power_min":4,"attack_power_max":8,"attack_speed":0.8,"attack_range":64.0,"defense":0,"movement_speed":200.0,"level":1,"experience":0,"experience_needed":100,"experience_worth":30,"_default_hp_max":100,"_default_energy_max":100,"_default_energy_regen":5,"_default_attack_power_min":0,"_default_attack_power_max":5,"_default_defense":0,"_default_movement_speed":300.0)
-
+[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("8_uad3u")]
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="Sprites" type="Node2D" parent="."]
 modulate = Color(1, 1, 1, 0.937745)
@@ -1068,10 +1058,8 @@ remote_path = NodePath("../../../Sprites/RightLeg")
 position = Vector2(4, 3)
 remote_path = NodePath("../../../Sprites/LeftLeg")
 
-[node name="HitParticlesComponent" parent="." instance=ExtResource("19_ox7m0")]
-stats_synchronizer = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":Resource("res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.gd"),"watcher_synchronizer":Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":false,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":Resource("res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.gd"),"network_visible_area_size":1.0)
-,"hp_max":30,"hp":30,"energy_max":100,"energy":null,"energy_regen":10,"attack_power_min":4,"attack_power_max":8,"attack_speed":0.8,"attack_range":64.0,"defense":0,"movement_speed":200.0,"level":1,"experience":0,"experience_needed":100,"experience_worth":30,"_default_hp_max":100,"_default_energy_max":100,"_default_energy_regen":5,"_default_attack_power_min":0,"_default_attack_power_max":5,"_default_defense":0,"_default_movement_speed":300.0)
-
+[node name="HitParticlesComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("19_ox7m0")]
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

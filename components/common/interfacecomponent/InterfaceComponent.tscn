@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://chhiamhxxhm3v"]
 
-[ext_resource type="Script" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.gd" id="1_f3slo"]
+[ext_resource type="Script" path="res://components/common/interfacecomponent/InterfaceComponent.gd" id="1_f3slo"]
 [ext_resource type="StyleBox" uid="uid://pbfuprosr3en" path="res://assets/themes/ProgressBars.tres" id="2_yw3mh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_klrxv"]

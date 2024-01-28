@@ -4,9 +4,16 @@ extends Node2D
 
 @onready var floating_text_scene = preload("res://scenes/templates/FloatingText/FloatingText.tscn")
 
+# The parent node
+var _target_node: Node
+
 
 func _ready():
-	if G.is_server():
+	_target_node = get_parent()
+
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
+	if _target_node.multiplayer_connection.is_server():
 		return
 
 	stats_synchronizer.healed.connect(_on_healed)

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://olha5mwr7hcr"]
 
-[ext_resource type="Script" path="res://scripts/components/common/hitparticlescomponent/HitParticlesComponent.gd" id="1_dluhj"]
+[ext_resource type="Script" path="res://components/common/hitparticlescomponent/HitParticlesComponent.gd" id="1_dluhj"]
 
 [sub_resource type="Curve" id="Curve_c8xqk"]
 _data = [Vector2(0.0168919, 0.982289), 0.0, 0.0, 0, 0, Vector2(1, 0.158719), 0.0, 0.0, 0, 0]
