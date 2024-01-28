@@ -10,6 +10,12 @@ signal skill_used(where: Vector2, skill_class: String)
 enum TYPE { ATTACK, SKILL_USE }
 
 var target_node: Node
+
+# Reference to the ClockSynchronizer component for timestamp synchronization.
+var _clock_synchronizer: ClockSynchronizer = null
+
+var _action_synchronizer_rpc: ActionSynchronizerRPC = null
+
 var peer_id: int = 0
 
 var server_buffer: Array[Dictionary] = []
@@ -18,14 +24,27 @@ var server_buffer: Array[Dictionary] = []
 func _ready():
 	target_node = get_parent()
 
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	if target_node.get("component_list") != null:
 		target_node.component_list["action_synchronizer"] = self
 
+	# Get the ClockSynchronizer component.
+	_clock_synchronizer = target_node.multiplayer_connection.component_list.get_component(
+		ClockSynchronizer.COMPONENT_NAME
+	)
+
+	assert(_clock_synchronizer != null, "Failed to get ClockSynchronizer component")
+
+	# Get the ActionSynchronizerRPC component.
+	_action_synchronizer_rpc = target_node.multiplayer_connection.component_list.get_component(
+		ActionSynchronizerRPC.COMPONENT_NAME
+	)
+
+	assert(_action_synchronizer_rpc != null, "Failed to get ActionSynchronizerRPC component")
+
 	if target_node.get("peer_id") != null:
 		peer_id = target_node.peer_id
-
-	if not G.is_server():
-		return
 
 
 func _physics_process(_delta):
@@ -35,7 +54,7 @@ func _physics_process(_delta):
 func _check_server_buffer():
 	for i in range(server_buffer.size() - 1, -1, -1):
 		var entry = server_buffer[i]
-		if entry["timestamp"] <= G.clock:
+		if entry["timestamp"] <= _clock_synchronizer.client_clock:
 			match entry["type"]:
 				TYPE.ATTACK:
 					attacked.emit(entry["direction"])
@@ -48,12 +67,10 @@ func attack(direction: Vector2):
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		G.sync_rpc.actionsynchronizer_sync_attack.rpc_id(
-			peer_id, target_node.name, timestamp, direction
-		)
+		_action_synchronizer_rpc.sync_attack(peer_id, target_node.name, timestamp, direction)
 
 	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.actionsynchronizer_sync_attack.rpc_id(
+		_action_synchronizer_rpc.sync_attack(
 			watcher.peer_id, target_node.name, timestamp, direction
 		)
 
@@ -64,12 +81,12 @@ func skill_use(target_global_pos: Vector2, skill_class: String):
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		G.sync_rpc.actionsynchronizer_sync_skill_use.rpc_id(
+		_action_synchronizer_rpc.sync_skill_use(
 			peer_id, target_node.name, timestamp, target_global_pos, skill_class
 		)
 
 	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.actionsynchronizer_sync_skill_use.rpc_id(
+		_action_synchronizer_rpc.sync_skill_use(
 			watcher.peer_id, target_node.name, timestamp, target_global_pos, skill_class
 		)
 
