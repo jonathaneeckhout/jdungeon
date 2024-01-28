@@ -55,11 +55,11 @@ func _ready():
 	synced_entities.add_child(portals_to_sync)
 	portals_to_sync.name = "Portals"
 
-	load_enemies()
-	load_npcs()
+	_load_enemies()
+	_load_npcs()
 
 
-func load_enemies():
+func _load_enemies():
 	for enemy in enemies_to_sync.get_children():
 		enemy.get_parent().remove_child(enemy)
 
@@ -70,7 +70,7 @@ func load_enemies():
 	enemies_to_sync.queue_free()
 
 
-func load_npcs():
+func _load_npcs():
 	for npc in npcs_to_sync.get_children():
 		npc.get_parent().remove_child(npc)
 
@@ -79,6 +79,23 @@ func load_npcs():
 			npcs.add_child(npc)
 
 	npcs_to_sync.queue_free()
+
+
+func get_entity_by_name(entity_name: String) -> Node:
+	var entity: Node = enemies.get_node_or_null(entity_name)
+	if entity != null:
+		return entity
+
+	entity = npcs.get_node_or_null(entity_name)
+	if entity != null:
+		return entity
+
+	entity = players.get_node_or_null(entity_name)
+	if entity != null:
+		return entity
+
+	entity = items.get_node_or_null(entity_name)
+	return entity
 
 # @export var respawn_locations: Node3D = null
 

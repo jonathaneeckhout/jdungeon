@@ -43,6 +43,7 @@ enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/logger/pl
 folder_colors={
 "res://addons/": "gray",
 "res://assets/": "yellow",
+"res://classes/": "orange",
 "res://components/": "green",
 "res://data/": "gray",
 "res://docker/": "pink",

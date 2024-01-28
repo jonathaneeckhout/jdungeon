@@ -2,6 +2,8 @@ extends CharacterBody2D
 
 class_name Enemy
 
+@export var multiplayer_connection: MultiplayerConnection = null
+
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ENEMY
 var enemy_class: String = ""
 var component_list: Dictionary = {}
@@ -17,7 +19,7 @@ var component_list: Dictionary = {}
 func _init():
 	collision_layer = J.PHYSICS_LAYER_ENEMIES
 
-	if G.is_server():
+	if multiplayer_connection.is_server():
 		# Enemies can be blocked by NPCs and players.
 		collision_mask = J.PHYSICS_LAYER_WORLD + J.PHYSICS_LAYER_PLAYERS + J.PHYSICS_LAYER_NPCS
 	else:

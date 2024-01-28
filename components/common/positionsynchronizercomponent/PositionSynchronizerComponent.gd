@@ -8,6 +8,11 @@ const INTERPOLATION_INDEX: float = 2
 
 var _target_node: Node
 
+# Reference to the ClockSynchronizer component for timestamp synchronization.
+var _clock_synchronizer: ClockSynchronizer = null
+
+var _position_synchronizer_rpc: PositionSynchronizerRPC = null
+
 # Buffer which keeps track of all the sync information received from the server
 var _server_buffer: Array[Dictionary] = []
 
@@ -18,8 +23,24 @@ var _last_sync_timestamp: float = 0.0
 func _ready():
 	_target_node = get_parent()
 
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	if _target_node.get("component_list") != null:
 		_target_node.component_list["position_synchronizer"] = self
+
+		# Get the ClockSynchronizer component.
+	_clock_synchronizer = _target_node.multiplayer_connection.component_list.get_component(
+		ClockSynchronizer.COMPONENT_NAME
+	)
+
+	assert(_clock_synchronizer != null, "Failed to get ClockSynchronizer component")
+
+	# Get the PositionSynchronizerRPC component.
+	_position_synchronizer_rpc = _target_node.multiplayer_connection.component_list.get_component(
+		PositionSynchronizerRPC.COMPONENT_NAME
+	)
+
+	assert(_position_synchronizer_rpc != null, "Failed to get PositionSynchronizerRPC component")
 
 	if _target_node.get("position") == null:
 		GodotLogger.error("_target_node does not have the position variable")
@@ -28,12 +49,12 @@ func _ready():
 
 func _physics_process(_delta):
 	# Handle server-side code
-	if G.is_server():
+	if _target_node.multiplayer_connection.is_server():
 		var timestamp: float = Time.get_unix_time_from_system()
 
 		# Sync your position to every entity that is watching you
 		for watcher in watcher_synchronizer.watchers:
-			G.sync_rpc.positionsynchronizer_queue_sync(
+			_position_synchronizer_rpc.sync_position(
 				watcher.peer_id, _target_node.name, timestamp, _target_node.position
 			)
 	# Handle client-side code
@@ -44,7 +65,7 @@ func _physics_process(_delta):
 
 func _calculate_position():
 	# Calculate the time of the player will actually see the entity
-	var render_time = G.clock - INTERPOLATION_OFFSET
+	var render_time = _clock_synchronizer.client_clock - INTERPOLATION_OFFSET
 
 	# Remove older messages out of the interpolation range
 	while (
@@ -106,7 +127,7 @@ func _extrapolate(extrapolation_factor: float, parameter: String) -> Vector2:
 
 
 ## This function stores the latest received sync information for this entity. This information is later used to smoothly inter or extrapolate the position of the entity.
-func sync(timestamp: float, pos: Vector2):
+func client_sync_position(timestamp: float, pos: Vector2):
 	# Ignore older syncs
 	if timestamp < _last_sync_timestamp:
 		return

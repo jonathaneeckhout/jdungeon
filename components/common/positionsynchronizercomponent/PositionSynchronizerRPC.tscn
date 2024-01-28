@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://s8h0g10nfeim"]
+
+[ext_resource type="Script" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerRPC.gd" id="1_r06fh"]
+
+[node name="PositionSynchronizerRpc" type="Node"]
+script = ExtResource("1_r06fh")

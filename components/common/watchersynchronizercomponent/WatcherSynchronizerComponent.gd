@@ -11,10 +11,12 @@ var watchers: Array[Node2D] = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if not G.is_server():
-		return
-
 	target_node = get_parent()
+
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
+	if not target_node.multiplayer_connection.is_server():
+		return
 
 	var cs_network_visible_circle = CircleShape2D.new()
 	cs_network_visible_circle.radius = network_visible_area_size
