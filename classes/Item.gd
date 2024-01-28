@@ -2,7 +2,7 @@ extends StaticBody2D
 
 class_name Item
 
-signal amount_changed(this: Item, new_amount: int)
+signal amount_changed(new_amount: int)
 
 enum MODE { LOOT, ITEMSLOT }
 
@@ -30,8 +30,8 @@ var amount_max: int = 1
 var amount: int = 1:
 	set(val):
 		amount = val
+		amount_changed.emit(amount)
 
-		amount_changed.emit(self, amount)
 var price: int = 0
 var value: int = 0
 
@@ -100,10 +100,17 @@ func server_use(player: Player) -> bool:
 		ITEM_TYPE.CONSUMABLE:
 			if boost.hp > 0:
 				player.stats.heal(self.name, boost.hp)
+
+				if amount <= 1:
+					player.inventory.remove_item(uuid)
+				else:
+					player.inventory.set_item_amount(uuid, amount - 1)
 				return true
+
 		ITEM_TYPE.EQUIPMENT:
 			if player.equipment and player.equipment.server_equip_item(self):
 				return true
+
 			else:
 				GodotLogger.info("%s could not equip item %s" % [player.name, item_class])
 				return false

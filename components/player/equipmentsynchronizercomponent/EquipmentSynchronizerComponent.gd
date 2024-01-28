@@ -14,7 +14,7 @@ var _target_node: Node
 
 var _equipment_synchronizer_rpc: EquipmentSynchronizerRPC = null
 
-var items = {
+var items: Dictionary = {
 	"Head": null,
 	"Body": null,
 	"Legs": null,
@@ -144,7 +144,7 @@ func _unequip_item(item_uuid: String) -> Item:
 
 
 func get_item(item_uuid: String) -> Item:
-	for equipment_slot in items:
+	for equipment_slot: String in items:
 		var item: Item = items[equipment_slot]
 		if item != null and item.uuid == item_uuid:
 			return item
@@ -156,7 +156,7 @@ func get_boost() -> Boost:
 	var boost: Boost = Boost.new()
 	boost.identifier = "equipment"
 
-	for equipment_slot in items:
+	for equipment_slot: String in items:
 		var item: Item = items[equipment_slot]
 		if item != null:
 			boost.combine_boost(item.boost)
@@ -167,7 +167,7 @@ func get_boost() -> Boost:
 func to_json() -> Dictionary:
 	var output: Dictionary = {}
 
-	for slot in items:
+	for slot: String in items:
 		if items[slot] != null:
 			var item: Item = items[slot]
 			output[slot] = item.to_json()
@@ -176,7 +176,7 @@ func to_json() -> Dictionary:
 
 
 func from_json(data: Dictionary) -> bool:
-	for slot in data:
+	for slot: String in data:
 		if not slot in items:
 			GodotLogger.warn("Slot=[%s] does not exist in equipment items" % slot)
 			return false
