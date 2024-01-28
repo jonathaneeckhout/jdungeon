@@ -155,6 +155,12 @@ signal boosts_changed
 var active_boosts: Array[Boost]
 
 var target_node: Node
+
+# Reference to the ClockSynchronizer component for timestamp synchronization.
+var _clock_synchronizer: ClockSynchronizer = null
+
+var _stats_synchronizer_rpc: StatsSynchronizerRPC = null
+
 var peer_id: int = 0
 var is_dead: bool = false
 
@@ -176,14 +182,31 @@ var energy_regen_timer: Timer
 func _ready():
 	target_node = get_parent()
 
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	if target_node.get("component_list") != null:
 		target_node.component_list[COMPONENT_NAME] = self
+
+	# Get the ClockSynchronizer component.
+	_clock_synchronizer = target_node.multiplayer_connection.component_list.get_component(
+		ClockSynchronizer.COMPONENT_NAME
+	)
+
+	assert(_clock_synchronizer != null, "Failed to get ClockSynchronizer component")
+
+	# Get the StatsSynchronizerRPC component.
+	_stats_synchronizer_rpc = target_node.multiplayer_connection.component_list.get_component(
+		StatsSynchronizerRPC.COMPONENT_NAME
+	)
+
+	# Ensure the StatsSynchronizerRPC component is present
+	assert(_stats_synchronizer_rpc != null, "Failed to get StatsSynchronizerRPC component")
 
 	if target_node.get("peer_id") != null:
 		peer_id = target_node.peer_id
 
 	# Physics only needed on client side
-	if G.is_server():
+	if target_node.multiplayer_connection.is_server():
 		set_physics_process(false)
 
 		#Uses a setter to automatically call server_periodic_update() when true
@@ -206,7 +229,7 @@ func _ready():
 		if not is_inside_tree():
 			await tree_entered
 
-		G.sync_rpc.statssynchronizer_sync_stats.rpc_id(1, target_node.name)
+		_stats_synchronizer_rpc.sync_stats(target_node.name)
 
 	boosts_changed.connect(reload_boosts)
 
@@ -221,7 +244,7 @@ func _physics_process(_delta: float):
 func check_server_buffer():
 	for i in range(server_buffer.size() - 1, -1, -1):
 		var entry: Dictionary = server_buffer[i]
-		if entry["timestamp"] <= G.clock:
+		if entry["timestamp"] <= _clock_synchronizer.client_clock:
 			assert(entry["type"] in TYPE.values(), "This is not a valid type")
 			match entry["type"]:
 				TYPE.HP_MAX:
@@ -280,12 +303,12 @@ func hurt(from: Node, damage: int) -> int:
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		G.sync_rpc.statssynchronizer_sync_hurt.rpc_id(
+		_stats_synchronizer_rpc.sync_hurt(
 			peer_id, target_node.name, timestamp, from.name, hp, reduced_damage
 		)
 
 	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.statssynchronizer_sync_hurt.rpc_id(
+		_stats_synchronizer_rpc.sync_hurt(
 			watcher.peer_id, target_node.name, timestamp, from.name, hp, reduced_damage
 		)
 
@@ -300,12 +323,10 @@ func heal(from: String, healing: int) -> int:
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		G.sync_rpc.statssynchronizer_sync_heal.rpc_id(
-			peer_id, target_node.name, timestamp, from, hp, healing
-		)
+		_stats_synchronizer_rpc.sync_heal(peer_id, target_node.name, timestamp, from, hp, healing)
 
 	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.statssynchronizer_sync_heal.rpc_id(
+		_stats_synchronizer_rpc.sync_heal(
 			watcher.peer_id, target_node.name, timestamp, from, hp, healing
 		)
 
@@ -330,12 +351,12 @@ func energy_recovery(from: String, recovered: int) -> int:
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		G.sync_rpc.statssynchronizer_sync_energy_recovery.rpc_id(
+		_stats_synchronizer_rpc.sync_energy_recovery(
 			peer_id, target_node.name, timestamp, from, energy, recovered
 		)
 
 	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.statssynchronizer_sync_energy_recovery.rpc_id(
+		_stats_synchronizer_rpc.sync_energy_recovery(
 			watcher.peer_id, target_node.name, timestamp, from, energy, recovered
 		)
 
@@ -417,10 +438,10 @@ func apply_boost(boost: Boost):
 	var data: Dictionary = to_json(true)
 
 	if peer_id > 0:
-		G.sync_rpc.statssynchronizer_sync_response.rpc_id(peer_id, target_node.name, data)
+		_stats_synchronizer_rpc.sync_response(peer_id, target_node.name, data)
 
 	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
+		_stats_synchronizer_rpc.sync_response(watcher.peer_id, target_node.name, data)
 
 	# This signal calls reload_boosts()
 	boosts_changed.emit()
@@ -437,10 +458,10 @@ func remove_boost(boost: Boost):
 	var data: Dictionary = to_json(true)
 
 	if peer_id > 0:
-		G.sync_rpc.statssynchronizer_sync_response.rpc_id(peer_id, target_node.name, data)
+		_stats_synchronizer_rpc.sync_response(peer_id, target_node.name, data)
 
 	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.statssynchronizer_sync_response.rpc_id(watcher.peer_id, target_node.name, data)
+		_stats_synchronizer_rpc.sync_response(watcher.peer_id, target_node.name, data)
 
 	boosts_changed.emit()
 
@@ -471,29 +492,12 @@ func reload_boosts():
 		# Set the stat to the flat value multiplied by the modifier
 		set(stat, flat_values[stat] * modifier_values[stat])
 
-	if Global.debug_mode:
-		var debug_log: String = "Boosts applied with these results: \n"
-
-		for stat_name: String in StatListPermanent + StatListCounter:
-			debug_log += "{0}: {1} | Flat boost: {2} | Modifier boost: {3} \n".format(
-				[
-					stat_name,
-					get(stat_name),
-					flat_values.get(stat_name, 0 as int),
-					modifier_values.get(stat_name, 0.0 as float)
-				]
-			)
-		GodotLogger.info(debug_log)
-
 
 ## Attempts to get a reference to a [Boost] with the given identifier, if it exists.
 func get_boost_with_identifier(identifier: String) -> Boost:
 	for boost: Boost in active_boosts:
 		if boost.identifier == identifier:
 			return boost
-
-	if Global.debug_mode:
-		GodotLogger.warn("Could not find boost with identifier '{0}'".format([identifier]))
 
 	return null
 
@@ -558,12 +562,12 @@ func _sync_int_change(stat_type: TYPE, value: int):
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		G.sync_rpc.statssynchronizer_sync_int_change.rpc_id(
+		_stats_synchronizer_rpc.sync_int_change(
 			peer_id, target_node.name, timestamp, stat_type, value
 		)
 
 	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.statssynchronizer_sync_int_change.rpc_id(
+		_stats_synchronizer_rpc.sync_int_change(
 			watcher.peer_id, target_node.name, timestamp, stat_type, value
 		)
 
@@ -576,17 +580,17 @@ func _sync_float_change(stat_type: TYPE, value: float):
 	var timestamp: float = Time.get_unix_time_from_system()
 
 	if peer_id > 0:
-		G.sync_rpc.statssynchronizer_sync_float_change.rpc_id(
+		_stats_synchronizer_rpc.sync_float_change(
 			peer_id, target_node.name, timestamp, stat_type, value
 		)
 	for watcher in watcher_synchronizer.watchers:
-		G.sync_rpc.statssynchronizer_sync_float_change.rpc_id(
+		_stats_synchronizer_rpc.sync_float_change(
 			watcher.peer_id, target_node.name, timestamp, stat_type, value
 		)
 
 
 func sync_stats(id: int):
-	G.sync_rpc.statssynchronizer_sync_response.rpc_id(id, target_node.name, to_json(true))
+	_stats_synchronizer_rpc.sync_response(id, target_node.name, to_json(true))
 
 
 func sync_response(data: Dictionary):

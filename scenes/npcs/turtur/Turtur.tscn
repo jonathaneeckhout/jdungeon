@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="1_47ndk"]
 [ext_resource type="Script" path="res://scenes/npcs/turtur/Turtur.gd" id="1_swogk"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_81jcy"]
-[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="3_nrmfh"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="3_nrmfh"]
 [ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://scripts/components/networking/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="4_r4601"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="6_8cka4"]
 [ext_resource type="Texture2D" uid="uid://dro8p6hqyf8ft" path="res://assets/images/npcs/blacksmithturtle/scaled/blacksmith.png" id="7_ad4mf"]
