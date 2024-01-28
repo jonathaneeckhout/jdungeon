@@ -47,20 +47,22 @@ var _line_of_sight_raycast: RayCast2D = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	# This node should only run the server side
-	if not G.is_server():
-		set_physics_process(false)
-		queue_free()
+	# Get the parent node
 
-		# Get the parent node
+	# This Node should run one level deeper than the behavior component
 
-		# This Node should run one level deeper than the behavior component
-
-		# Call this one deferred to give the time to the parent to add all it's childs
+	# Call this one deferred to give the time to the parent to add all it's childs
 	_parent = get_parent()
 
 	# This Node should run one level deeper than the behavior component
 	_target_node = _parent.get_parent()
+
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
+	# This node should only run the server side
+	if not _target_node.multiplayer_connection.is_server():
+		set_physics_process(false)
+		queue_free()
 
 	# Call this one deferred to give the time to the parent to add all it's childs
 	_link_parent.call_deferred()

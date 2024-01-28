@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://d2ippv4gqf6as"]
+
+[ext_resource type="Script" path="res://components/behaviors/fleeandwanderbehaviorcomponent/FleeAndWanderBehaviorCopmonent.gd" id="1_qussi"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://components/behaviors/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="2_3b1xg"]
+[ext_resource type="PackedScene" uid="uid://cnj2i4x6kdm4c" path="res://components/behaviors/components/wandercomponent/WanderComponent.tscn" id="3_pn0iu"]
+[ext_resource type="PackedScene" uid="uid://f7bdtxrmdg4g" path="res://components/behaviors/components/fleecomponent/FleeComponent.tscn" id="3_yeiba"]
+
+[node name="FleeAndWanderBehaviorCopmonent" type="Node2D"]
+script = ExtResource("1_qussi")
+
+[node name="AvoidanceRaysComponent" parent="." instance=ExtResource("2_3b1xg")]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_postprocessing = 1
+
+[node name="FleeComponent" parent="." instance=ExtResource("3_yeiba")]
+
+[node name="WanderComponent" parent="." instance=ExtResource("3_pn0iu")]

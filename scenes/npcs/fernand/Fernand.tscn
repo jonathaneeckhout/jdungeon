@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_yfw0l"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_5dcri"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_1rkqu"]
-[ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://scripts/components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="5_ogec5"]
+[ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="5_ogec5"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="6_cwl5p"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="7_tx6ks"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="8_yx887"]

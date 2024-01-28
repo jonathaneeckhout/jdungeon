@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=11 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dcur4xolp0oia" path="res://components/connection/ServerFSM/ServerFSM.tscn" id="5_uiu1q"]
 [ext_resource type="PackedScene" uid="uid://s8h0g10nfeim" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerRPC.tscn" id="6_1dj18"]
 [ext_resource type="PackedScene" uid="uid://b6qnexfdo1eg" path="res://components/common/statssynchronizercomponent/StatsSynchronizerRPC.tscn" id="7_6biju"]
+[ext_resource type="PackedScene" uid="uid://bn4fr6idoaxuw" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerRPC.tscn" id="8_3q1k4"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_et6n2")
@@ -32,6 +33,8 @@ unique_name_in_owner = true
 [node name="PSR" parent="Connections/ServerClient" instance=ExtResource("6_1dj18")]
 
 [node name="SSR" parent="Connections/ServerClient" instance=ExtResource("7_6biju")]
+
+[node name="ASR" parent="Connections/ServerClient" instance=ExtResource("8_3q1k4")]
 
 [node name="ServerFsm" parent="." node_paths=PackedStringArray("_server_gateway_client", "_server_client_server") instance=ExtResource("5_uiu1q")]
 unique_name_in_owner = true

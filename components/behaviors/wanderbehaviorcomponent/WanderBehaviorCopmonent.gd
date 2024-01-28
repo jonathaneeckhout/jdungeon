@@ -28,12 +28,14 @@ var _target_node: Node
 
 
 func _ready():
+	_target_node = get_parent()
+
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	# This node should only run the server side
-	if not G.is_server():
+	if not _target_node.multiplayer_connection.is_server():
 		set_physics_process(false)
 		queue_free()
-
-	_target_node = get_parent()
 
 	if _target_node.get("position") == null:
 		GodotLogger.error("target_node does not have the position variable")

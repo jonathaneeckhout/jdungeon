@@ -19,16 +19,18 @@ var _target_node: Node = null
 
 
 func _ready():
-	# This node should only run the server side
-	if not G.is_server():
-		set_physics_process(false)
-		queue_free()
-
 	# Get the parent node
 	_parent = get_parent()
 
 	# This Node should run one level deeper than the behavior component
 	_target_node = _parent.get_parent()
+
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
+	# This node should only run the server side
+	if not _target_node.multiplayer_connection.is_server():
+		set_physics_process(false)
+		queue_free()
 
 	if _target_node.get("velocity") == null:
 		GodotLogger.error("target_node does not have the position variable")

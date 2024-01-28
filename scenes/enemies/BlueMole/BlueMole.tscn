@@ -6,8 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_332co"]
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="5_luahv"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="6_2auxe"]
-[ext_resource type="PackedScene" uid="uid://d3pv4rqlo3xh7" path="res://scripts/components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.tscn" id="6_2m5ls"]
 [ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="6_lv1v7"]
+[ext_resource type="PackedScene" uid="uid://d3pv4rqlo3xh7" path="res://components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.tscn" id="7_7litw"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="7_qev5w"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="8_uad3u"]
 [ext_resource type="Texture2D" uid="uid://ix4rovrd5tqg" path="res://assets/images/enemies/bluemole/scaled/Arm1.png" id="9_82elk"]
@@ -972,10 +972,8 @@ experience_worth = 30
 [node name="EnemyRespawnComponent" parent="." instance=ExtResource("5_luahv")]
 
 [node name="ActionSynchronizerComponent" parent="." instance=ExtResource("6_lv1v7")]
-watcher_synchronizer = Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":false,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":Resource("res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.gd"),"network_visible_area_size":1.0)
 
-
-[node name="AttackAndWanderBehaviorComponent" parent="." instance=ExtResource("6_2m5ls")]
+[node name="AttackAndWanderBehaviorComponent" parent="." instance=ExtResource("7_7litw")]
 stats_component = Object(Node,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","script":Resource("res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.gd"),"watcher_synchronizer":Object(Node2D,"_import_path":NodePath(""),"unique_name_in_owner":false,"process_mode":0,"process_priority":0,"process_physics_priority":0,"process_thread_group":0,"editor_description":"","visible":true,"modulate":Color(1, 1, 1, 1),"self_modulate":Color(1, 1, 1, 1),"show_behind_parent":false,"top_level":false,"clip_children":0,"light_mask":1,"visibility_layer":1,"z_index":0,"z_as_relative":true,"y_sort_enabled":false,"texture_filter":0,"texture_repeat":0,"material":null,"use_parent_material":false,"position":Vector2(0, 0),"rotation":0.0,"scale":Vector2(1, 1),"skew":0.0,"script":Resource("res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.gd"),"network_visible_area_size":1.0)
 ,"hp_max":30,"hp":30,"energy_max":100,"energy":null,"energy_regen":10,"attack_power_min":4,"attack_power_max":8,"attack_speed":0.8,"attack_range":64.0,"defense":0,"movement_speed":200.0,"level":1,"experience":0,"experience_needed":100,"experience_worth":30,"_default_hp_max":100,"_default_energy_max":100,"_default_energy_regen":5,"_default_attack_power_min":0,"_default_attack_power_max":5,"_default_defense":0,"_default_movement_speed":300.0)
 
