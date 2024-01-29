@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bvkfby4kxvrh4"]
 
-[ext_resource type="Script" path="res://scripts/components/player/playerinteractioncomponent/PlayerInteractionComponent.gd" id="1_utsty"]
+[ext_resource type="Script" path="res://components/player/playerinteractioncomponent/PlayerInteractionComponent.gd" id="1_utsty"]
 [ext_resource type="Texture2D" uid="uid://bjjco37m58dcp" path="res://assets/images/varia/crosshairkenny/crosshair094.png" id="2_wnyms"]
 
 [node name="PlayerInteractionComponent" type="Node2D"]

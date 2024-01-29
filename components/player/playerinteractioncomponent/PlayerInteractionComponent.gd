@@ -25,11 +25,13 @@ var npcs_in_interact_range: Array[NPC] = []
 func _ready():
 	target_node = get_parent()
 
-	if G.is_server():
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
+	if target_node.multiplayer_connection.is_server():
 		_init_loot_area()
 		_init_npc_interact_area()
 		set_physics_process(false)
-	elif not G.is_own_player(target_node):
+	elif not target_node.multiplayer_connection.is_own_player(target_node):
 		queue_free()
 	else:
 		_init_attack_area()
