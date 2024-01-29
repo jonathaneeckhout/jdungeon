@@ -40,6 +40,12 @@ var current_target: Node2D
 
 # This serves as the parent node on which the component will take effect.
 var _target_node: Node
+
+# Reference to the ClockSynchronizer component for timestamp synchronization.
+var _clock_synchronizer: ClockSynchronizer = null
+
+var _player_synchronizer_rpc: PlayerSynchronizerRPC = null
+
 # This variable keeps track of which frame is currently handled
 var _current_frame: int = 0
 # Buffer to store all inputs received from the client
@@ -71,7 +77,7 @@ func _ready():
 	add_child(_attack_timer)
 
 	# Server-side logic
-	if G.is_server():
+	if _target_node.multiplayer_connection.is_server():
 		set_process_input(false)
 
 		# Connect to the interacted signal to handle interactions
@@ -79,7 +85,7 @@ func _ready():
 	# Client-side logic
 	else:
 		# This component is only needed for your own player on the client-side, thus it can be deleted for the other players
-		if not G.is_own_player(_target_node):
+		if not _target_node.multiplayer_connection.is_own_player(_target_node):
 			set_physics_process(false)
 			queue_free()
 			return
@@ -103,6 +109,22 @@ func _ready():
 func _init_target_node() -> bool:
 	# Get the parent node
 	_target_node = get_parent()
+
+	# Get the ClockSynchronizer component.
+	_clock_synchronizer = _target_node.multiplayer_connection.component_list.get_component(
+		ClockSynchronizer.COMPONENT_NAME
+	)
+
+	assert(_clock_synchronizer != null, "Failed to get ClockSynchronizer component")
+
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
+	# Get the PlayerSynchronizerRPC component.
+	_player_synchronizer_rpc = (_target_node.multiplayer_connection.component_list.get_component(
+		PlayerSynchronizerRPC.COMPONENT_NAME
+	))
+
+	assert(_player_synchronizer_rpc != null, "Failed to get PlayerSynchronizerRPC component")
 
 	if _target_node.get("peer_id") == null:
 		GodotLogger.error("_target_node does not have the peer_id variable")
@@ -163,12 +185,12 @@ func _physics_process(delta):
 		return
 
 	# Server-side logic
-	if G.is_server():
+	if _target_node.multiplayer_connection.is_server():
 		# Handle the player's inputs
 		_server_handle_inputs(delta)
 
 		# Sync the position back to the player
-		G.sync_rpc.playersynchronizer_sync_pos.rpc_id(
+		_player_synchronizer_rpc.sync_pos(
 			_target_node.peer_id, _current_frame, _target_node.position
 		)
 	# Client-side logic
@@ -188,7 +210,7 @@ func _physics_process(delta):
 		mouse_global_pos = _target_node.get_global_mouse_position()
 
 		# Sync this input back to the server
-		G.sync_rpc.playersynchronizer_sync_input.rpc_id(1, _current_frame, direction, delta)
+		_player_synchronizer_rpc.sync_input(_current_frame, direction, delta)
 
 		# Remove any input that is older than the timestamp of the last synced frame
 		while _input_buffer.size() > 0 and _input_buffer[0]["cf"] <= _last_sync_frame:
@@ -241,8 +263,8 @@ func _client_handle_right_click(click_global_pos: Vector2):
 	# Attempt to use a skill
 	if skill_component.get_skill_current_class() != "":
 		# Sync the skill usage to the server
-		G.sync_rpc.playersynchronizer_sync_skill_use.rpc_id(
-			1, click_global_pos, skill_component.get_skill_current_class()
+		_player_synchronizer_rpc.skill_use(
+			click_global_pos, skill_component.get_skill_current_class()
 		)
 
 		skill_used.emit(click_global_pos, skill_component.get_skill_current_class())
@@ -250,13 +272,13 @@ func _client_handle_right_click(click_global_pos: Vector2):
 	# Else, attempt to act on the target
 	elif current_target != null:
 		# Sync the interaction to the server
-		G.sync_rpc.playersynchronizer_sync_interact.rpc_id(1, current_target.get_name())
+		_player_synchronizer_rpc.sync_interact(current_target.get_name())
 
 		interacted.emit(current_target)
 	# An interaction was attempted, but there was no target
 	else:
 		# Sync the interaction to the server
-		G.sync_rpc.playersynchronizer_sync_interact.rpc_id(1, "")
+		_player_synchronizer_rpc.sync_interact("")
 
 		interacted.emit(null)
 
@@ -340,13 +362,15 @@ func server_sync_interact(target_name: String):
 		return
 
 	# Check if the target is a known enemy
-	var target: Node2D = G.world.enemies.get_node_or_null(target_name)
+	var target: Node2D = _target_node.multiplayer_connection.map.enemies.get_node_or_null(
+		target_name
+	)
 	if target == null:
 		# If not, check if the target is a known npcs
-		target = G.world.npcs.get_node_or_null(target_name)
+		target = _target_node.multiplayer_connection.map.npcs.get_node_or_null(target_name)
 		if target == null:
 			# If not, check if the target is a known item
-			target = G.world.items.get_node_or_null(target_name)
+			target = _target_node.multiplayer_connection.map.items.get_node_or_null(target_name)
 			# Check if the player is in range to loot the item
 			if target != null and interaction_component.items_in_loot_range.has(target):
 				# Loot the item
@@ -368,7 +392,9 @@ func server_handle_attack_request(timestamp: float, enemies: Array):
 	# Loop over the enemies
 	for enemy_name in enemies:
 		# Get the enemies by their name
-		var enemy: Node2D = G.world.enemies.get_node_or_null(enemy_name)
+		var enemy: Node2D = _target_node.multiplayer_connection.map.enemies.get_node_or_null(
+			enemy_name
+		)
 
 		# If the enemy doesn't exist, ignore and continue
 		if enemy == null:
@@ -469,4 +495,4 @@ func _on_client_interacted(target: Node2D):
 	for enemy in interaction_component.enemies_in_attack_range:
 		hit_enemies.append(enemy.name)
 
-	G.sync_rpc.playersynchronizer_request_attack.rpc_id(1, G.clock, hit_enemies)
+	_player_synchronizer_rpc.request_attack(_clock_synchronizer.client_clock, hit_enemies)
