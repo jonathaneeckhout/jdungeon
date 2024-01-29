@@ -19,14 +19,14 @@ const RETRY_TIME: int = 10.0
 @export var config: Resource = null
 
 ## The current state in which the fsm is in
-@export var state: STATES = STATES.INIT
+var state: STATES = STATES.IDLE
 
 ## The name of the map that will be used on the server
 var map_name: String = ""
 
 var _server_fsm_rpc: ServerFSMRPC = null
 
-# The world for the server
+# The map for the server
 var _map: Map = null
 
 # Timer used to retry the connection towards the gateway server
@@ -37,7 +37,7 @@ var _init_done: bool = false
 
 
 func _ready():
-	# Get the ClockSynchronizer component.
+	# Get the ServerFSMRPC component.
 	_server_fsm_rpc = _server_gateway_client.component_list.get_component(
 		ServerFSMRPC.COMPONENT_NAME
 	)

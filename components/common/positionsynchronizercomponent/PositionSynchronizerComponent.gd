@@ -28,7 +28,7 @@ func _ready():
 	if _target_node.get("component_list") != null:
 		_target_node.component_list["position_synchronizer"] = self
 
-		# Get the ClockSynchronizer component.
+	# Get the ClockSynchronizer component.
 	_clock_synchronizer = _target_node.multiplayer_connection.component_list.get_component(
 		ClockSynchronizer.COMPONENT_NAME
 	)

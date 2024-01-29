@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=15 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
 [ext_resource type="Resource" uid="uid://chbdptl7ubxyj" path="res://resources/DevelopmentConfigResource.tres" id="2_xw268"]
 [ext_resource type="PackedScene" uid="uid://bldyf3iyb7r6n" path="res://components/connection/WebsocketMultiplayerConnection/WebsocketMultiplayerConnection.tscn" id="3_ns7hw"]
 [ext_resource type="PackedScene" uid="uid://dd2r6bxk2js2g" path="res://components/connection/ServerFSM/ServerFSMRPC.tscn" id="4_ejj7u"]
+[ext_resource type="PackedScene" uid="uid://swgyk0ffhiav" path="res://components/connection/ClientFSM/ClientFSMGatewayRPC.tscn" id="5_6g1wk"]
 [ext_resource type="PackedScene" uid="uid://fp5jjs341obi" path="res://components/connection/ClockSynchronizer/ClockSynchronizer.tscn" id="5_emdm5"]
 [ext_resource type="PackedScene" uid="uid://dcur4xolp0oia" path="res://components/connection/ServerFSM/ServerFSM.tscn" id="5_uiu1q"]
 [ext_resource type="PackedScene" uid="uid://s8h0g10nfeim" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerRPC.tscn" id="6_1dj18"]
@@ -12,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://bn4fr6idoaxuw" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerRPC.tscn" id="8_3q1k4"]
 [ext_resource type="PackedScene" uid="uid://dderndos7tfdu" path="res://components/common/networkviewsynchronizercomponent/NetworkViewSynchronizerRPC.tscn" id="9_3pk1n"]
 [ext_resource type="PackedScene" uid="uid://d4c6yl66u2fdc" path="res://components/player/playersynchronizer/PlayerSynchronizerRPC.tscn" id="10_ghnhu"]
+[ext_resource type="PackedScene" uid="uid://cyd1haegch4ux" path="res://components/connection/ClientFSM/ClientFSM.tscn" id="12_7v67k"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_et6n2")
@@ -26,6 +28,10 @@ unique_name_in_owner = true
 
 [node name="GatewayClient" parent="Connections" instance=ExtResource("3_ns7hw")]
 unique_name_in_owner = true
+
+[node name="CFGR" parent="Connections/GatewayClient" node_paths=PackedStringArray("gateway_server_multiplayer_connection", "server_fsm_rpc") instance=ExtResource("5_6g1wk")]
+gateway_server_multiplayer_connection = NodePath("../../GatewayServer")
+server_fsm_rpc = NodePath("../../GatewayServer/SFR")
 
 [node name="ServerClient" parent="Connections" instance=ExtResource("3_ns7hw")]
 unique_name_in_owner = true
@@ -46,6 +52,11 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 _server_gateway_client = NodePath("../Connections/GatewayServer")
 _server_client_server = NodePath("../Connections/ServerClient")
+
+[node name="ClientFsm" parent="." node_paths=PackedStringArray("_client_gateway_client", "_client_server_client") instance=ExtResource("12_7v67k")]
+unique_name_in_owner = true
+_client_gateway_client = NodePath("../Connections/GatewayClient")
+_client_server_client = NodePath("../Connections/ServerClient")
 
 [node name="UI" type="CanvasLayer" parent="."]
 

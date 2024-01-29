@@ -134,6 +134,9 @@ func _start_client():
 	# Register all the scenes so that they can accesses via the J singleton in the rest of the project
 	J.register_scenes()
 
+	%ClientFsm.config = config
+	%ClientFsm.start()
+
 
 func _set_game_icon(icon: Texture, sub_icon: Texture = null):
 	var image: Image = icon.get_image()

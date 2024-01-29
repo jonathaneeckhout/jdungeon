@@ -190,6 +190,14 @@ func get_user_by_id(id: int) -> User:
 	return _server_users.get(id)
 
 
+func get_server_by_name(server_name: String) -> User:
+	for id in _server_users:
+		if _server_users[id].name == server_name:
+			return _server_users[id]
+
+	return null
+
+
 ## Checks if a user is logged in by it's id
 func is_user_logged_in(id: int) -> bool:
 	assert(is_server(), "This function should only be called on the server side")

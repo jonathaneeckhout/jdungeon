@@ -26,6 +26,10 @@ func register_server(server_name: String, address: String, portals_info: Diction
 	_register_server.rpc_id(1, server_name, address, portals_info)
 
 
+func register_user(peer_id: int, username: String, cookie: String):
+	_register_user.rpc_id(peer_id, username, cookie)
+
+
 @rpc("call_remote", "any_peer", "reliable")
 func _register_server(server_name: String, address: String, portals_info: Dictionary):
 	# Ensure this call is only run on the server.
@@ -52,3 +56,9 @@ func _register_server(server_name: String, address: String, portals_info: Dictio
 @rpc("call_remote", "authority", "reliable")
 func _register_response(response: bool):
 	server_registered.emit(response)
+
+
+@rpc("call_remote", "authority", "reliable")
+func _register_user(username: String, cookie: String):
+	pass
+	# S.register_user(username, cookie)
