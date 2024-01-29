@@ -1,8 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=17 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
 [ext_resource type="TileSet" uid="uid://d0vhi8a2dswg6" path="res://data/tileset/navcol.tres" id="3_37stb"]
+[ext_resource type="PackedScene" uid="uid://cgxevug65fx3d" path="res://scenes/enemies/BlueMole/BlueMole.tscn" id="5_oe42q"]
 [ext_resource type="PackedScene" uid="uid://cj38jwlc6ip7v" path="res://scenes/terrain/buildings/fernandshouse/Fernandshouse.tscn" id="8_w02d5"]
 [ext_resource type="PackedScene" uid="uid://djgsmi37cipds" path="res://scenes/terrain/buildings/smalltent/SmallTent.tscn" id="9_v6wmp"]
 [ext_resource type="PackedScene" uid="uid://vsig12850hrc" path="res://scenes/terrain/buildings/bigtent/BigTent.tscn" id="10_mdbr4"]
@@ -192,6 +193,9 @@ position = Vector2(-432, -600)
 
 [node name="Enemies" type="Node2D" parent="."]
 y_sort_enabled = true
+
+[node name="BlueMole" parent="Enemies" instance=ExtResource("5_oe42q")]
+position = Vector2(-1570, 633)
 
 [node name="NPCs" type="Node2D" parent="."]
 y_sort_enabled = true

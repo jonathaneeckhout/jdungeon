@@ -33,6 +33,8 @@ var uuid_util: UuidUtil
 
 var audio: SoundManager = SoundManager.new()
 
+var server_client_multiplayer_connection: WebsocketMultiplayerConnection = null
+
 
 func _ready():
 	uuid_util = load("res://scripts/utilities/uuid/uuid.gd").new()
@@ -44,7 +46,7 @@ func _ready():
 func register_scenes():
 	J.register_player_scene("res://scenes/player/Player.tscn")
 
-	# register_enemies()
+	register_enemies()
 	# register_npcs()
 	# register_items()
 	# register_skills()

@@ -107,11 +107,14 @@ func _handle_init():
 		get_tree().quit()
 		return
 
+	J.server_client_multiplayer_connection = _server_client_server
+
 	# Instantiate the world scene
 	_map = J.map_scenes[map_name].instantiate()
 	# Set the name
 	_map.name = map_name
 	_map.multiplayer_connection = _server_client_server
+
 	# Add it to the Root scene (which is the parent of this script)
 	get_parent().add_child(_map)
 
