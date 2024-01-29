@@ -13,11 +13,13 @@ var loot_table: Array[Dictionary] = []
 func _ready():
 	target_node = get_parent()
 
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	if target_node.get("position") == null:
 		GodotLogger.error("target_node does not have the position variable")
 		return
 
-	if not G.is_server():
+	if not target_node.multiplayer_connection.is_server():
 		return
 
 	stats.died.connect(_on_died)
@@ -35,8 +37,9 @@ func drop_loot():
 			var random_x = randi_range(-drop_range, drop_range)
 			var random_y = randi_range(-drop_range, drop_range)
 			item.position = target_node.position + Vector2(random_x, random_y)
+			item.multiplayer_connection = target_node.multiplayer_connection
 
-			G.world.items.add_child(item)
+			target_node.multiplayer_connection.map.items.add_child(item)
 			item.start_expire_timer()
 
 

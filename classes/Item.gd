@@ -6,6 +6,8 @@ enum MODE { LOOT, ITEMSLOT }
 
 enum ITEM_TYPE { EQUIPMENT, CONSUMABLE, CURRENCY }
 
+@export var multiplayer_connection: MultiplayerConnection = null
+
 @export var uuid: String = "":
 	set(new_uuid):
 		uuid = new_uuid
@@ -53,7 +55,7 @@ func _ready():
 	# Hiding the lootarea, else the player will be surrounded by collision shapes. Remove this line if you want to debug
 	lootarea.hide()
 
-	if G.is_server():
+	if multiplayer_connection.is_server():
 		expire_timer = Timer.new()
 		expire_timer.one_shot = true
 
@@ -73,7 +75,7 @@ func loot(player: Player) -> bool:
 		# Just to be safe, stop the expire timer
 		expire_timer.stop()
 		# Remove yourself from the world items
-		G.world.items.remove_child(self)
+		multiplayer_connection.map.items.remove_child(self)
 
 		return true
 
