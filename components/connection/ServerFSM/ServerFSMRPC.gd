@@ -6,6 +6,8 @@ const COMPONENT_NAME = "ServerFSMRPC"
 
 signal server_registered(response: bool)
 
+@export var client_fsm_server_rpc: ClientFSMServerRPC = null
+
 # Reference to the MultiplayerConnection parent node.
 var _multiplayer_connection: MultiplayerConnection = null
 
@@ -60,5 +62,4 @@ func _register_response(response: bool):
 
 @rpc("call_remote", "authority", "reliable")
 func _register_user(username: String, cookie: String):
-	pass
-	# S.register_user(username, cookie)
+	client_fsm_server_rpc.register_user(username, cookie)

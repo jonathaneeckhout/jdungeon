@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=16 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://fp5jjs341obi" path="res://components/connection/ClockSynchronizer/ClockSynchronizer.tscn" id="5_emdm5"]
 [ext_resource type="PackedScene" uid="uid://dcur4xolp0oia" path="res://components/connection/ServerFSM/ServerFSM.tscn" id="5_uiu1q"]
 [ext_resource type="PackedScene" uid="uid://s8h0g10nfeim" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerRPC.tscn" id="6_1dj18"]
+[ext_resource type="PackedScene" uid="uid://cepejjmy1uay8" path="res://components/connection/ClientFSM/ClientFSMServerRPC.tscn" id="6_5ffrs"]
 [ext_resource type="PackedScene" uid="uid://b6qnexfdo1eg" path="res://components/common/statssynchronizercomponent/StatsSynchronizerRPC.tscn" id="7_6biju"]
 [ext_resource type="PackedScene" uid="uid://bn4fr6idoaxuw" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerRPC.tscn" id="8_3q1k4"]
 [ext_resource type="PackedScene" uid="uid://dderndos7tfdu" path="res://components/common/networkviewsynchronizercomponent/NetworkViewSynchronizerRPC.tscn" id="9_3pk1n"]
@@ -24,7 +25,8 @@ config = ExtResource("2_xw268")
 [node name="GatewayServer" parent="Connections" instance=ExtResource("3_ns7hw")]
 unique_name_in_owner = true
 
-[node name="SFR" parent="Connections/GatewayServer" instance=ExtResource("4_ejj7u")]
+[node name="SFR" parent="Connections/GatewayServer" node_paths=PackedStringArray("client_fsm_server_rpc") instance=ExtResource("4_ejj7u")]
+client_fsm_server_rpc = NodePath("../../ServerClient/CFSR")
 
 [node name="GatewayClient" parent="Connections" instance=ExtResource("3_ns7hw")]
 unique_name_in_owner = true
@@ -35,6 +37,8 @@ server_fsm_rpc = NodePath("../../GatewayServer/SFR")
 
 [node name="ServerClient" parent="Connections" instance=ExtResource("3_ns7hw")]
 unique_name_in_owner = true
+
+[node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
 
 [node name="CS" parent="Connections/ServerClient" instance=ExtResource("5_emdm5")]
 
