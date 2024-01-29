@@ -127,7 +127,7 @@ func _on_flee_timer_timeout():
 
 
 func _on_got_hurt(from: String, _damage: int):
-	_attacker = G.world.get_entity_by_name(from)
+	_attacker = _target_node.multiplayer_connection.world.get_entity_by_name(from)
 
 	# Ignore if we can't find the attacker
 	if _attacker == null:

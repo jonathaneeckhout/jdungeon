@@ -13,7 +13,7 @@ func _ready():
 	super()
 
 	# Server side
-	if G.is_server():
+	if multiplayer_connection.is_server():
 		shop.add_item("Axe", 10000)
 		shop.add_item("Sword", 5000)
 		shop.add_item("Club", 300)

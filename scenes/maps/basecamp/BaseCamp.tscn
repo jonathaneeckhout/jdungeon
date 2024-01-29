@@ -1,22 +1,13 @@
-[gd_scene load_steps=25 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=16 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
 [ext_resource type="TileSet" uid="uid://d0vhi8a2dswg6" path="res://data/tileset/navcol.tres" id="3_37stb"]
-[ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="3_mj652"]
-[ext_resource type="PackedScene" uid="uid://bv8wlx0nq04pc" path="res://scenes/enemies/WildBoar/WildBoar.tscn" id="3_nm4wr"]
-[ext_resource type="PackedScene" uid="uid://cj48j2lhcde1a" path="res://scenes/terrain/portal/Portal.tscn" id="3_x8ed5"]
-[ext_resource type="PackedScene" uid="uid://ilcdoo6dba8g" path="res://scenes/npcs/fernand/Fernand.tscn" id="4_1ma72"]
-[ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://scenes/enemies/Sheep/Sheep.tscn" id="4_ycvjw"]
-[ext_resource type="PackedScene" uid="uid://cgxevug65fx3d" path="res://scenes/enemies/BlueMole/BlueMole.tscn" id="5_oe42q"]
-[ext_resource type="PackedScene" uid="uid://cssne8offdlm8" path="res://scenes/npcs/guard/Guard.tscn" id="5_xpwou"]
 [ext_resource type="PackedScene" uid="uid://cj38jwlc6ip7v" path="res://scenes/terrain/buildings/fernandshouse/Fernandshouse.tscn" id="8_w02d5"]
 [ext_resource type="PackedScene" uid="uid://djgsmi37cipds" path="res://scenes/terrain/buildings/smalltent/SmallTent.tscn" id="9_v6wmp"]
 [ext_resource type="PackedScene" uid="uid://vsig12850hrc" path="res://scenes/terrain/buildings/bigtent/BigTent.tscn" id="10_mdbr4"]
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_8nwqo"]
 [ext_resource type="PackedScene" uid="uid://2e4xaioctby5" path="res://scenes/terrain/attributes/fires/campfire/Campfire.tscn" id="12_c2e8t"]
-[ext_resource type="PackedScene" uid="uid://bsauq1smmlnkl" path="res://scenes/enemies/Ladybug/Ladybug.tscn" id="16_oij41"]
-[ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="17_1d0ep"]
 [ext_resource type="PackedScene" uid="uid://cgbfsliknfb2x" path="res://scenes/terrain/buildings/smallclosedtent/SmallClosedTent.tscn" id="18_5sudt"]
 [ext_resource type="PackedScene" uid="uid://dbvwp47xtho6f" path="res://scenes/terrain/attributes/barrels/treebarrels/TreeBarrels.tscn" id="18_k4omq"]
 [ext_resource type="PackedScene" uid="uid://kqih0di4otpx" path="res://scenes/terrain/attributes/barrels/onebarrel/OneBarrel.tscn" id="19_h4hwk"]
@@ -202,197 +193,8 @@ position = Vector2(-432, -600)
 [node name="Enemies" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="BlueMole" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-3005, 3246)
-
-[node name="BlueMole5" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-3748, 2954)
-
-[node name="BlueMole7" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-3808, 3415)
-
-[node name="BlueMole8" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-3415, 3516)
-
-[node name="BlueMole9" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-3738, 3922)
-
-[node name="BlueMole10" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-3042, 3678)
-
-[node name="BlueMole11" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-3183, 3993)
-
-[node name="BlueMole6" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-3273, 2889)
-
-[node name="BlueMole2" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-2892, 2945)
-
-[node name="BlueMole12" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-2485, 3049)
-
-[node name="BlueMole13" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-3684, 2445)
-
-[node name="BlueMole14" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-2609, 2469)
-
-[node name="BlueMole3" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-2432, 3960)
-
-[node name="BlueMole4" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-2760, 3914)
-
-[node name="WildBoar" parent="Enemies" instance=ExtResource("3_nm4wr")]
-position = Vector2(-2072, 864)
-
-[node name="WildBoar2" parent="Enemies" instance=ExtResource("3_nm4wr")]
-position = Vector2(-3120, 424)
-
-[node name="WildBoar6" parent="Enemies" instance=ExtResource("3_nm4wr")]
-position = Vector2(-2344, 2056)
-
-[node name="WildBoar8" parent="Enemies" instance=ExtResource("3_nm4wr")]
-position = Vector2(-1128, 2176)
-
-[node name="WildBoar9" parent="Enemies" instance=ExtResource("3_nm4wr")]
-position = Vector2(-3216, -448)
-
-[node name="WildBoar11" parent="Enemies" instance=ExtResource("3_nm4wr")]
-position = Vector2(-2456, -1168)
-
-[node name="WildBoar12" parent="Enemies" instance=ExtResource("3_nm4wr")]
-position = Vector2(-3392, -1776)
-
-[node name="WildBoar13" parent="Enemies" instance=ExtResource("3_nm4wr")]
-position = Vector2(-1248, -1104)
-
-[node name="WildBoar14" parent="Enemies" instance=ExtResource("3_nm4wr")]
-position = Vector2(-2392, -256)
-
-[node name="WildBoar7" parent="Enemies" instance=ExtResource("3_nm4wr")]
-position = Vector2(-3288, 1536)
-
-[node name="Sheep" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(-808, 3560)
-
-[node name="Sheep14" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(-1592, 3496)
-
-[node name="Sheep4" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(928, 2144)
-
-[node name="Sheep6" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(752, 2624)
-
-[node name="Sheep7" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(1472, 2712)
-
-[node name="Sheep9" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(1736, 1960)
-
-[node name="Sheep10" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(2168, 2608)
-
-[node name="Sheep11" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(1072, 3488)
-
-[node name="Sheep12" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(632, 3712)
-
-[node name="Sheep13" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(-632, 3864)
-
-[node name="Sheep15" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(-1416, 3920)
-
-[node name="Sheep5" parent="Enemies" instance=ExtResource("4_ycvjw")]
-position = Vector2(-944, 1472)
-
-[node name="Ladybug" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-368, 1392)
-
-[node name="Ladybug2" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-1520, 1472)
-
-[node name="Ladybug3" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-2216, 1272)
-
-[node name="Ladybug4" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-2688, 1696)
-
-[node name="Ladybug6" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-3704, 944)
-
-[node name="Ladybug7" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-3784, 1936)
-
-[node name="Ladybug8" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-3240, 2504)
-
-[node name="Ladybug9" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-2816, 2104)
-
-[node name="Ladybug10" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-2008, 1936)
-
-[node name="Ladybug11" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-1536, 2376)
-
-[node name="Ladybug12" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-1512, 544)
-
-[node name="Ladybug13" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-1888, 3512)
-
-[node name="Ladybug14" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-1000, 3984)
-
-[node name="Ladybug15" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(-112, 3560)
-
-[node name="Ladybug17" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(1024, 3968)
-
-[node name="Ladybug18" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(504, 3392)
-
-[node name="Ladybug19" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(1192, 3056)
-
-[node name="Ladybug20" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(1400, 2424)
-
-[node name="Ladybug22" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(600, 2080)
-
-[node name="Ladybug23" parent="Enemies" instance=ExtResource("16_oij41")]
-position = Vector2(2304, 2264)
-
 [node name="NPCs" type="Node2D" parent="."]
 y_sort_enabled = true
-
-[node name="Milklady" parent="NPCs" instance=ExtResource("3_mj652")]
-position = Vector2(640, 0)
-
-[node name="Fernand" parent="NPCs" instance=ExtResource("4_1ma72")]
-position = Vector2(-320, 704)
-
-[node name="Guard" parent="NPCs" instance=ExtResource("5_xpwou")]
-position = Vector2(-987, -72)
-
-[node name="Guard2" parent="NPCs" instance=ExtResource("5_xpwou")]
-position = Vector2(-989, 128)
-
-[node name="Guard3" parent="NPCs" instance=ExtResource("5_xpwou")]
-position = Vector2(-128, 1152)
-
-[node name="Guard4" parent="NPCs" instance=ExtResource("5_xpwou")]
-position = Vector2(131, 1152)
-
-[node name="Turtur" parent="NPCs" instance=ExtResource("17_1d0ep")]
-position = Vector2(632, 736)
 
 [node name="PlayerRespawnLocations" type="Node2D" parent="."]
 
@@ -401,11 +203,6 @@ position = Vector2(0, 128)
 
 [node name="Portals" type="Node2D" parent="."]
 y_sort_enabled = true
-
-[node name="WakeningForestPortal" parent="Portals" instance=ExtResource("3_x8ed5")]
-position = Vector2(-3900, 0)
-destination_server = "WakeningForest"
-destination_portal = "BaseCampPortal"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0

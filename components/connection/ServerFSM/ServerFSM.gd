@@ -111,6 +111,7 @@ func _handle_init():
 	_map = J.map_scenes[map_name].instantiate()
 	# Set the name
 	_map.name = map_name
+	_map.multiplayer_connection = _server_client_server
 	# Add it to the Root scene (which is the parent of this script)
 	get_parent().add_child(_map)
 
