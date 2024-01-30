@@ -8,6 +8,7 @@ const COOKIE_TIMER_INTERVAL: float = 10.0
 const COOKIE_VALID_TIME: float = 60.0
 
 signal authenticated(response: bool)
+signal player_loaded(username: String, pos: Vector2)
 
 # Reference to the MultiplayerConnection parent node.
 var _multiplayer_connection: MultiplayerConnection = null
@@ -47,6 +48,10 @@ func register_user(username: String, cookie: String):
 
 func authenticate(username: String, cookie: String):
 	_authenticate.rpc_id(1, username, cookie)
+
+
+func load_player():
+	_load_player.rpc_id(1)
 
 
 func _authenticate_user(username: String, cookie: String) -> bool:
@@ -106,3 +111,30 @@ func _authenticate(username: String, cookie: String):
 @rpc("call_remote", "authority", "reliable")
 func _authentication_response(response: bool):
 	authenticated.emit(response)
+
+
+@rpc("call_remote", "any_peer", "reliable")
+func _load_player():
+	if not multiplayer.is_server():
+		return
+
+	var id = multiplayer.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not multiplayer.is_user_logged_in(id):
+		return
+
+	var user: MultiplayerConnection.User = multiplayer.get_user_by_id(id)
+	if user == null:
+		GodotLogger.warn("Could not find user with id=%d" % id)
+		return
+
+	if user.player == null:
+		pass
+
+	_load_player_response.rpc_id(id, user.username, user.player.position)
+
+
+@rpc("call_remote", "authority", "reliable")
+func _load_player_response(username: String, pos: Vector2):
+	player_loaded.emit(username, pos)

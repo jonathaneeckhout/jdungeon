@@ -1027,7 +1027,7 @@ position = Vector2(4, 3)
 remote_path = NodePath("../../../Sprites/LeftLeg")
 
 [node name="HitParticlesComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("19_ox7m0")]
-stats_synchronizer = NodePath("")
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

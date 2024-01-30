@@ -46,6 +46,7 @@ func _start_gateway():
 	%ServerClient.queue_free()
 
 	%ServerFsm.queue_free()
+	%ClientFsm.queue_free()
 
 	%SelectRunMode.queue_free()
 
@@ -103,6 +104,8 @@ func _start_server():
 	GodotLogger.info("Running as server")
 
 	%GatewayClient.queue_free()
+
+	%ClientFsm.queue_free()
 
 	%SelectRunMode.queue_free()
 

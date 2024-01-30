@@ -2,7 +2,7 @@ extends Node
 
 class_name ClientFSM
 
-enum STATES { IDLE, INIT, LOGIN, RUNNING }
+enum STATES { IDLE, INIT, LOGIN, LOAD, RUNNING }
 
 @export var _client_gateway_client: WebsocketMultiplayerConnection = null
 
@@ -60,6 +60,8 @@ func _fsm(new_state: STATES):
 			_handle_init()
 		STATES.LOGIN:
 			_handle_login()
+		STATES.LOAD:
+			_handle_load()
 		STATES.RUNNING:
 			_handle_state_running()
 
@@ -73,6 +75,8 @@ func _state_to_string(to_string_state: STATES) -> String:
 			return "Init"
 		STATES.LOGIN:
 			return "Login"
+		STATES.LOAD:
+			return "Load"
 		STATES.RUNNING:
 			return "Running"
 
@@ -125,7 +129,7 @@ func _handle_init():
 		return
 
 	# Init the gameserver server-side
-	if not _client_server_client.websocket_server_init():
+	if not _client_server_client.websocket_client_init():
 		GodotLogger.error("Failed to init the client for the server, quitting")
 
 		# Stop the game if init fails
@@ -191,9 +195,24 @@ func _handle_login():
 		GodotLogger.warn("Authentication with server failed")
 		return
 
+	J.server_client_multiplayer_connection = _client_server_client
+
+	# Instantiate the world scene
+	_map = J.map_scenes[server_info["name"]].instantiate()
+	# Set the name
+	_map.name = server_info["name"]
+	_map.multiplayer_connection = _client_server_client
+
+	# Add it to the Root scene (which is the parent of this script)
+	get_parent().add_child(_map)
+
 	GodotLogger.info("Login to game server=[%s] successful" % server_info["name"])
 
-	_fsm.call_deferred(STATES.RUNNING)
+	_fsm.call_deferred(STATES.LOAD)
+
+
+func _handle_load():
+	pass
 
 
 func _handle_state_running():
