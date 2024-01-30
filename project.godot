@@ -49,6 +49,7 @@ folder_colors={
 "res://data/": "gray",
 "res://docker/": "pink",
 "res://documentation/": "gray",
+"res://resources/": "teal",
 "res://scenes/": "blue",
 "res://scripts/": "purple",
 "res://test/": "pink"

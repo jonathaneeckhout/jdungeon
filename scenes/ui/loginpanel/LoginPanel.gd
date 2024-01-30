@@ -2,7 +2,7 @@ extends Control
 
 class_name LoginPanel
 
-signal login_pressed(credentials: Dictionary)
+signal login_pressed(username: String, password: String)
 signal create_account_pressed(username: String, password: String)
 signal show_create_account_pressed
 signal back_create_account_pressed
@@ -75,7 +75,7 @@ func _on_login_button_pressed():
 		GodotLogger.warn("Invalid username or password")
 		return
 
-	login_pressed.emit({"username": username, "password": password})
+	login_pressed.emit(username, password)
 
 
 func _on_show_create_account_menu():

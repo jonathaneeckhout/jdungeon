@@ -2,7 +2,7 @@ extends Node
 
 class_name ClientFSM
 
-enum STATES { IDLE, INIT, LOGIN, LOAD, RUNNING }
+enum STATES { IDLE, INIT, WAIT_LOGIN, LOGIN, WAIT_CREATE_ACCOUNT, CREATE_ACCOUNT, LOAD, RUNNING }
 
 const RETRY_TIME: float = 5.0
 
@@ -25,6 +25,10 @@ var _map: Map = null
 
 var _connected_to_gateway: bool = false
 
+var _login_pressed: bool = false
+var _username: String = ""
+var _password: String = ""
+
 
 func _ready():
 	# Get the ClientFSMRPC component.
@@ -42,6 +46,11 @@ func _ready():
 
 	# Ensure the ClientFSMServerRPC component is present
 	assert(_client_fsm_server_rpc != null, "Failed to get ClientFSMServerRPC component")
+
+	login_panel.login_pressed.connect(_on_login_pressed)
+	login_panel.show_create_account_pressed.connect(_on_show_create_account_pressed)
+	login_panel.create_account_pressed.connect(_on_create_account_pressed)
+	login_panel.back_create_account_pressed.connect(_on_back_create_account_pressed)
 
 	# Trigger the fsm, starting with the INIT state
 	_fsm.call_deferred(STATES.IDLE)
@@ -64,8 +73,14 @@ func _fsm(new_state: STATES):
 			pass
 		STATES.INIT:
 			_handle_init()
+		STATES.WAIT_LOGIN:
+			_handle_wait_login()
 		STATES.LOGIN:
 			_handle_login()
+		STATES.WAIT_CREATE_ACCOUNT:
+			_handle_wait_create_account()
+		STATES.CREATE_ACCOUNT:
+			_handle_create_account()
 		STATES.LOAD:
 			_handle_load()
 		STATES.RUNNING:
@@ -79,8 +94,14 @@ func _state_to_string(to_string_state: STATES) -> String:
 			return "Idle"
 		STATES.INIT:
 			return "Init"
+		STATES.WAIT_LOGIN:
+			return "Wait Login"
 		STATES.LOGIN:
 			return "Login"
+		STATES.WAIT_CREATE_ACCOUNT:
+			return "Wait Create Account"
+		STATES.CREATE_ACCOUNT:
+			return "Create Account"
 		STATES.LOAD:
 			return "Load"
 		STATES.RUNNING:
@@ -150,10 +171,10 @@ func _handle_init():
 
 	J.server_client_multiplayer_connection = _client_server_client
 
-	_fsm.call_deferred(STATES.LOGIN)
+	_fsm.call_deferred(STATES.WAIT_LOGIN)
 
 
-func _handle_login():
+func _handle_wait_login():
 	login_panel.show()
 	login_panel.show_login_container()
 
@@ -163,22 +184,28 @@ func _handle_login():
 
 		await get_tree().create_timer(RETRY_TIME).timeout
 
-		_fsm.call_deferred(STATES.LOGIN)
+		_fsm.call_deferred(STATES.WAIT_LOGIN)
 
 		return
 
-	var credentials: Dictionary = await login_panel.login_pressed
+	if _login_pressed:
+		_login_pressed = false
+		_fsm.call_deferred(STATES.LOGIN)
 
+
+func _handle_login():
 	# Authenticate the user
 	GodotLogger.info("Authenticating to gateway server")
-	_client_fsm_gateway_rpc.authenticate(credentials["username"], credentials["password"])
+	_client_fsm_gateway_rpc.authenticate(_username, _password)
+
+	_password = ""
 
 	# Wait for the response
 	var response = await _client_fsm_gateway_rpc.authenticated
 	if not response:
 		GodotLogger.warn("Login to gateway server failed")
 
-		_fsm.call_deferred(STATES.LOGIN)
+		_fsm.call_deferred(STATES.WAIT_LOGIN)
 
 		return
 
@@ -192,7 +219,7 @@ func _handle_login():
 	if server_info["error"]:
 		GodotLogger.warn("Failed to fetch server information")
 
-		_fsm.call_deferred(STATES.LOGIN)
+		_fsm.call_deferred(STATES.WAIT_LOGIN)
 
 		return
 
@@ -214,12 +241,14 @@ func _handle_login():
 	if !await _connect_to_server():
 		GodotLogger.error("Client could not connect to server")
 
-		_fsm.call_deferred(STATES.LOGIN)
+		_fsm.call_deferred(STATES.WAIT_LOGIN)
 
 		return
 
 	GodotLogger.info("Authenticating to gateway server=[%s]" % server_info["name"])
-	_client_fsm_server_rpc.authenticate(credentials["username"], server_info["cookie"])
+	_client_fsm_server_rpc.authenticate(_username, server_info["cookie"])
+
+	_username = ""
 
 	response = await _client_fsm_server_rpc.authenticated
 	if not response:
@@ -242,6 +271,14 @@ func _handle_login():
 	_fsm.call_deferred(STATES.LOAD)
 
 
+func _handle_wait_create_account():
+	pass
+
+
+func _handle_create_account():
+	pass
+
+
 func _handle_load():
 	_client_fsm_server_rpc.load_player()
 
@@ -258,3 +295,24 @@ func _handle_state_running():
 	GodotLogger.info("Client successfully started")
 
 	login_panel.hide()
+
+
+func _on_login_pressed(username: String, password: String):
+	if state == STATES.WAIT_LOGIN:
+		_login_pressed = true
+		_username = username
+		_password = password
+
+		_fsm.call_deferred(STATES.WAIT_LOGIN)
+
+
+func _on_show_create_account_pressed():
+	login_panel.show_create_account_container()
+
+
+func _on_back_create_account_pressed():
+	login_panel.show_login_container()
+
+
+func _on_create_account_pressed(_user: String, _pwd: String):
+	pass
