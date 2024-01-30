@@ -124,11 +124,14 @@ func server_add_player(username: String, pos: Vector2) -> Player:
 	return player
 
 
-func client_add_player(username: String, pos: Vector2, _own_player: bool) -> Player:
+func client_add_player(username: String, pos: Vector2, own_player: bool) -> Player:
 	var player: Player = J.player_scene.instantiate()
 	player.name = username
 	player.username = username
 	player.position = pos
+
+	if own_player:
+		multiplayer_connection.client_player = player
 
 	players.add_child(player)
 

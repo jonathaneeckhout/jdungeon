@@ -1,6 +1,12 @@
-[gd_scene load_steps=21 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=27 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_3edxt"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="2_5hhip"]
+[ext_resource type="PackedScene" uid="uid://bvkfby4kxvrh4" path="res://components/player/playerinteractioncomponent/PlayerInteractionComponent.tscn" id="2_bvelc"]
+[ext_resource type="PackedScene" uid="uid://cj1os37u6hrpv" path="res://components/player/playersynchronizer/PlayerSynchronizer.tscn" id="3_hfltt"]
+[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="4_w086p"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="5_6iyts"]
 [ext_resource type="Texture2D" uid="uid://dbm30gu6qnmt2" path="res://assets/images/player/base/scaled/Basecharacter.png" id="19_lfk4e"]
 [ext_resource type="Texture2D" uid="uid://bhjm6d6tf1jmt" path="res://assets/images/player/base/scaled/base_handback.png" id="20_26vwi"]
 [ext_resource type="Texture2D" uid="uid://b6cxuf50u0nbt" path="res://assets/images/player/base/scaled/base_legback.png" id="21_1v54o"]
@@ -1750,6 +1756,28 @@ _data = {
 collision_layer = 3
 collision_mask = 5
 script = ExtResource("1_yw2vn")
+
+[node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("2_3edxt")]
+
+[node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("2_5hhip")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_w086p")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="PlayerInteractionComponent" parent="." node_paths=PackedStringArray("player_synchronizer") instance=ExtResource("2_bvelc")]
+player_synchronizer = NodePath("../PlayerSynchronizer")
+
+[node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton", "action_synchronizer", "player_synchronizer") instance=ExtResource("5_6iyts")]
+skeleton = NodePath("../Skeleton")
+action_synchronizer = NodePath("../ActionSynchronizerComponent")
+player_synchronizer = NodePath("../PlayerSynchronizer")
+
+[node name="PlayerSynchronizer" parent="." node_paths=PackedStringArray("stats_component", "interaction_component", "animation_player", "update_face") instance=ExtResource("3_hfltt")]
+stats_component = NodePath("../StatsSynchronizerComponent")
+interaction_component = NodePath("../PlayerInteractionComponent")
+animation_player = NodePath("../AnimationPlayer")
+update_face = NodePath("../UpdateFaceComponent")
 
 [node name="Sprites" type="Node2D" parent="."]
 position = Vector2(-28, -100)

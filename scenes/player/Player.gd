@@ -5,12 +5,14 @@ class_name Player
 # const PLAYER_HP_GAIN_PER_LEVEL: int = 8
 # const PLAYER_ATTACK_POWER_GAIN_PER_LEVEL: float = 0.2
 
+var multiplayer_connection: MultiplayerConnection = null
+
 var username: String = ""
 var server: String = ""
 var peer_id: int = 0
-# var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
+var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
 
-# var component_list: Dictionary = {}
+var component_list: Dictionary = {}
 
 # @onready var position_synchronizer: PositionSynchronizerComponent = $PositionSynchronizerComponent
 # @onready
@@ -53,11 +55,18 @@ var peer_id: int = 0
 # var left_weapon: Item = null
 
 
-# func _init():
-# 	collision_layer = J.PHYSICS_LAYER_PLAYERS
+func _init():
+	collision_layer = J.PHYSICS_LAYER_PLAYERS
 
-# 	# The player cannot walk past NPCs and enemies. But other players cannot block their path.
-# 	collision_mask = J.PHYSICS_LAYER_WORLD + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS
+	# The player cannot walk past NPCs and enemies. But other players cannot block their path.
+	collision_mask = J.PHYSICS_LAYER_WORLD + J.PHYSICS_LAYER_ENEMIES + J.PHYSICS_LAYER_NPCS
+
+	multiplayer_connection = J.server_client_multiplayer_connection
+
+
+func _ready():
+	if multiplayer_connection.is_own_player(self):
+		focus_camera()
 
 
 # func _ready():
@@ -96,9 +105,8 @@ var peer_id: int = 0
 # 			$Camera2D.queue_free()
 
 
-# func focus_camera():
-# 	$Camera2D.make_current()
-
+func focus_camera():
+	$Camera2D.make_current()
 
 # func load_equipment_single_sprite(equipment_slot: String):
 # 	for child in equipment_sprites[equipment_slot].get_children():
@@ -114,7 +122,6 @@ var peer_id: int = 0
 # 		equipment_sprites[equipment_slot].add_child(item)
 # 	else:
 # 		equipment_sprites[equipment_slot].texture = original_sprite_textures[equipment_slot]
-
 
 # func load_equipment_double_sprites(equipment_slot: String):
 # 	for equipment_sprite in equipment_sprites[equipment_slot]:
@@ -141,7 +148,6 @@ var peer_id: int = 0
 # 		equipment_sprites[equipment_slot][0].texture = original_sprite_textures[equipment_slot][0]
 # 		equipment_sprites[equipment_slot][1].texture = original_sprite_textures[equipment_slot][1]
 
-
 # func load_equipment_weapons():
 # 	if right_weapon != null:
 # 		right_weapon.queue_free()
@@ -164,7 +170,6 @@ var peer_id: int = 0
 # 		left_weapon.get_node("EquipmentSprite").show()
 
 # 	move_equipment_weapons()
-
 
 # func move_equipment_weapons():
 # 	for child in equipment_sprites["RightHand"].get_children():
@@ -191,7 +196,6 @@ var peer_id: int = 0
 # 		if left_weapon != null:
 # 			equipment_sprites["RightOffHand"].add_child(left_weapon)
 
-
 # func equipment_changed():
 # 	load_equipment_single_sprite("Head")
 # 	load_equipment_single_sprite("Body")
@@ -199,14 +203,12 @@ var peer_id: int = 0
 # 	load_equipment_double_sprites("Legs")
 # 	load_equipment_weapons()
 
-
 # func calculate_level_boost() -> Boost:
 # 	var boost: Boost = Boost.new()
 # 	boost.hp_max = int((stats.level - 1) * PLAYER_HP_GAIN_PER_LEVEL)
 # 	boost.attack_power_min = int(stats.level * PLAYER_ATTACK_POWER_GAIN_PER_LEVEL)
 # 	boost.attack_power_max = boost.attack_power_min
 # 	return boost
-
 
 # func calculate_and_apply_boosts():
 # 	var boost: Boost = calculate_level_boost()
@@ -217,17 +219,14 @@ var peer_id: int = 0
 # 	stats.apply_boost(equipment_boost)
 # 	stats.apply_boost(boost)
 
-
 # func update_boosts():
 # 	stats.load_defaults()
 
 # 	calculate_and_apply_boosts()
 
-
 # func _on_stats_changed(stat_type: StatsSynchronizerComponent.TYPE):
 # 	if G.is_server() and stat_type == StatsSynchronizerComponent.TYPE.LEVEL:
 # 		update_boosts()
-
 
 # func _on_equipment_loaded():
 # 	if G.is_server():
@@ -235,13 +234,11 @@ var peer_id: int = 0
 # 	else:
 # 		equipment_changed()
 
-
 # func _on_item_equiped(_item_uuid: String, _item_class: String):
 # 	if G.is_server():
 # 		update_boosts()
 # 	else:
 # 		equipment_changed()
-
 
 # func _on_item_unequiped(_item_uuid: String):
 # 	if G.is_server():
@@ -249,16 +246,13 @@ var peer_id: int = 0
 # 	else:
 # 		equipment_changed()
 
-
 # func _on_died():
 # 	if not G.is_server() and G.is_own_player(self):
 # 		$Camera2D/UILayer/GUI/DeathPopup.show_popup()
 
-
 # func _on_respawned():
 # 	if not G.is_server() and G.is_own_player(self):
 # 		$Camera2D/UILayer/GUI/DeathPopup.hide()
-
 
 # func _on_direction_changed(_original: bool):
 # 	move_equipment_weapons()

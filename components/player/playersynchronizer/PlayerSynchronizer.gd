@@ -10,10 +10,6 @@ signal interacted(target: Node2D)
 ## This signal is being sent on the client and server sides.
 signal attacked(direction: Vector2)
 
-## Signal emitted when a player uses a skill.
-## This signal is being sent on the client and server sides.
-signal skill_used(where: Vector2, skill_class: String)
-
 ## Name of the animation of when the player has the weapon in his/her right hand
 const ATTACK_RIGHT_HAND_ANIMATIONS: Array[String] = [
 	"Attack_Right_Hand", "Attack_Right_Hand_1", "Attack_Right_Hand_2"
@@ -28,9 +24,7 @@ const INTERPOLATION_OFFSET: float = 0.1
 
 @export var stats_component: StatsSynchronizerComponent
 @export var interaction_component: PlayerInteractionComponent
-@export var action_synchronizer: ActionSynchronizerComponent
 @export var animation_player: AnimationPlayer
-# @export var skill_component: SkillComponent
 @export var update_face: UpdateFaceComponent
 
 ## This variable stores the postion of the player's mouse. It is updated on client and server side.
@@ -101,9 +95,6 @@ func _ready():
 
 		# Connect to the interacted signal to handle interactions
 		interacted.connect(_on_client_interacted)
-
-		# #When an instant cast ability is selected, it emulates using it at the player's position
-		# skill_component.skill_cast_on_select_selected.connect(_on_client_skill_instant_used)
 
 
 func _init_target_node() -> bool:
@@ -260,15 +251,6 @@ func _client_handle_right_click(click_global_pos: Vector2):
 	# Fetch targets under the cursor
 	_client_query_targets_under_mouse(click_global_pos)
 
-	# # Attempt to use a skill
-	# if skill_component.get_skill_current_class() != "":
-	# 	# Sync the skill usage to the server
-	# 	_player_synchronizer_rpc.skill_use(
-	# 		click_global_pos, skill_component.get_skill_current_class()
-	# 	)
-
-	# 	skill_used.emit(click_global_pos, skill_component.get_skill_current_class())
-
 	# Else, attempt to act on the target
 	if current_target != null:
 		# Sync the interaction to the server
@@ -346,15 +328,6 @@ func server_sync_input(frame: int, direction: Vector2, timestamp: float):
 	_input_buffer.append({"dir": direction, "dt": timestamp})
 
 
-# func server_sync_skill_use(target_location: Vector2, skill_class: String):
-# 	if skill_component.is_skill_present(skill_class):
-# 		skill_used.emit(target_location, skill_class)
-# 	else:
-# 		GodotLogger.warn(
-# 			'This skill_component does not own a skill of class "{0)"'.format([skill_class])
-# 		)
-
-
 func server_sync_interact(target_name: String):
 	# The player interacted with nothing
 	if target_name == "":
@@ -422,11 +395,6 @@ func server_handle_attack_request(timestamp: float, enemies: Array):
 
 			# This is the call that actually hurts the enemy
 			enemy.stats.hurt(_target_node, damage)
-
-
-# Emulate a right click when a skill is instantly used when selected
-func _on_client_skill_instant_used(_skill: SkillComponentResource):
-	_client_handle_right_click(_target_node.global_position)
 
 
 func _on_died():
