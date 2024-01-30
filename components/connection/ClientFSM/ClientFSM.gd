@@ -216,7 +216,9 @@ func _handle_load():
 
 	var player_info: Dictionary = await _client_fsm_server_rpc.player_loaded
 
-	_map.client_add_player(player_info["username"], player_info["pos"], true)
+	_map.client_add_player(
+		player_info["peer_id"], player_info["username"], player_info["pos"], true
+	)
 
 
 func _handle_state_running():

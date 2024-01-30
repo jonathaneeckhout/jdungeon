@@ -22,8 +22,14 @@ func _ready():
 	await _multiplayer_connection.init_done
 
 
-func add_player(peer_id: int, entity_name: String, target_entity_name: String, pos: Vector2):
-	_add_player.rpc_id(peer_id, entity_name, target_entity_name, pos)
+func add_player(
+	peer_id: int,
+	entity_name: String,
+	target_entity_peer_id: int,
+	target_entity_name: String,
+	pos: Vector2
+):
+	_add_player.rpc_id(peer_id, entity_name, target_entity_peer_id, target_entity_name, pos)
 
 
 func remove_player(peer_id: int, entity_name: String, target_entity_name: String):
@@ -63,7 +69,7 @@ func sync_bodies_in_view():
 
 
 @rpc("call_remote", "authority", "reliable")
-func _add_player(n: String, u: String, p: Vector2):
+func _add_player(n: String, i: int, u: String, p: Vector2):
 	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
 
 	if entity == null:
@@ -73,7 +79,7 @@ func _add_player(n: String, u: String, p: Vector2):
 		return
 
 	if entity.component_list.has("networkview_synchronizer"):
-		entity.component_list["networkview_synchronizer"].add_player(u, p)
+		entity.component_list["networkview_synchronizer"].add_player(i, u, p)
 
 
 @rpc(

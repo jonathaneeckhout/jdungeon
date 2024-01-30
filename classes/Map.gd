@@ -113,10 +113,11 @@ func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn
 	enemy_respawns.add_child(respawn)
 
 
-func server_add_player(username: String, pos: Vector2) -> Player:
+func server_add_player(peer_id: int, username: String, pos: Vector2) -> Player:
 	var player: Player = J.player_scene.instantiate()
 	player.name = username
 	player.username = username
+	player.peer_id = peer_id
 	player.position = pos
 
 	players.add_child(player)
@@ -124,10 +125,11 @@ func server_add_player(username: String, pos: Vector2) -> Player:
 	return player
 
 
-func client_add_player(username: String, pos: Vector2, own_player: bool) -> Player:
+func client_add_player(peer_id: int, username: String, pos: Vector2, own_player: bool) -> Player:
 	var player: Player = J.player_scene.instantiate()
 	player.name = username
 	player.username = username
+	player.peer_id = peer_id
 	player.position = pos
 
 	if own_player:

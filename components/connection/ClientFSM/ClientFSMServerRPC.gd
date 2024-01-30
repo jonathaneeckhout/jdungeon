@@ -130,11 +130,13 @@ func _load_player():
 		return
 
 	if user.player == null:
-		user.player = _multiplayer_connection.map.server_add_player(user.username, Vector2(0, 128))
+		user.player = _multiplayer_connection.map.server_add_player(
+			id, user.username, Vector2(0, 128)
+		)
 
-	_load_player_response.rpc_id(id, user.username, user.player.position)
+	_load_player_response.rpc_id(id, id, user.username, user.player.position)
 
 
 @rpc("call_remote", "authority", "reliable")
-func _load_player_response(username: String, pos: Vector2):
-	player_loaded.emit({"username": username, "pos": pos})
+func _load_player_response(peer_id: int, username: String, pos: Vector2):
+	player_loaded.emit({"peer_id": peer_id, "username": username, "pos": pos})

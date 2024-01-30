@@ -102,7 +102,7 @@ func handle_body(body: Node2D):
 				return
 
 			_network_view_synchronizer_rpc.add_player(
-				target_node.peer_id, target_node.name, body.username, body.position
+				target_node.peer_id, target_node.name, body.peer_id, body.username, body.position
 			)
 			player_added.emit(body.username, body.position)
 		J.ENTITY_TYPE.ENEMY:
@@ -165,7 +165,7 @@ func _on_body_network_view_area_body_exited(body: Node2D):
 		return
 
 	if bodies_in_view.has(body):
-		if target_node.peer_id in multiplayer.get_peers():
+		if target_node.peer_id in target_node.multiplayer_connection.multiplayer_api.get_peers():
 			match body.entity_type:
 				J.ENTITY_TYPE.PLAYER:
 					if body.get("username") == null:
@@ -197,10 +197,10 @@ func _on_body_network_view_area_body_exited(body: Node2D):
 		body_exited.emit(body)
 
 
-func add_player(username: String, pos: Vector2):
+func add_player(peer_id: int, username: String, pos: Vector2):
 	player_added.emit(username, pos)
 
-	target_node.multiplayer_connection.map.client_add_player(username, pos)
+	target_node.multiplayer_connection.map.client_add_player(peer_id, username, pos)
 
 
 func remove_player(username: String):

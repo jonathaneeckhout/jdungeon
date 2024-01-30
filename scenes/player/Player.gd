@@ -19,7 +19,7 @@ var component_list: Dictionary = {}
 # var network_view_synchronizer: NetworkViewSynchronizerComponent = $NetworkViewSynchronizerComponent
 # @onready var player_synchronizer: PlayerSynchronizer = $PlayerSynchronizer
 
-# @onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
+@onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
 # @onready var inventory: InventorySynchronizerComponent = $InventorySynchronizerComponent
 # @onready var equipment: EquipmentSynchronizerComponent = $EquipmentSynchronizerComponent
 # @onready var player_unstuck: PlayerUnstuckComponent = $PlayerUnstuckComponent
