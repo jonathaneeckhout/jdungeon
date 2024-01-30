@@ -1,11 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://bdgegw7cy4d1r"]
+[gd_scene load_steps=8 format=3 uid="uid://bdgegw7cy4d1r"]
 
 [ext_resource type="Script" path="res://scenes/ui/loginpanel/LoginPanel.gd" id="1_uhohb"]
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="2_d6ypk"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="3_itj7r"]
-[ext_resource type="PackedScene" uid="uid://retyeadedkag" path="res://scenes/ui/buttons/mute_unmute_all_button.tscn" id="3_lpu63"]
-[ext_resource type="AudioStream" uid="uid://b3kstyb5opkj1" path="res://assets/audio/ui/login_panel/ui_click/ui_click.mp3" id="3_pgl4f"]
-[ext_resource type="AudioStream" uid="uid://xvulnt1qjsua" path="res://assets/audio/ui/login_panel/village_consort/village_ consort.mp3" id="4_c7ug3"]
 
 [sub_resource type="Animation" id="Animation_hddh3"]
 length = 0.001
@@ -160,11 +157,9 @@ _data = {
 [node name="LoginPanel" type="Control"]
 custom_minimum_size = Vector2(800, 800)
 layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -172,33 +167,26 @@ size_flags_vertical = 4
 theme = ExtResource("2_d6ypk")
 script = ExtResource("1_uhohb")
 
-[node name="BackgroundImage" type="Sprite2D" parent="."]
-position = Vector2(400, 400)
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
 texture = ExtResource("3_itj7r")
 
-[node name="Panel" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="LoginContainer" type="VBoxContainer" parent="Panel"]
-visible = false
-custom_minimum_size = Vector2(500, 0)
+[node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -250.0
-offset_top = -138.0
-offset_right = 263.0
-offset_bottom = 180.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="LoginContainer" type="VBoxContainer" parent="Panel"]
+visible = false
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/LoginContainer"]
 layout_mode = 2
@@ -240,9 +228,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 placeholder_text = "Enter Your Password"
 alignment = 1
-secret = true
 caret_blink = true
 caret_blink_interval = 0.45
+secret = true
 
 [node name="MarginContainer3" type="MarginContainer" parent="Panel/LoginContainer"]
 layout_mode = 2
@@ -266,18 +254,7 @@ text = "Create Account"
 [node name="CreateAccountContainer" type="VBoxContainer" parent="Panel"]
 visible = false
 custom_minimum_size = Vector2(500, 0)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -250.0
-offset_top = -138.0
-offset_right = 263.0
-offset_bottom = 204.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/CreateAccountContainer"]
 layout_mode = 2
@@ -320,9 +297,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 placeholder_text = "Enter Your Password"
 alignment = 1
-secret = true
 caret_blink = true
 caret_blink_interval = 0.45
+secret = true
 
 [node name="PasswordConfirmText" type="LineEdit" parent="Panel/CreateAccountContainer/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(350, 0)
@@ -331,9 +308,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 placeholder_text = "Re-Enter Your Password"
 alignment = 1
-secret = true
 caret_blink = true
 caret_blink_interval = 0.45
+secret = true
 
 [node name="MarginContainer3" type="MarginContainer" parent="Panel/CreateAccountContainer"]
 layout_mode = 2
@@ -355,20 +332,7 @@ layout_mode = 2
 size_flags_vertical = 4
 text = "Back"
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Panel"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -78.0
-offset_right = 86.0
-grow_vertical = 0
-
-[node name="MuteUnmuteAllButton" parent="Panel/AspectRatioContainer" instance=ExtResource("3_lpu63")]
-layout_mode = 2
-
 [node name="TransitionPanel" type="Panel" parent="."]
-visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
@@ -381,11 +345,3 @@ grow_vertical = 2
 libraries = {
 "": SubResource("AnimationLibrary_3bwtf")
 }
-
-[node name="BackgroundAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_c7ug3")
-volume_db = -10.0
-
-[node name="ClickAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_pgl4f")
-volume_db = 10.0

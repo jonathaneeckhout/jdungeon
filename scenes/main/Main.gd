@@ -56,6 +56,7 @@ func _start_gateway():
 	%ServerFsm.queue_free()
 	%ClientFsm.queue_free()
 
+	%LoginPanel.queue_free()
 	%SelectRunMode.queue_free()
 
 	if not _gateway_server.websocket_server_init():
@@ -114,7 +115,8 @@ func _start_server():
 	%GatewayClient.queue_free()
 
 	%ClientFsm.queue_free()
-
+	
+	%LoginPanel.queue_free()
 	%SelectRunMode.queue_free()
 
 	# Register all the scenes so that they can accesses via the J singleton in the rest of the project

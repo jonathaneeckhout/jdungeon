@@ -4,11 +4,15 @@ class_name ClientFSM
 
 enum STATES { IDLE, INIT, LOGIN, LOAD, RUNNING }
 
+const RETRY_TIME: float = 5.0
+
 @export var _client_gateway_client: WebsocketMultiplayerConnection = null
 
 @export var _client_server_client: WebsocketMultiplayerConnection = null
 
 @export var config: Resource = null
+
+@export var login_panel: LoginPanel
 
 var state: STATES = STATES.IDLE
 
@@ -18,6 +22,8 @@ var _client_fsm_server_rpc: ClientFSMServerRPC = null
 
 # The map for the server
 var _map: Map = null
+
+var _connected_to_gateway: bool = false
 
 
 func _ready():
@@ -85,6 +91,10 @@ func _state_to_string(to_string_state: STATES) -> String:
 
 # Connect to the gateway server
 func _connect_to_gateway() -> bool:
+	if _connected_to_gateway:
+		GodotLogger.info("Already connected to gateway, no need to connect again")
+		return true
+
 	# Try to connect to the gateway server
 	if !_client_gateway_client.websocket_client_start(config.client_gateway_client_address):
 		GodotLogger.warn("Could not connect to gateway=[%s]" % config.client_gateway_client_address)
@@ -97,6 +107,8 @@ func _connect_to_gateway() -> bool:
 		return false
 
 	GodotLogger.info("Connected to gateway=[%s]" % config.client_gateway_client_address)
+
+	_connected_to_gateway = true
 
 	return true
 
@@ -142,19 +154,32 @@ func _handle_init():
 
 
 func _handle_login():
+	login_panel.show()
+	login_panel.show_login_container()
+
 	# Try to connect to the gateway server
 	if !await _connect_to_gateway():
 		GodotLogger.error("Client could not connect to gateway server")
+
+		await get_tree().create_timer(RETRY_TIME).timeout
+
+		_fsm.call_deferred(STATES.LOGIN)
+
 		return
+
+	var credentials: Dictionary = await login_panel.login_pressed
 
 	# Authenticate the user
 	GodotLogger.info("Authenticating to gateway server")
-	_client_fsm_gateway_rpc.authenticate("test", "test")
+	_client_fsm_gateway_rpc.authenticate(credentials["username"], credentials["password"])
 
 	# Wait for the response
 	var response = await _client_fsm_gateway_rpc.authenticated
 	if not response:
 		GodotLogger.warn("Login to gateway server failed")
+
+		_fsm.call_deferred(STATES.LOGIN)
+
 		return
 
 	GodotLogger.info("Login to gateway server successful")
@@ -166,6 +191,9 @@ func _handle_login():
 	var server_info: Dictionary = await _client_fsm_gateway_rpc.server_info_received
 	if server_info["error"]:
 		GodotLogger.warn("Failed to fetch server information")
+
+		_fsm.call_deferred(STATES.LOGIN)
+
 		return
 
 	# Disconnect the client from the gateway server
@@ -185,10 +213,13 @@ func _handle_login():
 	# Connect to the gameserver
 	if !await _connect_to_server():
 		GodotLogger.error("Client could not connect to server")
+
+		_fsm.call_deferred(STATES.LOGIN)
+
 		return
 
 	GodotLogger.info("Authenticating to gateway server=[%s]" % server_info["name"])
-	_client_fsm_server_rpc.authenticate("test", server_info["cookie"])
+	_client_fsm_server_rpc.authenticate(credentials["username"], server_info["cookie"])
 
 	response = await _client_fsm_server_rpc.authenticated
 	if not response:
@@ -220,6 +251,10 @@ func _handle_load():
 		player_info["peer_id"], player_info["username"], player_info["pos"], true
 	)
 
+	_fsm.call_deferred(STATES.RUNNING)
+
 
 func _handle_state_running():
 	GodotLogger.info("Client successfully started")
+
+	login_panel.hide()

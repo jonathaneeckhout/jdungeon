@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=17 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://dderndos7tfdu" path="res://components/player/networkviewsynchronizercomponent/NetworkViewSynchronizerRPC.tscn" id="9_3pk1n"]
 [ext_resource type="PackedScene" uid="uid://d4c6yl66u2fdc" path="res://components/player/playersynchronizer/PlayerSynchronizerRPC.tscn" id="10_ghnhu"]
 [ext_resource type="PackedScene" uid="uid://cyd1haegch4ux" path="res://components/connection/ClientFSM/ClientFSM.tscn" id="12_7v67k"]
+[ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="15_7xr38"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_et6n2")
@@ -57,10 +58,11 @@ unique_name_in_owner = true
 _server_gateway_client = NodePath("../Connections/GatewayServer")
 _server_client_server = NodePath("../Connections/ServerClient")
 
-[node name="ClientFsm" parent="." node_paths=PackedStringArray("_client_gateway_client", "_client_server_client") instance=ExtResource("12_7v67k")]
+[node name="ClientFsm" parent="." node_paths=PackedStringArray("_client_gateway_client", "_client_server_client", "login_panel") instance=ExtResource("12_7v67k")]
 unique_name_in_owner = true
 _client_gateway_client = NodePath("../Connections/GatewayClient")
 _client_server_client = NodePath("../Connections/ServerClient")
+login_panel = NodePath("../UI/LoginPanel")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -111,3 +113,7 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "3 - Run as Client"
 alignment = 0
+
+[node name="LoginPanel" parent="UI" instance=ExtResource("15_7xr38")]
+unique_name_in_owner = true
+visible = false
