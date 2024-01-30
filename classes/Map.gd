@@ -137,145 +137,58 @@ func client_add_player(username: String, pos: Vector2, own_player: bool) -> Play
 
 	return player
 
-# @export var respawn_locations: Node3D = null
 
-# ## Node grouping all the players
-# var players: Node3D = null
+func client_add_enemy(enemy_name: String, enemy_class: String, pos: Vector2):
+	if enemies.has_node(enemy_name):
+		GodotLogger.info("Enemy=[%s] already exists, no need to add again" % enemy_name)
+		return
 
-# ## Node grouping all the projectiles
-# var projectiles: Node3D = null
+	var enemy: CharacterBody2D = J.enemy_scenes[enemy_class].instantiate()
+	enemy.name = enemy_name
+	enemy.position = pos
+	enemies.add_child(enemy)
 
-# var client_decorations: Node = null
 
-# var _player_spawn_synchronizer: PlayerSpawnerSynchronizer = null
+func client_remove_enemy(enemy_name: String):
+	if enemies.has_node(enemy_name):
+		enemies.get_node(enemy_name).queue_free()
 
-# func _ready():
-# 	multiplayer_connection.map = self
 
-# 	randomize()
+func client_add_npc(
+	npc_name: String,
+	npc_class: String,
+	pos: Vector2,
+):
+	if npcs.has_node(npc_name):
+		GodotLogger.info("NPC=[%s] already exists, no need to add again" % npc_name)
+		return
 
-# 	# Create the players node
-# 	players = Node3D.new()
-# 	players.name = "Players"
-# 	add_child(players)
+	var npc: CharacterBody2D = J.npc_scenes[npc_class].instantiate()
+	npc.name = npc_name
+	npc.position = pos
 
-# 	# Create the projectiles node
-# 	projectiles = Node3D.new()
-# 	projectiles.name = "Projectiles"
-# 	add_child(projectiles)
+	npcs.add_child(npc)
 
-# 	# Create the projectiles node
-# 	client_decorations = Node3D.new()
-# 	client_decorations.name = "ClientDecorations"
-# 	add_child(client_decorations)
 
-# func map_init() -> bool:
-# 	# Common code
-# 	_player_spawn_synchronizer = (multiplayer_connection.component_list.get_component(
-# 		PlayerSpawnerSynchronizer.COMPONENT_NAME
-# 	))
+func client_remove_npc(npc_name: String):
+	if npcs.has_node(npc_name):
+		npcs.get_node(npc_name).queue_free()
 
-# 	assert(_player_spawn_synchronizer != null, "Failed to get PlayerSpawnerSynchronizer component")
 
-# 	# Server-side logic
-# 	if multiplayer_connection.is_server():
-# 		_player_spawn_synchronizer.server_player_added.connect(_on_server_player_added)
-# 		_player_spawn_synchronizer.server_player_removed.connect(_on_server_player_removed)
+func client_add_item(item_uuid: String, item_class: String, pos: Vector2):
+	if items.has_node(item_uuid):
+		GodotLogger.info("Item=[%s] already exists, no need to add again")
+		return
 
-# 	# Client-side logic
-# 	else:
-# 		# Listen to the signal for your player to be added
-# 		_player_spawn_synchronizer.client_player_added.connect(_on_client_player_added)
-# 		_player_spawn_synchronizer.client_player_removed.connect(_on_client_player_removed)
-# 	return true
+	var item: Item = J.item_scenes[item_class].instantiate()
+	item.uuid = item_uuid
+	item.item_class = item_class
+	item.position = pos
+	item.collision_layer = J.PHYSICS_LAYER_ITEMS
 
-# func get_random_spawn_location():
-# 	# Get how many respawn locations there are in this map
-# 	var number_of_respawn_location: int = respawn_locations.get_child_count()
+	items.add_child(item)
 
-# 	# Pick a random index of the childs
-# 	var random_spawn_location_index: int = randi() % number_of_respawn_location
 
-# 	# Get that random child
-# 	var random_spawn_location: RespawnLocation = respawn_locations.get_child(
-# 		random_spawn_location_index
-# 	)
-
-# 	# Return the position of this random respawn location
-# 	return random_spawn_location.position
-
-# ## Return an player by it's name if it doesn't exist it will return null
-# func get_player_by_name(player_name: String) -> Player:
-# 	return players.get_node_or_null(player_name)
-
-# func _on_server_player_added(username: String, peer_id: int):
-# 	# Fetch the user from the connection list
-# 	var user: MultiplayerConnection.User = multiplayer_connection.get_user_by_id(peer_id)
-# 	if user == null:
-# 		GodotLogger.warn("Could not find user with id=%d" % peer_id)
-# 		return
-
-# 	var new_player: Player = player_scene.instantiate()
-# 	new_player.name = username
-# 	new_player.peer_id = peer_id
-# 	new_player.position = get_random_spawn_location()
-# 	new_player.multiplayer_connection = multiplayer_connection
-
-# 	GodotLogger.info("Adding player=[%s] with id=[%d] to the map" % [new_player.name, peer_id])
-
-# 	# Add the player to the world
-# 	players.add_child(new_player)
-
-# 	user.player = new_player
-
-# 	_player_spawn_synchronizer.add_client_player(
-# 		new_player.peer_id, new_player.name, new_player.position, true
-# 	)
-
-# func _on_server_player_removed(username: String):
-# 	# Try to get the player with the given username
-# 	var player: Player = players.get_node_or_null(username)
-# 	if player == null:
-# 		return
-
-# 	GodotLogger.info("Removing player=[%s] from the map" % username)
-
-# 	_player_spawn_synchronizer.remove_client_player(player.peer_id, player.name)
-
-# 	# Make sure this player isn't updated anymore
-# 	player.set_physics_process(false)
-
-# 	# Queue the player for deletions
-# 	player.queue_free()
-
-# func _on_client_player_added(username: String, pos: Vector3, own_player: bool):
-# 	if players.has_node(username):
-# 		GodotLogger.info("Player=[%s] already exists, no need to add again" % username)
-# 		return
-
-# 	GodotLogger.info("Adding player=[%s] to the map" % username)
-
-# 	var new_player: Player = player_scene.instantiate()
-# 	new_player.name = username
-# 	new_player.position = pos
-# 	new_player.multiplayer_connection = multiplayer_connection
-
-# 	if own_player:
-# 		multiplayer_connection.client_player = new_player
-
-# 	# Add the player to the world
-# 	players.add_child(new_player)
-
-# func _on_client_player_removed(username: String):
-# 	# Try to get the player with the given username
-# 	var player: Player = players.get_node_or_null(username)
-# 	if player == null:
-# 		return
-
-# 	GodotLogger.info("Removing player=[%s] from the map" % username)
-
-# 	# Make sure this player isn't updated anymore
-# 	player.set_physics_process(false)
-
-# 	# Queue the player for deletions
-# 	player.queue_free()
+func client_remove_item(item_uuid: String):
+	if items.has_node(item_uuid):
+		items.get_node(item_uuid).queue_free()

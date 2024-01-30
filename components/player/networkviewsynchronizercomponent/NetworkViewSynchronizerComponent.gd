@@ -90,6 +90,8 @@ func _ready():
 
 		# Synchronize bodies in view.
 		_network_view_synchronizer_rpc.sync_bodies_in_view()
+	else:
+		queue_free()
 
 
 func handle_body(body: Node2D):
@@ -198,33 +200,49 @@ func _on_body_network_view_area_body_exited(body: Node2D):
 func add_player(username: String, pos: Vector2):
 	player_added.emit(username, pos)
 
+	target_node.multiplayer_connection.map.client_add_player(username, pos)
+
 
 func remove_player(username: String):
 	player_removed.emit(username)
+
+	target_node.multiplayer_connection.map.client_remove_player(username)
 
 
 func add_enemy(enemy_name: String, enemy_class: String, pos: Vector2):
 	enemy_added.emit(enemy_name, enemy_class, pos)
 
+	target_node.multiplayer_connection.map.client_add_enemy(enemy_name, enemy_class, pos)
+
 
 func remove_enemy(enemy_name: String):
 	enemy_removed.emit(enemy_name)
+
+	target_node.multiplayer_connection.map.client_remove_enemy(enemy_name)
 
 
 func add_npc(npc_name: String, npc_class: String, pos: Vector2):
 	npc_added.emit(npc_name, npc_class, pos)
 
+	target_node.multiplayer_connection.map.client_add_npc(npc_name, npc_class, pos)
+
 
 func remove_npc(npc_name: String):
 	npc_removed.emit(npc_name)
+
+	target_node.multiplayer_connection.map.client_remove_npc(npc_name)
 
 
 func add_item(item_uuid: String, item_class: String, pos: Vector2):
 	item_added.emit(item_uuid, item_class, pos)
 
+	target_node.multiplayer_connection.map.client_add_item(item_uuid, item_class, pos)
+
 
 func remove_item(item_uuid: String):
 	item_removed.emit(item_uuid)
+
+	target_node.multiplayer_connection.map.client_remove_item(item_uuid)
 
 
 func sync_bodies_in_view():
