@@ -36,6 +36,8 @@ func _ready():
 		check_cookie_timer.timeout.connect(_on_check_cookie_timer_timeout)
 		add_child(check_cookie_timer)
 
+		_multiplayer_connection.client_disconnected.connect(_on_client_disconnected)
+
 
 func register_user(username: String, cookie: String):
 	GodotLogger.info("Registering user=[%s]" % username)
@@ -130,6 +132,7 @@ func _load_player():
 		return
 
 	if user.player == null:
+		# TODO: fix this spawn location
 		user.player = _multiplayer_connection.map.server_add_player(
 			id, user.username, Vector2(0, 128)
 		)
@@ -140,3 +143,7 @@ func _load_player():
 @rpc("call_remote", "authority", "reliable")
 func _load_player_response(peer_id: int, username: String, pos: Vector2):
 	player_loaded.emit({"peer_id": peer_id, "username": username, "pos": pos})
+
+
+func _on_client_disconnected(username: String):
+	_multiplayer_connection.map.server_remove_player(username)

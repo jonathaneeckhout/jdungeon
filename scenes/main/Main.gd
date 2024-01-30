@@ -32,6 +32,14 @@ func _ready():
 	%RunAsServerButton.pressed.connect(_on_run_as_server_pressed)
 	%RunAsClientButton.pressed.connect(_on_run_as_client_pressed)
 
+	if config.mode == ConfigResource.MODE.DEPLOYMENT:
+		if "--gateway" in OS.get_cmdline_args():
+			_start_gateway()
+		elif "--server" in OS.get_cmdline_args():
+			_start_server()
+		else:
+			_start_client()
+
 
 func _start_gateway():
 	GodotLogger._prefix = gateway_logging_prefix

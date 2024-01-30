@@ -125,6 +125,11 @@ func server_add_player(peer_id: int, username: String, pos: Vector2) -> Player:
 	return player
 
 
+func server_remove_player(username: String):
+	if players.has_node(username):
+		players.get_node(username).queue_free()
+
+
 func client_add_player(peer_id: int, username: String, pos: Vector2, own_player: bool) -> Player:
 	var player: Player = J.player_scene.instantiate()
 	player.name = username

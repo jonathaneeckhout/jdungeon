@@ -5,6 +5,8 @@ class_name MultiplayerConnection
 ## Signal indicating if a client connected or not
 signal client_connected(connected: bool)
 
+signal client_disconnected(username: String)
+
 ## Signal to indicate that the initialization is done. Used for the child components
 signal init_done
 
@@ -213,6 +215,13 @@ func _on_server_peer_connected(id: int):
 
 func _on_server_peer_disconnected(id: int):
 	GodotLogger.info("Peer disconnected %d" % id)
+
+	var user: User = get_user_by_id(id)
+	if user == null:
+		GodotLogger.warn("Could not find user with id=%d" % id)
+		return
+
+	client_disconnected.emit(user.username)
 
 	_server_users.erase(id)
 
