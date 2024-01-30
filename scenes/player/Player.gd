@@ -65,8 +65,15 @@ func _init():
 
 
 func _ready():
-	if multiplayer_connection.is_own_player(self):
-		focus_camera()
+	if multiplayer_connection.is_server():
+		pass
+	else:
+		$InterfaceComponent.display_name = username
+
+		if multiplayer_connection.is_own_player(self):
+			focus_camera()
+		else:
+			$Camera2D.queue_free()
 
 
 # func _ready():

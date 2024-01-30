@@ -127,7 +127,9 @@ func server_add_player(peer_id: int, username: String, pos: Vector2) -> Player:
 
 func server_remove_player(username: String):
 	if players.has_node(username):
-		players.get_node(username).queue_free()
+		var player: Player = players.get_node(username)
+		player.set_physics_process(false)
+		player.queue_free()
 
 
 func client_add_player(peer_id: int, username: String, pos: Vector2, own_player: bool) -> Player:

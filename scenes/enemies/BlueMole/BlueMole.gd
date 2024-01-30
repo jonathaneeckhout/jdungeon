@@ -8,3 +8,5 @@ func _init():
 
 func _ready():
 	super()
+
+	$InterfaceComponent.display_name = enemy_class

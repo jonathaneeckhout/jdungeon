@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cgxevug65fx3d"]
+[gd_scene load_steps=27 format=3 uid="uid://cgxevug65fx3d"]
 
 [ext_resource type="Script" path="res://scenes/enemies/BlueMole/BlueMole.gd" id="1_0kuqc"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_7anrd"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_332co"]
 [ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="6_hj783"]
 [ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="6_lv1v7"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://components/common/interfacecomponent/InterfaceComponent.tscn" id="7_3lv1e"]
+[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="8_q46g2"]
 [ext_resource type="Texture2D" uid="uid://ix4rovrd5tqg" path="res://assets/images/enemies/bluemole/scaled/Arm1.png" id="9_82elk"]
 [ext_resource type="Texture2D" uid="uid://xnjigwd7ta4k" path="res://assets/images/enemies/bluemole/scaled/Arm2.png" id="10_hd4po"]
 [ext_resource type="Texture2D" uid="uid://dqyouflmy1kq6" path="res://assets/images/enemies/bluemole/scaled/Body.png" id="11_6l74c"]
@@ -965,6 +967,14 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
 [node name="WanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component") instance=ExtResource("6_hj783")]
 stats_component = NodePath("../StatsSynchronizerComponent")
+
+[node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("7_3lv1e")]
+offset_top = -53.0
+offset_bottom = -13.0
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+
+[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("8_q46g2")]
+stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="Sprites" type="Node2D" parent="."]
 modulate = Color(1, 1, 1, 0.937745)
