@@ -112,6 +112,28 @@ func queue_enemy_respawn(enemy_class: String, respawn_position: Vector2, respawn
 
 	enemy_respawns.add_child(respawn)
 
+
+func server_add_player(username: String, pos: Vector2) -> Player:
+	var player: Player = J.player_scene.instantiate()
+	player.name = username
+	player.username = username
+	player.position = pos
+
+	players.add_child(player)
+
+	return player
+
+
+func client_add_player(username: String, pos: Vector2, _own_player: bool) -> Player:
+	var player: Player = J.player_scene.instantiate()
+	player.name = username
+	player.username = username
+	player.position = pos
+
+	players.add_child(player)
+
+	return player
+
 # @export var respawn_locations: Node3D = null
 
 # ## Node grouping all the players

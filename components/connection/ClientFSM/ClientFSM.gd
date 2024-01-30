@@ -212,7 +212,9 @@ func _handle_login():
 
 
 func _handle_load():
-	pass
+	_client_fsm_server_rpc.load_player()
+
+	var player_info: Dictionary = await _client_fsm_server_rpc.player_loaded
 
 
 func _handle_state_running():
