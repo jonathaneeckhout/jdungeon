@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=18 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://d4c6yl66u2fdc" path="res://components/player/playersynchronizer/PlayerSynchronizerRPC.tscn" id="10_ghnhu"]
 [ext_resource type="PackedScene" uid="uid://cyd1haegch4ux" path="res://components/connection/ClientFSM/ClientFSM.tscn" id="12_7v67k"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="15_7xr38"]
+[ext_resource type="PackedScene" uid="uid://bikd514i5nqux" path="res://components/connection/Database/Database.tscn" id="15_byw11"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_et6n2")
@@ -63,6 +64,9 @@ unique_name_in_owner = true
 _client_gateway_client = NodePath("../Connections/GatewayClient")
 _client_server_client = NodePath("../Connections/ServerClient")
 login_panel = NodePath("../UI/LoginPanel")
+
+[node name="Database" parent="." instance=ExtResource("15_byw11")]
+unique_name_in_owner = true
 
 [node name="UI" type="CanvasLayer" parent="."]
 

@@ -27,3 +27,5 @@ client_gateway_client_address = "ws://localhost:9072"
 client_gateway_client_fps = 30
 client_server_client_address = "ws://localhost:9073"
 client_server_client_fps = 30
+database_backend = 0
+json_backend_file = "res://data/users.json"

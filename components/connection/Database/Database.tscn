@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bikd514i5nqux"]
+
+[ext_resource type="Script" path="res://components/connection/Database/Database.gd" id="1_d7imd"]
+
+[node name="Database" type="Node"]
+script = ExtResource("1_d7imd")

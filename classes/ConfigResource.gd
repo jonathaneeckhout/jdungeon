@@ -40,3 +40,7 @@ enum MODE { DEVELOPMENT, DEPLOYMENT }
 @export_group("Client Server Configuration")
 @export var client_server_client_address: String = "ws://localhost:9073"
 @export var client_server_client_fps: int = 30
+
+@export_group("Database Configuration")
+@export var database_backend: Database.BACKENDS = Database.BACKENDS.JSON
+@export var json_backend_file: String = "res://data/users.json"

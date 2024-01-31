@@ -59,6 +59,13 @@ func _start_gateway():
 	%LoginPanel.queue_free()
 	%SelectRunMode.queue_free()
 
+	%Database.config = config
+
+	if not %Database.init():
+		GodotLogger.error("Failed to start database")
+
+		get_tree().quit()
+
 	if not _gateway_server.websocket_server_init():
 		GodotLogger.error("Failed to init gateway server websocket server")
 
@@ -115,14 +122,22 @@ func _start_server():
 	%GatewayClient.queue_free()
 
 	%ClientFsm.queue_free()
-	
+
 	%LoginPanel.queue_free()
 	%SelectRunMode.queue_free()
 
 	# Register all the scenes so that they can accesses via the J singleton in the rest of the project
 	J.register_scenes()
 
+	%Database.config = config
+
+	if not %Database.init():
+		GodotLogger.error("Failed to start database")
+
+		get_tree().quit()
+
 	%ServerFsm.config = config
+
 	# Hardcore this value for now
 	%ServerFsm.map_name = "BaseCamp"
 	%ServerFsm.start()
@@ -141,6 +156,8 @@ func _start_client():
 	%GatewayServer.queue_free()
 
 	%ServerFsm.queue_free()
+
+	%Database.queue_free()
 
 	%SelectRunMode.queue_free()
 

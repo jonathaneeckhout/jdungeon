@@ -2,29 +2,34 @@ extends Node
 
 class_name Database
 
-var backend: Node
+enum BACKENDS { JSON, POSTGRES }
+
+@export var config: ConfigResource = null
+
+var _backend: Node
 
 
 func init() -> bool:
-	match Global.env_database_backend:
-		"json":
+	match config.database_backend:
+		BACKENDS.JSON:
 			GodotLogger.info("Loading json database backend")
-			backend = JSONDatabaseBackend.new()
-			backend.name = "Backend"
-			add_child(backend)
-		"postgres":
+			_backend = JSONDatabaseBackend.new()
+			_backend.name = "JsonBackend"
+			_backend.config = config
+			add_child(_backend)
+		BACKENDS.POSTGRES:
 			GodotLogger.info("Loading postgres database backend")
-			backend = (
+			_backend = (
 				load("res://scripts/network/database/backends/PostgresDatabaseBackend.cs").new()
 			)
-			backend.name = "Backend"
-			add_child(backend)
+			_backend.name = "PostgresBackend"
+			add_child(_backend)
 
-	if not backend or not backend.Init():
+	if not _backend or not _backend.Init():
 		GodotLogger.error("Failed to init database")
 		return false
 
-	GodotLogger.info("Database backend=[%s] successfully loaded" % Global.env_database_backend)
+	GodotLogger.info("Database backend=[%s] successfully loaded" % _backend.name)
 
 	return true
 
@@ -35,7 +40,7 @@ func create_account(username: String, password: String) -> Dictionary:
 		GodotLogger.info("Invalid account for username=[%s]" % username)
 		return validation_result
 
-	return backend.CreateAccount(username, password)
+	return _backend.CreateAccount(username, password)
 
 
 func is_account_valid(username: String, password: String) -> Dictionary:
@@ -77,12 +82,12 @@ func authenticate_user(username: String, password: String) -> bool:
 		GodotLogger.info("Invalid username or password")
 		return false
 
-	return backend.AuthenticateUser(username, password)
+	return _backend.AuthenticateUser(username, password)
 
 
 func store_player_data(username: String, data: Dictionary) -> bool:
-	return backend.StorePlayerData(username, data)
+	return _backend.StorePlayerData(username, data)
 
 
 func load_player_data(username: String) -> Dictionary:
-	return backend.LoadPlayerData(username)
+	return _backend.LoadPlayerData(username)
