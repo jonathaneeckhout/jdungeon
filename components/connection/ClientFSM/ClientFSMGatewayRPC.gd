@@ -6,10 +6,13 @@ const COMPONENT_NAME = "ClientFSMGatewayRPC"
 
 signal authenticated(response: bool)
 signal server_info_received(response: Dictionary)
+signal account_created(response: Dictionary)
 
 @export var gateway_server_multiplayer_connection: WebsocketMultiplayerConnection = null
 
 @export var server_fsm_rpc: ServerFSMRPC = null
+
+@export var database: Database = null
 
 # Reference to the MultiplayerConnection parent node.
 var _multiplayer_connection: MultiplayerConnection = null
@@ -35,19 +38,22 @@ func get_server():
 	_get_server.rpc_id(1)
 
 
+func create_account(username: String, password: String):
+	_create_account.rpc_id(1, username, password)
+
+
 @rpc("call_remote", "any_peer", "reliable")
-func _authenticate(username: String, _password: String):
+func _authenticate(username: String, password: String):
 	if not _multiplayer_connection.is_server():
 		return
 
 	GodotLogger.info("Authenticating user=[%s]" % username)
-	var id = multiplayer.get_remote_sender_id()
+	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
-	var res: bool = true
-	# var res = C.database.authenticate_user(username, password)
-	# if not res:
-	# 	authentication_response.rpc_id(id, false)
-	# 	return
+	var res = database.authenticate_user(username, password)
+	if not res:
+		_authentication_response.rpc_id(id, false)
+		return
 
 	var user: MultiplayerConnection.User = _multiplayer_connection.get_user_by_id(id)
 	if user == null:
@@ -71,7 +77,7 @@ func _get_server():
 	if not _multiplayer_connection.is_server():
 		return
 
-	var id = multiplayer.get_remote_sender_id()
+	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
 	# Only allow logged in players
 	if not _multiplayer_connection.is_user_logged_in(id):
@@ -116,3 +122,23 @@ func _get_server_response(error: bool, server_name: String, address: String, coo
 	server_info_received.emit(
 		{"error": error, "name": server_name, "address": address, "cookie": cookie}
 	)
+
+
+@rpc("call_remote", "any_peer", "reliable")
+func _create_account(username: String, password: String):
+	if not _multiplayer_connection.is_server():
+		return
+
+	GodotLogger.info("Creating account for user=[%s]" % username)
+	var id: int = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
+
+	var create_account_result: Dictionary = database.create_account(username, password)
+	if create_account_result["result"]:
+		_create_account_response.rpc_id(id, false, "Account created")
+	else:
+		_create_account_response.rpc_id(id, true, create_account_result["error"])
+
+
+@rpc("call_remote", "authority", "reliable")
+func _create_account_response(error: bool, reason: String = ""):
+	account_created.emit({"error": error, "reason": reason})

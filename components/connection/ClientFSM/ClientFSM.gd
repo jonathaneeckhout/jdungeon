@@ -2,7 +2,7 @@ extends Node
 
 class_name ClientFSM
 
-enum STATES { IDLE, INIT, LOGIN, WAIT_CREATE_ACCOUNT, CREATE_ACCOUNT, LOAD, RUNNING }
+enum STATES { IDLE, INIT, LOGIN, CREATE_ACCOUNT, LOAD, RUNNING }
 
 const RETRY_TIME: float = 5.0
 
@@ -26,6 +26,7 @@ var _map: Map = null
 var _connected_to_gateway: bool = false
 
 var _login_pressed: bool = false
+var _create_account_pressed: bool = false
 var _username: String = ""
 var _password: String = ""
 
@@ -75,8 +76,6 @@ func _fsm(new_state: STATES):
 			_handle_init()
 		STATES.LOGIN:
 			_handle_login()
-		STATES.WAIT_CREATE_ACCOUNT:
-			_handle_wait_create_account()
 		STATES.CREATE_ACCOUNT:
 			_handle_create_account()
 		STATES.LOAD:
@@ -94,8 +93,6 @@ func _state_to_string(to_string_state: STATES) -> String:
 			return "Init"
 		STATES.LOGIN:
 			return "Login"
-		STATES.WAIT_CREATE_ACCOUNT:
-			return "Wait Create Account"
 		STATES.CREATE_ACCOUNT:
 			return "Create Account"
 		STATES.LOAD:
@@ -116,11 +113,16 @@ func _connect_to_gateway() -> bool:
 	if !_client_gateway_client.websocket_client_start(config.client_gateway_client_address):
 		GodotLogger.warn("Could not connect to gateway=[%s]" % config.client_gateway_client_address)
 
+		JUI.alertbox("Error connecting to gateway", login_panel)
+
 		return false
 
 	# Wait until you receive the server_connected signal
 	if !await _client_gateway_client.client_connected:
 		GodotLogger.warn("Could not connect to gateway=[%s]" % config.client_gateway_client_address)
+
+		JUI.alertbox("Error connecting to gateway", login_panel)
+
 		return false
 
 	GodotLogger.info("Connected to gateway=[%s]" % config.client_gateway_client_address)
@@ -136,11 +138,16 @@ func _connect_to_server() -> bool:
 	if !_client_server_client.websocket_client_start(config.client_server_client_address):
 		GodotLogger.warn("Could not connect to server=[%s]" % config.client_server_client_address)
 
+		JUI.alertbox("Error connecting to server", login_panel)
+
 		return false
 
 	# Wait until you receive the server_connected signal
 	if !await _client_server_client.client_connected:
 		GodotLogger.warn("Could not connect to server=[%s]" % config.client_server_client_address)
+
+		JUI.alertbox("Error connecting to server", login_panel)
+
 		return false
 
 	GodotLogger.info("Connected to server=[%s]" % config.client_server_client_address)
@@ -200,6 +207,8 @@ func _handle_login():
 	if not response:
 		GodotLogger.warn("Login to gateway server failed")
 
+		JUI.alertbox("Login to gateway server failed", login_panel)
+
 		_fsm.call_deferred(STATES.LOGIN)
 
 		return
@@ -213,6 +222,8 @@ func _handle_login():
 	var server_info: Dictionary = await _client_fsm_gateway_rpc.server_info_received
 	if server_info["error"]:
 		GodotLogger.warn("Failed to fetch server information")
+
+		JUI.alertbox("Server error, please try again", login_panel)
 
 		_fsm.call_deferred(STATES.LOGIN)
 
@@ -248,6 +259,9 @@ func _handle_login():
 	response = await _client_fsm_server_rpc.authenticated
 	if not response:
 		GodotLogger.warn("Authentication with server failed")
+
+		JUI.alertbox("Authentication with server failed", login_panel)
+
 		return
 
 	J.server_client_multiplayer_connection = _client_server_client
@@ -266,12 +280,38 @@ func _handle_login():
 	_fsm.call_deferred(STATES.LOAD)
 
 
-func _handle_wait_create_account():
-	pass
-
-
 func _handle_create_account():
-	pass
+	login_panel.show()
+	login_panel.show_create_account_container()
+
+	# Try to connect to the gateway server
+	if !await _connect_to_gateway():
+		GodotLogger.error("Client could not connect to gateway server")
+
+		await get_tree().create_timer(RETRY_TIME).timeout
+
+		_fsm.call_deferred(STATES.LOGIN)
+
+		return
+
+	if not _create_account_pressed:
+		return
+
+	_create_account_pressed = false
+
+	GodotLogger.info("Creating new user=%s" % _username)
+
+	_client_fsm_gateway_rpc.create_account(_username, _password)
+
+	var response = await _client_fsm_gateway_rpc.account_created
+	if response["error"]:
+		JUI.alertbox(response["reason"], login_panel)
+	else:
+		JUI.alertbox("Account created", login_panel)
+
+		_login_pressed = true
+
+	_fsm.call_deferred(STATES.LOGIN)
 
 
 func _handle_load():
@@ -302,12 +342,17 @@ func _on_login_pressed(username: String, password: String):
 
 
 func _on_show_create_account_pressed():
-	login_panel.show_create_account_container()
+	_fsm.call_deferred(STATES.CREATE_ACCOUNT)
 
 
 func _on_back_create_account_pressed():
 	login_panel.show_login_container()
 
 
-func _on_create_account_pressed(_user: String, _pwd: String):
-	pass
+func _on_create_account_pressed(username: String, password: String):
+	if state == STATES.CREATE_ACCOUNT:
+		_create_account_pressed = true
+		_username = username
+		_password = password
+
+		_fsm.call_deferred(STATES.CREATE_ACCOUNT)

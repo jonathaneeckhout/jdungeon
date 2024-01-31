@@ -33,9 +33,10 @@ client_fsm_server_rpc = NodePath("../../ServerClient/CFSR")
 [node name="GatewayClient" parent="Connections" instance=ExtResource("3_ns7hw")]
 unique_name_in_owner = true
 
-[node name="CFGR" parent="Connections/GatewayClient" node_paths=PackedStringArray("gateway_server_multiplayer_connection", "server_fsm_rpc") instance=ExtResource("5_6g1wk")]
+[node name="CFGR" parent="Connections/GatewayClient" node_paths=PackedStringArray("gateway_server_multiplayer_connection", "server_fsm_rpc", "database") instance=ExtResource("5_6g1wk")]
 gateway_server_multiplayer_connection = NodePath("../../GatewayServer")
 server_fsm_rpc = NodePath("../../GatewayServer/SFR")
+database = NodePath("../../../Database")
 
 [node name="ServerClient" parent="Connections" instance=ExtResource("3_ns7hw")]
 unique_name_in_owner = true
