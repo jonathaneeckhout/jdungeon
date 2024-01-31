@@ -2,7 +2,7 @@ extends Node
 
 class_name ClientFSM
 
-enum STATES { IDLE, INIT, WAIT_LOGIN, LOGIN, WAIT_CREATE_ACCOUNT, CREATE_ACCOUNT, LOAD, RUNNING }
+enum STATES { IDLE, INIT, LOGIN, WAIT_CREATE_ACCOUNT, CREATE_ACCOUNT, LOAD, RUNNING }
 
 const RETRY_TIME: float = 5.0
 
@@ -73,8 +73,6 @@ func _fsm(new_state: STATES):
 			pass
 		STATES.INIT:
 			_handle_init()
-		STATES.WAIT_LOGIN:
-			_handle_wait_login()
 		STATES.LOGIN:
 			_handle_login()
 		STATES.WAIT_CREATE_ACCOUNT:
@@ -94,8 +92,6 @@ func _state_to_string(to_string_state: STATES) -> String:
 			return "Idle"
 		STATES.INIT:
 			return "Init"
-		STATES.WAIT_LOGIN:
-			return "Wait Login"
 		STATES.LOGIN:
 			return "Login"
 		STATES.WAIT_CREATE_ACCOUNT:
@@ -171,10 +167,10 @@ func _handle_init():
 
 	J.server_client_multiplayer_connection = _client_server_client
 
-	_fsm.call_deferred(STATES.WAIT_LOGIN)
+	_fsm.call_deferred(STATES.LOGIN)
 
 
-func _handle_wait_login():
+func _handle_login():
 	login_panel.show()
 	login_panel.show_login_container()
 
@@ -184,16 +180,15 @@ func _handle_wait_login():
 
 		await get_tree().create_timer(RETRY_TIME).timeout
 
-		_fsm.call_deferred(STATES.WAIT_LOGIN)
+		_fsm.call_deferred(STATES.LOGIN)
 
 		return
 
-	if _login_pressed:
-		_login_pressed = false
-		_fsm.call_deferred(STATES.LOGIN)
+	if not _login_pressed:
+		return
 
+	_login_pressed = false
 
-func _handle_login():
 	# Authenticate the user
 	GodotLogger.info("Authenticating to gateway server")
 	_client_fsm_gateway_rpc.authenticate(_username, _password)
@@ -205,7 +200,7 @@ func _handle_login():
 	if not response:
 		GodotLogger.warn("Login to gateway server failed")
 
-		_fsm.call_deferred(STATES.WAIT_LOGIN)
+		_fsm.call_deferred(STATES.LOGIN)
 
 		return
 
@@ -219,7 +214,7 @@ func _handle_login():
 	if server_info["error"]:
 		GodotLogger.warn("Failed to fetch server information")
 
-		_fsm.call_deferred(STATES.WAIT_LOGIN)
+		_fsm.call_deferred(STATES.LOGIN)
 
 		return
 
@@ -241,7 +236,7 @@ func _handle_login():
 	if !await _connect_to_server():
 		GodotLogger.error("Client could not connect to server")
 
-		_fsm.call_deferred(STATES.WAIT_LOGIN)
+		_fsm.call_deferred(STATES.LOGIN)
 
 		return
 
@@ -298,12 +293,12 @@ func _handle_state_running():
 
 
 func _on_login_pressed(username: String, password: String):
-	if state == STATES.WAIT_LOGIN:
+	if state == STATES.LOGIN:
 		_login_pressed = true
 		_username = username
 		_password = password
 
-		_fsm.call_deferred(STATES.WAIT_LOGIN)
+		_fsm.call_deferred(STATES.LOGIN)
 
 
 func _on_show_create_account_pressed():
