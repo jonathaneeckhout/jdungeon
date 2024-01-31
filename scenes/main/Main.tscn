@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
-[ext_resource type="Resource" uid="uid://chbdptl7ubxyj" path="res://resources/DevelopmentConfigResource.tres" id="2_xw268"]
+[ext_resource type="Resource" uid="uid://uwmeq8par8fu" path="res://resources/DeploymentConfigResource.tres" id="2_oxtiu"]
 [ext_resource type="PackedScene" uid="uid://bldyf3iyb7r6n" path="res://components/connection/WebsocketMultiplayerConnection/WebsocketMultiplayerConnection.tscn" id="3_ns7hw"]
 [ext_resource type="PackedScene" uid="uid://dd2r6bxk2js2g" path="res://components/connection/ServerFSM/ServerFSMRPC.tscn" id="4_ejj7u"]
 [ext_resource type="PackedScene" uid="uid://swgyk0ffhiav" path="res://components/connection/ClientFSM/ClientFSMGatewayRPC.tscn" id="5_6g1wk"]
@@ -20,7 +20,7 @@
 
 [node name="Main" type="Node"]
 script = ExtResource("1_et6n2")
-config = ExtResource("2_xw268")
+config = ExtResource("2_oxtiu")
 
 [node name="Connections" type="Node" parent="."]
 

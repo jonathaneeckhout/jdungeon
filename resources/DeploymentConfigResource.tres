@@ -6,6 +6,7 @@
 script = ExtResource("1_qlogw")
 mode = 1
 use_tls = true
+minimize_on_start = true
 gateway_server_server_bind_address = "*"
 gateway_server_server_port = 9071
 gateway_server_server_fps = 30
@@ -27,3 +28,5 @@ client_gateway_client_address = "wss://jdungeon.org:9072"
 client_gateway_client_fps = 30
 client_server_client_address = "wss://jdungeon.org:9073"
 client_server_client_fps = 30
+database_backend = 0
+json_backend_file = "/app/users.json"

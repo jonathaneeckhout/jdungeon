@@ -1,0 +1,26 @@
+version: "3"
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    image: jdungeon-gateway-web
+    container_name: jdungeon-gateway-web
+    restart: always
+    volumes:
+      - /etc/letsencrypt/live/jdungeon.org/fullchain.pem:/etc/letsencrypt/live/jdungeon.org/fullchain.pem
+      - /etc/letsencrypt/live/jdungeon.org/privkey.pem:/etc/letsencrypt/live/jdungeon.org/privkey.pem
+      - /root/web/users.json:/app/users.json
+    network_mode: "host"
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    image: jdungeon-server-web
+    container_name: jdungeon-server-web
+    restart: always
+    volumes:
+      - /etc/letsencrypt/live/jdungeon.org/fullchain.pem:/etc/letsencrypt/live/jdungeon.org/fullchain.pem
+      - /etc/letsencrypt/live/jdungeon.org/privkey.pem:/etc/letsencrypt/live/jdungeon.org/privkey.pem
+      - /root/web/users.json:/app/users.json
+    network_mode: "host"
