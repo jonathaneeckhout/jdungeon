@@ -51,6 +51,9 @@ func _start_gateway():
 
 	GodotLogger.info("Running as Gateway")
 
+	if config.minimize_on_start:
+		get_tree().root.mode = Window.MODE_MINIMIZED
+
 	%ServerClient.queue_free()
 
 	%ServerFsm.queue_free()
@@ -118,6 +121,9 @@ func _start_server():
 	_set_game_icon(GAME_ICONS.pick_random(), SERVER_SUB_ICON)
 
 	GodotLogger.info("Running as server")
+
+	if config.minimize_on_start:
+		get_tree().root.mode = Window.MODE_MINIMIZED
 
 	%GatewayClient.queue_free()
 

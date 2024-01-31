@@ -7,6 +7,7 @@ enum MODE { DEVELOPMENT, DEPLOYMENT }
 @export_group("Global Configuration")
 @export var mode: MODE = MODE.DEVELOPMENT
 @export var use_tls: bool = false
+@export var minimize_on_start: bool = true
 
 @export_group("Gateway Server Server Configuration")
 @export var gateway_server_server_bind_address: String = "*"
