@@ -16,6 +16,8 @@ signal init_done
 ## The physics ticks rate for the server
 @export var server_physics_ticks_per_second: int = 10
 
+@export var database: Database = null
+
 ## The modes a connection can be in
 enum MODE { SERVER, CLIENT }
 

@@ -3,18 +3,21 @@ extends Node
 class_name PersistentPlayerDataComponent
 
 @export var stats: StatsSynchronizerComponent
-@export var inventory: InventorySynchronizerComponent
-@export var equipment: EquipmentSynchronizerComponent
-@export var character_class: CharacterClassComponent
+# @export var inventory: InventorySynchronizerComponent
+# @export var equipment: EquipmentSynchronizerComponent
+# @export var character_class: CharacterClassComponent
 @export var store_interval_time: float = 60.0
 var target_node: Node
 
 
 func _ready():
-	if not G.is_server():
-		return
-
 	target_node = get_parent()
+
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
+	if not target_node.multiplayer_connection.is_server():
+		queue_free()
+		return
 
 	if target_node.get("username") == null:
 		GodotLogger.error("target_node does not have the position variable")
@@ -45,7 +48,9 @@ func _on_exiting_tree():
 
 
 func load_persistent_data() -> bool:
-	var data: Dictionary = G.database.load_player_data(target_node.username)
+	var data: Dictionary = target_node.multiplayer_connection.database.load_player_data(
+		target_node.username
+	)
 
 	if data.is_empty():
 		GodotLogger.info("Player=[%s] does not have peristent data" % target_node.username)
@@ -76,17 +81,17 @@ func load_persistent_data() -> bool:
 		if not stats.from_json(data["stats"]):
 			GodotLogger.warn("Failed to load stats from data")
 
-	if inventory and "inventory" in data:
-		if not inventory.from_json(data["inventory"]):
-			GodotLogger.warn("Failed to load inventory from data")
+	# if inventory and "inventory" in data:
+	# 	if not inventory.from_json(data["inventory"]):
+	# 		GodotLogger.warn("Failed to load inventory from data")
 
-	if equipment and "equipment" in data:
-		if not equipment.from_json(data["equipment"]):
-			GodotLogger.warn("Failed to load equipment from data")
+	# if equipment and "equipment" in data:
+	# 	if not equipment.from_json(data["equipment"]):
+	# 		GodotLogger.warn("Failed to load equipment from data")
 
-	if character_class and "characterClass" in data:
-		if not character_class.from_json(data["characterClass"]):
-			GodotLogger.warn("Failed to load character classes from data")
+	# if character_class and "characterClass" in data:
+	# 	if not character_class.from_json(data["characterClass"]):
+	# 		GodotLogger.warn("Failed to load character classes from data")
 
 	return true
 
@@ -100,16 +105,16 @@ func store_persistent_data() -> bool:
 	if stats:
 		data["stats"] = stats.to_json()
 
-	if inventory:
-		data["inventory"] = inventory.to_json()
+	# if inventory:
+	# 	data["inventory"] = inventory.to_json()
 
-	if equipment:
-		data["equipment"] = equipment.to_json()
+	# if equipment:
+	# 	data["equipment"] = equipment.to_json()
 
-	if character_class:
-		data["characterClass"] = character_class.to_json()
+	# if character_class:
+	# 	data["characterClass"] = character_class.to_json()
 
-	return G.database.store_player_data(target_node.username, data)
+	return target_node.multiplayer_connection.database.store_player_data(target_node.username, data)
 
 
 func _on_persistency_timer_timeout():

@@ -30,16 +30,17 @@ unique_name_in_owner = true
 [node name="SFR" parent="Connections/GatewayServer" node_paths=PackedStringArray("client_fsm_server_rpc") instance=ExtResource("4_ejj7u")]
 client_fsm_server_rpc = NodePath("../../ServerClient/CFSR")
 
-[node name="GatewayClient" parent="Connections" instance=ExtResource("3_ns7hw")]
+[node name="GatewayClient" parent="Connections" node_paths=PackedStringArray("database") instance=ExtResource("3_ns7hw")]
 unique_name_in_owner = true
+database = NodePath("../../Database")
 
-[node name="CFGR" parent="Connections/GatewayClient" node_paths=PackedStringArray("gateway_server_multiplayer_connection", "server_fsm_rpc", "database") instance=ExtResource("5_6g1wk")]
+[node name="CFGR" parent="Connections/GatewayClient" node_paths=PackedStringArray("gateway_server_multiplayer_connection", "server_fsm_rpc") instance=ExtResource("5_6g1wk")]
 gateway_server_multiplayer_connection = NodePath("../../GatewayServer")
 server_fsm_rpc = NodePath("../../GatewayServer/SFR")
-database = NodePath("../../../Database")
 
-[node name="ServerClient" parent="Connections" instance=ExtResource("3_ns7hw")]
+[node name="ServerClient" parent="Connections" node_paths=PackedStringArray("database") instance=ExtResource("3_ns7hw")]
 unique_name_in_owner = true
+database = NodePath("../../Database")
 
 [node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
 

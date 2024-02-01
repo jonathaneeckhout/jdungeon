@@ -12,8 +12,6 @@ signal account_created(response: Dictionary)
 
 @export var server_fsm_rpc: ServerFSMRPC = null
 
-@export var database: Database = null
-
 # Reference to the MultiplayerConnection parent node.
 var _multiplayer_connection: MultiplayerConnection = null
 
@@ -50,7 +48,7 @@ func _authenticate(username: String, password: String):
 	GodotLogger.info("Authenticating user=[%s]" % username)
 	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
-	var res = database.authenticate_user(username, password)
+	var res = _multiplayer_connection.database.authenticate_user(username, password)
 	if not res:
 		_authentication_response.rpc_id(id, false)
 		return
@@ -132,7 +130,9 @@ func _create_account(username: String, password: String):
 	GodotLogger.info("Creating account for user=[%s]" % username)
 	var id: int = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
-	var create_account_result: Dictionary = database.create_account(username, password)
+	var create_account_result: Dictionary = _multiplayer_connection.database.create_account(
+		username, password
+	)
 	if create_account_result["result"]:
 		_create_account_response.rpc_id(id, false, "Account created")
 	else:
