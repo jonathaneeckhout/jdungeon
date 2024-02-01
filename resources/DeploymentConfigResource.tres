@@ -6,7 +6,7 @@
 script = ExtResource("1_qlogw")
 mode = 1
 use_tls = true
-minimize_on_start = true
+minimize_on_start = false
 gateway_server_server_bind_address = "*"
 gateway_server_server_port = 9071
 gateway_server_server_fps = 30

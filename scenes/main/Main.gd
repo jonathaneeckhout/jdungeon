@@ -47,7 +47,9 @@ func _start_gateway():
 	# Set the window's title
 	get_window().title = "JDungeon (Gateway)"
 
-	_set_game_icon(GAME_ICONS.pick_random(), GATEWAY_SUB_ICON)
+
+	if config.mode != ConfigResource.MODE.DEPLOYMENT:
+		_set_game_icon(GAME_ICONS.pick_random(), GATEWAY_SUB_ICON)
 
 	GodotLogger.info("Running as Gateway")
 
@@ -118,7 +120,8 @@ func _start_server():
 	# Set the window's title
 	get_window().title = "JDungeon (Server)"
 
-	_set_game_icon(GAME_ICONS.pick_random(), SERVER_SUB_ICON)
+	if config.mode != ConfigResource.MODE.DEPLOYMENT:
+		_set_game_icon(GAME_ICONS.pick_random(), SERVER_SUB_ICON)
 
 	GodotLogger.info("Running as server")
 
