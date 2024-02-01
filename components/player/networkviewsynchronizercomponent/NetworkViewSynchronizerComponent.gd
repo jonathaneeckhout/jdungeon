@@ -200,7 +200,7 @@ func _on_body_network_view_area_body_exited(body: Node2D):
 func add_player(peer_id: int, username: String, pos: Vector2):
 	player_added.emit(username, pos)
 
-	target_node.multiplayer_connection.map.client_add_player(peer_id, username, pos)
+	target_node.multiplayer_connection.map.client_add_player(peer_id, username, pos, false)
 
 
 func remove_player(username: String):
