@@ -1,0 +1,131 @@
+[gd_scene load_steps=3 format=3 uid="uid://dy1r3n0fpuneq"]
+
+[ext_resource type="Script" path="res://todo/player/shop/Shop.gd" id="1_wtd5h"]
+[ext_resource type="PackedScene" uid="uid://dws3rqcdwrf43" path="res://todo/player/shop/ShopPanel.tscn" id="2_g77pf"]
+
+[node name="Shop" type="Panel"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -141.0
+offset_top = -139.0
+offset_right = 128.0
+offset_bottom = 164.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("1_wtd5h")
+
+[node name="CloseButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -50.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "Close"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+offset_right = 64.0
+offset_bottom = 23.0
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -131.0
+offset_top = -262.0
+offset_right = 131.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+columns = 4
+
+[node name="Panel_0_0" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_1_0" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_2_0" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_3_0" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_0_1" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_1_1" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_2_1" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_3_1" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_0_2" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_1_2" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_2_2" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_3_2" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_0_3" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_1_3" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_2_3" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="Panel_3_3" parent="GridContainer" instance=ExtResource("2_g77pf")]
+layout_mode = 2
+
+[node name="InfoPanel" type="Control" parent="."]
+anchors_preset = 0
+offset_left = -123.0
+offset_top = 71.0
+offset_right = -59.0
+offset_bottom = 135.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="InfoPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+metadata/_edit_lock_ = true
+
+[node name="Price" type="Label" parent="InfoPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -23.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+metadata/_edit_lock_ = true

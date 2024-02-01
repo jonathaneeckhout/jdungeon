@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://df3gttjrd8kg5"]
+
+[ext_resource type="Script" path="res://todo/components/player/skillcomponent/Skills/PoisonSelf.gd" id="1_xacx3"]
+
+[resource]
+script = ExtResource("1_xacx3")
+status_effects = Array[String]([])
+stack_overrides = Array[int]([])
+duration_overrides = Array[float]([])
+skill_class = "PoisonSelf"
+displayed_name = "Do drugs"
+energy_usage = 0
+icon_path = "res://icon.svg"
+collision_mask = 0
+valid_entities = Array[int]([])
+cooldown = 0.0
+cast_on_select = true
+damage = 0
+hitbox_shape = [Vector2(50, 0)]
+hitbox_hits_user = false
+hitbox_rotate_shape = false
+hit_range = 1.0
+description = "All the cool kids you say?"

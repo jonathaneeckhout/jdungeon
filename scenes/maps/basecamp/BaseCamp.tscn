@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cj38jwlc6ip7v" path="res://scenes/terrain/buildings/fernandshouse/Fernandshouse.tscn" id="8_w02d5"]
 [ext_resource type="PackedScene" uid="uid://djgsmi37cipds" path="res://scenes/terrain/buildings/smalltent/SmallTent.tscn" id="9_v6wmp"]
 [ext_resource type="PackedScene" uid="uid://vsig12850hrc" path="res://scenes/terrain/buildings/bigtent/BigTent.tscn" id="10_mdbr4"]
-[ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_8nwqo"]
+[ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://todo/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_8nwqo"]
 [ext_resource type="PackedScene" uid="uid://2e4xaioctby5" path="res://scenes/terrain/attributes/fires/campfire/Campfire.tscn" id="12_c2e8t"]
 [ext_resource type="PackedScene" uid="uid://cgbfsliknfb2x" path="res://scenes/terrain/buildings/smallclosedtent/SmallClosedTent.tscn" id="18_5sudt"]
 [ext_resource type="PackedScene" uid="uid://dbvwp47xtho6f" path="res://scenes/terrain/attributes/barrels/treebarrels/TreeBarrels.tscn" id="18_k4omq"]

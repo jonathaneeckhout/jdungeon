@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://3g7orj1tuc66"]
+
+[ext_resource type="Script" path="res://todo/components/player/skillcomponent/Skills/Attack.gd" id="1_y7uef"]
+
+[resource]
+script = ExtResource("1_y7uef")
+add_attack_stat = true
+damage_bonus = 0
+damage_modifier = 1.0
+skill_class = "BasicAttack"
+displayed_name = "Basic Attack"
+energy_usage = 0
+icon_path = "res://icon.svg"
+collision_mask = 30
+valid_entities = Array[int]([1])
+max_targets = 10
+cooldown = 0.0
+cast_on_select = false
+hitbox_shape = [Vector2(50, 0)]
+hitbox_hits_user = false
+hitbox_rotate_shape = false
+hit_range = 100.0
+description = "Deal damage equal to your attack to the target."

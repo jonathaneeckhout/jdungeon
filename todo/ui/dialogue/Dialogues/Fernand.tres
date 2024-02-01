@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=6 format=3 uid="uid://bmruydyn2dmgk"]
+
+[ext_resource type="Script" path="res://todo/ui/dialogue/DialogueResourceSnippet.gd" id="1_ik5r4"]
+[ext_resource type="Script" path="res://todo/ui/dialogue/DialogueResource.gd" id="2_5ev3e"]
+
+[sub_resource type="Resource" id="Resource_vfg0g"]
+script = ExtResource("1_ik5r4")
+text = "Ah, you whippersnapper! Back in my day, life was a real struggle for an old coot like me."
+enableBBCode = true
+speaker_id = 0
+portrait_id = 0
+conditions_to_show = Array[String]([])
+conditions_to_hide = Array[String](["dial_milklady_greeted"])
+text_speed_modifier = 1.0
+flags_set_on_seen = Array[String]([])
+flags_unset_on_seen = Array[String]([])
+
+[sub_resource type="Resource" id="Resource_07mrd"]
+script = ExtResource("1_ik5r4")
+text = "I used to be a powerhouse, unstoppable and robust. Nothing could put a damper on my spirits.
+Now look at me – feeble and ancient. The years have a way of catching up, you see."
+enableBBCode = true
+speaker_id = 0
+portrait_id = 0
+conditions_to_show = Array[String]([])
+conditions_to_hide = Array[String](["dial_milklady_greeted"])
+text_speed_modifier = 1.0
+flags_set_on_seen = Array[String](["dial_milklady_greeted"])
+flags_unset_on_seen = Array[String]([])
+
+[sub_resource type="Resource" id="Resource_tslh3"]
+script = ExtResource("1_ik5r4")
+text = "I took pleasure in my humble abode by the farm, a little shack that was my sanctuary.
+But darn it all, those cursed blue moles have run amok and invaded my space.
+If only I could shoo them away and reclaim my peaceful shack for a bit of rest and tranquility."
+enableBBCode = true
+speaker_id = 0
+portrait_id = 0
+conditions_to_show = Array[String]([])
+conditions_to_hide = Array[String]([])
+text_speed_modifier = 1.0
+flags_set_on_seen = Array[String]([])
+flags_unset_on_seen = Array[String]([])
+
+[resource]
+script = ExtResource("2_5ev3e")
+dialogue_identifier = "Fernand"
+speaker_names = Array[String](["(Old grumpy) Fernand"])
+speaker_portraits = Array[Array]([["res://assets/images/npcs/oldman/scaled/Head.png"]])
+dialogue_snippets = Array[ExtResource("1_ik5r4")]([SubResource("Resource_vfg0g"), SubResource("Resource_07mrd"), SubResource("Resource_tslh3")])

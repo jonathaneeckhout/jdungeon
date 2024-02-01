@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://by0oa7xms4p7c"]
+
+[ext_resource type="Script" path="res://todo/components/player/skillcomponent/Skills/FireProjectileSkill.gd" id="1_4ihq3"]
+
+[resource]
+script = ExtResource("1_4ihq3")
+projectile_class = "Arrow"
+skill_class = "LaunchArrow"
+displayed_name = "Launch Arrow"
+energy_usage = 5
+icon_path = "res://icon.svg"
+collision_mask = 30
+valid_entities = Array[int]([1])
+max_targets = 10
+cooldown = 0.35
+cast_on_select = false
+hitbox_shape = []
+hitbox_hits_user = false
+hitbox_rotate_shape = false
+hit_range = 1000.0
+description = "This does something, right? ...right?"

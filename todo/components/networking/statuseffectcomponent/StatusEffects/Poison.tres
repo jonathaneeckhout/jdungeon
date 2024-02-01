@@ -1,0 +1,20 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://crqboml4548vk"]
+
+[ext_resource type="Script" path="res://todo/components/networking/statuseffectcomponent/StatusEffects/DamageOverTime.gd" id="1_23kxf"]
+
+[resource]
+script = ExtResource("1_23kxf")
+damage = 1
+scale_per_stack = true
+proc_on_timeout = true
+status_class = "Poison"
+displayed_name = "Poison"
+description = "Deals damage every time it's duration ends equal to it's stack, then looses 20% of it's stacks. "
+icon_path = "res://icon.svg"
+type = 1
+timeout_satck_consumption_flat = 0
+timeout_stack_consumption_percent = 0.2
+combine_stackable_duration = false
+combine_stack_override = true
+default_stacks = 20
+default_duration = 2.2

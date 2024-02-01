@@ -1,0 +1,89 @@
+[gd_scene load_steps=9 format=3 uid="uid://6xcgrn54y7si"]
+
+[ext_resource type="Script" path="res://todo/root/Root.gd" id="1_2xin5"]
+[ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_xtuay"]
+
+[sub_resource type="InputEventAction" id="InputEventAction_lbyq1"]
+action = &"j_slot1"
+pressed = true
+
+[sub_resource type="Shortcut" id="Shortcut_kh7qo"]
+events = [SubResource("InputEventAction_lbyq1")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_ple52"]
+action = &"j_slot2"
+pressed = true
+
+[sub_resource type="Shortcut" id="Shortcut_jdnlo"]
+events = [SubResource("InputEventAction_ple52")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_js6rf"]
+action = &"j_slot3"
+pressed = true
+
+[sub_resource type="Shortcut" id="Shortcut_lgvw8"]
+events = [SubResource("InputEventAction_js6rf")]
+
+[node name="Root" type="Node"]
+script = ExtResource("1_2xin5")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="SelectRunMode" type="Control" parent="UI"]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackgroundImage" type="Sprite2D" parent="UI/SelectRunMode"]
+position = Vector2(128, 132)
+texture = ExtResource("2_xtuay")
+
+[node name="SelectModeButtons" type="VBoxContainer" parent="UI/SelectRunMode"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RunAsGatewayButton" type="Button" parent="UI/SelectRunMode/SelectModeButtons"]
+layout_mode = 2
+shortcut = SubResource("Shortcut_kh7qo")
+text = "1 - Run as gateway"
+
+[node name="RunAsServerButton" type="Button" parent="UI/SelectRunMode/SelectModeButtons"]
+layout_mode = 2
+shortcut = SubResource("Shortcut_jdnlo")
+text = "2 - Run as server"
+
+[node name="RunAsClientButton" type="Button" parent="UI/SelectRunMode/SelectModeButtons"]
+layout_mode = 2
+shortcut = SubResource("Shortcut_lgvw8")
+text = "3 - Run as client"
+
+[node name="SelectMap" type="VBoxContainer" parent="UI/SelectRunMode"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MapOptionButton" type="OptionButton" parent="UI/SelectRunMode/SelectMap"]
+layout_mode = 2
+
+[node name="StartServerButton" type="Button" parent="UI/SelectRunMode/SelectMap"]
+layout_mode = 2
+shortcut = SubResource("Shortcut_lgvw8")
+text = "StartServer"

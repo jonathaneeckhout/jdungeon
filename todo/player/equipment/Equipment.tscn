@@ -1,0 +1,65 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqsdy2usb2e6d"]
+
+[ext_resource type="Script" path="res://todo/player/equipment/Equipment.gd" id="1_bc25i"]
+[ext_resource type="PackedScene" uid="uid://qwimw7m784q1" path="res://todo/player/equipment/EquipmentPanel.tscn" id="2_mp35s"]
+
+[node name="Equipment" type="Panel"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 1.0
+offset_top = -300.0
+offset_right = 160.0
+offset_bottom = 102.0
+grow_vertical = 2
+size_flags_horizontal = 0
+script = ExtResource("1_bc25i")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -67.5
+offset_top = -192.0
+offset_right = 67.5
+offset_bottom = 198.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+columns = 2
+
+[node name="Panel_Head" parent="GridContainer" instance=ExtResource("2_mp35s")]
+layout_mode = 2
+slot = "Head"
+
+[node name="Panel_Body" parent="GridContainer" instance=ExtResource("2_mp35s")]
+layout_mode = 2
+slot = "Body"
+
+[node name="Panel_Legs" parent="GridContainer" instance=ExtResource("2_mp35s")]
+layout_mode = 2
+slot = "Legs"
+
+[node name="Panel_Arms" parent="GridContainer" instance=ExtResource("2_mp35s")]
+layout_mode = 2
+slot = "Arms"
+
+[node name="Panel_Ring1" parent="GridContainer" instance=ExtResource("2_mp35s")]
+layout_mode = 2
+slot = "Ring1"
+
+[node name="Panel_Ring2" parent="GridContainer" instance=ExtResource("2_mp35s")]
+layout_mode = 2
+slot = "Ring2"
+
+[node name="Panel_LeftHand" parent="GridContainer" instance=ExtResource("2_mp35s")]
+layout_mode = 2
+slot = "LeftHand"
+
+[node name="Panel_RightHand" parent="GridContainer" instance=ExtResource("2_mp35s")]
+layout_mode = 2
+slot = "RightHand"

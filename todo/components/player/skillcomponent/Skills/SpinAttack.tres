@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://c612o56ath81w"]
+
+[ext_resource type="Script" path="res://todo/components/player/skillcomponent/Skills/Attack.gd" id="1_kcf7i"]
+
+[resource]
+script = ExtResource("1_kcf7i")
+add_attack_stat = true
+damage_bonus = 0
+damage_modifier = 1.0
+skill_class = "SpinAttack"
+displayed_name = "Spin Attack"
+energy_usage = 10
+icon_path = "res://icon.svg"
+collision_mask = 6
+valid_entities = Array[int]([1])
+max_targets = 10
+cooldown = 0.35
+cast_on_select = true
+hitbox_shape = [Vector2(50, 0)]
+hitbox_hits_user = false
+hitbox_rotate_shape = false
+hit_range = 1.0
+description = "Attacks all enemies near the user."
