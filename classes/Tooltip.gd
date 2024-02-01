@@ -15,7 +15,6 @@ const INVISIBLE_RECT: Rect2 = Rect2()
 signal visibility_update_required
 
 @export_category("Settings")
-@export var debug_mode: bool = false
 @export var allow_sub_tooltips: bool = true
 @export var pin_action: String = "ui_accept"
 
