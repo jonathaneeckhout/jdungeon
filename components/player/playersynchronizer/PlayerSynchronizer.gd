@@ -24,6 +24,7 @@ const INTERPOLATION_OFFSET: float = 0.1
 
 @export var stats_component: StatsSynchronizerComponent
 @export var interaction_component: PlayerInteractionComponent
+@export var action_synchronizer: ActionSynchronizerComponent
 @export var animation_player: AnimationPlayer
 @export var update_face: UpdateFaceComponent
 
@@ -357,10 +358,13 @@ func server_sync_interact(target_name: String):
 	interacted.emit(target)
 
 
-func server_handle_attack_request(timestamp: float, enemies: Array):
+func server_handle_attack_request(timestamp: float, direction: Vector2, enemies: Array):
 	# Don't do anything if the attack timer is running, this means your attack is still on timeout
 	if !_attack_timer.is_stopped():
 		return
+
+	# Synchronize to other players that the player attacked
+	action_synchronizer.attack(direction)
 
 	# Loop over the enemies
 	for enemy_name in enemies:
@@ -452,8 +456,10 @@ func _on_client_interacted(target: Node2D):
 		var random_index = randi() % ATTACK_LEFT_HAND_ANIMATIONS.size()
 		animation_player.play(ATTACK_LEFT_HAND_ANIMATIONS[random_index])
 
+	var attack_direction: Vector2 = _target_node.position.direction_to(mouse_global_pos)
+
 	# Emit the signal that the player attacked
-	attacked.emit(_target_node.position.direction_to(mouse_global_pos))
+	attacked.emit(attack_direction)
 
 	# Start the timer so that the player needs to wait for this timer to stop before performing another attack
 	_attack_timer.start(stats_component.attack_speed)
@@ -463,4 +469,6 @@ func _on_client_interacted(target: Node2D):
 	for enemy in interaction_component.enemies_in_attack_range:
 		hit_enemies.append(enemy.name)
 
-	_player_synchronizer_rpc.request_attack(_clock_synchronizer.client_clock, hit_enemies)
+	_player_synchronizer_rpc.request_attack(
+		_clock_synchronizer.client_clock, attack_direction, hit_enemies
+	)

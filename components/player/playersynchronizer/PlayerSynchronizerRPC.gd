@@ -34,8 +34,8 @@ func sync_interact(target: String):
 	_sync_interact.rpc_id(1, target)
 
 
-func request_attack(timestamp: float, enemies: Array):
-	_request_attack.rpc_id(1, timestamp, enemies)
+func request_attack(timestamp: float, direction: Vector2, enemies: Array):
+	_request_attack.rpc_id(1, timestamp, direction, enemies)
 
 
 @rpc("call_remote", "authority", "unreliable")
@@ -92,7 +92,7 @@ func _sync_interact(t: String):
 
 
 @rpc("call_remote", "any_peer", "reliable")
-func _request_attack(t: float, e: Array):
+func _request_attack(t: float, d: Vector2, e: Array):
 	if not _multiplayer_connection.is_server():
 		return
 
@@ -109,4 +109,4 @@ func _request_attack(t: float, e: Array):
 		return
 
 	if user.player.component_list.has("player_synchronizer"):
-		user.player.component_list["player_synchronizer"].server_handle_attack_request(t, e)
+		user.player.component_list["player_synchronizer"].server_handle_attack_request(t, d, e)
