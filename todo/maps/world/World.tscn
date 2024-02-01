@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="11_nyeba"]
 [ext_resource type="PackedScene" uid="uid://bija15ujapx3h" path="res://scenes/terrain/areas/wakingforest/WakingForest.tscn" id="12_e6xjj"]
 [ext_resource type="PackedScene" uid="uid://cpw0d00b7prm0" path="res://scenes/terrain/areas/harbor/harbor.tscn" id="13_xrvt2"]
-[ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://todo/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="14_qs20i"]
+[ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="14_qs20i"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_fsi10")
