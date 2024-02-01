@@ -133,6 +133,10 @@ func server_remove_player(username: String):
 
 
 func client_add_player(peer_id: int, username: String, pos: Vector2, own_player: bool) -> Player:
+	if players.has_node(username):
+		GodotLogger.info("Player=[%s] already exists, no need to add again" % username)
+		return
+
 	var player: Player = J.player_scene.instantiate()
 	player.name = username
 	player.username = username

@@ -12,7 +12,6 @@ var target_node: Node
 
 var original_scale: Vector2 = Vector2.ONE
 var last_scale: Vector2 = Vector2.ONE
-var _prev_pos: Vector2 = Vector2.ZERO
 
 
 func _ready():
@@ -30,7 +29,6 @@ func _ready():
 
 	original_scale = skeleton.scale
 	last_scale = original_scale
-	_prev_pos = target_node.position
 
 	if (
 		player_synchronizer
@@ -46,12 +44,8 @@ func _ready():
 
 
 func _physics_process(_delta):
-	var direction: Vector2 = target_node.position - _prev_pos
-
-	_prev_pos = target_node.position
-
-	if not direction.is_zero_approx():
-		update_face_direction(direction.x)
+	if not target_node.velocity.is_zero_approx():
+		update_face_direction(target_node.velocity.x)
 
 
 func update_face_direction(direction: float):
