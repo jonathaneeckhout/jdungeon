@@ -19,7 +19,10 @@ func _ready():
 		return
 
 	# This component should not run on your own player
-	if _target_node.multiplayer_connection.is_own_player(_target_node):
+	if (
+		_target_node.get("peer_id") != null
+		and _target_node.multiplayer_connection.is_own_player(_target_node)
+	):
 		queue_free()
 		return
 
