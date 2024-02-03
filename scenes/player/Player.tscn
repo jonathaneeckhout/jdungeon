@@ -1,6 +1,7 @@
-[gd_scene load_steps=34 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=35 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
+[ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="2_1l633"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_3edxt"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="2_5hhip"]
 [ext_resource type="PackedScene" uid="uid://bvkfby4kxvrh4" path="res://components/player/playerinteractioncomponent/PlayerInteractionComponent.tscn" id="2_bvelc"]
@@ -1763,6 +1764,8 @@ _data = {
 collision_layer = 3
 collision_mask = 5
 script = ExtResource("1_yw2vn")
+
+[node name="InventorySynchronizerComponent" parent="." instance=ExtResource("2_1l633")]
 
 [node name="NetworkViewSynchronizerComponent" parent="." instance=ExtResource("2_gjeic")]
 

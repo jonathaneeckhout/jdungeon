@@ -102,14 +102,14 @@ func _init_target_node() -> bool:
 	# Get the parent node
 	_target_node = get_parent()
 
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	# Get the ClockSynchronizer component.
 	_clock_synchronizer = _target_node.multiplayer_connection.component_list.get_component(
 		ClockSynchronizer.COMPONENT_NAME
 	)
 
 	assert(_clock_synchronizer != null, "Failed to get ClockSynchronizer component")
-
-	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
 
 	# Get the PlayerSynchronizerRPC component.
 	_player_synchronizer_rpc = (_target_node.multiplayer_connection.component_list.get_component(

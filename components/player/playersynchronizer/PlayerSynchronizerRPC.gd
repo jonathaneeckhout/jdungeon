@@ -54,7 +54,7 @@ func _sync_input(c: int, d: Vector2, t: float):
 	if not _multiplayer_connection.is_server():
 		return
 
-	var id = multiplayer.get_remote_sender_id()
+	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
 	var user: MultiplayerConnection.User = _multiplayer_connection.get_user_by_id(id)
 	if user == null:
@@ -75,7 +75,7 @@ func _sync_interact(t: String):
 	if not _multiplayer_connection.is_server():
 		return
 
-	var id = multiplayer.get_remote_sender_id()
+	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
 	var user: MultiplayerConnection.User = _multiplayer_connection.get_user_by_id(id)
 	if user == null:
@@ -96,7 +96,7 @@ func _request_attack(t: float, d: Vector2, e: Array):
 	if not _multiplayer_connection.is_server():
 		return
 
-	var id = multiplayer.get_remote_sender_id()
+	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
 	var user: MultiplayerConnection.User = _multiplayer_connection.get_user_by_id(id)
 	if user == null:

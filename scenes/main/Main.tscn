@@ -1,8 +1,8 @@
-[gd_scene load_steps=18 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=19 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
-[ext_resource type="Resource" uid="uid://chbdptl7ubxyj" path="res://resources/DevelopmentConfigResource.tres" id="2_ql0hu"]
+[ext_resource type="Resource" uid="uid://chbdptl7ubxyj" path="res://resources/DevelopmentConfigResource.tres" id="2_vcm10"]
 [ext_resource type="PackedScene" uid="uid://bldyf3iyb7r6n" path="res://components/connection/WebsocketMultiplayerConnection/WebsocketMultiplayerConnection.tscn" id="3_ns7hw"]
 [ext_resource type="PackedScene" uid="uid://dd2r6bxk2js2g" path="res://components/connection/ServerFSM/ServerFSMRPC.tscn" id="4_ejj7u"]
 [ext_resource type="PackedScene" uid="uid://swgyk0ffhiav" path="res://components/connection/ClientFSM/ClientFSMGatewayRPC.tscn" id="5_6g1wk"]
@@ -15,12 +15,13 @@
 [ext_resource type="PackedScene" uid="uid://dderndos7tfdu" path="res://components/player/networkviewsynchronizercomponent/NetworkViewSynchronizerRPC.tscn" id="9_3pk1n"]
 [ext_resource type="PackedScene" uid="uid://d4c6yl66u2fdc" path="res://components/player/playersynchronizer/PlayerSynchronizerRPC.tscn" id="10_ghnhu"]
 [ext_resource type="PackedScene" uid="uid://cyd1haegch4ux" path="res://components/connection/ClientFSM/ClientFSM.tscn" id="12_7v67k"]
+[ext_resource type="PackedScene" uid="uid://c1mvaiehmnyeq" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerRPC.tscn" id="13_dprpu"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="15_7xr38"]
 [ext_resource type="PackedScene" uid="uid://bikd514i5nqux" path="res://components/connection/Database/Database.tscn" id="15_byw11"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_et6n2")
-config = ExtResource("2_ql0hu")
+config = ExtResource("2_vcm10")
 
 [node name="Connections" type="Node" parent="."]
 
@@ -55,6 +56,8 @@ database = NodePath("../../Database")
 [node name="NWSR" parent="Connections/ServerClient" instance=ExtResource("9_3pk1n")]
 
 [node name="PLSR" parent="Connections/ServerClient" instance=ExtResource("10_ghnhu")]
+
+[node name="ISR" parent="Connections/ServerClient" instance=ExtResource("13_dprpu")]
 
 [node name="ServerFsm" parent="." node_paths=PackedStringArray("_server_gateway_client", "_server_client_server") instance=ExtResource("5_uiu1q")]
 unique_name_in_owner = true

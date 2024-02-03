@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1mvaiehmnyeq"]
+
+[ext_resource type="Script" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerRPC.gd" id="1_n4ikk"]
+
+[node name="InventorySynchronizerRpc" type="Node"]
+script = ExtResource("1_n4ikk")
