@@ -47,8 +47,8 @@ func register_scenes():
 	J.register_player_scene("res://scenes/player/Player.tscn")
 
 	register_enemies()
-	# register_npcs()
-	# register_items()
+	register_npcs()
+	register_items()
 	# register_skills()
 	register_maps()
 	# register_projectiles()
@@ -68,10 +68,10 @@ func register_enemies():
 
 
 func register_npcs():
-	J.register_npc_scene("MilkLady", "res://scenes/npcs/milklady/Milklady.tscn")
+	# J.register_npc_scene("MilkLady", "res://scenes/npcs/milklady/Milklady.tscn")
 	J.register_npc_scene("Turtur", "res://scenes/npcs/turtur/Turtur.tscn")
-	J.register_npc_scene("Fernand", "res://scenes/npcs/fernand/Fernand.tscn")
-	J.register_npc_scene("Guard", "res://scenes/npcs/guard/Guard.tscn")
+	# J.register_npc_scene("Fernand", "res://scenes/npcs/fernand/Fernand.tscn")
+	# J.register_npc_scene("Guard", "res://scenes/npcs/guard/Guard.tscn")
 
 
 func register_items():

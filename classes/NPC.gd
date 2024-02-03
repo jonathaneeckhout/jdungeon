@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 class_name NPC
 
-@export var multiplayer_connection: MultiplayerConnection = null
+var multiplayer_connection: MultiplayerConnection = null
 
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.NPC
 var npc_class: String = ""
@@ -14,6 +14,8 @@ var component_list: Dictionary = {}
 
 func _init():
 	collision_layer = J.PHYSICS_LAYER_NPCS
+
+	multiplayer_connection = J.server_client_multiplayer_connection
 
 	if multiplayer_connection.is_server():
 		# NPCs cannot be stopped by any entity.

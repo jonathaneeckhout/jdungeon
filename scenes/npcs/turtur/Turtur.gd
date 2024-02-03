@@ -14,25 +14,25 @@ func _ready():
 
 	# Server side
 	if multiplayer_connection.is_server():
-		shop.add_item("Axe", 10000)
-		shop.add_item("Sword", 5000)
-		shop.add_item("Club", 300)
-		shop.add_item("IronShield", 10000)
+		shop.server_add_item("Axe", 10000)
+		shop.server_add_item("Sword", 5000)
+		shop.server_add_item("Club", 300)
+		shop.server_add_item("IronShield", 10000)
 
-		shop.add_item("LeatherHelm", 100)
-		shop.add_item("LeatherBody", 100)
-		shop.add_item("LeatherArms", 100)
-		shop.add_item("LeatherLegs", 100)
+		shop.server_add_item("LeatherHelm", 100)
+		shop.server_add_item("LeatherBody", 100)
+		shop.server_add_item("LeatherArms", 100)
+		shop.server_add_item("LeatherLegs", 100)
 
-		shop.add_item("ChainMailHelm", 1000)
-		shop.add_item("ChainMailBody", 1000)
-		shop.add_item("ChainMailArms", 1000)
-		shop.add_item("ChainMailLegs", 1000)
+		shop.server_add_item("ChainMailHelm", 1000)
+		shop.server_add_item("ChainMailBody", 1000)
+		shop.server_add_item("ChainMailArms", 1000)
+		shop.server_add_item("ChainMailLegs", 1000)
 
-		shop.add_item("PlateHelm", 10000)
-		shop.add_item("PlateBody", 10000)
-		shop.add_item("PlateArms", 10000)
-		shop.add_item("PlateLegs", 10000)
+		shop.server_add_item("PlateHelm", 10000)
+		shop.server_add_item("PlateBody", 10000)
+		shop.server_add_item("PlateArms", 10000)
+		shop.server_add_item("PlateLegs", 10000)
 
 	else:
 		animation_player.animation_started.connect(_on_animation_started)

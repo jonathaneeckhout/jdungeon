@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=18 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://vsig12850hrc" path="res://scenes/terrain/buildings/bigtent/BigTent.tscn" id="10_mdbr4"]
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_8nwqo"]
 [ext_resource type="PackedScene" uid="uid://2e4xaioctby5" path="res://scenes/terrain/attributes/fires/campfire/Campfire.tscn" id="12_c2e8t"]
+[ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="17_0np6n"]
 [ext_resource type="PackedScene" uid="uid://cgbfsliknfb2x" path="res://scenes/terrain/buildings/smallclosedtent/SmallClosedTent.tscn" id="18_5sudt"]
 [ext_resource type="PackedScene" uid="uid://dbvwp47xtho6f" path="res://scenes/terrain/attributes/barrels/treebarrels/TreeBarrels.tscn" id="18_k4omq"]
 [ext_resource type="PackedScene" uid="uid://kqih0di4otpx" path="res://scenes/terrain/attributes/barrels/onebarrel/OneBarrel.tscn" id="19_h4hwk"]
@@ -237,3 +238,6 @@ y_sort_enabled = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
+
+[node name="Turtur" parent="." instance=ExtResource("17_0np6n")]
+position = Vector2(627, 699)

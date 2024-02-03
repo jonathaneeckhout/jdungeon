@@ -1,7 +1,7 @@
 [gd_scene load_steps=23 format=3 uid="uid://da2hmdia7jfvy"]
 
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="1_47ndk"]
-[ext_resource type="Script" path="res://todo/npcs/turtur/Turtur.gd" id="1_swogk"]
+[ext_resource type="Script" path="res://scenes/npcs/turtur/Turtur.gd" id="1_swogk"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_81jcy"]
 [ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="3_nrmfh"]
 [ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://components/npc/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="4_r4601"]
@@ -507,22 +507,26 @@ texture = ExtResource("8_rv7ru")
 offset = Vector2(-44.5578, -42.8275)
 
 [node name="RightArm" type="Sprite2D" parent="Sprites"]
-position = Vector2(-27, -17)
+position = Vector2(-5.21656, -26.5673)
+rotation = -0.846312
 texture = ExtResource("9_gvr6a")
 offset = Vector2(22.592, 18.914)
 
 [node name="RightFoot" type="Sprite2D" parent="Sprites"]
-position = Vector2(-7, 10)
+position = Vector2(0.482667, 6.54639)
+rotation = -0.138011
 texture = ExtResource("10_6rx6o")
 offset = Vector2(18.1485, -10.0668)
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(4, 24)
+rotation = 0.467108
 texture = ExtResource("11_l73qk")
 offset = Vector2(-9.00101, -22.089)
 
 [node name="LeftFoot" type="Sprite2D" parent="Sprites"]
-position = Vector2(27, 20)
+position = Vector2(26.3373, 30.7855)
+rotation = 0.026962
 texture = ExtResource("12_ujdyy")
 offset = Vector2(-31.096, -17.3263)
 
@@ -537,12 +541,14 @@ texture = ExtResource("14_ek0h1")
 offset = Vector2(42.257, -8.70601)
 
 [node name="LeftUpperArm" type="Sprite2D" parent="Sprites"]
-position = Vector2(9, -17)
+position = Vector2(26.9269, -10.3563)
+rotation = -0.07201
 texture = ExtResource("15_iend1")
 offset = Vector2(-12.8972, 18.654)
 
 [node name="LeftLowerArm" type="Sprite2D" parent="Sprites"]
-position = Vector2(9, 7)
+position = Vector2(28.6537, 13.5815)
+rotation = -0.07201
 texture = ExtResource("16_a0qvh")
 offset = Vector2(-14.2303, -5.19159)
 
