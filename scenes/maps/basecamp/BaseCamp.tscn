@@ -228,6 +228,9 @@ position = Vector2(-1616, 1143)
 [node name="NPCs" type="Node2D" parent="."]
 y_sort_enabled = true
 
+[node name="Turtur" parent="NPCs" instance=ExtResource("17_0np6n")]
+position = Vector2(627, 699)
+
 [node name="PlayerRespawnLocations" type="Node2D" parent="."]
 
 [node name="PlayerRespawnLocation" parent="PlayerRespawnLocations" instance=ExtResource("12_8nwqo")]
@@ -238,6 +241,3 @@ y_sort_enabled = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
-
-[node name="Turtur" parent="." instance=ExtResource("17_0np6n")]
-position = Vector2(627, 699)

@@ -1,20 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://dy1r3n0fpuneq"]
 
-[ext_resource type="Script" path="res://todo/player/shop/Shop.gd" id="1_wtd5h"]
-[ext_resource type="PackedScene" uid="uid://dws3rqcdwrf43" path="res://todo/player/shop/ShopPanel.tscn" id="2_g77pf"]
+[ext_resource type="Script" path="res://scenes/player/shop/Shop.gd" id="1_wtd5h"]
+[ext_resource type="PackedScene" uid="uid://dws3rqcdwrf43" path="res://scenes/player/shop/ShopPanel.tscn" id="2_g77pf"]
 
 [node name="Shop" type="Panel"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -141.0
-offset_top = -139.0
-offset_right = 128.0
-offset_bottom = 164.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 269.0
+offset_bottom = 303.0
 size_flags_horizontal = 4
 script = ExtResource("1_wtd5h")
 

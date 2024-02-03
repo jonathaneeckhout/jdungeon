@@ -22,6 +22,8 @@ var component_list: Dictionary = {}
 @onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
 @onready var inventory: InventorySynchronizerComponent = $InventorySynchronizerComponent
 @onready var equipment: EquipmentSynchronizerComponent = $EquipmentSynchronizerComponent
+
+@onready var shop: Shop = $Camera2D/UILayer/Shop
 # @onready var player_unstuck: PlayerUnstuckComponent = $PlayerUnstuckComponent
 # @onready var update_face: UpdateFaceComponent = $UpdateFaceComponent
 # @onready var skeleton: Node2D = $Skeleton

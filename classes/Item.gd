@@ -6,14 +6,14 @@ enum MODE { LOOT, ITEMSLOT }
 
 enum ITEM_TYPE { EQUIPMENT, CONSUMABLE, CURRENCY }
 
-@export var multiplayer_connection: MultiplayerConnection = null
-
 @export var uuid: String = "":
 	set(new_uuid):
 		uuid = new_uuid
 		name = new_uuid
 
 @export var expire_time: float = 60.0
+
+var multiplayer_connection: MultiplayerConnection = null
 
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.ITEM
 var item_type: ITEM_TYPE = ITEM_TYPE.EQUIPMENT
@@ -38,6 +38,8 @@ var boost: Boost
 
 
 func _init():
+	multiplayer_connection = J.server_client_multiplayer_connection
+
 	# Disable physics by default
 	collision_layer = 0
 
@@ -68,8 +70,8 @@ func start_expire_timer():
 	expire_timer.start(expire_time)
 
 
-func loot(player: Player) -> bool:
-	if player.inventory.add_item(self):
+func server_loot(player: Player) -> bool:
+	if player.inventory.server_add_item(self):
 		# Reset your postion
 		self.position = Vector2.ZERO
 		# Just to be safe, stop the expire timer
@@ -82,14 +84,14 @@ func loot(player: Player) -> bool:
 	return false
 
 
-func use(player: Player) -> bool:
+func server_use(player: Player) -> bool:
 	match item_type:
 		ITEM_TYPE.CONSUMABLE:
 			if boost.hp > 0:
 				player.stats.heal(self.name, boost.hp)
 				return true
 		ITEM_TYPE.EQUIPMENT:
-			if player.equipment and player.equipment.equip_item(self):
+			if player.equipment and player.equipment.server_equip_item(self):
 				return true
 			else:
 				GodotLogger.info("%s could not equip item %s" % [player.name, item_class])

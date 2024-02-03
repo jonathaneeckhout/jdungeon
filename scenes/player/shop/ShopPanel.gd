@@ -21,8 +21,19 @@ func _ready():
 
 
 func _gui_input(event: InputEvent):
-	if event.is_action_pressed("j_right_click") and shop.shop_synchronizer != null:
-		shop.shop_synchronizer.buy_shop_item.rpc_id(1, item.uuid)
+	if event.is_action_pressed("j_right_click") and shop.vendor != null:
+		var shop_synchronizer_rpc: ShopSynchronizerRPC = (
+			shop
+			. player
+			. multiplayer_connection
+			. component_list
+			. get_component(ShopSynchronizerRPC.COMPONENT_NAME)
+		)
+
+		# Ensure the ShopSynchronizerRPC component is present
+		assert(shop_synchronizer_rpc != null, "Failed to get ShopSynchronizerRPC component")
+
+		shop_synchronizer_rpc.buy_item(shop.vendor.name, item.uuid)
 
 
 func _on_mouse_entered():

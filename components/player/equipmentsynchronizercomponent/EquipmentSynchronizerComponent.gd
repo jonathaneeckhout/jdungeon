@@ -132,7 +132,7 @@ func _unequip_item(item_uuid: String) -> Item:
 		items[item.equipment_slot] = null
 
 		if _target_node.get("inventory") != null:
-			_target_node.inventory.add_item(item)
+			_target_node.inventory.server_add_item(item)
 		else:
 			GodotLogger.warn("Player does not have a inventory, item will be lost")
 

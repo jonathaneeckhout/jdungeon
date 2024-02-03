@@ -39,15 +39,17 @@ func _ready():
 
 		animation_player.play("Idle")
 
+		shop.loaded.connect(_on_loaded)
+
 	$InterfaceComponent.display_name = npc_class
 
 
-func interact(player: Player):
+func server_interact(player: Player):
 	if player.get("peer_id") == null:
 		GodotLogger.error("player node does not have the peer_id variable")
 		return
 
-	shop.open_shop(player.peer_id)
+	shop.server_sync_shop(player.peer_id)
 
 
 func _on_animation_started(_anim_name: String):
@@ -59,3 +61,7 @@ func _on_animation_started(_anim_name: String):
 	else:
 		# Play the "smithing" animation.
 		animation_player.queue("Smithing")
+
+
+func _on_loaded():
+	multiplayer_connection.client_player.shop.open_shop(name)

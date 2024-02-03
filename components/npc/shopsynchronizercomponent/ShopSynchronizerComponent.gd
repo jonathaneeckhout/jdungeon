@@ -4,6 +4,8 @@ class_name ShopSynchronizerComponent
 
 const COMPONENT_NAME: String = "shop_synchronizer"
 
+signal loaded
+
 @export var size: int = 36
 
 var inventory: Array[Dictionary] = []
@@ -85,6 +87,8 @@ func from_json(data: Dictionary) -> bool:
 
 		inventory.append(item_data)
 
+	loaded.emit()
+
 	return true
 
 
@@ -105,10 +109,10 @@ func server_buy_item(player: Player, item_uuid: String):
 		GodotLogger.error("player does not have the inventory variable")
 		return
 
-	if player.inventory.remove_gold(shop_item["price"]):
+	if player.inventory.server_remove_gold(shop_item["price"]):
 		var new_item: Item = J.item_scenes[shop_item["item_class"]].instantiate()
 		new_item.uuid = J.uuid_util.v4()
 		new_item.item_class = shop_item["item_class"]
 
-		if not player.inventory.add_item(new_item):
-			player.inventory.add_gold(shop_item["price"])
+		if not player.inventory.server_add_item(new_item):
+			player.inventory.server_add_gold(shop_item["price"])

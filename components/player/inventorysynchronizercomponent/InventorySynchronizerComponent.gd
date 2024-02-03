@@ -131,7 +131,7 @@ func server_use_item(item_uuid: String):
 		return false
 
 	var item: Item = get_item(item_uuid)
-	if item and item.use(_target_node):
+	if item and item.server_use(_target_node):
 		server_remove_item(item_uuid)
 		return true
 

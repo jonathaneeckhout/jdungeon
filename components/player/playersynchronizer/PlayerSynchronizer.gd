@@ -348,12 +348,12 @@ func server_sync_interact(target_name: String):
 			# Check if the player is in range to loot the item
 			if target != null and interaction_component.items_in_loot_range.has(target):
 				# Loot the item
-				target.loot(_target_node)
+				target.server_loot(_target_node)
 		else:
 			# Check if the player is in interaction range of the the npc
 			if interaction_component.npcs_in_interact_range.has(target):
 				# Interact with npc
-				target.interact(_target_node)
+				target.server_interact(_target_node)
 
 	interacted.emit(target)
 
