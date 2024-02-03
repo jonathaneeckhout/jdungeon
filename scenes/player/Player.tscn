@@ -1924,10 +1924,11 @@ remote_path = NodePath("../../../Sprites/RightLeg")
 position = Vector2(7, 6)
 remote_path = NodePath("../../../Sprites/LeftLeg")
 
-[node name="EquipmentComponent" parent="." node_paths=PackedStringArray("equipment", "skeleton", "sprites") instance=ExtResource("24_dxas2")]
+[node name="EquipmentComponent" parent="." node_paths=PackedStringArray("equipment", "skeleton", "sprites", "update_face") instance=ExtResource("24_dxas2")]
 equipment = NodePath("../EquipmentSynchronizerComponent")
 skeleton = NodePath("../Skeleton")
 sprites = NodePath("../Sprites")
+update_face = NodePath("../UpdateFaceComponent")
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_rrdkp")

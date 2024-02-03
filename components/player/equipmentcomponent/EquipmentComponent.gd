@@ -5,6 +5,7 @@ const COMPONENT_NAME: String = "equipment"
 @export var equipment: EquipmentSynchronizerComponent = null
 @export var skeleton: Node2D = null
 @export var sprites: Node2D = null
+@export var update_face: UpdateFaceComponent = null
 
 var _target_node: Node
 
@@ -51,6 +52,8 @@ func _ready():
 	equipment.loaded.connect(_on_equipment_loaded)
 	equipment.item_added.connect(_on_item_equiped)
 	equipment.item_removed.connect(_on_item_unequiped)
+
+	update_face.direction_changed.connect(_on_direction_changed)
 
 
 func load_equipment_single_sprite(equipment_slot: String):
@@ -163,3 +166,7 @@ func _on_item_equiped(_item_uuid: String, _item_class: String):
 
 func _on_item_unequiped(_item_uuid: String):
 	equipment_changed()
+
+
+func _on_direction_changed(_original: bool):
+	move_equipment_weapons()
