@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7cukljxissss"]
+
+[ext_resource type="Script" path="res://components/player/equipmentsynchronizercomponent/EquipmentSynchronizerRPC.gd" id="1_iadnw"]
+
+[node name="EquipmentSynchronizerRpc" type="Node"]
+script = ExtResource("1_iadnw")

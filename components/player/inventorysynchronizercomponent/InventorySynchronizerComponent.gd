@@ -29,7 +29,7 @@ func _ready():
 	if _target_node.get("component_list") != null:
 		_target_node.component_list[COMPONENT_NAME] = self
 
-	# Get the StatsSynchronizerRPC component.
+	# Get the InventorySynchronizerRPC component.
 	_inventory_synchronizer_rpc = _target_node.multiplayer_connection.component_list.get_component(
 		InventorySynchronizerRPC.COMPONENT_NAME
 	)
@@ -61,8 +61,8 @@ func _ready():
 		_inventory_synchronizer_rpc.sync_inventory()
 
 
-func server_sync_inventory() -> Dictionary:
-	return to_json()
+func server_sync_inventory(peer_id: int):
+	_inventory_synchronizer_rpc.sync_response(peer_id, to_json())
 
 
 func server_add_item(item: Item) -> bool:

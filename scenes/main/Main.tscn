@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=20 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://d4c6yl66u2fdc" path="res://components/player/playersynchronizer/PlayerSynchronizerRPC.tscn" id="10_ghnhu"]
 [ext_resource type="PackedScene" uid="uid://cyd1haegch4ux" path="res://components/connection/ClientFSM/ClientFSM.tscn" id="12_7v67k"]
 [ext_resource type="PackedScene" uid="uid://c1mvaiehmnyeq" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerRPC.tscn" id="13_dprpu"]
+[ext_resource type="PackedScene" uid="uid://b7cukljxissss" path="res://components/player/equipmentsynchronizercomponent/EquipmentSynchronizerRPC.tscn" id="14_m4jl4"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="15_7xr38"]
 [ext_resource type="PackedScene" uid="uid://bikd514i5nqux" path="res://components/connection/Database/Database.tscn" id="15_byw11"]
 
@@ -58,6 +59,8 @@ database = NodePath("../../Database")
 [node name="PLSR" parent="Connections/ServerClient" instance=ExtResource("10_ghnhu")]
 
 [node name="ISR" parent="Connections/ServerClient" instance=ExtResource("13_dprpu")]
+
+[node name="ESR" parent="Connections/ServerClient" instance=ExtResource("14_m4jl4")]
 
 [node name="ServerFsm" parent="." node_paths=PackedStringArray("_server_gateway_client", "_server_client_server") instance=ExtResource("5_uiu1q")]
 unique_name_in_owner = true

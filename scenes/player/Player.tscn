@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=36 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="2_1l633"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="4_2vbfi"]
 [ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="4_w086p"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="5_6iyts"]
+[ext_resource type="PackedScene" uid="uid://cka62nlyw5gm5" path="res://components/player/equipmentsynchronizercomponent/EquipmentSynchronizerComponent.tscn" id="6_rcnqx"]
 [ext_resource type="PackedScene" uid="uid://cy3sl4bl86h6m" path="res://components/common/velocitysimulatorcomponent/VelocitySimulatorComponent.tscn" id="9_my4dj"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="10_68b1w"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="12_1yb8r"]
@@ -1773,6 +1774,9 @@ script = ExtResource("1_yw2vn")
 stats = NodePath("../StatsSynchronizerComponent")
 
 [node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("2_3edxt")]
+
+[node name="EquipmentSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("6_rcnqx")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
 [node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_2vbfi")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")

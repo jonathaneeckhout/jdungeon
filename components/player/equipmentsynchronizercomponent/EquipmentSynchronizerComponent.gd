@@ -6,9 +6,13 @@ signal loaded
 signal item_added(item_uuid: String, item_class: String)
 signal item_removed(item_uuid: String)
 
+const COMPONENT_NAME: String = "equipment_synchronizer"
+
 @export var watcher_synchronizer: WatcherSynchronizerComponent
 
-var target_node: Node
+var _target_node: Node
+
+var _equipment_synchronizer_rpc: EquipmentSynchronizerRPC = null
 
 var items = {
 	"Head": null,
@@ -25,38 +29,70 @@ var delay_timer: Timer
 
 
 func _ready():
-	target_node = get_parent()
+	_target_node = get_parent()
 
-	if target_node.get("peer_id") == null:
-		GodotLogger.error("target_node does not have the peer_id variable")
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
+	if _target_node.get("component_list") != null:
+		_target_node.component_list[COMPONENT_NAME] = self
+
+	# Get the EquipmentSynchronizerRPC component.
+	_equipment_synchronizer_rpc = _target_node.multiplayer_connection.component_list.get_component(
+		EquipmentSynchronizerRPC.COMPONENT_NAME
+	)
+
+	# Ensure the EquipmentSynchronizerRPC component is present
+	assert(_equipment_synchronizer_rpc != null, "Failed to get EquipmentSynchronizerRPC component")
+
+	if _target_node.get("peer_id") == null:
+		GodotLogger.error("_target_node does not have the peer_id variable")
 		return
 
-	if not G.is_server():
-		# This timer is needed to give the client some time to setup its multiplayer connection
-		delay_timer = Timer.new()
-		delay_timer.name = "DelayTimer"
-		delay_timer.wait_time = 0.1
-		delay_timer.autostart = true
-		delay_timer.one_shot = true
-		delay_timer.timeout.connect(_on_delay_timer_timeout)
-		add_child(delay_timer)
+	# Physics only needed on client side
+	if not _target_node.multiplayer_connection.is_server():
+		#Wait until the connection is ready to synchronize stats
+		if not multiplayer.has_multiplayer_peer():
+			await multiplayer.connected_to_server
+
+		#Wait an additional frame so others can get set.
+		await get_tree().process_frame
+
+		#Some entities take a bit to get added to the tree, do not update them until then.
+		if not is_inside_tree():
+			await tree_entered
+
+		_equipment_synchronizer_rpc.sync_equipment(_target_node.name)
 
 
-func equip_item(item: Item) -> bool:
+func server_sync_equipment(peer_id: int):
+	return _equipment_synchronizer_rpc.sync_response(peer_id, _target_node.name, to_json())
+
+
+func server_equip_item(item: Item) -> bool:
 	if items[item.equipment_slot] != null:
-		unequip_item(items[item.equipment_slot].uuid)
+		server_unequip_item(items[item.equipment_slot].uuid)
 
 	if _equip_item(item):
-		sync_equip_item.rpc_id(target_node.peer_id, item.uuid, item.item_class)
+		_equipment_synchronizer_rpc.equip_item(_target_node.peer_id, item.uuid, item.item_class)
 
 		for watcher in watcher_synchronizer.watchers:
-			sync_equip_item.rpc_id(watcher.peer_id, item.uuid, item.item_class)
+			_equipment_synchronizer_rpc.equip_item(watcher.peer_id, item.uuid, item.item_class)
 
 		item_added.emit(item.uuid, item.item_class)
 
 		return true
 
 	return false
+
+
+func client_equip_item(item_uuid: String, item_class: String):
+	var item: Item = J.item_scenes[item_class].instantiate()
+	item.uuid = item_uuid
+	item.item_class = item_class
+	item.collision_layer = 0
+
+	if _equip_item(item):
+		item_added.emit(item_uuid, item_class)
 
 
 func _equip_item(item: Item) -> bool:
@@ -72,17 +108,22 @@ func _equip_item(item: Item) -> bool:
 	return true
 
 
-func unequip_item(item_uuid: String) -> Item:
+func server_unequip_item(item_uuid: String) -> Item:
 	var item: Item = _unequip_item(item_uuid)
 	if item:
-		sync_unequip_item.rpc_id(target_node.peer_id, item.uuid)
+		_equipment_synchronizer_rpc.unequip_item(_target_node.peer_id, item.uuid)
 
 		for watcher in watcher_synchronizer.watchers:
-			sync_unequip_item.rpc_id(watcher.peer_id, item.uuid)
+			_equipment_synchronizer_rpc.unequip_item(watcher.peer_id, item.uuid)
 
 		item_removed.emit(item_uuid)
 
 	return item
+
+
+func client_unequip_item(item_uuid: String):
+	if _unequip_item(item_uuid) != null:
+		item_removed.emit(item_uuid)
 
 
 func _unequip_item(item_uuid: String) -> Item:
@@ -90,8 +131,8 @@ func _unequip_item(item_uuid: String) -> Item:
 	if item:
 		items[item.equipment_slot] = null
 
-		if target_node.get("inventory") != null:
-			target_node.inventory.add_item(item)
+		if _target_node.get("inventory") != null:
+			_target_node.inventory.add_item(item)
 		else:
 			GodotLogger.warn("Player does not have a inventory, item will be lost")
 
@@ -158,60 +199,3 @@ func from_json(data: Dictionary) -> bool:
 	loaded.emit()
 
 	return true
-
-
-func _on_delay_timer_timeout():
-	sync_equipment.rpc_id(1)
-
-
-@rpc("call_remote", "any_peer", "reliable")
-func sync_equipment():
-	if not G.is_server():
-		return
-
-	var id: int = multiplayer.get_remote_sender_id()
-
-	# Only allow logged in players
-	if not G.is_user_logged_in(id):
-		return
-
-	sync_response.rpc_id(id, to_json())
-
-
-@rpc("call_remote", "authority", "reliable")
-func sync_response(equipment: Dictionary):
-	from_json(equipment)
-
-
-@rpc("call_remote", "authority", "reliable")
-func sync_equip_item(item_uuid: String, item_class: String):
-	var item: Item = J.item_scenes[item_class].instantiate()
-	item.uuid = item_uuid
-	item.item_class = item_class
-	item.collision_layer = 0
-
-	if _equip_item(item):
-		item_added.emit(item_uuid, item_class)
-
-
-@rpc("call_remote", "authority", "reliable")
-func sync_unequip_item(item_uuid: String):
-	if _unequip_item(item_uuid) != null:
-		item_removed.emit(item_uuid)
-
-
-@rpc("call_remote", "any_peer", "reliable")
-func remove_equipment_item(item_uuid: String):
-	if not G.is_server():
-		return
-
-	var id = multiplayer.get_remote_sender_id()
-
-	# Only allow logged in players
-	if not G.is_user_logged_in(id):
-		return
-
-	if target_node.peer_id != id:
-		return
-
-	unequip_item(item_uuid)

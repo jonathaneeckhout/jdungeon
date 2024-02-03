@@ -76,7 +76,7 @@ func _sync_inventory():
 			user
 			. player
 			. component_list[InventorySynchronizerComponent.COMPONENT_NAME]
-			. server_sync_inventory()
+			. server_sync_inventory(id)
 		)
 
 
