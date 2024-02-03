@@ -72,7 +72,7 @@ func _stop_sync_clock():
 
 func _on_client_clock_sync_timer_timeout():
 	# If the connection is still up, call the get latency rpc
-	if multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
+	if _multiplayer_connection.multiplayer_api.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
 		get_latency.rpc_id(1, Time.get_unix_time_from_system())
 
 
@@ -88,7 +88,7 @@ func fetch_server_time(client_time: float):
 	if not _multiplayer_connection.is_server():
 		return
 
-	var id = multiplayer.get_remote_sender_id()
+	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 	return_server_time.rpc_id(id, Time.get_unix_time_from_system(), client_time)
 
 
@@ -103,7 +103,7 @@ func get_latency(client_time: float):
 	if not _multiplayer_connection.is_server():
 		return
 
-	var id = multiplayer.get_remote_sender_id()
+	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 	return_latency.rpc_id(id, client_time)
 
 

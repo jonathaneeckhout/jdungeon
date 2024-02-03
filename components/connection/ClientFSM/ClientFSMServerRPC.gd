@@ -117,7 +117,7 @@ func _authentication_response(response: bool):
 
 @rpc("call_remote", "any_peer", "reliable")
 func _load_player():
-	if not multiplayer.is_server():
+	if not _multiplayer_connection.multiplayer_api.is_server():
 		return
 
 	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()

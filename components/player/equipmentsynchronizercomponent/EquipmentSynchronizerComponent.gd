@@ -51,8 +51,8 @@ func _ready():
 	# Physics only needed on client side
 	if not _target_node.multiplayer_connection.is_server():
 		#Wait until the connection is ready to synchronize stats
-		if not multiplayer.has_multiplayer_peer():
-			await multiplayer.connected_to_server
+		if not _target_node.multiplayer_connection.multiplayer_api.has_multiplayer_peer():
+			await _target_node.multiplayer_connection.multiplayer_api.connected_to_server
 
 		#Wait an additional frame so others can get set.
 		await get_tree().process_frame

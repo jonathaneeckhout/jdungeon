@@ -46,7 +46,7 @@ func remove_equipment_item(item_uuid: String):
 func _sync_equipment(n: String):
 	assert(_multiplayer_connection.is_server(), "This call can only run on the server")
 
-	var id = multiplayer.get_remote_sender_id()
+	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
 	# Only allow logged in players
 	if not _multiplayer_connection.is_user_logged_in(id):

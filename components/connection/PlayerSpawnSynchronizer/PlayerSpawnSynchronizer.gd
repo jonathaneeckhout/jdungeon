@@ -35,20 +35,20 @@ func _ready():
 		user_authenticator.server_player_logged_in.connect(_on_server_player_logged_in)
 
 		# Connect to the disconnect signal, this is the trigger to emit the signal to remove the player from the server instance
-		multiplayer.peer_disconnected.connect(_on_server_peer_disconnected)
+		_multiplayer_connection.multiplayer_api.peer_disconnected.connect(_on_server_peer_disconnected)
 	else:
 		pass
 
 
 func add_client_player(peer_id: int, username: String, pos: Vector3, own_player: bool):
-	if not peer_id in multiplayer.get_peers():
+	if not peer_id in _multiplayer_connection.multiplayer_api.get_peers():
 		return
 
 	_add_client_player.rpc_id(peer_id, username, pos, own_player)
 
 
 func remove_client_player(peer_id: int, username: String):
-	if not peer_id in multiplayer.get_peers():
+	if not peer_id in _multiplayer_connection.multiplayer_api.get_peers():
 		return
 
 	_remove_client_player.rpc_id(peer_id, username)

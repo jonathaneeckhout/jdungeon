@@ -2,30 +2,42 @@ extends Node
 
 class_name ShopSynchronizerComponent
 
-signal shop_item_bought(player_id: int, item_uuid: String)
+const COMPONENT_NAME: String = "shop_synchronizer"
 
 @export var size: int = 36
 
 var inventory: Array[Dictionary] = []
 
-var target_node: Node
+var _target_node: Node
+
+var _shop_synchronizer_rpc: ShopSynchronizerRPC = null
 
 
 func _ready():
-	target_node = get_parent()
+	_target_node = get_parent()
 
-	if target_node.get("npc_class") == null:
-		GodotLogger.error("target_node does not have the npc_class variable")
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
+	if _target_node.get("component_list") != null:
+		_target_node.component_list[COMPONENT_NAME] = self
+
+	# Get the ShopSynchronizerRPC component.
+	_shop_synchronizer_rpc = _target_node.multiplayer_connection.component_list.get_component(
+		ShopSynchronizerRPC.COMPONENT_NAME
+	)
+
+	# Ensure the ShopSynchronizerRPC component is present
+	assert(_shop_synchronizer_rpc != null, "Failed to get ShopSynchronizerRPC component")
+
+	if _target_node.get("npc_class") == null:
+		GodotLogger.error("_target_node does not have the npc_class variable")
 		return
 
-	if G.is_server():
-		shop_item_bought.connect(_on_shop_item_bought)
 
-
-func add_item(item_class: String, price: int) -> bool:
+func server_add_item(item_class: String, price: int) -> bool:
 	if inventory.size() >= size:
 		GodotLogger.warn(
-			"Can not add more items to %s's shop, shop is full" % target_node.npc_class
+			"Can not add more items to %s's shop, shop is full" % _target_node.npc_class
 		)
 		return false
 
@@ -76,15 +88,15 @@ func from_json(data: Dictionary) -> bool:
 	return true
 
 
-func open_shop(peer_id: int):
-	sync_shop.rpc_id(peer_id, to_json())
+func server_sync_shop(peer_id: int):
+	_shop_synchronizer_rpc.sync_shop(peer_id, _target_node.name, to_json())
 
 
-func _on_shop_item_bought(player_id: int, item_uuid: String):
-	var player = G.world.get_player_by_peer_id(player_id)
-	if player == null:
-		return
+func client_sync_shop(shop: Dictionary):
+	from_json(shop)
 
+
+func server_buy_item(player: Player, item_uuid: String):
 	var shop_item = get_item(item_uuid)
 	if !shop_item:
 		return
@@ -100,24 +112,3 @@ func _on_shop_item_bought(player_id: int, item_uuid: String):
 
 		if not player.inventory.add_item(new_item):
 			player.inventory.add_gold(shop_item["price"])
-
-
-@rpc("call_remote", "authority", "reliable")
-func sync_shop(shop: Dictionary):
-	from_json(shop)
-
-	G.shop_opened.emit(target_node.name)
-
-
-@rpc("call_remote", "any_peer", "reliable")
-func buy_shop_item(item_uuid: String):
-	if not G.is_server():
-		return
-
-	var id = multiplayer.get_remote_sender_id()
-
-	# Only allow logged in players
-	if not G.is_user_logged_in(id):
-		return
-
-	shop_item_bought.emit(id, item_uuid)

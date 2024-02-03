@@ -188,7 +188,7 @@ func _remove_item(n: String, iu: String):
 func _sync_bodies_in_view():
 	assert(_multiplayer_connection.is_server(), "This call can only run on the server")
 
-	var id = multiplayer.get_remote_sender_id()
+	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
 	var user: MultiplayerConnection.User = _multiplayer_connection.get_user_by_id(id)
 	if user == null:

@@ -30,7 +30,7 @@ func authenticate(username: String, password: String):
 func _authenticate(username: String, _password: String):
 	assert(_multiplayer_connection.is_server(), "This call can only run on the server")
 
-	var id: int = multiplayer.get_remote_sender_id()
+	var id: int = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
 	# TODO: for now no authentication is implemented
 
