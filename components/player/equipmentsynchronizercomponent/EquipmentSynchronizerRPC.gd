@@ -30,12 +30,12 @@ func sync_response(peer_id: int, entity_name: String, equipment: Dictionary):
 	_sync_response.rpc_id(peer_id, entity_name, equipment)
 
 
-func equip_item(peer_id: int, item_uuid: String, item_class: String):
-	_equip_item.rpc_id(peer_id, item_uuid, item_class)
+func equip_item(peer_id: int, entity_name: String, item_uuid: String, item_class: String):
+	_equip_item.rpc_id(peer_id, entity_name, item_uuid, item_class)
 
 
-func unequip_item(peer_id: int, item_uuid: String):
-	_unequip_item.rpc_id(peer_id, item_uuid)
+func unequip_item(peer_id: int, entity_name: String, item_uuid: String):
+	_unequip_item.rpc_id(peer_id, entity_name, item_uuid)
 
 
 func remove_equipment_item(item_uuid: String):
@@ -81,35 +81,31 @@ func _sync_response(n: String, e: Dictionary):
 
 
 @rpc("call_remote", "authority", "reliable")
-func _equip_item(u: String, c: String):
-	if _multiplayer_connection.client_player == null:
+func _equip_item(n: String, u: String, c: String):
+	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
+
+	if entity == null:
 		return
 
-	if _multiplayer_connection.client_player.component_list.has(
-		EquipmentSynchronizerComponent.COMPONENT_NAME
-	):
-		(
-			_multiplayer_connection
-			. client_player
-			. component_list[EquipmentSynchronizerComponent.COMPONENT_NAME]
-			. client_equip_item(u, c)
-		)
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has(EquipmentSynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[EquipmentSynchronizerComponent.COMPONENT_NAME].client_equip_item(u, c)
 
 
 @rpc("call_remote", "authority", "reliable")
-func _unequip_item(u: String):
-	if _multiplayer_connection.client_player == null:
+func _unequip_item(n: String, u: String):
+	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
+
+	if entity == null:
 		return
 
-	if _multiplayer_connection.client_player.component_list.has(
-		EquipmentSynchronizerComponent.COMPONENT_NAME
-	):
-		(
-			_multiplayer_connection
-			. client_player
-			. component_list[EquipmentSynchronizerComponent.COMPONENT_NAME]
-			. client_unequip_item(u)
-		)
+	if entity.get("component_list") == null:
+		return
+
+	if entity.component_list.has(EquipmentSynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[EquipmentSynchronizerComponent.COMPONENT_NAME].client_unequip_item(u)
 
 
 @rpc("call_remote", "any_peer", "reliable")

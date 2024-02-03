@@ -73,10 +73,14 @@ func server_equip_item(item: Item) -> bool:
 		server_unequip_item(items[item.equipment_slot].uuid)
 
 	if _equip_item(item):
-		_equipment_synchronizer_rpc.equip_item(_target_node.peer_id, item.uuid, item.item_class)
+		_equipment_synchronizer_rpc.equip_item(
+			_target_node.peer_id, _target_node.name, item.uuid, item.item_class
+		)
 
 		for watcher in watcher_synchronizer.watchers:
-			_equipment_synchronizer_rpc.equip_item(watcher.peer_id, item.uuid, item.item_class)
+			_equipment_synchronizer_rpc.equip_item(
+				watcher.peer_id, _target_node.name, item.uuid, item.item_class
+			)
 
 		item_added.emit(item.uuid, item.item_class)
 
@@ -111,10 +115,10 @@ func _equip_item(item: Item) -> bool:
 func server_unequip_item(item_uuid: String) -> Item:
 	var item: Item = _unequip_item(item_uuid)
 	if item:
-		_equipment_synchronizer_rpc.unequip_item(_target_node.peer_id, item.uuid)
+		_equipment_synchronizer_rpc.unequip_item(_target_node.peer_id, _target_node.name, item.uuid)
 
 		for watcher in watcher_synchronizer.watchers:
-			_equipment_synchronizer_rpc.unequip_item(watcher.peer_id, item.uuid)
+			_equipment_synchronizer_rpc.unequip_item(watcher.peer_id, _target_node.name, item.uuid)
 
 		item_removed.emit(item_uuid)
 
