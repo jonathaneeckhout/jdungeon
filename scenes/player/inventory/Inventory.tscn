@@ -1,20 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://uord7b0pb5jt"]
 
-[ext_resource type="Script" path="res://todo/player/inventory/Inventory.gd" id="1_s20km"]
-[ext_resource type="PackedScene" uid="uid://bmicns3cmcurr" path="res://todo/player/inventory/InventoryPanel.tscn" id="2_3vugu"]
+[ext_resource type="Script" path="res://scenes/player/inventory/Inventory.gd" id="1_s20km"]
+[ext_resource type="PackedScene" uid="uid://bmicns3cmcurr" path="res://scenes/player/inventory/InventoryPanel.tscn" id="2_3vugu"]
 
 [node name="Inventory" type="Panel"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -203.0
-offset_top = -218.0
-offset_right = 203.0
-offset_bottom = 218.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 406.0
+offset_bottom = 436.0
 size_flags_horizontal = 4
 script = ExtResource("1_s20km")
 
@@ -33,7 +24,6 @@ grow_vertical = 2
 theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 columns = 6
-metadata/_edit_lock_ = true
 
 [node name="Panel_0_0" parent="GridContainer" instance=ExtResource("2_3vugu")]
 layout_mode = 2

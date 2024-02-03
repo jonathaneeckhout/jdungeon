@@ -4,6 +4,9 @@ class_name Inventory
 
 const SIZE = Vector2(6, 6)
 
+@export var player: Player = null
+@export var inventory_synchronizer: InventorySynchronizerComponent = null
+
 var gold := 0:
 	set(amount):
 		gold = amount
@@ -13,11 +16,10 @@ var panels = []
 var mouse_above_this_panel: InventoryPanel
 var location_cache = {}
 
-@onready var player: Player = $"../../../../"
-
 
 func _ready():
-	if G.is_server():
+	if player.multiplayer_connection.is_server():
+		queue_free()
 		return
 
 	mouse_entered.connect(_on_mouse_entered)
@@ -48,17 +50,16 @@ func _input(event):
 		if visible:
 			hide()
 		else:
-			player.inventory.sync_inventory.rpc_id(1)
 			show()
 
 
 func register_signals():
-	player.inventory.loaded.connect(_on_inventory_loaded)
-	player.inventory.gold_added.connect(_on_gold_added)
-	player.inventory.gold_removed.connect(_on_gold_removed)
+	inventory_synchronizer.loaded.connect(_on_inventory_loaded)
+	inventory_synchronizer.gold_added.connect(_on_gold_added)
+	inventory_synchronizer.gold_removed.connect(_on_gold_removed)
 
-	player.inventory.item_added.connect(_on_item_added)
-	player.inventory.item_removed.connect(_on_item_removed)
+	inventory_synchronizer.item_added.connect(_on_item_added)
+	inventory_synchronizer.item_removed.connect(_on_item_removed)
 
 
 func get_panel_at_pos(pos: Vector2) -> InventoryPanel:
@@ -102,9 +103,9 @@ func _on_mouse_exited():
 func _on_inventory_loaded():
 	clear_all_panels()
 
-	gold = player.inventory.gold
+	gold = inventory_synchronizer.gold
 
-	for item in player.inventory.items:
+	for item in inventory_synchronizer.items:
 		place_item_at_free_slot(item)
 
 
@@ -117,7 +118,7 @@ func _on_gold_removed(total: int, _amount: int):
 
 
 func _on_item_added(item_uuid: String, _item_class: String):
-	var item: Item = player.inventory.get_item(item_uuid)
+	var item: Item = inventory_synchronizer.get_item(item_uuid)
 
 	if not item:
 		return

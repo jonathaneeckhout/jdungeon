@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bmicns3cmcurr"]
 
-[ext_resource type="Script" path="res://todo/player/inventory/InventoryPanel.gd" id="1_kvfmi"]
+[ext_resource type="Script" path="res://scenes/player/inventory/InventoryPanel.gd" id="1_kvfmi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lyqlp"]
 bg_color = Color(0.0901961, 0.0901961, 0.0901961, 1)

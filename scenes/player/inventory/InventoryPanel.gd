@@ -17,8 +17,26 @@ var grid_pos: Vector2
 var selected = false
 var drag_panel_offset: Vector2
 
+var _inventory_synchronizer_rpc: InventorySynchronizerRPC = null
+
 
 func _ready():
+	assert(
+		inventory.player.multiplayer_connection != null, "Target's multiplayer connection is null"
+	)
+
+	# Get the InventorySynchronizerRPC component.
+	_inventory_synchronizer_rpc = (
+		inventory
+		. player
+		. multiplayer_connection
+		. component_list
+		. get_component(InventorySynchronizerRPC.COMPONENT_NAME)
+	)
+
+	# Ensure the InventorySynchronizerRPC component is present
+	assert(_inventory_synchronizer_rpc != null, "Failed to get InventorySynchronizerRPC component")
+
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 
@@ -39,11 +57,11 @@ func _gui_input(event: InputEvent):
 			inventory.swap_items(self, inventory.mouse_above_this_panel)
 		else:
 			if item:
-				inventory.player.inventory.drop_inventory_item.rpc_id(1, item.uuid)
+				_inventory_synchronizer_rpc.drop_item(item.uuid)
 	elif event.is_action_pressed("j_right_click"):
 		if not selected:
 			if item:
-				inventory.player.inventory.use_inventory_item.rpc_id(1, item.uuid)
+				_inventory_synchronizer_rpc.use_item(item.uuid)
 		else:
 			selected = false
 			drag_panel.hide()
