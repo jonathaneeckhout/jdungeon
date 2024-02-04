@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=42 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="2_1l633"]
@@ -28,6 +28,7 @@
 [ext_resource type="Texture2D" uid="uid://ixmwiam5br6r" path="res://assets/images/player/base/scaled/base_fronthand.png" id="25_l4uyq"]
 [ext_resource type="PackedScene" uid="uid://dy1r3n0fpuneq" path="res://scenes/player/shop/Shop.tscn" id="26_1vuxv"]
 [ext_resource type="PackedScene" uid="uid://npibcxiy8qqo" path="res://scenes/player/expbar/ExpBar.tscn" id="28_c7q8l"]
+[ext_resource type="PackedScene" uid="uid://dirsk8pf0bxh5" path="res://scenes/player/statdisplay/StatDisplay.tscn" id="29_lciek"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rrdkp"]
 radius = 16.0
@@ -1994,4 +1995,8 @@ offset_right = 320.0
 offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 0
+stats = NodePath("../../../StatsSynchronizerComponent")
+
+[node name="StatDisplay" parent="Camera2D/UILayer" node_paths=PackedStringArray("stats") instance=ExtResource("29_lciek")]
+visible = false
 stats = NodePath("../../../StatsSynchronizerComponent")

@@ -22,7 +22,6 @@ func _ready():
 
 
 func server_interact(player: Player):
-	print("HIER")
 	if player.get("peer_id") == null:
 		GodotLogger.error("player node does not have the peer_id variable")
 		return

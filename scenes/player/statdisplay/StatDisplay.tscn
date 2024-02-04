@@ -1,14 +1,12 @@
 [gd_scene load_steps=2 format=3 uid="uid://dirsk8pf0bxh5"]
 
-[ext_resource type="Script" path="res://todo/player/statdisplay/StatDisplay.gd" id="1_j3bvc"]
+[ext_resource type="Script" path="res://scenes/player/statdisplay/StatDisplay.gd" id="1_j3bvc"]
 
 [node name="StatDisplay" type="Panel"]
 anchors_preset = -1
 anchor_left = 0.7
 anchor_right = 1.0
 anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_j3bvc")
 
