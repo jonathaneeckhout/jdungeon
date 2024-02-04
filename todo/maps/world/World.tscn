@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://todo/enemies/Sheep/Sheep.tscn" id="6_cvst6"]
 [ext_resource type="PackedScene" uid="uid://drmaubupv57n1" path="res://todo/enemies/MoldedDruvar/MoldedDruvar.tscn" id="7_qys7n"]
 [ext_resource type="PackedScene" uid="uid://pp0i54sl5web" path="res://todo/enemies/ClamDog/ClamDog.tscn" id="8_w2dtf"]
-[ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://todo/npcs/milklady/Milklady.tscn" id="9_e850n"]
+[ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="9_e850n"]
 [ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="10_bxiih"]
 [ext_resource type="PackedScene" uid="uid://cj48j2lhcde1a" path="res://scenes/terrain/portal/Portal.tscn" id="11_nqcmx"]
 [ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="11_nyeba"]

@@ -4,15 +4,7 @@
 [ext_resource type="Script" path="res://scenes/player/expbar/ExpBar.gd" id="2_qtgyb"]
 
 [node name="ExpBar" type="ProgressBar"]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -320.0
-offset_top = -32.0
-offset_right = 320.0
-grow_horizontal = 2
-grow_vertical = 0
+offset_right = 640.0
+offset_bottom = 32.0
 theme_override_styles/fill = ExtResource("1_6g03i")
 script = ExtResource("2_qtgyb")
