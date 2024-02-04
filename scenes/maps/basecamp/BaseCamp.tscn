@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=19 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_8nwqo"]
 [ext_resource type="PackedScene" uid="uid://2e4xaioctby5" path="res://scenes/terrain/attributes/fires/campfire/Campfire.tscn" id="12_c2e8t"]
 [ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="17_0np6n"]
+[ext_resource type="PackedScene" uid="uid://cssne8offdlm8" path="res://scenes/npcs/guard/Guard.tscn" id="17_08rmf"]
 [ext_resource type="PackedScene" uid="uid://cgbfsliknfb2x" path="res://scenes/terrain/buildings/smallclosedtent/SmallClosedTent.tscn" id="18_5sudt"]
 [ext_resource type="PackedScene" uid="uid://dbvwp47xtho6f" path="res://scenes/terrain/attributes/barrels/treebarrels/TreeBarrels.tscn" id="18_k4omq"]
 [ext_resource type="PackedScene" uid="uid://kqih0di4otpx" path="res://scenes/terrain/attributes/barrels/onebarrel/OneBarrel.tscn" id="19_h4hwk"]
@@ -230,6 +231,18 @@ y_sort_enabled = true
 
 [node name="Turtur" parent="NPCs" instance=ExtResource("17_0np6n")]
 position = Vector2(627, 699)
+
+[node name="Guard" parent="NPCs" instance=ExtResource("17_08rmf")]
+position = Vector2(159, 1122)
+
+[node name="Guard2" parent="NPCs" instance=ExtResource("17_08rmf")]
+position = Vector2(-141, 1121)
+
+[node name="Guard3" parent="NPCs" instance=ExtResource("17_08rmf")]
+position = Vector2(-991, 150)
+
+[node name="Guard4" parent="NPCs" instance=ExtResource("17_08rmf")]
+position = Vector2(-991, -88)
 
 [node name="PlayerRespawnLocations" type="Node2D" parent="."]
 
