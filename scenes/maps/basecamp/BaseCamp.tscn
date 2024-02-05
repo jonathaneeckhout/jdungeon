@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=23 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://cssne8offdlm8" path="res://scenes/npcs/guard/Guard.tscn" id="17_08rmf"]
 [ext_resource type="PackedScene" uid="uid://cgbfsliknfb2x" path="res://scenes/terrain/buildings/smallclosedtent/SmallClosedTent.tscn" id="18_5sudt"]
 [ext_resource type="PackedScene" uid="uid://dbvwp47xtho6f" path="res://scenes/terrain/attributes/barrels/treebarrels/TreeBarrels.tscn" id="18_k4omq"]
+[ext_resource type="PackedScene" uid="uid://bsauq1smmlnkl" path="res://scenes/enemies/Ladybug/Ladybug.tscn" id="18_sp53d"]
 [ext_resource type="PackedScene" uid="uid://kqih0di4otpx" path="res://scenes/terrain/attributes/barrels/onebarrel/OneBarrel.tscn" id="19_h4hwk"]
 [ext_resource type="PackedScene" uid="uid://cyr834v3kao1y" path="res://scenes/terrain/attributes/bags/fourbags/FourBags.tscn" id="19_mx0g6"]
 [ext_resource type="PackedScene" uid="uid://by50kfgdbc37a" path="res://scenes/terrain/attributes/carts/flat cart empty.tscn" id="20_gtrsr"]
@@ -318,6 +319,48 @@ position = Vector2(-3501, -1015)
 
 [node name="WildBoar4" parent="Enemies" instance=ExtResource("16_j1bv3")]
 position = Vector2(-3526, -1663)
+
+[node name="Ladybug" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-1788, 1543)
+
+[node name="Ladybug9" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-813, 2295)
+
+[node name="Ladybug10" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-950, 3679)
+
+[node name="Ladybug11" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-20, 3312)
+
+[node name="Ladybug12" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(1512, 2842)
+
+[node name="Ladybug13" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(2285, 2242)
+
+[node name="Ladybug14" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(1513, 1868)
+
+[node name="Ladybug2" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-2957, 2174)
+
+[node name="Ladybug3" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-3206, 1173)
+
+[node name="Ladybug4" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-1988, 282)
+
+[node name="Ladybug5" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-2157, -370)
+
+[node name="Ladybug6" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-908, -1175)
+
+[node name="Ladybug7" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-2907, -988)
+
+[node name="Ladybug8" parent="Enemies" instance=ExtResource("18_sp53d")]
+position = Vector2(-3689, -502)
 
 [node name="NPCs" type="Node2D" parent="."]
 y_sort_enabled = true
