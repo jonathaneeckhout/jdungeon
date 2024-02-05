@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=22 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://vsig12850hrc" path="res://scenes/terrain/buildings/bigtent/BigTent.tscn" id="10_mdbr4"]
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_8nwqo"]
 [ext_resource type="PackedScene" uid="uid://2e4xaioctby5" path="res://scenes/terrain/attributes/fires/campfire/Campfire.tscn" id="12_c2e8t"]
+[ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://scenes/enemies/Sheep/Sheep.tscn" id="15_31tui"]
 [ext_resource type="PackedScene" uid="uid://bv8wlx0nq04pc" path="res://scenes/enemies/WildBoar/WildBoar.tscn" id="16_j1bv3"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="16_qq077"]
 [ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="17_0np6n"]
@@ -197,6 +198,57 @@ position = Vector2(-432, -600)
 
 [node name="Enemies" type="Node2D" parent="."]
 y_sort_enabled = true
+
+[node name="Sheep" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(656, 2283)
+
+[node name="Sheep6" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(717, 2470)
+
+[node name="Sheep7" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(721, 3340)
+
+[node name="Sheep8" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(725, 3048)
+
+[node name="Sheep9" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(978, 3251)
+
+[node name="Sheep10" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(964, 3005)
+
+[node name="Sheep11" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(-1809, 3817)
+
+[node name="Sheep12" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(-1805, 3525)
+
+[node name="Sheep13" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(-1552, 3728)
+
+[node name="Sheep14" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(-1566, 3482)
+
+[node name="Sheep2" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(918, 2342)
+
+[node name="Sheep15" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(-438, 3634)
+
+[node name="Sheep16" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(-377, 3821)
+
+[node name="Sheep17" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(-176, 3693)
+
+[node name="Sheep3" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(1946, 2713)
+
+[node name="Sheep4" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(2154, 2582)
+
+[node name="Sheep5" parent="Enemies" instance=ExtResource("15_31tui")]
+position = Vector2(1882, 2515)
 
 [node name="BlueMole" parent="Enemies" instance=ExtResource("5_oe42q")]
 position = Vector2(-3010, 3402)

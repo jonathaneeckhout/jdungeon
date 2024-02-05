@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://todo/maps/world/World.gd" id="1_fsi10"]
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://todo/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="5_2l8ik"]
-[ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://todo/enemies/Sheep/Sheep.tscn" id="6_cvst6"]
+[ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://scenes/enemies/Sheep/Sheep.tscn" id="6_cvst6"]
 [ext_resource type="PackedScene" uid="uid://drmaubupv57n1" path="res://todo/enemies/MoldedDruvar/MoldedDruvar.tscn" id="7_qys7n"]
 [ext_resource type="PackedScene" uid="uid://pp0i54sl5web" path="res://todo/enemies/ClamDog/ClamDog.tscn" id="8_w2dtf"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="9_e850n"]
