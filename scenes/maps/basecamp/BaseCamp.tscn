@@ -229,16 +229,43 @@ position = Vector2(-2513, 2751)
 position = Vector2(-2954, 3836)
 
 [node name="WildBoar" parent="Enemies" instance=ExtResource("16_j1bv3")]
-position = Vector2(-1819, -513)
+position = Vector2(-1749, -792)
+
+[node name="WildBoar5" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-1697, 649)
+
+[node name="WildBoar6" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-2652, 615)
+
+[node name="WildBoar7" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-3713, 956)
+
+[node name="WildBoar8" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-3533, 1891)
+
+[node name="WildBoar9" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-2673, 1820)
+
+[node name="WildBoar10" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-1853, 2021)
+
+[node name="WildBoar12" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-1138, 1617)
+
+[node name="WildBoar11" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-2122, 1194)
 
 [node name="WildBoar2" parent="Enemies" instance=ExtResource("16_j1bv3")]
-position = Vector2(-2860, -399)
+position = Vector2(-2784, -386)
+
+[node name="WildBoar13" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-2664, -1282)
 
 [node name="WildBoar3" parent="Enemies" instance=ExtResource("16_j1bv3")]
-position = Vector2(-3304, -1199)
+position = Vector2(-3501, -1015)
 
 [node name="WildBoar4" parent="Enemies" instance=ExtResource("16_j1bv3")]
-position = Vector2(-3304, -1199)
+position = Vector2(-3526, -1663)
 
 [node name="NPCs" type="Node2D" parent="."]
 y_sort_enabled = true
