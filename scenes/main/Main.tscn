@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=22 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="15_7xr38"]
 [ext_resource type="PackedScene" uid="uid://bikd514i5nqux" path="res://components/connection/Database/Database.tscn" id="15_byw11"]
 [ext_resource type="PackedScene" uid="uid://bopl1rpbyww77" path="res://components/npc/shopsynchronizercomponent/ShopSynchronizerRPC.tscn" id="15_et847"]
+[ext_resource type="PackedScene" uid="uid://d26qxk2biwiyb" path="res://components/player/chatcomponent/ChatServerRPC.tscn" id="16_7gwu3"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_et6n2")
@@ -64,6 +65,8 @@ database = NodePath("../../Database")
 [node name="ESR" parent="Connections/ServerClient" instance=ExtResource("14_m4jl4")]
 
 [node name="SHSR" parent="Connections/ServerClient" instance=ExtResource("15_et847")]
+
+[node name="CSR" parent="Connections/ServerClient" instance=ExtResource("16_7gwu3")]
 
 [node name="ServerFsm" parent="." node_paths=PackedStringArray("_server_gateway_client", "_server_client_server") instance=ExtResource("5_uiu1q")]
 unique_name_in_owner = true

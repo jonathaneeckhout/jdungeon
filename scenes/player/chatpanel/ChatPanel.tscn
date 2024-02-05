@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dmf2tmcuq22vg"]
 
-[ext_resource type="Script" path="res://todo/player/chatpanel/ChatPanel.gd" id="1_4dbdm"]
+[ext_resource type="Script" path="res://scenes/player/chatpanel/ChatPanel.gd" id="1_4dbdm"]
 
 [node name="ChatPanel" type="Control"]
 custom_minimum_size = Vector2(512, 326)
@@ -64,7 +64,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Global:"
+text = "Map:"
 
 [node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2

@@ -151,6 +151,11 @@ func client_add_player(peer_id: int, username: String, pos: Vector2, own_player:
 	return player
 
 
+func client_remove_player(username: String):
+	if players.has_node(username):
+		players.get_node(username).queue_free()
+
+
 func client_add_enemy(enemy_name: String, enemy_class: String, pos: Vector2):
 	if enemies.has_node(enemy_name):
 		GodotLogger.info("Enemy=[%s] already exists, no need to add again" % enemy_name)
