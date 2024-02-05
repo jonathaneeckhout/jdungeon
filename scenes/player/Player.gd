@@ -2,9 +2,6 @@ extends CharacterBody2D
 
 class_name Player
 
-# const PLAYER_HP_GAIN_PER_LEVEL: int = 8
-# const PLAYER_ATTACK_POWER_GAIN_PER_LEVEL: float = 0.2
-
 var multiplayer_connection: MultiplayerConnection = null
 
 var username: String = ""
@@ -92,48 +89,6 @@ func _ready():
 func focus_camera():
 	$Camera2D.make_current()
 
-# func calculate_level_boost() -> Boost:
-# 	var boost: Boost = Boost.new()
-# 	boost.hp_max = int((stats.level - 1) * PLAYER_HP_GAIN_PER_LEVEL)
-# 	boost.attack_power_min = int(stats.level * PLAYER_ATTACK_POWER_GAIN_PER_LEVEL)
-# 	boost.attack_power_max = boost.attack_power_min
-# 	return boost
-
-# func calculate_and_apply_boosts():
-# 	var boost: Boost = calculate_level_boost()
-# 	boost.identifier = "player_level"
-# 	var equipment_boost: Boost = equipment.get_boost()
-# 	equipment_boost.identifier = "player_equipment"
-
-# 	stats.apply_boost(equipment_boost)
-# 	stats.apply_boost(boost)
-
-# func update_boosts():
-# 	stats.load_defaults()
-
-# 	calculate_and_apply_boosts()
-
-# func _on_stats_changed(stat_type: StatsSynchronizerComponent.TYPE):
-# 	if G.is_server() and stat_type == StatsSynchronizerComponent.TYPE.LEVEL:
-# 		update_boosts()
-
-# func _on_equipment_loaded():
-# 	if G.is_server():
-# 		update_boosts()
-# 	else:
-# 		equipment_changed()
-
-# func _on_item_equiped(_item_uuid: String, _item_class: String):
-# 	if G.is_server():
-# 		update_boosts()
-# 	else:
-# 		equipment_changed()
-
-# func _on_item_unequiped(_item_uuid: String):
-# 	if G.is_server():
-# 		update_boosts()
-# 	else:
-# 		equipment_changed()
 
 # func _on_died():
 # 	if not G.is_server() and G.is_own_player(self):

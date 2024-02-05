@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bbp5hd0go74jt"]
+
+[ext_resource type="Script" path="res://components/player/boostcomponent/BoostComponent.gd" id="1_dae6k"]
+
+[node name="BoostComponent" type="Node"]
+script = ExtResource("1_dae6k")
