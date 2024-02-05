@@ -1,11 +1,11 @@
 extends Control
 
-var respawn_time: float = J.PLAYER_RESPAWN_TIME
+@export var player_respawn: PlayerRespawnComponent = null
+
+@onready var count_down_label: Label = $Panel/CountdownLabel
 
 var timer: Timer
 var countdown_timer: Timer
-
-@onready var count_down_label: Label = $Panel/CountdownLabel
 
 
 func _ready():
@@ -26,7 +26,7 @@ func _ready():
 
 func show_popup():
 	self.show()
-	timer.start(respawn_time)
+	timer.start(player_respawn.respawn_time)
 	countdown_timer.start(0.1)
 	update_counter()
 

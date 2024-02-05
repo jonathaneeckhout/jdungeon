@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ccq2mcrkefjnb"]
 
-[ext_resource type="Script" path="res://todo/player/deathpopup/DeathPopup.gd" id="1_augcx"]
+[ext_resource type="Script" path="res://scenes/player/deathpopup/DeathPopup.gd" id="1_augcx"]
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="2_htxd2"]
 
 [node name="DeathPopup" type="Control"]

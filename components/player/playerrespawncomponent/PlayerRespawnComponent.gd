@@ -1,5 +1,7 @@
 extends Node
 
+class_name PlayerRespawnComponent
+
 @export var stats_synchronizer: StatsSynchronizerComponent
 @export var respawn_time: float = 10
 
@@ -13,8 +15,8 @@ func _ready():
 
 	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
 
+	# Don't run on client, but also not free as the value of respawn_time is used in the death popup screen
 	if not _target_node.multiplayer_connection.is_server():
-		queue_free()
 		return
 
 	if _target_node.get("position") == null:
