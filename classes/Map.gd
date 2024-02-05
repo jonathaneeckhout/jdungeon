@@ -205,3 +205,22 @@ func client_add_item(item_uuid: String, item_class: String, pos: Vector2):
 func client_remove_item(item_uuid: String):
 	if items.has_node(item_uuid):
 		items.get_node(item_uuid).queue_free()
+
+
+func find_player_respawn_location(player_position: Vector2) -> Vector2:
+	var spots = player_respawn_locations.get_children()
+
+	if len(spots) == 0:
+		GodotLogger.warn("No player respawn spots found, returning current player's position")
+		return player_position
+
+	var closest = spots[0].position
+	var closest_distance = closest.distance_to(player_position)
+
+	for spot in spots:
+		var distance = spot.position.distance_to(player_position)
+		if distance < closest_distance:
+			closest = spot.position
+			closest_distance = distance
+
+	return closest

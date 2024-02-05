@@ -11,7 +11,6 @@ class_name BoostComponent
 var _target_node: Node
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	_target_node = get_parent()
 
