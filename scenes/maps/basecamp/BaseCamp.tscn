@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_8nwqo"]
 [ext_resource type="PackedScene" uid="uid://2e4xaioctby5" path="res://scenes/terrain/attributes/fires/campfire/Campfire.tscn" id="12_c2e8t"]
 [ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://scenes/enemies/Sheep/Sheep.tscn" id="15_31tui"]
-[ext_resource type="PackedScene" uid="uid://bv8wlx0nq04pc" path="res://todo/enemies/WildBoar/WildBoar.tscn" id="16_j1bv3"]
+[ext_resource type="PackedScene" uid="uid://bv8wlx0nq04pc" path="res://scenes/enemies/WildBoar/WildBoar.tscn" id="16_j1bv3"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="16_qq077"]
 [ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="17_0np6n"]
 [ext_resource type="PackedScene" uid="uid://cssne8offdlm8" path="res://scenes/npcs/guard/Guard.tscn" id="17_08rmf"]
