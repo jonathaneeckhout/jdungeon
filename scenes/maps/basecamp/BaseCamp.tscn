@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=21 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://vsig12850hrc" path="res://scenes/terrain/buildings/bigtent/BigTent.tscn" id="10_mdbr4"]
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="12_8nwqo"]
 [ext_resource type="PackedScene" uid="uid://2e4xaioctby5" path="res://scenes/terrain/attributes/fires/campfire/Campfire.tscn" id="12_c2e8t"]
+[ext_resource type="PackedScene" uid="uid://bv8wlx0nq04pc" path="res://scenes/enemies/WildBoar/WildBoar.tscn" id="16_j1bv3"]
 [ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="16_qq077"]
 [ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="17_0np6n"]
 [ext_resource type="PackedScene" uid="uid://cssne8offdlm8" path="res://scenes/npcs/guard/Guard.tscn" id="17_08rmf"]
@@ -198,34 +199,46 @@ position = Vector2(-432, -600)
 y_sort_enabled = true
 
 [node name="BlueMole" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-1570, 633)
+position = Vector2(-3010, 3402)
 
 [node name="BlueMole2" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-2225, 1012)
+position = Vector2(-3729, 3895)
 
 [node name="BlueMole3" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-1812, 935)
+position = Vector2(-2516, 3980)
 
 [node name="BlueMole4" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-2057, 705)
+position = Vector2(-3303, 2992)
 
 [node name="BlueMole5" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-2059, 386)
+position = Vector2(-3435, 2527)
 
 [node name="BlueMole6" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-1795, 301)
+position = Vector2(-2895, 2876)
 
 [node name="BlueMole7" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-2407, 343)
+position = Vector2(-3747, 2998)
 
 [node name="BlueMole8" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-2305, 734)
+position = Vector2(-3611, 3455)
 
 [node name="BlueMole9" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-1941, 1064)
+position = Vector2(-2513, 2751)
 
 [node name="BlueMole10" parent="Enemies" instance=ExtResource("5_oe42q")]
-position = Vector2(-1616, 1143)
+position = Vector2(-2954, 3836)
+
+[node name="WildBoar" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-1819, -513)
+
+[node name="WildBoar2" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-2860, -399)
+
+[node name="WildBoar3" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-3304, -1199)
+
+[node name="WildBoar4" parent="Enemies" instance=ExtResource("16_j1bv3")]
+position = Vector2(-3304, -1199)
 
 [node name="NPCs" type="Node2D" parent="."]
 y_sort_enabled = true
