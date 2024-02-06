@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
-[ext_resource type="Resource" uid="uid://chbdptl7ubxyj" path="res://resources/DevelopmentConfigResource.tres" id="2_vcm10"]
+[ext_resource type="Resource" uid="uid://uwmeq8par8fu" path="res://resources/DeploymentConfigResource.tres" id="2_cj06x"]
 [ext_resource type="PackedScene" uid="uid://bldyf3iyb7r6n" path="res://components/connection/WebsocketMultiplayerConnection/WebsocketMultiplayerConnection.tscn" id="3_ns7hw"]
 [ext_resource type="PackedScene" uid="uid://dd2r6bxk2js2g" path="res://components/connection/ServerFSM/ServerFSMRPC.tscn" id="4_ejj7u"]
 [ext_resource type="PackedScene" uid="uid://swgyk0ffhiav" path="res://components/connection/ClientFSM/ClientFSMGatewayRPC.tscn" id="5_6g1wk"]
@@ -24,7 +24,7 @@
 
 [node name="Main" type="Node"]
 script = ExtResource("1_et6n2")
-config = ExtResource("2_vcm10")
+config = ExtResource("2_cj06x")
 
 [node name="Connections" type="Node" parent="."]
 
@@ -87,15 +87,21 @@ unique_name_in_owner = true
 [node name="SelectRunMode" type="Control" parent="UI"]
 unique_name_in_owner = true
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Background" type="TextureRect" parent="UI/SelectRunMode"]
-layout_mode = 0
-offset_right = 1922.0
-offset_bottom = 1080.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("2_56s56")
+expand_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="UI/SelectRunMode"]
 layout_mode = 1
@@ -104,10 +110,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 863.0
-offset_top = 469.5
-offset_right = 1017.0
-offset_bottom = 570.5
+offset_left = -77.0
+offset_top = -50.5
+offset_right = 77.0
+offset_bottom = 50.5
 grow_horizontal = 2
 grow_vertical = 2
 

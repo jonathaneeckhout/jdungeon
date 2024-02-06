@@ -3,13 +3,12 @@
 [ext_resource type="Script" path="res://scenes/player/chatpanel/ChatPanel.gd" id="1_4dbdm"]
 
 [node name="ChatPanel" type="Control"]
-custom_minimum_size = Vector2(512, 326)
 layout_mode = 3
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -326.0
-offset_right = 512.0
+offset_top = -256.0
+offset_right = 256.0
 grow_vertical = 0
 script = ExtResource("1_4dbdm")
 
@@ -35,7 +34,7 @@ layout_mode = 2
 text = "Logs"
 
 [node name="Logs" type="Control" parent="VBoxContainer"]
-custom_minimum_size = Vector2(512, 256)
+custom_minimum_size = Vector2(256, 184)
 layout_mode = 2
 size_flags_horizontal = 0
 
