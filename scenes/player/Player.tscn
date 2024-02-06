@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=49 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="2_1l633"]
@@ -21,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://dbm30gu6qnmt2" path="res://assets/images/player/base/scaled/Basecharacter.png" id="19_lfk4e"]
 [ext_resource type="PackedScene" uid="uid://c8avj1dgil2xf" path="res://components/player/chatcomponent/ChatComponent.tscn" id="19_mqgdc"]
 [ext_resource type="Texture2D" uid="uid://bhjm6d6tf1jmt" path="res://assets/images/player/base/scaled/base_handback.png" id="20_26vwi"]
+[ext_resource type="PackedScene" uid="uid://b1dgvmg6277k4" path="res://components/player/playerunstuckcomponent/PlayerUnstuckComponent.tscn" id="20_wfyag"]
 [ext_resource type="Texture2D" uid="uid://b6cxuf50u0nbt" path="res://assets/images/player/base/scaled/base_legback.png" id="21_1v54o"]
 [ext_resource type="Texture2D" uid="uid://buuqjbcf13d1a" path="res://assets/images/player/base/scaled/base_leg.png" id="22_s6iqk"]
 [ext_resource type="Texture2D" uid="uid://dmhy5hm831ys4" path="res://assets/images/player/base/scaled/base_trunk.png" id="23_cciaf"]
@@ -34,6 +35,7 @@
 [ext_resource type="PackedScene" uid="uid://dirsk8pf0bxh5" path="res://scenes/player/statdisplay/StatDisplay.tscn" id="29_lciek"]
 [ext_resource type="PackedScene" uid="uid://ccq2mcrkefjnb" path="res://scenes/player/deathpopup/DeathPopup.tscn" id="32_nfctc"]
 [ext_resource type="PackedScene" uid="uid://dmf2tmcuq22vg" path="res://scenes/player/chatpanel/ChatPanel.tscn" id="34_55882"]
+[ext_resource type="PackedScene" uid="uid://dssmk0m8xsvxf" path="res://scenes/player/gamemenu/GameMenu.tscn" id="35_aixvg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rrdkp"]
 radius = 16.0
@@ -1840,6 +1842,8 @@ stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="ChatComponent" parent="." instance=ExtResource("19_mqgdc")]
 
+[node name="PlayerUnstuckComponent" parent="." instance=ExtResource("20_wfyag")]
+
 [node name="Sprites" type="Node2D" parent="."]
 position = Vector2(-28, -100)
 
@@ -2022,3 +2026,15 @@ player_respawn = NodePath("../../../PlayerRespawnComponent")
 
 [node name="ChatPanel" parent="Camera2D/UILayer" node_paths=PackedStringArray("chat_component") instance=ExtResource("34_55882")]
 chat_component = NodePath("../../../ChatComponent")
+
+[node name="GameMenu" parent="Camera2D/UILayer" node_paths=PackedStringArray("player_unstuck") instance=ExtResource("35_aixvg")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -239.0
+offset_top = -238.0
+offset_right = 239.0
+offset_bottom = 238.0
+player_unstuck = NodePath("../../../PlayerUnstuckComponent")

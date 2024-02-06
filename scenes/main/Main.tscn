@@ -1,8 +1,8 @@
-[gd_scene load_steps=22 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=23 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
-[ext_resource type="Resource" uid="uid://uwmeq8par8fu" path="res://resources/DeploymentConfigResource.tres" id="2_cj06x"]
+[ext_resource type="Resource" uid="uid://chbdptl7ubxyj" path="res://resources/DevelopmentConfigResource.tres" id="2_lyxqn"]
 [ext_resource type="PackedScene" uid="uid://bldyf3iyb7r6n" path="res://components/connection/WebsocketMultiplayerConnection/WebsocketMultiplayerConnection.tscn" id="3_ns7hw"]
 [ext_resource type="PackedScene" uid="uid://dd2r6bxk2js2g" path="res://components/connection/ServerFSM/ServerFSMRPC.tscn" id="4_ejj7u"]
 [ext_resource type="PackedScene" uid="uid://swgyk0ffhiav" path="res://components/connection/ClientFSM/ClientFSMGatewayRPC.tscn" id="5_6g1wk"]
@@ -21,10 +21,11 @@
 [ext_resource type="PackedScene" uid="uid://bikd514i5nqux" path="res://components/connection/Database/Database.tscn" id="15_byw11"]
 [ext_resource type="PackedScene" uid="uid://bopl1rpbyww77" path="res://components/npc/shopsynchronizercomponent/ShopSynchronizerRPC.tscn" id="15_et847"]
 [ext_resource type="PackedScene" uid="uid://d26qxk2biwiyb" path="res://components/player/chatcomponent/ChatServerRPC.tscn" id="16_7gwu3"]
+[ext_resource type="PackedScene" uid="uid://bj1l2sxb06c2o" path="res://components/player/playerunstuckcomponent/PlayerUnstuckRPC.tscn" id="17_5u5ls"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_et6n2")
-config = ExtResource("2_cj06x")
+config = ExtResource("2_lyxqn")
 
 [node name="Connections" type="Node" parent="."]
 
@@ -67,6 +68,8 @@ database = NodePath("../../Database")
 [node name="SHSR" parent="Connections/ServerClient" instance=ExtResource("15_et847")]
 
 [node name="CSR" parent="Connections/ServerClient" instance=ExtResource("16_7gwu3")]
+
+[node name="PUR" parent="Connections/ServerClient" instance=ExtResource("17_5u5ls")]
 
 [node name="ServerFsm" parent="." node_paths=PackedStringArray("_server_gateway_client", "_server_client_server") instance=ExtResource("5_uiu1q")]
 unique_name_in_owner = true
