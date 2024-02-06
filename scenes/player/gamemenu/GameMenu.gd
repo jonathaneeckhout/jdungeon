@@ -70,7 +70,6 @@ func _input(event):
 
 
 func _on_unstuck_button_pressed():
-	print("HIER")
 	JUI.confirmationbox("You will die and respawn, ok?", self, "Respawn?", unstuck)
 
 
