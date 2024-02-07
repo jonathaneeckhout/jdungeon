@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://def1cvge1maga"]
 
-[ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_pikhc"]
-[ext_resource type="Script" path="res://scenes/ui/report_bug_menu/report_bug_menu.gd" id="2_vukat"]
+[ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_cwdvt"]
+[ext_resource type="Script" path="res://scenes/player/gamemenu/reportbugmenu/ReportBugMenu.gd" id="2_2ckj4"]
 
 [node name="ReportBugMenu" type="Control"]
 layout_mode = 3
@@ -12,8 +12,8 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme = ExtResource("1_pikhc")
-script = ExtResource("2_vukat")
+theme = ExtResource("1_cwdvt")
+script = ExtResource("2_2ckj4")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1

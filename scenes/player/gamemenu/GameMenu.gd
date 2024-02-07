@@ -1,9 +1,9 @@
 extends PanelContainer
 
 # const OPTIONS_MENU_SCENE: PackedScene = preload("res://scenes/ui/options_menu/options_menu.tscn")
-# const REPORT_BUG_MENU_SCENE: PackedScene = preload(
-# 	"res://scenes/ui/report_bug_menu/report_bug_menu.tscn"
-# )
+const REPORT_BUG_MENU_SCENE: PackedScene = preload(
+	"res://scenes/player/gamemenu/reportbugmenu/ReportBugMenu.tscn"
+)
 
 @export var player_unstuck: PlayerUnstuckComponent = null
 
@@ -15,12 +15,12 @@ extends PanelContainer
 # @onready var panel: Control = $Panel
 
 # #Holds a reference to the currently open sub-menu
-# var subMenuReference: Node
+var sub_menu_reference: Node
 
 
 func _ready():
 	#options_button.pressed.connect(_on_options_button_pressed)
-	#report_bug_button.pressed.connect(_on_report_bug_button_pressed)
+	report_bug_button.pressed.connect(_on_report_bug_button_pressed)
 	unstuck_button.pressed.connect(_on_unstuck_button_pressed)
 	quit_button.pressed.connect(_on_quit_button_pressed)
 
@@ -49,12 +49,13 @@ func _input(event):
 				get_viewport().set_input_as_handled()
 
 
-# #Also saves changes to disk.
-# func close_submenu():
-# 	LocalSaveSystem.save_file()
+#Also saves changes to disk.
+func close_submenu():
+	LocalSaveSystem.save_file()
 
-# 	if is_instance_valid(subMenuReference):
-# 		subMenuReference.queue_free()
+	if is_instance_valid(sub_menu_reference):
+		sub_menu_reference.queue_free()
+
 
 # func _on_options_button_pressed():
 # 	var optionsInstance: Control = OPTIONS_MENU_SCENE.instantiate()
@@ -62,11 +63,12 @@ func _input(event):
 # 	optionsInstance.quit_pressed.connect(close_submenu)
 # 	add_child(optionsInstance)
 
-# func _on_report_bug_button_pressed():
-# 	var reportBugInstance: Control = REPORT_BUG_MENU_SCENE.instantiate()
-# 	subMenuReference = reportBugInstance
-# 	reportBugInstance.quit_pressed.connect(close_submenu)
-# 	add_child(reportBugInstance)
+
+func _on_report_bug_button_pressed():
+	var report_bug_instance: Control = REPORT_BUG_MENU_SCENE.instantiate()
+	sub_menu_reference = report_bug_instance
+	report_bug_instance.quit_pressed.connect(close_submenu)
+	add_child(report_bug_instance)
 
 
 func _on_unstuck_button_pressed():
