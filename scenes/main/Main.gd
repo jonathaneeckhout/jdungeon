@@ -47,7 +47,6 @@ func _start_gateway():
 	# Set the window's title
 	get_window().title = "JDungeon (Gateway)"
 
-
 	if config.mode != ConfigResource.MODE.DEPLOYMENT:
 		_set_game_icon(GAME_ICONS.pick_random(), GATEWAY_SUB_ICON)
 
