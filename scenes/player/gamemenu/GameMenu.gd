@@ -1,13 +1,13 @@
 extends PanelContainer
 
-# const OPTIONS_MENU_SCENE: PackedScene = preload("res://scenes/ui/options_menu/options_menu.tscn")
+const CONTROLS_MENU_SCENE: PackedScene = preload("res://scenes/player/gamemenu/controlsmenu/ControlsMenu.tscn")
 const REPORT_BUG_MENU_SCENE: PackedScene = preload(
 	"res://scenes/player/gamemenu/reportbugmenu/ReportBugMenu.tscn"
 )
 
 @export var player_unstuck: PlayerUnstuckComponent = null
 
-# @onready var options_button: Button = $Panel/VBoxContainer/OptionsMarginContainer/OptionsMenu
+@onready var controls_button: Button = %ControlsButton
 @onready var report_bug_button: Button = %ReportBugButton
 @onready var quit_button: Button = %QuitButton
 @onready var unstuck_button: Button = %UnstuckButton
@@ -19,7 +19,7 @@ var sub_menu_reference: Node
 
 
 func _ready():
-	#options_button.pressed.connect(_on_options_button_pressed)
+	controls_button.pressed.connect(_on_controls_button_pressed)
 	report_bug_button.pressed.connect(_on_report_bug_button_pressed)
 	unstuck_button.pressed.connect(_on_unstuck_button_pressed)
 	quit_button.pressed.connect(_on_quit_button_pressed)
@@ -57,11 +57,11 @@ func close_submenu():
 		sub_menu_reference.queue_free()
 
 
-# func _on_options_button_pressed():
-# 	var optionsInstance: Control = OPTIONS_MENU_SCENE.instantiate()
-# 	subMenuReference = optionsInstance
-# 	optionsInstance.quit_pressed.connect(close_submenu)
-# 	add_child(optionsInstance)
+func _on_controls_button_pressed():
+	var controls_instance: Control = CONTROLS_MENU_SCENE.instantiate()
+	sub_menu_reference = controls_instance
+	controls_instance.quit_pressed.connect(close_submenu)
+	add_child(controls_instance)
 
 
 func _on_report_bug_button_pressed():

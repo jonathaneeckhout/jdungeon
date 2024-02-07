@@ -30,9 +30,10 @@ layout_mode = 2
 [node name="OptionsMarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="OptionsMenu" type="Button" parent="MarginContainer/VBoxContainer/OptionsMarginContainer"]
+[node name="ControlsButton" type="Button" parent="MarginContainer/VBoxContainer/OptionsMarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "Options"
+text = "Show Controls"
 
 [node name="ReportBugMarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
