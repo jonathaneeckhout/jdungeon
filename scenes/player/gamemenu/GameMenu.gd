@@ -1,8 +1,10 @@
 extends PanelContainer
 
-class_name  GameMenu
+class_name GameMenu
 
-const CONTROLS_MENU_SCENE: PackedScene = preload("res://scenes/player/gamemenu/controlsmenu/ControlsMenu.tscn")
+const CONTROLS_MENU_SCENE: PackedScene = preload(
+	"res://scenes/player/gamemenu/controlsmenu/ControlsMenu.tscn"
+)
 const REPORT_BUG_MENU_SCENE: PackedScene = preload(
 	"res://scenes/player/gamemenu/reportbugmenu/ReportBugMenu.tscn"
 )
