@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=50 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="2_1l633"]
@@ -23,7 +23,6 @@
 [ext_resource type="Texture2D" uid="uid://bhjm6d6tf1jmt" path="res://assets/images/player/base/scaled/base_handback.png" id="20_26vwi"]
 [ext_resource type="PackedScene" uid="uid://b1dgvmg6277k4" path="res://components/player/playerunstuckcomponent/PlayerUnstuckComponent.tscn" id="20_wfyag"]
 [ext_resource type="Texture2D" uid="uid://b6cxuf50u0nbt" path="res://assets/images/player/base/scaled/base_legback.png" id="21_1v54o"]
-[ext_resource type="PackedScene" uid="uid://qdyqn5c3hmey" path="res://components/player/cursorcomponent/CursorComponent.tscn" id="21_ny8mf"]
 [ext_resource type="Texture2D" uid="uid://buuqjbcf13d1a" path="res://assets/images/player/base/scaled/base_leg.png" id="22_s6iqk"]
 [ext_resource type="Texture2D" uid="uid://dmhy5hm831ys4" path="res://assets/images/player/base/scaled/base_trunk.png" id="23_cciaf"]
 [ext_resource type="PackedScene" uid="uid://uord7b0pb5jt" path="res://scenes/player/inventory/Inventory.tscn" id="24_36s1p"]
@@ -1845,9 +1844,6 @@ stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 [node name="ChatComponent" parent="." instance=ExtResource("19_mqgdc")]
 
 [node name="PlayerUnstuckComponent" parent="." instance=ExtResource("20_wfyag")]
-
-[node name="CursorComponent" parent="." node_paths=PackedStringArray("player_synchronizer") instance=ExtResource("21_ny8mf")]
-player_synchronizer = NodePath("../PlayerSynchronizer")
 
 [node name="Sprites" type="Node2D" parent="."]
 position = Vector2(-28, -100)
