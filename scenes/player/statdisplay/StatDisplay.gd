@@ -1,6 +1,8 @@
 extends Control
 ## Set the [member stats] variable to start updating
 
+class_name StatsDisplay
+
 ## Set by export
 @export var stats: StatsSynchronizerComponent:
 	set(value):

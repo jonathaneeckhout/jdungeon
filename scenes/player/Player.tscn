@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=50 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="2_1l633"]
@@ -36,6 +36,7 @@
 [ext_resource type="PackedScene" uid="uid://ccq2mcrkefjnb" path="res://scenes/player/deathpopup/DeathPopup.tscn" id="32_nfctc"]
 [ext_resource type="PackedScene" uid="uid://dmf2tmcuq22vg" path="res://scenes/player/chatpanel/ChatPanel.tscn" id="34_55882"]
 [ext_resource type="PackedScene" uid="uid://dssmk0m8xsvxf" path="res://scenes/player/gamemenu/GameMenu.tscn" id="35_aixvg"]
+[ext_resource type="PackedScene" uid="uid://d261xncd2la2h" path="res://scenes/player/shortcutmenu/ShortcutMenu.tscn" id="37_7vdqs"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rrdkp"]
 radius = 16.0
@@ -2039,3 +2040,9 @@ offset_top = -238.0
 offset_right = 239.0
 offset_bottom = 238.0
 player_unstuck = NodePath("../../../PlayerUnstuckComponent")
+
+[node name="ShortcutMenu" parent="Camera2D/UILayer" node_paths=PackedStringArray("game_menu", "stats_display", "equipment", "inventory") instance=ExtResource("37_7vdqs")]
+game_menu = NodePath("../GameMenu")
+stats_display = NodePath("../StatDisplay")
+equipment = NodePath("../Equipment")
+inventory = NodePath("../Inventory")
