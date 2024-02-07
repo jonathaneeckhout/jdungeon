@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1dgvmg6277k4"]
+
+[ext_resource type="Script" path="res://components/player/playerunstuckcomponent/PlayerUnstuckComponent.gd" id="1_gcs6u"]
+
+[node name="PlayerUnstuckComponent" type="Node"]
+script = ExtResource("1_gcs6u")

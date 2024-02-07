@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://retyeadedkag"]
+
+[ext_resource type="Script" path="res://todo/ui/buttons/mute_unmute_all_button.gd" id="2_i2qej"]
+[ext_resource type="Texture2D" uid="uid://6cfadl7hgfka" path="res://assets/images/ui/buttons/sound_off/sound_on_white.png" id="2_jyned"]
+[ext_resource type="Texture2D" uid="uid://bh3ujw17fdayx" path="res://assets/images/ui/buttons/sound_off/sound_off_white.png" id="3_wn1go"]
+
+[node name="MuteUnmuteAllButton" type="TextureButton"]
+offset_right = 281.0
+offset_bottom = 322.0
+texture_normal = ExtResource("2_jyned")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("2_i2qej")
+sound_on = ExtResource("2_jyned")
+sound_off = ExtResource("3_wn1go")

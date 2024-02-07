@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://dv6a22n6h5bly"]
+
+[ext_resource type="Script" path="res://components/behaviors/components/avoidancerayscomponent/AvoidanceRaysComponent.gd" id="1_tabad"]
+
+[node name="AvoidanceRaysComponent" type="Node2D"]
+script = ExtResource("1_tabad")
+
+[node name="RayFront" type="RayCast2D" parent="."]
+target_position = Vector2(65, 0)
+
+[node name="RayLeft0" type="RayCast2D" parent="."]
+rotation = -0.523599
+target_position = Vector2(43.333, 0)
+
+[node name="RayLeft1" type="RayCast2D" parent="."]
+rotation = -1.0472
+target_position = Vector2(32, 0)
+
+[node name="RayRight0" type="RayCast2D" parent="."]
+rotation = 0.523599
+target_position = Vector2(43.333, 0)
+
+[node name="RayRight1" type="RayCast2D" parent="."]
+rotation = 1.0472
+target_position = Vector2(32, 0)

@@ -1,18 +1,18 @@
 [gd_scene load_steps=33 format=3 uid="uid://bv8wlx0nq04pc"]
 
 [ext_resource type="Script" path="res://scenes/enemies/WildBoar/WildBoar.gd" id="1_p2524"]
-[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_6ui5c"]
-[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_8lf5i"]
-[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_5s61a"]
-[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://scripts/components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="5_3stlk"]
-[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://scripts/components/networking/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="6_ueada"]
-[ext_resource type="PackedScene" uid="uid://d3pv4rqlo3xh7" path="res://scripts/components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.tscn" id="7_kanc1"]
-[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="8_g7gpp"]
-[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="9_0yelv"]
-[ext_resource type="PackedScene" uid="uid://cjkhsifuk2une" path="res://scripts/components/networking/statuseffectcomponent/StatusEffectComponent.tscn" id="10_47q1s"]
-[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="10_k4u5q"]
-[ext_resource type="PackedScene" uid="uid://olha5mwr7hcr" path="res://scripts/components/common/hitparticlescomponent/HitParticlesComponent.tscn" id="10_ol2jf"]
-[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://scripts/components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="11_wem1f"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_6ui5c"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="3_8lf5i"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="4_5s61a"]
+[ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="5_3stlk"]
+[ext_resource type="PackedScene" uid="uid://bjjk2cftt2cex" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerComponent.tscn" id="6_ueada"]
+[ext_resource type="PackedScene" uid="uid://d3pv4rqlo3xh7" path="res://components/behaviors/attackandwanderbehaviorcomponent/AttackAndWanderBehaviorComponent.tscn" id="7_kanc1"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="8_g7gpp"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="9_0yelv"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://components/common/interfacecomponent/InterfaceComponent.tscn" id="10_k4u5q"]
+[ext_resource type="PackedScene" uid="uid://olha5mwr7hcr" path="res://components/common/hitparticlescomponent/HitParticlesComponent.tscn" id="10_ol2jf"]
+[ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="11_wem1f"]
+[ext_resource type="PackedScene" uid="uid://cy3sl4bl86h6m" path="res://components/common/velocitysimulatorcomponent/VelocitySimulatorComponent.tscn" id="12_dn5x4"]
 [ext_resource type="Texture2D" uid="uid://cisv1a7xuemgs" path="res://assets/images/enemies/boar/scaled/body.png" id="14_hsdk1"]
 [ext_resource type="Texture2D" uid="uid://jqror5mpe44o" path="res://assets/images/enemies/boar/scaled/front_l_hoof.png" id="16_ts8jf"]
 [ext_resource type="Texture2D" uid="uid://ccm8s6xj5i6bg" path="res://assets/images/enemies/boar/scaled/front_r_hoof.png" id="17_67wl5"]
@@ -20,7 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://brgjwvmht3tob" path="res://assets/images/enemies/boar/scaled/opened_eyes.png" id="19_5salc"]
 [ext_resource type="Texture2D" uid="uid://b84rerloofiny" path="res://assets/images/enemies/boar/scaled/rear_r_hoof.png" id="20_1vgai"]
 [ext_resource type="Texture2D" uid="uid://43y6b1fwws5k" path="res://assets/images/enemies/boar/scaled/snout.png" id="21_oivx0"]
-[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://scripts/components/networking/lagcompensationcomponent/LagCompensationComponent.tscn" id="22_5wt1x"]
+[ext_resource type="PackedScene" uid="uid://cpybc5oxieo6i" path="res://components/common/lagcompensationcomponent/LagCompensationComponent.tscn" id="22_5wt1x"]
 [ext_resource type="Texture2D" uid="uid://bi7hq3q4u0myf" path="res://assets/images/enemies/boar/scaled/tail.png" id="22_tk5li"]
 
 [sub_resource type="Animation" id="Animation_stwrd"]
@@ -1114,10 +1114,6 @@ stats = NodePath("../StatsSynchronizerComponent")
 action_synchronizer = NodePath("../ActionSynchronizerComponent")
 update_face = NodePath("../UpdateFaceComponent")
 
-[node name="StatusEffectComponent" parent="." node_paths=PackedStringArray("user", "stats_component") instance=ExtResource("10_47q1s")]
-user = NodePath("..")
-stats_component = NodePath("../StatsSynchronizerComponent")
-
 [node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("10_k4u5q")]
 offset_top = -72.0
 offset_bottom = -32.0
@@ -1125,6 +1121,8 @@ stats_synchronizer = NodePath("../StatsSynchronizerComponent")
 
 [node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("11_wem1f")]
 stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+
+[node name="VelocitySimulatorComponent" parent="." instance=ExtResource("12_dn5x4")]
 
 [node name="Sprites" type="Node2D" parent="."]
 

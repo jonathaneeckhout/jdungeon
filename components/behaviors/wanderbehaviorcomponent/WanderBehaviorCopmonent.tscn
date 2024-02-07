@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://dtmpwn0ids6rv"]
+
+[ext_resource type="Script" path="res://components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.gd" id="1_jp5qs"]
+[ext_resource type="PackedScene" uid="uid://cnj2i4x6kdm4c" path="res://components/behaviors/components/wandercomponent/WanderComponent.tscn" id="2_urper"]
+[ext_resource type="PackedScene" uid="uid://dv6a22n6h5bly" path="res://components/behaviors/components/avoidancerayscomponent/AvoidanceRaysComponent.tscn" id="3_bumww"]
+
+[node name="WanderBehaviorCopmonent" type="Node2D"]
+script = ExtResource("1_jp5qs")
+
+[node name="AvoidanceRaysComponent" parent="." instance=ExtResource("3_bumww")]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_postprocessing = 1
+
+[node name="WanderComponent" parent="." instance=ExtResource("2_urper")]

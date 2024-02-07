@@ -1,0 +1,146 @@
+[gd_scene load_steps=23 format=3 uid="uid://dhlwuon2arb14"]
+
+[ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
+[ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
+[ext_resource type="Resource" uid="uid://chbdptl7ubxyj" path="res://resources/DevelopmentConfigResource.tres" id="2_lyxqn"]
+[ext_resource type="PackedScene" uid="uid://bldyf3iyb7r6n" path="res://components/connection/WebsocketMultiplayerConnection/WebsocketMultiplayerConnection.tscn" id="3_ns7hw"]
+[ext_resource type="PackedScene" uid="uid://dd2r6bxk2js2g" path="res://components/connection/ServerFSM/ServerFSMRPC.tscn" id="4_ejj7u"]
+[ext_resource type="PackedScene" uid="uid://swgyk0ffhiav" path="res://components/connection/ClientFSM/ClientFSMGatewayRPC.tscn" id="5_6g1wk"]
+[ext_resource type="PackedScene" uid="uid://fp5jjs341obi" path="res://components/connection/ClockSynchronizer/ClockSynchronizer.tscn" id="5_emdm5"]
+[ext_resource type="PackedScene" uid="uid://dcur4xolp0oia" path="res://components/connection/ServerFSM/ServerFSM.tscn" id="5_uiu1q"]
+[ext_resource type="PackedScene" uid="uid://s8h0g10nfeim" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerRPC.tscn" id="6_1dj18"]
+[ext_resource type="PackedScene" uid="uid://cepejjmy1uay8" path="res://components/connection/ClientFSM/ClientFSMServerRPC.tscn" id="6_5ffrs"]
+[ext_resource type="PackedScene" uid="uid://b6qnexfdo1eg" path="res://components/common/statssynchronizercomponent/StatsSynchronizerRPC.tscn" id="7_6biju"]
+[ext_resource type="PackedScene" uid="uid://bn4fr6idoaxuw" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerRPC.tscn" id="8_3q1k4"]
+[ext_resource type="PackedScene" uid="uid://dderndos7tfdu" path="res://components/player/networkviewsynchronizercomponent/NetworkViewSynchronizerRPC.tscn" id="9_3pk1n"]
+[ext_resource type="PackedScene" uid="uid://d4c6yl66u2fdc" path="res://components/player/playersynchronizer/PlayerSynchronizerRPC.tscn" id="10_ghnhu"]
+[ext_resource type="PackedScene" uid="uid://cyd1haegch4ux" path="res://components/connection/ClientFSM/ClientFSM.tscn" id="12_7v67k"]
+[ext_resource type="PackedScene" uid="uid://c1mvaiehmnyeq" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerRPC.tscn" id="13_dprpu"]
+[ext_resource type="PackedScene" uid="uid://b7cukljxissss" path="res://components/player/equipmentsynchronizercomponent/EquipmentSynchronizerRPC.tscn" id="14_m4jl4"]
+[ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="15_7xr38"]
+[ext_resource type="PackedScene" uid="uid://bikd514i5nqux" path="res://components/connection/Database/Database.tscn" id="15_byw11"]
+[ext_resource type="PackedScene" uid="uid://bopl1rpbyww77" path="res://components/npc/shopsynchronizercomponent/ShopSynchronizerRPC.tscn" id="15_et847"]
+[ext_resource type="PackedScene" uid="uid://d26qxk2biwiyb" path="res://components/player/chatcomponent/ChatServerRPC.tscn" id="16_7gwu3"]
+[ext_resource type="PackedScene" uid="uid://bj1l2sxb06c2o" path="res://components/player/playerunstuckcomponent/PlayerUnstuckRPC.tscn" id="17_5u5ls"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_et6n2")
+config = ExtResource("2_lyxqn")
+
+[node name="Connections" type="Node" parent="."]
+
+[node name="GatewayServer" parent="Connections" instance=ExtResource("3_ns7hw")]
+unique_name_in_owner = true
+
+[node name="SFR" parent="Connections/GatewayServer" node_paths=PackedStringArray("client_fsm_server_rpc") instance=ExtResource("4_ejj7u")]
+client_fsm_server_rpc = NodePath("../../ServerClient/CFSR")
+
+[node name="GatewayClient" parent="Connections" node_paths=PackedStringArray("database") instance=ExtResource("3_ns7hw")]
+unique_name_in_owner = true
+database = NodePath("../../Database")
+
+[node name="CFGR" parent="Connections/GatewayClient" node_paths=PackedStringArray("gateway_server_multiplayer_connection", "server_fsm_rpc") instance=ExtResource("5_6g1wk")]
+gateway_server_multiplayer_connection = NodePath("../../GatewayServer")
+server_fsm_rpc = NodePath("../../GatewayServer/SFR")
+
+[node name="ServerClient" parent="Connections" node_paths=PackedStringArray("database") instance=ExtResource("3_ns7hw")]
+unique_name_in_owner = true
+database = NodePath("../../Database")
+
+[node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
+
+[node name="CS" parent="Connections/ServerClient" instance=ExtResource("5_emdm5")]
+
+[node name="PSR" parent="Connections/ServerClient" instance=ExtResource("6_1dj18")]
+
+[node name="SSR" parent="Connections/ServerClient" instance=ExtResource("7_6biju")]
+
+[node name="ASR" parent="Connections/ServerClient" instance=ExtResource("8_3q1k4")]
+
+[node name="NWSR" parent="Connections/ServerClient" instance=ExtResource("9_3pk1n")]
+
+[node name="PLSR" parent="Connections/ServerClient" instance=ExtResource("10_ghnhu")]
+
+[node name="ISR" parent="Connections/ServerClient" instance=ExtResource("13_dprpu")]
+
+[node name="ESR" parent="Connections/ServerClient" instance=ExtResource("14_m4jl4")]
+
+[node name="SHSR" parent="Connections/ServerClient" instance=ExtResource("15_et847")]
+
+[node name="CSR" parent="Connections/ServerClient" instance=ExtResource("16_7gwu3")]
+
+[node name="PUR" parent="Connections/ServerClient" instance=ExtResource("17_5u5ls")]
+
+[node name="ServerFsm" parent="." node_paths=PackedStringArray("_server_gateway_client", "_server_client_server") instance=ExtResource("5_uiu1q")]
+unique_name_in_owner = true
+_server_gateway_client = NodePath("../Connections/GatewayServer")
+_server_client_server = NodePath("../Connections/ServerClient")
+
+[node name="ClientFsm" parent="." node_paths=PackedStringArray("_client_gateway_client", "_client_server_client", "login_panel") instance=ExtResource("12_7v67k")]
+unique_name_in_owner = true
+_client_gateway_client = NodePath("../Connections/GatewayClient")
+_client_server_client = NodePath("../Connections/ServerClient")
+login_panel = NodePath("../UI/LoginPanel")
+
+[node name="Database" parent="." instance=ExtResource("15_byw11")]
+unique_name_in_owner = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="SelectRunMode" type="Control" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="UI/SelectRunMode"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_56s56")
+expand_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="UI/SelectRunMode"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -77.0
+offset_top = -50.5
+offset_right = 77.0
+offset_bottom = 50.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/SelectRunMode/PanelContainer"]
+layout_mode = 2
+
+[node name="RunAsGatewayButton" type="Button" parent="UI/SelectRunMode/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "1 - Run as Gateway"
+alignment = 0
+
+[node name="RunAsServerButton" type="Button" parent="UI/SelectRunMode/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "2 - Run as Server"
+alignment = 0
+
+[node name="RunAsClientButton" type="Button" parent="UI/SelectRunMode/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "3 - Run as Client"
+alignment = 0
+
+[node name="LoginPanel" parent="UI" instance=ExtResource("15_7xr38")]
+unique_name_in_owner = true
+visible = false

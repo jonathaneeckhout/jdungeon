@@ -7,27 +7,17 @@
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 1.0
-offset_top = -300.0
-offset_right = 160.0
-offset_bottom = 102.0
+offset_top = -540.0
+offset_right = 159.0
+offset_bottom = -138.0
 grow_vertical = 2
 size_flags_horizontal = 0
 script = ExtResource("1_bc25i")
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -67.5
-offset_top = -192.0
-offset_right = 67.5
-offset_bottom = 198.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 135.0
+offset_bottom = 390.0
 theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 columns = 2

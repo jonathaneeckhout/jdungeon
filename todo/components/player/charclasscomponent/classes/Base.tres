@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="CharacterClassResource" load_steps=2 format=3 uid="uid://b1d0wonavya6e"]
+
+[ext_resource type="Script" path="res://todo/components/player/charclasscomponent/CharacterClassResource.gd" id="1_lpdwr"]
+
+[resource]
+script = ExtResource("1_lpdwr")
+displayed_name = "Base"
+class_registered = &"Base"
+icon_path = "res://assets/images/ui/buttons/sound_off/sound_off_black.png"
+description = "Your average hee-hoo-human. Healthy, but that's about it."
+available_skills = Array[String]([])
+stat_multipliers = {
+"attack_power_max": 1.0,
+"attack_power_min": 1.0,
+"defense": 1.0,
+"energy_max": 1.0,
+"energy_regen": 1.0,
+"hp_max": 1.5,
+"movement_speed": 1.0
+}
+stat_bonuses = {
+"attack_power_max": 0,
+"attack_power_min": 0,
+"defense": 0,
+"energy_max": 0,
+"energy_regen": 0,
+"hp_max": 0,
+"movement_speed": 0
+}

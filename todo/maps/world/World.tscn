@@ -1,0 +1,165 @@
+[gd_scene load_steps=13 format=3 uid="uid://beiq65may6bdw"]
+
+[ext_resource type="Script" path="res://todo/maps/world/World.gd" id="1_fsi10"]
+[ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://todo/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="5_2l8ik"]
+[ext_resource type="PackedScene" uid="uid://dfq5lb87meq6q" path="res://scenes/enemies/Sheep/Sheep.tscn" id="6_cvst6"]
+[ext_resource type="PackedScene" uid="uid://drmaubupv57n1" path="res://todo/enemies/MoldedDruvar/MoldedDruvar.tscn" id="7_qys7n"]
+[ext_resource type="PackedScene" uid="uid://pp0i54sl5web" path="res://todo/enemies/ClamDog/ClamDog.tscn" id="8_w2dtf"]
+[ext_resource type="PackedScene" uid="uid://dj1mpx8a8yeko" path="res://scenes/npcs/milklady/Milklady.tscn" id="9_e850n"]
+[ext_resource type="PackedScene" uid="uid://da2hmdia7jfvy" path="res://scenes/npcs/turtur/Turtur.tscn" id="10_bxiih"]
+[ext_resource type="PackedScene" uid="uid://cj48j2lhcde1a" path="res://scenes/terrain/portal/Portal.tscn" id="11_nqcmx"]
+[ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="11_nyeba"]
+[ext_resource type="PackedScene" uid="uid://bija15ujapx3h" path="res://scenes/terrain/areas/wakingforest/WakingForest.tscn" id="12_e6xjj"]
+[ext_resource type="PackedScene" uid="uid://cpw0d00b7prm0" path="res://scenes/terrain/areas/harbor/harbor.tscn" id="13_xrvt2"]
+[ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="14_qs20i"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_fsi10")
+
+[node name="Entities" type="Node2D" parent="."]
+
+[node name="Enemies" type="Node2D" parent="Entities"]
+
+[node name="TreeTrunkGuy" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-2006, 948)
+
+[node name="TreeTrunkGuy2" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-2552, 107)
+
+[node name="TreeTrunkGuy3" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-3511, 1070)
+
+[node name="TreeTrunkGuy8" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-2717, 1456)
+
+[node name="TreeTrunkGuy9" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-4344, 1312)
+
+[node name="TreeTrunkGuy18" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-4545, 416)
+
+[node name="TreeTrunkGuy19" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-4085, -1271)
+
+[node name="TreeTrunkGuy20" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-3124, -609)
+
+[node name="TreeTrunkGuy10" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-5516, 1115)
+
+[node name="TreeTrunkGuy11" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-5244, 255)
+
+[node name="TreeTrunkGuy13" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-5644, -639)
+
+[node name="TreeTrunkGuy14" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-4929, -1000)
+
+[node name="TreeTrunkGuy15" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-5050, -397)
+
+[node name="TreeTrunkGuy16" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-4537, -827)
+
+[node name="TreeTrunkGuy17" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-3335, -1180)
+
+[node name="TreeTrunkGuy12" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-5229, 738)
+
+[node name="TreeTrunkGuy4" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-2074, -657)
+
+[node name="TreeTrunkGuy6" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-1903, -1113)
+
+[node name="TreeTrunkGuy7" parent="Entities/Enemies" instance=ExtResource("5_2l8ik")]
+position = Vector2(-2364, -1316)
+
+[node name="Sheep6" parent="Entities/Enemies" instance=ExtResource("6_cvst6")]
+position = Vector2(-1099, -418)
+
+[node name="Sheep8" parent="Entities/Enemies" instance=ExtResource("6_cvst6")]
+position = Vector2(-1243, -243)
+
+[node name="Sheep9" parent="Entities/Enemies" instance=ExtResource("6_cvst6")]
+position = Vector2(-1177, 449)
+
+[node name="Sheep10" parent="Entities/Enemies" instance=ExtResource("6_cvst6")]
+position = Vector2(-970, 458)
+
+[node name="Sheep11" parent="Entities/Enemies" instance=ExtResource("6_cvst6")]
+position = Vector2(-1299, 694)
+
+[node name="Sheep12" parent="Entities/Enemies" instance=ExtResource("6_cvst6")]
+position = Vector2(-1424, -650)
+
+[node name="Sheep13" parent="Entities/Enemies" instance=ExtResource("6_cvst6")]
+position = Vector2(-1034, -776)
+
+[node name="Sheep7" parent="Entities/Enemies" instance=ExtResource("6_cvst6")]
+position = Vector2(-1176, 146)
+
+[node name="MoldedDruvar" parent="Entities/Enemies" instance=ExtResource("7_qys7n")]
+position = Vector2(-3888, 232)
+
+[node name="ClamDog" parent="Entities/Enemies" instance=ExtResource("8_w2dtf")]
+position = Vector2(-3560, 3336)
+
+[node name="ClamDog2" parent="Entities/Enemies" instance=ExtResource("8_w2dtf")]
+position = Vector2(-2816, 3352)
+
+[node name="ClamDog3" parent="Entities/Enemies" instance=ExtResource("8_w2dtf")]
+position = Vector2(-3912, 3856)
+
+[node name="ClamDog4" parent="Entities/Enemies" instance=ExtResource("8_w2dtf")]
+position = Vector2(-5272, 4032)
+
+[node name="ClamDog5" parent="Entities/Enemies" instance=ExtResource("8_w2dtf")]
+position = Vector2(-6096, 4344)
+
+[node name="NPCs" type="Node2D" parent="Entities"]
+
+[node name="Milklady" parent="Entities/NPCs" instance=ExtResource("9_e850n")]
+position = Vector2(324, -199)
+
+[node name="Turtur" parent="Entities/NPCs" instance=ExtResource("10_bxiih")]
+position = Vector2(-4265, 2872)
+
+[node name="Map" type="Node2D" parent="Entities"]
+y_sort_enabled = true
+
+[node name="Areas" type="Node2D" parent="Entities/Map"]
+y_sort_enabled = true
+
+[node name="BaseCamp" parent="Entities/Map/Areas" instance=ExtResource("11_nyeba")]
+position = Vector2(-576, -640)
+
+[node name="WakingForest" parent="Entities/Map/Areas" instance=ExtResource("12_e6xjj")]
+position = Vector2(-1536, -64)
+
+[node name="Harbor" parent="Entities/Map/Areas" instance=ExtResource("13_xrvt2")]
+position = Vector2(-1536, 3519)
+
+[node name="PlayerRespawnLocations" type="Node2D" parent="."]
+
+[node name="PlayerRespawnLocation" parent="PlayerRespawnLocations" instance=ExtResource("14_qs20i")]
+position = Vector2(-32, -48)
+
+[node name="Portals" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="BaseCampPortal" parent="Portals" instance=ExtResource("11_nqcmx")]
+position = Vector2(-1280, -568)
+destination_server = "World"
+destination_portal = "CoastPortal"
+
+[node name="CoastPortal" parent="Portals" instance=ExtResource("11_nqcmx")]
+position = Vector2(-5472, 3312)
+destination_server = "World"
+destination_portal = "BaseCampPortal"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+anchor_mode = 0

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bouefyuo18dob"]
+
+[ext_resource type="Script" path="res://todo/components/networking/statuseffectcomponent/StatusEffects/StatChange.gd" id="1_4nm01"]
+
+[resource]
+script = ExtResource("1_4nm01")
+stat_name_to_boost = "attack_power_max"
+status_effect_modifier = 1.0
+status_effect_bonus = -1
+bonus_scales_with_stacks = true
+modifier_scales_with_stacks = false
+status_class = "AttackDownPerStackFlat"
+displayed_name = "Attack Down"
+description = ""
+icon_path = "res://icon.svg"
+type = 0
+timeout_satck_consumption_flat = 0
+timeout_stack_consumption_percent = 1.0
+combine_stackable_duration = false
+combine_stack_override = true
+default_stacks = 1
+default_duration = 1.0

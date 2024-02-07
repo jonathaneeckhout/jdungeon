@@ -1,0 +1,124 @@
+[gd_scene load_steps=7 format=3 uid="uid://dkgn4i61r780j"]
+
+[ext_resource type="Script" path="res://todo/components/player/charclasscomponent/CharClassSelection.gd" id="1_ieyck"]
+[ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_iy7gq"]
+[ext_resource type="PackedScene" uid="uid://dirsk8pf0bxh5" path="res://scenes/player/statdisplay/StatDisplay.tscn" id="2_n16eb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hi3xl"]
+bg_color = Color(0.0588235, 0.0588235, 0.0588235, 0.556863)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v5bvh"]
+bg_color = Color(0.180392, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_aad2d"]
+font_size = 80
+font_color = Color(0.803922, 0.803922, 0.803922, 1)
+
+[node name="CharClassSelection" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_iy7gq")
+script = ExtResource("1_ieyck")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hi3xl")
+
+[node name="AvailableLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+offset_right = 202.0
+offset_bottom = 42.0
+text = "Available Classes"
+
+[node name="AvailableClasses" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.2
+anchor_bottom = 1.0
+offset_top = 48.0
+
+[node name="OwnedLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+offset_left = 384.0
+offset_right = 571.0
+offset_bottom = 42.0
+text = "Your Classes"
+
+[node name="OwnedClasses" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_right = 0.4
+anchor_bottom = 1.0
+offset_top = 48.0
+
+[node name="StatDisplay" parent="." instance=ExtResource("2_n16eb")]
+layout_mode = 1
+anchor_left = 0.75
+anchor_bottom = 0.9
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="ClassDescription" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_right = 0.75
+anchor_bottom = 0.8
+theme_override_font_sizes/normal_font_size = 52
+theme_override_font_sizes/bold_font_size = 52
+theme_override_font_sizes/italics_font_size = 52
+theme_override_font_sizes/bold_italics_font_size = 52
+theme_override_font_sizes/mono_font_size = 52
+bbcode_enabled = true
+text = "[b]TESTING[/b]"
+
+[node name="Done" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_top = 0.9
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 80
+text = "DONE"
+metadata/_edit_use_anchors_ = true
+
+[node name="ChangeSkills" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.8
+anchor_right = 0.75
+anchor_bottom = 0.9
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 80
+text = "Change Skills"
+metadata/_edit_use_anchors_ = true
+
+[node name="LockedText" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.9
+anchor_right = 0.75
+anchor_bottom = 1.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_v5bvh")
+text = "CANNOT CHANGE CLASS"
+label_settings = SubResource("LabelSettings_aad2d")
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -30,10 +30,6 @@ var create_account_button := $Panel/CreateAccountContainer/MarginContainer3/VBox
 @onready
 var goto_login_button := $Panel/CreateAccountContainer/MarginContainer3/VBoxContainer/BackToLoginButton
 
-#AudioStreamers
-@onready var click_audio_stream_player: AudioStreamPlayer = $ClickAudioStreamPlayer
-@onready var background_audio_stream_player: AudioStreamPlayer = $BackgroundAudioStreamPlayer
-
 @onready var _anim_player := $AnimationPlayer
 
 
@@ -43,13 +39,7 @@ func _ready():
 	create_account_button.pressed.connect(_on_create_account_button_pressed)
 	goto_login_button.pressed.connect(_on_back_create_account_button_pressed)
 
-	background_audio_stream_player.play()
-	background_audio_stream_player.finished.connect(background_audio_stream_player.play)
 	login_input.grab_focus.call_deferred()
-
-	var buttons: Array = get_tree().get_nodes_in_group("ui_button")
-	for button in buttons:
-		button.pressed.connect(_on_button_pressed)
 
 	login_container.show()
 
@@ -112,17 +102,3 @@ func _on_create_account_button_pressed():
 
 func _on_back_create_account_button_pressed():
 	back_create_account_pressed.emit()
-
-
-func _on_button_pressed():
-	click_audio_stream_player.play()
-
-
-func play_login_background_audio():
-	if not background_audio_stream_player.playing:
-		background_audio_stream_player.play()
-
-
-func stop_login_background_audio():
-	if background_audio_stream_player.playing:
-		background_audio_stream_player.stop()

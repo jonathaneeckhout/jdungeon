@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b70bia1uuoud4"]
+
+[ext_resource type="Script" path="res://components/npc/shopsynchronizercomponent/ShopSynchronizerComponent.gd" id="1_pucn4"]
+
+[node name="ShopSynchronizerComponent" type="Node"]
+script = ExtResource("1_pucn4")

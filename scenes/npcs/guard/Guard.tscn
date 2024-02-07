@@ -1,11 +1,11 @@
 [gd_scene load_steps=25 format=3 uid="uid://cssne8offdlm8"]
 
 [ext_resource type="Script" path="res://scenes/npcs/guard/Guard.gd" id="1_n85hb"]
-[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="4_ma3q1"]
-[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="5_e1j0b"]
-[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="6_k8t3m"]
-[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="8_1fhmx"]
-[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="9_cfort"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="4_ma3q1"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="5_e1j0b"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="6_k8t3m"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="8_1fhmx"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="9_cfort"]
 [ext_resource type="Texture2D" uid="uid://n03ctmf2vdq0" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_handback.png" id="9_yvbv3"]
 [ext_resource type="Texture2D" uid="uid://cjb24x51lann0" path="res://assets/images/equipment/weapons/club/scaled/club.png" id="10_3h5f8"]
 [ext_resource type="Texture2D" uid="uid://dosy4itvr7p2t" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_legback.png" id="11_r4xo3"]
@@ -14,7 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://b0jdstcatotn5" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_handfront.png" id="15_wk7q7"]
 [ext_resource type="Texture2D" uid="uid://dbm30gu6qnmt2" path="res://assets/images/player/base/scaled/Basecharacter.png" id="21_rx0a2"]
 [ext_resource type="Texture2D" uid="uid://dmhy5hm831ys4" path="res://assets/images/player/base/scaled/base_trunk.png" id="25_5r11c"]
-[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="28_ffjev"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://components/common/interfacecomponent/InterfaceComponent.tscn" id="28_ffjev"]
 
 [sub_resource type="Animation" id="Animation_bodxh"]
 resource_name = "Attack_Left_Hand"

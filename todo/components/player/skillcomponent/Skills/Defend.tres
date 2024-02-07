@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dxiiylbgawgmi"]
+
+[ext_resource type="Script" path="res://todo/components/player/skillcomponent/Skills/SelfStatChangeStatus.gd" id="1_6x7hw"]
+
+[resource]
+script = ExtResource("1_6x7hw")
+status_effect = "DefenseUpPerStackFlat"
+stacks = 10
+duration = 3.0
+skill_class = "Defend"
+displayed_name = "Defend"
+energy_usage = 35
+icon_path = "res://assets/images/equipment/weapons/shield/scaled/shield.png"
+collision_mask = 0
+valid_entities = Array[int]([0])
+max_targets = 10
+cooldown = 0.0
+cast_on_select = true
+hitbox_shape = [Vector2(50, 0)]
+hitbox_hits_user = false
+hitbox_rotate_shape = false
+hit_range = 1.0
+description = "Raises your defense by 10 for 3 seconds."

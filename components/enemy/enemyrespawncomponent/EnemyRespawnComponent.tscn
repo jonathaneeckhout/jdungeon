@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dikf715gqy3x"]
+
+[ext_resource type="Script" path="res://components/enemy/enemyrespawncomponent/EnemyRespawnComponent.gd" id="1_n4d60"]
+
+[node name="EnemyRespawnComponent" type="Node"]
+script = ExtResource("1_n4d60")

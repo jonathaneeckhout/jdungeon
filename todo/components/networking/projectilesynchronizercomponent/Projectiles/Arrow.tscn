@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://ciba40tryx4n3"]
+
+[ext_resource type="Script" path="res://todo/components/networking/projectilesynchronizercomponent/Projectiles/StraightProjectile2D.gd" id="1_hrrne"]
+[ext_resource type="Texture2D" uid="uid://c26si4u8ogkgu" path="res://assets/images/projectile/scaled/BasicArrow.png" id="2_1i1lo"]
+[ext_resource type="PackedScene" uid="uid://cloh3hx8jfl61" path="res://todo/projectiles/collision_scenes/Puff.tscn" id="2_mvj3j"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_l0reg"]
+b = Vector2(26, 0)
+
+[node name="Arrow" type="StaticBody2D"]
+script = ExtResource("1_hrrne")
+projectile_class = "Arrow"
+skill_class = "BasicAttack"
+collision_scene = ExtResource("2_mvj3j")
+move_speed = 850.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_1i1lo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("SegmentShape2D_l0reg")

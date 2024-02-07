@@ -1,6 +1,10 @@
 extends Panel
 
+class_name Shop
+
 const SIZE = Vector2(4, 4)
+
+@export var player: Player = null
 
 var gold := 0:
 	set(amount):
@@ -9,11 +13,12 @@ var gold := 0:
 
 var panels = []
 
-var shop_synchronizer: ShopSynchronizerComponent
+var vendor: NPC = null
 
 
 func _ready():
-	if G.is_server():
+	if player.multiplayer_connection.is_server():
+		queue_free()
 		return
 
 	mouse_entered.connect(_on_mouse_entered)
@@ -31,15 +36,14 @@ func _ready():
 			panel.grid_pos = Vector2(x, y)
 			panels[x][y] = panel
 			i += 1
-	$CloseButton.pressed.connect(_on_close_button_pressed)
 
-	G.shop_opened.connect(_on_shop_opened)
+	$CloseButton.pressed.connect(_on_close_button_pressed)
 
 
 func _input(event):
 	if event.is_action_pressed("j_right_click") and not JUI.above_ui:
 		hide()
-		shop_synchronizer = null
+		vendor = null
 
 
 func get_panel_at_pos(pos: Vector2):
@@ -92,8 +96,8 @@ func _on_mouse_exited():
 	JUI.above_ui = false
 
 
-func _on_shop_opened(vendor_name: String):
-	var vendor: Node2D = G.world.npcs.get_node_or_null(vendor_name)
+func open_shop(vendor_name: String):
+	vendor = player.multiplayer_connection.map.npcs.get_node_or_null(vendor_name)
 	if vendor == null:
 		GodotLogger.info("Can not find npc=[%s]" % vendor_name)
 		return
@@ -105,8 +109,6 @@ func _on_shop_opened(vendor_name: String):
 	if vendor.get("shop") == null:
 		GodotLogger.error("vendor does not have the shop variable")
 		return
-
-	shop_synchronizer = vendor.shop
 
 	$Label.text = "%s's shop" % vendor.npc_class
 
@@ -120,3 +122,4 @@ func _on_shop_opened(vendor_name: String):
 
 func _on_close_button_pressed():
 	hide()
+	vendor = null

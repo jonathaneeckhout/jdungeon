@@ -1,0 +1,45 @@
+[gd_scene load_steps=10 format=3 uid="uid://d261xncd2la2h"]
+
+[ext_resource type="Script" path="res://scenes/player/shortcutmenu/ShortcutMenu.gd" id="1_faslu"]
+[ext_resource type="Texture2D" uid="uid://dqw4dsidoi5wf" path="res://assets/images/icons/789_Lorc_RPG_icons/scaled/Icon.5_85.png" id="1_ryg2n"]
+[ext_resource type="Texture2D" uid="uid://cwgm6exidxs08" path="res://assets/images/icons/789_Lorc_RPG_icons/scaled/Icon.3_83.png" id="2_481p7"]
+[ext_resource type="Texture2D" uid="uid://ceoisjqj6obhb" path="res://assets/images/icons/789_Lorc_RPG_icons/scaled/Icon.6_94.png" id="3_upl7j"]
+[ext_resource type="Texture2D" uid="uid://5xbd6go3j1y6" path="res://assets/images/icons/789_Lorc_RPG_icons/scaled/Icon.6_37.png" id="4_pds2v"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_djxay"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_05pst"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_3vu0y"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_x2us5"]
+
+[node name="ShortcutMenu" type="PanelContainer"]
+script = ExtResource("1_faslu")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="GameMenuButton" type="TextureButton" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("1_ryg2n")
+texture_pressed = SubResource("CanvasTexture_djxay")
+
+[node name="StatsButton" type="TextureButton" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("2_481p7")
+texture_pressed = SubResource("CanvasTexture_05pst")
+
+[node name="EquipmentButton" type="TextureButton" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("3_upl7j")
+texture_pressed = SubResource("CanvasTexture_3vu0y")
+
+[node name="BagButton" type="TextureButton" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("4_pds2v")
+texture_pressed = SubResource("CanvasTexture_x2us5")

@@ -1,10 +1,13 @@
 extends Control
 
 const GROUPS: Dictionary = {
-	"Global": {"color": "WHITE"}, "Local": {"color": "LIGHT_BLUE"}, "Whisper": {"color": "VIOLET"}
+	ChatComponent.MESSAGE_TYPE.MAP: {"color": "WHITE"},
+	ChatComponent.MESSAGE_TYPE.WHISPER: {"color": "VIOLET"}
 }
 
-var current_group: String = "Global"
+@export var chat_component: ChatComponent = null
+
+var current_group: ChatComponent.MESSAGE_TYPE = ChatComponent.MESSAGE_TYPE.MAP
 var username: String = "player"
 var wisper_target: String = ""
 
@@ -19,8 +22,8 @@ var delay_timer: Timer
 
 func _ready():
 	input_field.text_submitted.connect(_on_text_submitted)
-	change_group("Global")
-	G.player_rpc.message_received.connect(_on_message_received)
+	change_group(ChatComponent.MESSAGE_TYPE.MAP)
+	chat_component.message_received.connect(_on_message_received)
 
 	$VBoxContainer/SelectButtons/ChatButton.pressed.connect(_on_chat_button_pressed)
 	$VBoxContainer/SelectButtons/LogsButton.pressed.connect(_on_logs_button_pressed)
@@ -51,13 +54,13 @@ func _input(event):
 		delay_timer.start()
 
 
-func change_group(value: String):
+func change_group(value: ChatComponent.MESSAGE_TYPE):
 	current_group = value
 
-	if current_group == "Whisper" and wisper_target != "":
+	if current_group == ChatComponent.MESSAGE_TYPE.WHISPER and wisper_target != "":
 		input_label.text = "[" + wisper_target + "]"
 	else:
-		input_label.text = "[" + current_group + "]"
+		input_label.text = "[" + chat_component.message_type_to_string(current_group) + "]"
 
 	input_label.set("theme_override_colors/font_color", Color(GROUPS[current_group]["color"]))
 
@@ -77,7 +80,7 @@ func _on_text_submitted(text: String):
 	if text == "/h" or text == "/help":
 		append_chat_line_escaped(
 			"Helper",
-			"Press /g for global chat, /l for local chat and /w <name> to whisper",
+			"Press /m for map chat and /w <name> to whisper (not implemented yet)",
 			"SKY_BLUE"
 		)
 		input_field.text = ""
@@ -85,15 +88,8 @@ func _on_text_submitted(text: String):
 		JUI.chat_active = false
 		return
 
-	if text == "/g":
-		change_group("Global")
-		input_field.text = ""
-		input_field.release_focus()
-		JUI.chat_active = false
-		return
-
-	if text == "/l":
-		change_group("Local")
+	if text == "/m":
+		change_group(ChatComponent.MESSAGE_TYPE.MAP)
 		input_field.text = ""
 		input_field.release_focus()
 		JUI.chat_active = false
@@ -104,7 +100,7 @@ func _on_text_submitted(text: String):
 			# Discard the /w part to get the username
 			wisper_target = text.replace("/w ", "")
 			if wisper_target != "":
-				change_group("Whisper")
+				change_group(ChatComponent.MESSAGE_TYPE.WHISPER)
 
 		input_field.text = ""
 		input_field.release_focus()
@@ -113,12 +109,12 @@ func _on_text_submitted(text: String):
 
 	if text != "":
 		match current_group:
-			"Global":
-				G.player_rpc.send_message.rpc_id(1, "Global", "", text)
-			"Local":
-				G.player_rpc.send_message.rpc_id(1, "Local", "", text)
-			"Whisper":
-				G.player_rpc.send_message.rpc_id(1, "Whisper", wisper_target, text)
+			ChatComponent.MESSAGE_TYPE.MAP:
+				chat_component.client_send_message(ChatComponent.MESSAGE_TYPE.MAP, "", text)
+			ChatComponent.MESSAGE_TYPE.WHISPER:
+				chat_component.client_send_message(
+					ChatComponent.MESSAGE_TYPE.WHISPER, wisper_target, text
+				)
 			_:
 				append_chat_line_escaped(username, text, GROUPS[current_group]["color"])
 
@@ -128,14 +124,14 @@ func _on_text_submitted(text: String):
 		JUI.chat_active = false
 
 
-func _on_message_received(type: String, from: String, message: String):
+func _on_message_received(type: ChatComponent.MESSAGE_TYPE, from: String, message: String):
 	match type:
-		"Global":
-			append_chat_line_escaped(from, message, GROUPS["Global"]["color"])
-		"Local":
-			append_chat_line_escaped(from, message, GROUPS["Local"]["color"])
-		"Whisper":
-			append_chat_line_escaped(from, message, GROUPS["Whisper"]["color"])
+		ChatComponent.MESSAGE_TYPE.MAP:
+			append_chat_line_escaped(from, message, GROUPS[ChatComponent.MESSAGE_TYPE.MAP]["color"])
+		ChatComponent.MESSAGE_TYPE.WHISPER:
+			append_chat_line_escaped(
+				from, message, GROUPS[ChatComponent.MESSAGE_TYPE.WHISPER]["color"]
+			)
 
 
 func append_log_line(message: String, color: String = "YELLOW"):

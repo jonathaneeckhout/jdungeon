@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bopl1rpbyww77"]
+
+[ext_resource type="Script" path="res://components/npc/shopsynchronizercomponent/ShopSynchronizerRPC.gd" id="1_na0qr"]
+
+[node name="ShopSynchronizerRpc" type="Node"]
+script = ExtResource("1_na0qr")

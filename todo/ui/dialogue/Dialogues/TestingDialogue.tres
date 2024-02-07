@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=6 format=3 uid="uid://cmxkyo262nnbr"]
+
+[ext_resource type="Script" path="res://todo/ui/dialogue/DialogueResourceSnippet.gd" id="1_e2a2w"]
+[ext_resource type="Script" path="res://todo/ui/dialogue/DialogueResource.gd" id="1_ehnrn"]
+
+[sub_resource type="Resource" id="Resource_x5hi5"]
+script = ExtResource("1_e2a2w")
+text = "This is a test snippet"
+enableBBCode = true
+speaker_id = 0
+portrait_id = 0
+conditions_to_show = Array[String]([])
+conditions_to_hide = Array[String]([])
+text_speed_modifier = 1.0
+
+[sub_resource type="Resource" id="Resource_3dplm"]
+script = ExtResource("1_e2a2w")
+text = "Good to know."
+enableBBCode = true
+speaker_id = 1
+portrait_id = 0
+conditions_to_show = Array[String]([])
+conditions_to_hide = Array[String]([])
+text_speed_modifier = 1.0
+
+[sub_resource type="Resource" id="Resource_lnl7t"]
+script = ExtResource("1_e2a2w")
+text = "I just want to play if you don't mind."
+enableBBCode = true
+speaker_id = 1
+portrait_id = 0
+conditions_to_show = Array[String]([])
+conditions_to_hide = Array[String]([])
+text_speed_modifier = 1.0
+
+[resource]
+script = ExtResource("1_ehnrn")
+dialogue_identifier = "UNDEFINED"
+speaker_names = Array[String](["Game", "Player Insert"])
+speaker_portraits = Array[Array]([["res://assets/images/enemies/flower/original/Flower_head.png", "res://assets/images/enemies/flower/original/Flower.png"]])
+dialogue_snippets = Array[ExtResource("1_e2a2w")]([SubResource("Resource_x5hi5"), SubResource("Resource_3dplm"), SubResource("Resource_lnl7t")])

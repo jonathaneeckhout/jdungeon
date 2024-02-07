@@ -13,7 +13,7 @@ func _ready():
 
 	$InterfaceComponent.display_name = enemy_class
 
-	if G.is_server():
+	if multiplayer_connection.is_server():
 		_add_loot()
 
 

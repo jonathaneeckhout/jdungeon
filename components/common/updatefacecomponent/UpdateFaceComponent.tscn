@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfkcs65b1vpi3"]
+
+[ext_resource type="Script" path="res://components/common/updatefacecomponent/UpdateFaceComponent.gd" id="1_ot28e"]
+
+[node name="UpdateFaceComponent" type="Node"]
+script = ExtResource("1_ot28e")

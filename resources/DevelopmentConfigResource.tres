@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="ConfigResource" load_steps=2 format=3 uid="uid://chbdptl7ubxyj"]
+
+[ext_resource type="Script" path="res://classes/ConfigResource.gd" id="1_cwmgo"]
+
+[resource]
+script = ExtResource("1_cwmgo")
+mode = 0
+use_tls = false
+minimize_on_start = true
+gateway_server_server_bind_address = "*"
+gateway_server_server_port = 9071
+gateway_server_server_fps = 30
+gateway_server_certh_path = ""
+gateway_server_key_path = ""
+gateway_client_server_bind_address = "*"
+gateway_client_server_port = 9072
+gateway_client_server_fps = 30
+gateway_client_certh_path = ""
+gateway_client_key_path = ""
+server_client_server_bind_address = "*"
+server_client_server_port = 9073
+server_client_server_fps = 10
+server_client_certh_path = ""
+server_client_key_path = ""
+server_gateway_client_address = "ws://localhost:9071"
+server_gateway_client_fps = 30
+client_gateway_client_address = "ws://localhost:9072"
+client_gateway_client_fps = 30
+client_server_client_address = "ws://localhost:9073"
+client_server_client_fps = 30
+database_backend = 0
+json_backend_file = "res://data/users.json"

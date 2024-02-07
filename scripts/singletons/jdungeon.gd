@@ -33,6 +33,8 @@ var uuid_util: UuidUtil
 
 var audio: SoundManager = SoundManager.new()
 
+var server_client_multiplayer_connection: WebsocketMultiplayerConnection = null
+
 
 func _ready():
 	uuid_util = load("res://scripts/utilities/uuid/uuid.gd").new()
@@ -47,19 +49,19 @@ func register_scenes():
 	register_enemies()
 	register_npcs()
 	register_items()
-	register_skills()
+	# register_skills()
 	register_maps()
-	register_projectiles()
-	register_character_classes()
-	register_dialogues()
-	register_status_effects()
+	# register_projectiles()
+	# register_character_classes()
+	# register_dialogues()
+	# register_status_effects()
 
 
 func register_enemies():
 	J.register_enemy_scene("Sheep", "res://scenes/enemies/Sheep/Sheep.tscn")
-	J.register_enemy_scene("TreeTrunkGuy", "res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn")
-	J.register_enemy_scene("MoldedDruvar", "res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn")
-	J.register_enemy_scene("ClamDog", "res://scenes/enemies/ClamDog/ClamDog.tscn")
+	# J.register_enemy_scene("TreeTrunkGuy", "res://scenes/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn")
+	# J.register_enemy_scene("MoldedDruvar", "res://scenes/enemies/MoldedDruvar/MoldedDruvar.tscn")
+	# J.register_enemy_scene("ClamDog", "res://scenes/enemies/ClamDog/ClamDog.tscn")
 	J.register_enemy_scene("BlueMole", "res://scenes/enemies/BlueMole/BlueMole.tscn")
 	J.register_enemy_scene("WildBoar", "res://scenes/enemies/WildBoar/WildBoar.tscn")
 	J.register_enemy_scene("Ladybug", "res://scenes/enemies/Ladybug/Ladybug.tscn")
@@ -68,7 +70,7 @@ func register_enemies():
 func register_npcs():
 	J.register_npc_scene("MilkLady", "res://scenes/npcs/milklady/Milklady.tscn")
 	J.register_npc_scene("Turtur", "res://scenes/npcs/turtur/Turtur.tscn")
-	J.register_npc_scene("Fernand", "res://scenes/npcs/fernand/Fernand.tscn")
+	# J.register_npc_scene("Fernand", "res://scenes/npcs/fernand/Fernand.tscn")
 	J.register_npc_scene("Guard", "res://scenes/npcs/guard/Guard.tscn")
 
 
@@ -127,105 +129,102 @@ func register_items():
 	)
 
 
-func register_skills():
-	J.register_skill_resource(
-		"debug", "res://scripts/components/player/skillcomponent/Skills/debug.tres"
-	)
-	J.register_skill_resource(
-		"HealSelf", "res://scripts/components/player/skillcomponent/Skills/HealSelf.tres"
-	)
-	J.register_skill_resource(
-		"Combustion", "res://scripts/components/player/skillcomponent/Skills/Combustion.tres"
-	)
-	J.register_skill_resource(
-		"PoisonSelf", "res://scripts/components/player/skillcomponent/Skills/DebugPoisonSelf.tres"
-	)
-	J.register_skill_resource(
-		"SpinAttack", "res://scripts/components/player/skillcomponent/Skills/SpinAttack.tres"
-	)
-	J.register_skill_resource(
-		"Cripple", "res://scripts/components/player/skillcomponent/Skills/Cripple.tres"
-	)
-	J.register_skill_resource(
-		"Defend", "res://scripts/components/player/skillcomponent/Skills/Defend.tres"
-	)
-	J.register_skill_resource(
-		"BasicAttack", "res://scripts/components/player/skillcomponent/Skills/BasicAttack.tres"
-	)
-	J.register_skill_resource(
-		"LaunchArrow", "res://scripts/components/player/skillcomponent/Skills/LaunchArrow.tres"
-	)
-	J.register_skill_resource(
-		"SetTrap", "res://scripts/components/player/skillcomponent/Skills/SetTrap.tres"
-	)
+# func register_skills():
+# 	J.register_skill_resource(
+# 		"debug", "res://scripts/components/player/skillcomponent/Skills/debug.tres"
+# 	)
+# 	J.register_skill_resource(
+# 		"HealSelf", "res://scripts/components/player/skillcomponent/Skills/HealSelf.tres"
+# 	)
+# 	J.register_skill_resource(
+# 		"Combustion", "res://scripts/components/player/skillcomponent/Skills/Combustion.tres"
+# 	)
+# 	J.register_skill_resource(
+# 		"PoisonSelf", "res://scripts/components/player/skillcomponent/Skills/DebugPoisonSelf.tres"
+# 	)
+# 	J.register_skill_resource(
+# 		"SpinAttack", "res://scripts/components/player/skillcomponent/Skills/SpinAttack.tres"
+# 	)
+# 	J.register_skill_resource(
+# 		"Cripple", "res://scripts/components/player/skillcomponent/Skills/Cripple.tres"
+# 	)
+# 	J.register_skill_resource(
+# 		"Defend", "res://scripts/components/player/skillcomponent/Skills/Defend.tres"
+# 	)
+# 	J.register_skill_resource(
+# 		"BasicAttack", "res://scripts/components/player/skillcomponent/Skills/BasicAttack.tres"
+# 	)
+# 	J.register_skill_resource(
+# 		"LaunchArrow", "res://scripts/components/player/skillcomponent/Skills/LaunchArrow.tres"
+# 	)
+# 	J.register_skill_resource(
+# 		"SetTrap", "res://scripts/components/player/skillcomponent/Skills/SetTrap.tres"
+# 	)
 
 
 func register_maps():
-	J.register_map_scene("World", "res://scenes/maps/world/World.tscn")
+	# J.register_map_scene("World", "res://scenes/maps/world/World.tscn")
 	J.register_map_scene("BaseCamp", "res://scenes/maps/basecamp/BaseCamp.tscn")
-	J.register_map_scene("WakeningForest", "res://scenes/maps/wakeningforest/WakeningForest.tscn")
-	J.register_map_scene("ForestDungeon", "res://scenes/maps/forestdungeon/ForestDungeon.tscn")
+	# J.register_map_scene("WakeningForest", "res://scenes/maps/wakeningforest/WakeningForest.tscn")
+	# J.register_map_scene("ForestDungeon", "res://scenes/maps/forestdungeon/ForestDungeon.tscn")
 
 
-func register_character_classes():
-	J.register_class_resource(
-		"Base", "res://scripts/components/player/charclasscomponent/classes/Base.tres"
-	)
-	J.register_class_resource(
-		"Warrior", "res://scripts/components/player/charclasscomponent/classes/Warrior.tres"
-	)
-	J.register_class_resource(
-		"Hexpecialist",
-		"res://scripts/components/player/charclasscomponent/classes/Hexpecialist.tres"
-	)
-	J.register_class_resource(
-		"Ranger", "res://scripts/components/player/charclasscomponent/classes/Ranger.tres"
-	)
+# func register_character_classes():
+# 	J.register_class_resource(
+# 		"Base", "res://scripts/components/player/charclasscomponent/classes/Base.tres"
+# 	)
+# 	J.register_class_resource(
+# 		"Warrior", "res://scripts/components/player/charclasscomponent/classes/Warrior.tres"
+# 	)
+# 	J.register_class_resource(
+# 		"Hexpecialist",
+# 		"res://scripts/components/player/charclasscomponent/classes/Hexpecialist.tres"
+# 	)
+# 	J.register_class_resource(
+# 		"Ranger", "res://scripts/components/player/charclasscomponent/classes/Ranger.tres"
+# 	)
 
+# func register_dialogues():
+# 	J.register_dialogue_resource("MilkLady", "res://scenes/ui/dialogue/Dialogues/MilkLady.tres")
+# 	J.register_dialogue_resource("Fernand", "res://scenes/ui/dialogue/Dialogues/Fernand.tres")
+# 	J.register_dialogue_resource("FALLBACK", "res://scenes/ui/dialogue/Dialogues/FALLBACK.tres")
 
-func register_dialogues():
-	J.register_dialogue_resource("MilkLady", "res://scenes/ui/dialogue/Dialogues/MilkLady.tres")
-	J.register_dialogue_resource("Fernand", "res://scenes/ui/dialogue/Dialogues/Fernand.tres")
-	J.register_dialogue_resource("FALLBACK", "res://scenes/ui/dialogue/Dialogues/FALLBACK.tres")
+# func register_status_effects():
+# 	J.register_status_effect_resource(
+# 		"Poison",
+# 		"res://scripts/components/networking/statuseffectcomponent/StatusEffects/Poison.tres"
+# 	)
+# 	(
+# 		J
+# 		. register_status_effect_resource(
+# 			"DefenseUpPerStackFlat",
+# 			"res://scripts/components/networking/statuseffectcomponent/StatusEffects/DefenseUpStatChange.tres"
+# 		)
+# 	)
+# 	(
+# 		J
+# 		. register_status_effect_resource(
+# 			"DefenseDownPerStackFlat",
+# 			"res://scripts/components/networking/statuseffectcomponent/StatusEffects/DefenseDownPerStackFlat.tres"
+# 		)
+# 	)
+# 	(
+# 		J
+# 		. register_status_effect_resource(
+# 			"AttackDownPerStackFlat",
+# 			"res://scripts/components/networking/statuseffectcomponent/StatusEffects/AttackDownPerStackFlat.tres"
+# 		)
+# 	)
 
-
-func register_status_effects():
-	J.register_status_effect_resource(
-		"Poison",
-		"res://scripts/components/networking/statuseffectcomponent/StatusEffects/Poison.tres"
-	)
-	(
-		J
-		. register_status_effect_resource(
-			"DefenseUpPerStackFlat",
-			"res://scripts/components/networking/statuseffectcomponent/StatusEffects/DefenseUpStatChange.tres"
-		)
-	)
-	(
-		J
-		. register_status_effect_resource(
-			"DefenseDownPerStackFlat",
-			"res://scripts/components/networking/statuseffectcomponent/StatusEffects/DefenseDownPerStackFlat.tres"
-		)
-	)
-	(
-		J
-		. register_status_effect_resource(
-			"AttackDownPerStackFlat",
-			"res://scripts/components/networking/statuseffectcomponent/StatusEffects/AttackDownPerStackFlat.tres"
-		)
-	)
-
-
-func register_projectiles():
-	J.register_projectile_scene(
-		"Arrow",
-		"res://scripts/components/networking/projectilesynchronizercomponent/Projectiles/Arrow.tscn"
-	)
-	J.register_projectile_scene(
-		"Trap",
-		"res://scripts/components/networking/projectilesynchronizercomponent/Projectiles/Trap.tscn"
-	)
+# func register_projectiles():
+# 	J.register_projectile_scene(
+# 		"Arrow",
+# 		"res://scripts/components/networking/projectilesynchronizercomponent/Projectiles/Arrow.tscn"
+# 	)
+# 	J.register_projectile_scene(
+# 		"Trap",
+# 		"res://scripts/components/networking/projectilesynchronizercomponent/Projectiles/Trap.tscn"
+# 	)
 
 
 func register_player_scene(player_scene_path: String):

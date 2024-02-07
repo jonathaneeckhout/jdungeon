@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://kb8mhtyak1ki"]
+
+[ext_resource type="Script" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.gd" id="1_22iby"]
+
+[node name="WatcherSynchronizerComponent" type="Node2D"]
+script = ExtResource("1_22iby")

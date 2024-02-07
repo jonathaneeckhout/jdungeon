@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cka62nlyw5gm5"]
+
+[ext_resource type="Script" path="res://components/player/equipmentsynchronizercomponent/EquipmentSynchronizerComponent.gd" id="1_ok83h"]
+
+[node name="EquipmentSynchronizerComponent" type="Node"]
+script = ExtResource("1_ok83h")

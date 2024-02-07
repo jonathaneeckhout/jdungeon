@@ -21,8 +21,28 @@ var grid_pos: Vector2
 
 @onready var equipment: Equipment = $"../.."
 
+var _equipment_synchronizer_rpc: EquipmentSynchronizerRPC = null
+
+
+func _ready():
+	assert(
+		equipment.player.multiplayer_connection != null, "Target's multiplayer connection is null"
+	)
+
+	# Get the EquipmentSynchronizerRPC component.
+	_equipment_synchronizer_rpc = (
+		equipment
+		. player
+		. multiplayer_connection
+		. component_list
+		. get_component(EquipmentSynchronizerRPC.COMPONENT_NAME)
+	)
+
+	# Ensure the EquipmentSynchronizerRPC component is present
+	assert(_equipment_synchronizer_rpc != null, "Failed to get EquipmentSynchronizerRPC component")
+
 
 func _gui_input(event: InputEvent):
 	if event.is_action_pressed("j_right_click"):
 		if item:
-			equipment.player.equipment.remove_equipment_item.rpc_id(1, item.uuid)
+			_equipment_synchronizer_rpc.remove_equipment_item(item.uuid)

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpybc5oxieo6i"]
+
+[ext_resource type="Script" path="res://components/common/lagcompensationcomponent/LagCompensationComponent.gd" id="1_c1itp"]
+
+[node name="LagCompensationComponent" type="Node2D"]
+script = ExtResource("1_c1itp")

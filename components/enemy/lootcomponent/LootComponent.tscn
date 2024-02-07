@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://pateh36oi60s"]
+
+[ext_resource type="Script" path="res://components/enemy/lootcomponent/LootComponent.gd" id="1_eyxe1"]
+
+[node name="LootComponent" type="Node"]
+script = ExtResource("1_eyxe1")

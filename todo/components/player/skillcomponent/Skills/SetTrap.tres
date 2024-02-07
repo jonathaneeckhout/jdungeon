@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dwg005yiwkx0f"]
+
+[ext_resource type="Script" path="res://todo/components/player/skillcomponent/Skills/FireProjectileSkill.gd" id="1_0xdwk"]
+
+[resource]
+script = ExtResource("1_0xdwk")
+projectile_class = "Trap"
+skill_class = "SetTrap"
+displayed_name = "Set Trap"
+energy_usage = 40
+icon_path = "res://icon.svg"
+collision_mask = 30
+valid_entities = Array[int]([1])
+max_targets = 10
+cooldown = 0.0
+cast_on_select = false
+hitbox_shape = [Vector2(50, 0)]
+hitbox_hits_user = false
+hitbox_rotate_shape = false
+hit_range = 250.0
+description = "Places down a harmful trap."

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqsq7rd0h4l03"]
+
+[ext_resource type="Script" path="res://todo/components/player/skillcomponent/skillcomponent.gd" id="1_u2x5b"]
+
+[node name="SkillComponent" type="Node2D"]
+script = ExtResource("1_u2x5b")

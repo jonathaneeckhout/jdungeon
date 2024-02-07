@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="CharacterClassResource" load_steps=2 format=3 uid="uid://bnh4gh5tkanpd"]
+
+[ext_resource type="Script" path="res://todo/components/player/charclasscomponent/CharacterClassResource.gd" id="1_oa5ut"]
+
+[resource]
+script = ExtResource("1_oa5ut")
+displayed_name = "Hexpecialist"
+class_registered = &"Hexpecialist"
+icon_path = "res://assets/images/spells/lightning/Lightning .png"
+description = ""
+available_skills = Array[String](["Combustion", "Cripple"])
+stat_multipliers = {
+"attack_power_max": 1.0,
+"attack_power_min": 1.0,
+"defense": 1.0,
+"energy_max": 1.0,
+"energy_regen": 1.0,
+"hp_max": 1.0,
+"movement_speed": 1.0
+}
+stat_bonuses = {
+"attack_power_max": 0,
+"attack_power_min": 0,
+"defense": 0,
+"energy_max": 0,
+"energy_regen": 0,
+"hp_max": 0,
+"movement_speed": 0
+}

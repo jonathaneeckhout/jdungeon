@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="DialogueResource" load_steps=6 format=3 uid="uid://thvviokw5o5c"]
+
+[ext_resource type="Script" path="res://todo/ui/dialogue/DialogueResource.gd" id="1_3t1yd"]
+[ext_resource type="Script" path="res://todo/ui/dialogue/DialogueResourceSnippet.gd" id="1_05atd"]
+
+[sub_resource type="Resource" id="Resource_vfg0g"]
+script = ExtResource("1_05atd")
+text = "Welcome dear. It must have taken quite some effort to get all the way here."
+enableBBCode = true
+speaker_id = 0
+portrait_id = 0
+conditions_to_show = Array[String]([])
+conditions_to_hide = Array[String](["dial_milklady_greeted"])
+text_speed_modifier = 1.0
+flags_set_on_seen = Array[String]([])
+flags_unset_on_seen = Array[String]([])
+
+[sub_resource type="Resource" id="Resource_07mrd"]
+script = ExtResource("1_05atd")
+text = "It's a miracle you made it here without proper equipment. 
+But rest easy, this place is safe."
+enableBBCode = true
+speaker_id = 0
+portrait_id = 0
+conditions_to_show = Array[String]([])
+conditions_to_hide = Array[String](["dial_milklady_greeted"])
+text_speed_modifier = 1.0
+flags_set_on_seen = Array[String](["dial_milklady_greeted"])
+flags_unset_on_seen = Array[String]([])
+
+[sub_resource type="Resource" id="Resource_tslh3"]
+script = ExtResource("1_05atd")
+text = "I am in charge of handing out supplies, but since you're not in the guard i am afraid i'll have to sell it to you. "
+enableBBCode = true
+speaker_id = 0
+portrait_id = 0
+conditions_to_show = Array[String]([])
+conditions_to_hide = Array[String]([])
+text_speed_modifier = 1.0
+flags_set_on_seen = Array[String]([])
+flags_unset_on_seen = Array[String]([])
+
+[resource]
+script = ExtResource("1_3t1yd")
+dialogue_identifier = "MilkLady"
+speaker_names = Array[String](["Milk Lady"])
+speaker_portraits = Array[Array]([["res://assets/images/npcs/milklady/scaled/milklady_head.png"]])
+dialogue_snippets = Array[ExtResource("1_05atd")]([SubResource("Resource_vfg0g"), SubResource("Resource_07mrd"), SubResource("Resource_tslh3")])

@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://olha5mwr7hcr"]
+
+[ext_resource type="Script" path="res://components/common/hitparticlescomponent/HitParticlesComponent.gd" id="1_dluhj"]
+
+[sub_resource type="Curve" id="Curve_c8xqk"]
+_data = [Vector2(0.0168919, 0.982289), 0.0, 0.0, 0, 0, Vector2(1, 0.158719), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="HitParticlesComponent" type="Node2D"]
+script = ExtResource("1_dluhj")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emitting = false
+one_shot = true
+speed_scale = 2.0
+explosiveness = 0.85
+spread = 25.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 100.0
+scale_amount_min = 2.0
+scale_amount_max = 4.0
+scale_amount_curve = SubResource("Curve_c8xqk")

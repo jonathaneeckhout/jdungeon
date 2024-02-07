@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d4c6yl66u2fdc"]
+
+[ext_resource type="Script" path="res://components/player/playersynchronizer/PlayerSynchronizerRPC.gd" id="1_8lfik"]
+
+[node name="PlayerSynchronizerRpc" type="Node"]
+script = ExtResource("1_8lfik")

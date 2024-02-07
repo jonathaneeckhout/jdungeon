@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjjk2cftt2cex"]
+
+[ext_resource type="Script" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerComponent.gd" id="1_tcvs7"]
+
+[node name="ActionSynchronizerComponent" type="Node"]
+script = ExtResource("1_tcvs7")

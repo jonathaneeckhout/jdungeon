@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cj121d2pvc3s8"]
+
+[ext_resource type="Script" path="res://todo/components/networking/dialoguesynhcronizercomponent/DialogueSynchronizerComponent.gd" id="1_5sb0o"]
+
+[node name="DialogueSynchronizerComponent" type="Node"]
+script = ExtResource("1_5sb0o")

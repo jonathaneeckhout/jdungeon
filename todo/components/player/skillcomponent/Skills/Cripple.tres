@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cxvnmcld3g72k"]
+
+[ext_resource type="Script" path="res://todo/components/player/skillcomponent/Skills/MultiStatusEffect.gd" id="1_sey4b"]
+
+[resource]
+script = ExtResource("1_sey4b")
+statuses_to_apply = Array[String](["AttackDownPerStackFlat", "DefenseDownPerStackFlat"])
+duration = 5.0
+stacks = 10
+skill_class = "Cripple"
+displayed_name = "Cripple"
+energy_usage = 40
+icon_path = "res://icon.svg"
+collision_mask = 6
+valid_entities = Array[int]([1])
+max_targets = 10
+cooldown = 3.0
+cast_on_select = false
+hitbox_shape = [Vector2(50, 0)]
+hitbox_hits_user = false
+hitbox_rotate_shape = true
+hit_range = 100.0
+description = "Lowers the attack and defense of the target by 10 for 5 seconds."

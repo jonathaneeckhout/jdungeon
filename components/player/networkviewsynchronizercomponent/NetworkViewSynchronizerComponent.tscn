@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2wwaeyvgno55"]
+
+[ext_resource type="Script" path="res://components/player/networkviewsynchronizercomponent/NetworkViewSynchronizerComponent.gd" id="1_tq6tm"]
+
+[node name="NetworkViewSynchronizerComponent" type="Node2D"]
+script = ExtResource("1_tq6tm")
+network_sync_area_size = 1024.0

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bj1l2sxb06c2o"]
+
+[ext_resource type="Script" path="res://components/player/playerunstuckcomponent/PlayerUnstuckRPC.gd" id="1_lobtb"]
+
+[node name="PlayerUnstuckRPC" type="Node"]
+script = ExtResource("1_lobtb")

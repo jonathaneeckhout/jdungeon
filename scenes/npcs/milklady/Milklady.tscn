@@ -1,14 +1,15 @@
-[gd_scene load_steps=23 format=3 uid="uid://dj1mpx8a8yeko"]
+[gd_scene load_steps=24 format=3 uid="uid://dj1mpx8a8yeko"]
 
 [ext_resource type="Script" path="res://scenes/npcs/milklady/Milklady.gd" id="1_i2k6g"]
-[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://scripts/components/networking/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_444i3"]
-[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://scripts/components/networking/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="2_v4sko"]
-[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://scripts/components/networking/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_xwj24"]
-[ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://scripts/components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="4_jq4vr"]
-[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://scripts/components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="6_7nn8c"]
-[ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://scripts/components/networking/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="7_b43t0"]
-[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://scripts/components/common/animationcomponent/AnimationComponent.tscn" id="7_kfsbv"]
-[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://scripts/components/common/interfacecomponent/InterfaceComponent.tscn" id="9_3kap7"]
+[ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_444i3"]
+[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="2_v4sko"]
+[ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="2_xwj24"]
+[ext_resource type="PackedScene" uid="uid://dtmpwn0ids6rv" path="res://components/behaviors/wanderbehaviorcomponent/WanderBehaviorCopmonent.tscn" id="4_jq4vr"]
+[ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="6_7nn8c"]
+[ext_resource type="PackedScene" uid="uid://cy3sl4bl86h6m" path="res://components/common/velocitysimulatorcomponent/VelocitySimulatorComponent.tscn" id="7_73vnj"]
+[ext_resource type="PackedScene" uid="uid://b70bia1uuoud4" path="res://components/npc/shopsynchronizercomponent/ShopSynchronizerComponent.tscn" id="7_b43t0"]
+[ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="7_kfsbv"]
+[ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://components/common/interfacecomponent/InterfaceComponent.tscn" id="9_3kap7"]
 [ext_resource type="Texture2D" uid="uid://d3bki65r7slmw" path="res://assets/images/npcs/milklady/scaled/milklady_whole.png" id="11_lg4rx"]
 [ext_resource type="Texture2D" uid="uid://gwalcp3d24vg" path="res://assets/images/npcs/milklady/scaled/milklady_right_arm.png" id="12_ky2ex"]
 [ext_resource type="Texture2D" uid="uid://cwmwgqtp4cxco" path="res://assets/images/npcs/milklady/scaled/milklady_body.png" id="13_mb4tp"]
@@ -470,9 +471,12 @@ stats_component = NodePath("../StatsSynchronizerComponent")
 [node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("6_7nn8c")]
 skeleton = NodePath("../Skeleton")
 
-[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats") instance=ExtResource("7_kfsbv")]
+[node name="VelocitySimulatorComponent" parent="." instance=ExtResource("7_73vnj")]
+
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "update_face") instance=ExtResource("7_kfsbv")]
 animation_player = NodePath("../AnimationPlayer")
 stats = NodePath("../StatsSynchronizerComponent")
+update_face = NodePath("../UpdateFaceComponent")
 
 [node name="ShopSynchronizerComponent" parent="." instance=ExtResource("7_b43t0")]
 

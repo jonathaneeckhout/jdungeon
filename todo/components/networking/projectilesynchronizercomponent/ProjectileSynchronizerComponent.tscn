@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d120xwg2n4n23"]
+
+[ext_resource type="Script" path="res://todo/components/networking/projectilesynchronizercomponent/projectilesynchronizercomponent.gd" id="1_7tbop"]
+
+[node name="ProjectileSynchronizerComponent" type="Node"]
+script = ExtResource("1_7tbop")

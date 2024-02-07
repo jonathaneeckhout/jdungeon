@@ -4,6 +4,9 @@ class_name Equipment
 
 const SIZE = Vector2(2, 4)
 
+@export var player: Player = null
+@export var equipment_synchronizer: EquipmentSynchronizerComponent = null
+
 @export var gold := 0:
 	set(amount):
 		gold = amount
@@ -11,11 +14,10 @@ const SIZE = Vector2(2, 4)
 
 var panels = []
 
-@onready var player: Player = $"../../../../"
-
 
 func _ready():
-	if G.is_server():
+	if player.multiplayer_connection.is_server():
+		queue_free()
 		return
 
 	mouse_entered.connect(_on_mouse_entered)
@@ -45,14 +47,13 @@ func _input(event):
 		if visible:
 			hide()
 		else:
-			player.equipment.sync_equipment.rpc_id(1)
 			show()
 
 
 func register_signals():
-	player.equipment.loaded.connect(_on_equipment_loaded)
-	player.equipment.item_added.connect(_on_item_added)
-	player.equipment.item_removed.connect(_on_item_removed)
+	equipment_synchronizer.loaded.connect(_on_equipment_loaded)
+	equipment_synchronizer.item_added.connect(_on_item_added)
+	equipment_synchronizer.item_removed.connect(_on_item_removed)
 
 
 func get_panel_at_slot(equipment_slot: String) -> EquipmentPanel:
@@ -76,7 +77,7 @@ func _on_mouse_exited():
 
 
 func _on_item_added(item_uuid: String, _item_class: String):
-	var item: Item = player.equipment.get_item(item_uuid)
+	var item: Item = equipment_synchronizer.get_item(item_uuid)
 	if item == null:
 		return
 
@@ -96,8 +97,8 @@ func _on_item_removed(item_uuid: String):
 func _on_equipment_loaded():
 	clear_all_panels()
 
-	for slot in player.equipment.items:
-		var item: Item = player.equipment.items[slot]
+	for slot in equipment_synchronizer.items:
+		var item: Item = equipment_synchronizer.items[slot]
 		if item:
 			var panel = get_panel_at_slot(item.equipment_slot)
 			if panel:
