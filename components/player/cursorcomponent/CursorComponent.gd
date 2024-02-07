@@ -23,11 +23,16 @@ var target_node: Node
 func _ready():
 	target_node = get_parent()
 
+	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+
 	if target_node.get("peer_id") == null:
 		GodotLogger.error("target_node does not have the peer_id variable")
 		return
 
-	if G.is_server() or not G.is_own_player(target_node):
+	if (
+		target_node.multiplayer_connection.is_server()
+		or not target_node.multiplayer_connection.is_own_player(target_node)
+	):
 		queue_free()
 
 	set_cursor(CursorGraphics.DEFAULT)
