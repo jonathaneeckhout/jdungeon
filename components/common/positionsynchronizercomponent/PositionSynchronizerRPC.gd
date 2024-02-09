@@ -30,12 +30,6 @@ func sync_position(peer_id: int, player_name: String, timestamp: float, pos: Vec
 	_network_message_handler.send_message(
 		peer_id, message_identifier, [player_name, timestamp, pos]
 	)
-	# pass
-	# # _multiplayer_connection.network_stats.log_func_call("sync_position", player_name)
-
-	# # var data: PackedByteArray = var_to_bytes([player_name, timestamp, pos])
-
-	# # _sync_position.rpc_id(peer_id, data)
 
 
 func handle_message(peer_id: int, message: Array):

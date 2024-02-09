@@ -52,6 +52,9 @@ func _start_gateway():
 
 	GodotLogger.info("Running as Gateway")
 
+	GodotLogger.info("Setting the game's physics ticks per second to %d" % config.gateway_fps)
+	Engine.set_physics_ticks_per_second(config.gateway_fps)
+
 	if config.minimize_on_start:
 		get_tree().root.mode = Window.MODE_MINIMIZED
 
@@ -124,6 +127,9 @@ func _start_server():
 
 	GodotLogger.info("Running as server")
 
+	GodotLogger.info("Setting the game's physics ticks per second to %d" % config.server_fps)
+	Engine.set_physics_ticks_per_second(config.server_fps)
+
 	if config.minimize_on_start:
 		get_tree().root.mode = Window.MODE_MINIMIZED
 
@@ -160,6 +166,9 @@ func _start_client():
 	_set_game_icon(GAME_ICONS.pick_random())
 
 	GodotLogger.info("Running as client")
+
+	GodotLogger.info("Setting the game's physics ticks per second to %d" % config.client_fps)
+	Engine.set_physics_ticks_per_second(config.client_fps)
 
 	%GatewayServer.queue_free()
 

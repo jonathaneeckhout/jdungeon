@@ -10,12 +10,6 @@ signal client_disconnected(username: String)
 ## Signal to indicate that the initialization is done. Used for the child components
 signal init_done
 
-## The physics ticks rate for the client
-@export var client_physics_ticks_per_second: int = 30
-
-## The physics ticks rate for the server
-@export var server_physics_ticks_per_second: int = 10
-
 @export var database: Database = null
 
 ## The modes a connection can be in
@@ -52,16 +46,13 @@ func _process(_delta):
 		multiplayer_api.poll()
 
 
-func _init_common(fps: int) -> bool:
+func _init_common() -> bool:
 	multiplayer_api = MultiplayerAPI.create_default_interface()
 
 	get_tree().set_multiplayer(multiplayer_api, get_path())
 
 	# Set the current multiplayer's api path to this path to optimize multiplayer packets
 	multiplayer_api.object_configuration_add(null, get_path())
-
-	GodotLogger.info("Setting the game's physics ticks per second to %d" % fps)
-	Engine.set_physics_ticks_per_second(fps)
 
 	return true
 
@@ -75,7 +66,7 @@ func _client_init() -> bool:
 
 	GodotLogger.info("Running game as client instance")
 
-	if not _init_common(client_physics_ticks_per_second):
+	if not _init_common():
 		GodotLogger.error("Failed to init common connection part")
 		return false
 
@@ -119,7 +110,7 @@ func _server_init() -> bool:
 
 	GodotLogger.info("Running game as server instance")
 
-	if not _init_common(server_physics_ticks_per_second):
+	if not _init_common():
 		GodotLogger.error("Failed to init common connection part")
 		return false
 

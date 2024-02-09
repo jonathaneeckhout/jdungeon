@@ -50,8 +50,11 @@ database = NodePath("../../Database")
 
 [node name="NetworkMessageHandler" parent="Connections/ServerClient" instance=ExtResource("6_08ulk")]
 
-[node name="PSR" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("6_1dj18")]
+[node name="PositionSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("6_1dj18")]
 message_identifier = 1
+
+[node name="PlayerSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("10_ghnhu")]
+message_identifier = 2
 
 [node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
 
@@ -62,8 +65,6 @@ message_identifier = 1
 [node name="ASR" parent="Connections/ServerClient" instance=ExtResource("8_3q1k4")]
 
 [node name="NWSR" parent="Connections/ServerClient" instance=ExtResource("9_3pk1n")]
-
-[node name="PLSR" parent="Connections/ServerClient" instance=ExtResource("10_ghnhu")]
 
 [node name="ISR" parent="Connections/ServerClient" instance=ExtResource("13_dprpu")]
 
