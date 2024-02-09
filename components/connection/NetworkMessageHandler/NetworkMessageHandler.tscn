@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwhs7uqiwaesi"]
+
+[ext_resource type="Script" path="res://components/connection/NetworkMessageHandler/NetworkMessageHandler.gd" id="1_h7o6y"]
+
+[node name="NetworkMessageHandler" type="Node"]
+script = ExtResource("1_h7o6y")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=24 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dcur4xolp0oia" path="res://components/connection/ServerFSM/ServerFSM.tscn" id="5_uiu1q"]
 [ext_resource type="PackedScene" uid="uid://s8h0g10nfeim" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerRPC.tscn" id="6_1dj18"]
 [ext_resource type="PackedScene" uid="uid://cepejjmy1uay8" path="res://components/connection/ClientFSM/ClientFSMServerRPC.tscn" id="6_5ffrs"]
+[ext_resource type="PackedScene" uid="uid://bwhs7uqiwaesi" path="res://components/connection/NetworkMessageHandler/NetworkMessageHandler.tscn" id="6_08ulk"]
 [ext_resource type="PackedScene" uid="uid://b6qnexfdo1eg" path="res://components/common/statssynchronizercomponent/StatsSynchronizerRPC.tscn" id="7_6biju"]
 [ext_resource type="PackedScene" uid="uid://bn4fr6idoaxuw" path="res://components/common/actionsynchronizercomponent/ActionSynchronizerRPC.tscn" id="8_3q1k4"]
 [ext_resource type="PackedScene" uid="uid://dderndos7tfdu" path="res://components/player/networkviewsynchronizercomponent/NetworkViewSynchronizerRPC.tscn" id="9_3pk1n"]
@@ -47,11 +48,14 @@ server_fsm_rpc = NodePath("../../GatewayServer/SFR")
 unique_name_in_owner = true
 database = NodePath("../../Database")
 
+[node name="NetworkMessageHandler" parent="Connections/ServerClient" instance=ExtResource("6_08ulk")]
+
+[node name="PSR" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("6_1dj18")]
+message_identifier = 1
+
 [node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
 
 [node name="CS" parent="Connections/ServerClient" instance=ExtResource("5_emdm5")]
-
-[node name="PSR" parent="Connections/ServerClient" instance=ExtResource("6_1dj18")]
 
 [node name="SSR" parent="Connections/ServerClient" instance=ExtResource("7_6biju")]
 

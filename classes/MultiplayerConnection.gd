@@ -26,6 +26,8 @@ var multiplayer_api: MultiplayerAPI = null
 ## A list of the components attached to this component
 var component_list: ComponentList = ComponentList.new()
 
+var network_stats: NetworkStats = NetworkStats.new()
+
 ## The client's player character
 var client_player: Player = null
 
