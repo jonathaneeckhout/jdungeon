@@ -55,9 +55,7 @@ func request_attack(timestamp: float, direction: Vector2, enemies: Array):
 func handle_message(peer_id: int, message: Array):
 	match message[0]:
 		TYPE.POS:
-			if peer_id != 1:
-				return
-			_sync_pos(message[1], message[2])
+			_sync_pos(peer_id, message[1], message[2])
 		TYPE.INPUT:
 			_sync_input(peer_id, message[1], message[2], message[3])
 		TYPE.INTERACT:
@@ -66,7 +64,10 @@ func handle_message(peer_id: int, message: Array):
 			_request_attack(peer_id, message[1], message[2], message[3])
 
 
-func _sync_pos(c: int, p: Vector2):
+func _sync_pos(id: int, c: int, p: Vector2):
+	if id != 1:
+		return
+
 	if _multiplayer_connection.client_player == null:
 		return
 

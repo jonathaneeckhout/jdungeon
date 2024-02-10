@@ -56,9 +56,10 @@ message_identifier = 1
 [node name="PlayerSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("10_ghnhu")]
 message_identifier = 2
 
-[node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
+[node name="ClockSynchronizer" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("5_emdm5")]
+message_identifier = 3
 
-[node name="CS" parent="Connections/ServerClient" instance=ExtResource("5_emdm5")]
+[node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
 
 [node name="SSR" parent="Connections/ServerClient" instance=ExtResource("7_6biju")]
 

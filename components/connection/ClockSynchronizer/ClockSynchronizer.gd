@@ -8,6 +8,10 @@ const LATENCY_BUFFER_SIZE = 9
 const LATENCY_BUFFER_MID_POINT = int(LATENCY_BUFFER_SIZE / float(2))
 const LATENCY_MINIMUM_THRESHOLD = 20
 
+enum TYPE { FETCH_SERVER_TIME, RETURN_SERVER_TIME, GET_LATENCY, RETURN_LATENCY }
+
+@export var message_identifier: int = 0
+
 ## Time of the delay between clock sync calls on the client side
 @export var client_clock_sync_time: float = 0.5
 
@@ -15,6 +19,8 @@ const LATENCY_MINIMUM_THRESHOLD = 20
 var client_clock: float = 0.0
 
 var latency: float = 0.0
+
+var _network_message_handler: NetworkMessageHandler = null
 
 var _multiplayer_connection: MultiplayerConnection = null
 
@@ -27,7 +33,10 @@ var _client_clock_sync_timer: Timer = null
 
 
 func _ready():
-	_multiplayer_connection = get_parent()
+	_network_message_handler = get_parent()
+
+	# Get the MultiplayerConnection parent node.
+	_multiplayer_connection = get_parent().get_parent()
 
 	# Register yourself with your parent
 	_multiplayer_connection.component_list.register_component(COMPONENT_NAME, self)
@@ -56,10 +65,26 @@ func _physics_process(delta):
 	_delta_latency = 0
 
 
+func handle_message(peer_id: int, message: Array):
+	match message[0]:
+		TYPE.FETCH_SERVER_TIME:
+			_fetch_server_time(peer_id, message[1])
+		TYPE.RETURN_SERVER_TIME:
+			_return_server_time(peer_id, message[1], message[2])
+		TYPE.GET_LATENCY:
+			_get_latency(peer_id, message[1])
+		TYPE.RETURN_LATENCY:
+			_return_latency(peer_id, message[1])
+
+
 func _start_sync_clock():
 	GodotLogger.info("Starting sync clock")
 
-	fetch_server_time.rpc_id(1, Time.get_unix_time_from_system())
+	# fetch_server_time.rpc_id(1, Time.get_unix_time_from_system())
+
+	_network_message_handler.send_message(
+		1, message_identifier, [TYPE.FETCH_SERVER_TIME, Time.get_unix_time_from_system()]
+	)
 
 	_client_clock_sync_timer.start()
 
@@ -72,8 +97,15 @@ func _stop_sync_clock():
 
 func _on_client_clock_sync_timer_timeout():
 	# If the connection is still up, call the get latency rpc
-	if _multiplayer_connection.multiplayer_api.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
-		get_latency.rpc_id(1, Time.get_unix_time_from_system())
+	if (
+		_multiplayer_connection.multiplayer_api.multiplayer_peer.get_connection_status()
+		== MultiplayerPeer.CONNECTION_CONNECTED
+	):
+		# get_latency.rpc_id(1, Time.get_unix_time_from_system())
+
+		_network_message_handler.send_message(
+			1, message_identifier, [TYPE.GET_LATENCY, Time.get_unix_time_from_system()]
+		)
 
 
 func _on_client_connected(connected: bool):
@@ -83,32 +115,42 @@ func _on_client_connected(connected: bool):
 		_stop_sync_clock()
 
 
-@rpc("call_remote", "any_peer", "reliable")
-func fetch_server_time(client_time: float):
+func _fetch_server_time(id: int, client_time: float):
 	if not _multiplayer_connection.is_server():
 		return
 
-	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
-	return_server_time.rpc_id(id, Time.get_unix_time_from_system(), client_time)
+	# return_server_time.rpc_id(id, Time.get_unix_time_from_system(), client_time)
+
+	_network_message_handler.send_message(
+		id,
+		message_identifier,
+		[TYPE.RETURN_SERVER_TIME, Time.get_unix_time_from_system(), client_time]
+	)
 
 
-@rpc("call_remote", "authority", "reliable")
-func return_server_time(server_time: float, client_time: float):
+func _return_server_time(id: int, server_time: float, client_time: float):
+	if id != 1:
+		return
+
 	latency = (Time.get_unix_time_from_system() - client_time) / 2
 	client_clock = server_time + latency
 
 
-@rpc("call_remote", "any_peer", "reliable")
-func get_latency(client_time: float):
+func _get_latency(id: int, client_time: float):
 	if not _multiplayer_connection.is_server():
 		return
 
-	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
-	return_latency.rpc_id(id, client_time)
+	# return_latency.rpc_id(id, client_time)
+
+	_network_message_handler.send_message(
+		id, message_identifier, [TYPE.RETURN_LATENCY, client_time]
+	)
 
 
-@rpc("call_remote", "authority", "reliable")
-func return_latency(client_time: float):
+func _return_latency(id: int, client_time: float):
+	if id != 1:
+		return
+
 	_latency_buffer.append((Time.get_unix_time_from_system() - client_time) / 2)
 	if _latency_buffer.size() == LATENCY_BUFFER_SIZE:
 		var total_latency = 0
