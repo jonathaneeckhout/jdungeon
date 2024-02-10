@@ -6,14 +6,22 @@ class_name ShopSynchronizerRPC
 # The component name for registration in the multiplayer connection's component list.
 const COMPONENT_NAME = "ShopSynchronizerRPC"
 
+enum TYPE { SYNC_SHOP, BUY_ITEM }
+
+@export var message_identifier: int = 0
+
+var _network_message_handler: NetworkMessageHandler = null
+
 # Reference to the MultiplayerConnection parent node.
 var _multiplayer_connection: MultiplayerConnection = null
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	_network_message_handler = get_parent()
+
 	# Get the MultiplayerConnection parent node.
-	_multiplayer_connection = get_parent()
+	_multiplayer_connection = get_parent().get_parent()
 
 	# Register the component with the parent MultiplayerConnection.
 	_multiplayer_connection.component_list.register_component(COMPONENT_NAME, self)
@@ -23,15 +31,33 @@ func _ready():
 
 
 func sync_shop(peer_id: int, entity_name: String, shop: Dictionary):
-	_sync_shop.rpc_id(peer_id, entity_name, shop)
+	# _sync_shop.rpc_id(peer_id, entity_name, shop)
+
+	_network_message_handler.send_message(
+		peer_id, message_identifier, [TYPE.SYNC_SHOP, entity_name, shop]
+	)
 
 
 func buy_item(entity_name: String, item_uuid: String):
-	_buy_item.rpc_id(1, entity_name, item_uuid)
+	# _buy_item.rpc_id(1, entity_name, item_uuid)
+
+	_network_message_handler.send_message(
+		1, message_identifier, [TYPE.BUY_ITEM, entity_name, item_uuid]
+	)
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_shop(n: String, s: Dictionary):
+func handle_message(peer_id: int, message: Array):
+	match message[0]:
+		TYPE.SYNC_SHOP:
+			_sync_shop(peer_id, message[1], message[2])
+		TYPE.BUY_ITEM:
+			_buy_item(peer_id, message[1], message[2])
+
+
+func _sync_shop(id: int, n: String, s: Dictionary):
+	if id != 1:
+		return
+
 	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
 
 	if entity == null:
@@ -44,11 +70,8 @@ func _sync_shop(n: String, s: Dictionary):
 		entity.component_list[ShopSynchronizerComponent.COMPONENT_NAME].from_json(s)
 
 
-@rpc("call_remote", "any_peer", "reliable")
-func _buy_item(n: String, u: String):
+func _buy_item(id: int, n: String, u: String):
 	assert(_multiplayer_connection.is_server(), "This call can only run on the server")
-
-	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
 	var user: MultiplayerConnection.User = _multiplayer_connection.get_user_by_id(id)
 	if user == null:
