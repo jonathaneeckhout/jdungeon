@@ -60,6 +60,7 @@ message_identifier = 2
 message_identifier = 3
 
 [node name="ShopSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("15_et847")]
+message_identifier = 4
 
 [node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
 

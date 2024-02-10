@@ -12,13 +12,17 @@ var _message_mapper: Dictionary = {}
 var _input_message_queue: Dictionary = {}
 var _output_message_queue: Dictionary = {}
 
+var bytes_per_second_out = 0
+var bytes_per_second_in = 0
 
-var bytes_per_second = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Get the MultiplayerConnection parent node.
 	multiplayer_connection = get_parent()
+
+	# Register the component with the parent MultiplayerConnection.
+	multiplayer_connection.component_list.register_component(COMPONENT_NAME, self)
 
 	# Wait until the multiplayer connection is initialized.
 	await multiplayer_connection.init_done
@@ -80,7 +84,7 @@ func _handle_peer_output_messages(peer_id: int, messages: Array):
 		output_data.put_u16(message_data.size())
 		output_data.put_data(message_data)
 
-	bytes_per_second = output_data.get_size() / 0.1
+	bytes_per_second_out = output_data.get_size() / 0.05
 
 	_send_message.rpc_id(peer_id, output_data.data_array)
 
@@ -116,6 +120,8 @@ func send_message(peer_id: int, identifier: int, message: Array):
 
 @rpc("call_remote", "any_peer", "reliable")
 func _send_message(message: PackedByteArray):
+	bytes_per_second_in = message.size() / 0.05
+
 	var peer_id = multiplayer_connection.multiplayer_api.get_remote_sender_id()
 	if _input_message_queue.has(peer_id):
 		_input_message_queue[peer_id].append(message)
