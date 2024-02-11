@@ -26,7 +26,10 @@ signal visibility_update_required
 @export_category("Appereance")
 ## Will cause the tooltip to automatically choose a direction, ignores the popup_dir property while active.
 @export var auto_choose_direction: bool = true
-
+@export var theme: Theme:
+	set(val):
+		theme = val
+		panel.theme = theme
 @export var popup_dir: PopupDirections = PopupDirections.UP
 
 @export_multiline var text: String = "Placeholder":
@@ -98,7 +101,10 @@ func _ready() -> void:
 
 	pinned = pinned
 	connect_target_signals(get_target())
-
+	
+	if get_target().get("theme"):
+		theme = get_target().theme
+	
 	visibility_update_required.emit()
 
 
