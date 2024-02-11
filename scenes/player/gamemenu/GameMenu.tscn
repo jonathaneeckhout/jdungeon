@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dssmk0m8xsvxf"]
+[gd_scene load_steps=4 format=3 uid="uid://dssmk0m8xsvxf"]
 
 [ext_resource type="Theme" uid="uid://dreboohjjcn2f" path="res://assets/themes/LoginPanelTheme.tres" id="1_yn42h"]
 [ext_resource type="Script" path="res://scenes/player/gamemenu/GameMenu.gd" id="2_dg6jl"]
+[ext_resource type="Script" path="res://classes/Tooltip.gd" id="3_l1agu"]
 
 [node name="GameMenu" type="PanelContainer"]
 anchors_preset = 15
@@ -51,6 +52,12 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "I'm Stuck Help!
 "
+
+[node name="Tooltip" type="Node2D" parent="MarginContainer/VBoxContainer/UnstuckButtonMarginContainer/UnstuckButton"]
+script = ExtResource("3_l1agu")
+pin_action = ""
+text = "Kills you instantly!
+This allows you to respawn at a proper, non-stuck location."
 
 [node name="QuitButtonMarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
