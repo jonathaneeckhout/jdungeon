@@ -15,15 +15,21 @@ const INVISIBLE_RECT: Rect2 = Rect2()
 signal visibility_update_required
 
 @export_category("Settings")
-@export var allow_sub_tooltips: bool = true
-@export var pin_action: String = "ui_accept"
+# TODO: when we update to 4.3.1, i'll add proper sub-tooltip support. The current approach works like ass. So in the meantime this will remain off by default
+@export var allow_sub_tooltips: bool = false
+@export var pin_action: String = "j_pin_tooltip":
+	set(val):
+		pin_action = val
+		#Disable input if the pin_action is ""
+		set_process_input(not pin_action == "")
 
 @export_category("Appereance")
+## Will cause the tooltip to automatically choose a direction, ignores the popup_dir property while active.
 @export var auto_choose_direction: bool = true
 
 @export var popup_dir: PopupDirections = PopupDirections.UP
 
-@export var text: String = "Placeholder":
+@export_multiline var text: String = "Placeholder":
 	set(value):
 		if label:
 			text = value
@@ -46,7 +52,6 @@ var pinned: bool = false:
 		pinned = val
 		visibility_update_required.emit()
 
-#var keyword_rect_dict: Dictionary
 var panel := Panel.new()
 var label := RichTextLabel.new()
 
@@ -89,7 +94,7 @@ func _ready() -> void:
 		update_input_processing()
 		return
 
-	sub_tooltip = add_to_control(label, true)
+	sub_tooltip = Tooltip.add_to_control(label, true)
 
 	pinned = pinned
 	connect_target_signals(get_target())
@@ -113,6 +118,34 @@ func connect_target_signals(target: Control):
 
 func get_target() -> Control:
 	return get_parent() if get_parent() is Control else null
+
+
+func get_distance_to_border(direction: PopupDirections) -> float:
+	var viewport_rect: Rect2 = get_viewport_rect()
+	match direction:
+		PopupDirections.UP:
+			return global_position.distance_to(
+				Vector2(
+					viewport_rect.position.x + viewport_rect.size.x / 2, viewport_rect.position.y
+				)
+			)
+		PopupDirections.DOWN:
+			return global_position.distance_to(
+				Vector2(viewport_rect.position.x + viewport_rect.size.x / 2, viewport_rect.end.y)
+			)
+		PopupDirections.LEFT:
+			return global_position.distance_to(
+				Vector2(
+					viewport_rect.position.x, viewport_rect.position.y + viewport_rect.size.y / 2
+				)
+			)
+		PopupDirections.RIGHT:
+			return global_position.distance_to(
+				Vector2(viewport_rect.end.x, viewport_rect.position.y + viewport_rect.size.y / 2)
+			)
+		_:
+			push_error("Invalid direction.")
+			return 0
 
 
 func get_auto_direction() -> PopupDirections:
@@ -140,6 +173,8 @@ func get_auto_direction() -> PopupDirections:
 	var closest_dir_to_border: PopupDirections
 	var smallest_value: float = INF
 
+	print(direction_dist_dict)
+
 	for direction: PopupDirections in direction_dist_dict:
 		var value: float = direction_dist_dict[direction]
 		if value < smallest_value:
@@ -160,32 +195,52 @@ func get_auto_direction() -> PopupDirections:
 			return popup_dir
 
 
-func adjust_position(direction: PopupDirections):
-	var target_size: Vector2 = get_target().size
+func adjust_expansion(direction: PopupDirections):
+	var target_rect: Rect2 = get_target().get_rect()
 
 	match direction:
 		PopupDirections.UP:
-			position = Vector2(target_size.x / 2, 0)
-			panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+			position.y = 0
 			panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
 
 		PopupDirections.DOWN:
-			position = Vector2(target_size.x / 2, target_size.y)
-			panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+			position.y = target_rect.size.y
 			panel.grow_vertical = Control.GROW_DIRECTION_END
 
 		PopupDirections.LEFT:
-			position = Vector2(0, target_size.y / 2)
+			position.x = 0
 			panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-			panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 
 		PopupDirections.RIGHT:
-			position = Vector2(target_size.x, target_size.y / 2)
+			position.x = target_rect.size.x
 			panel.grow_horizontal = Control.GROW_DIRECTION_END
-			panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 
 		_:
 			push_error("Invalid direction." + str(direction))
+			return
+
+	#Adjust the remaining direction of growth.
+	if direction == PopupDirections.UP or direction == PopupDirections.DOWN:
+		#If close to the left border, extend to the right.
+		if (
+			get_distance_to_border(PopupDirections.LEFT)
+			< get_distance_to_border(PopupDirections.RIGHT)
+		):
+			panel.grow_horizontal = Control.GROW_DIRECTION_END
+		#If close to the right border...
+		else:
+			panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+
+	elif direction == PopupDirections.LEFT or direction == PopupDirections.RIGHT:
+		#If close to the upper border, extend down.
+		if (
+			get_distance_to_border(PopupDirections.UP)
+			< get_distance_to_border(PopupDirections.DOWN)
+		):
+			panel.grow_vertical = Control.GROW_DIRECTION_END
+		#If close to the down border...
+		else:
+			panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
 
 
 func update_size():
@@ -200,12 +255,10 @@ func update_input_processing():
 		label.mouse_filter = Control.MOUSE_FILTER_PASS
 	else:
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		pass
 
 
 func update_rich_text():
 	var enriched_text: String
-	#var word_ranges: Array[Vector2i]
 
 	var words: PackedStringArray = text.split(" ")
 	var resulting_words: PackedStringArray = words.duplicate()
@@ -229,25 +282,6 @@ func update_rich_text():
 	label.parse_bbcode(enriched_text)
 
 
-#func update_keyword_rects():
-#var to_fill: Array[Rect2]
-#
-#for keyword: String in sub_tooltips_to_display.keys():
-#var last_find_index: int = 0
-#while last_find_index != -1:
-#last_find_index = label.text.find(keyword, last_find_index + 1)
-#
-#if last_find_index == -1:
-#continue
-#
-#var text_rect: Rect2 = calculate_word_position(label, last_find_index, last_find_index + keyword.length())
-#
-#to_fill.append(text_rect)
-#
-#keyword_rect_dict[keyword] = to_fill
-#print(keyword_rect_dict)
-
-
 func on_target_gui_input(event: InputEvent):
 	if event.is_action_pressed(pin_action):
 		pinned = !pinned
@@ -263,19 +297,21 @@ func on_visibility_update_required():
 
 	if pinned:
 		show()
+		return
+
 	elif target_hovered:
 		show()
+
 	elif not target_hovered:
 		hide()
 
 	if auto_choose_direction:
 		popup_dir = get_auto_direction()
 
-	adjust_position(popup_dir)
+	adjust_expansion(popup_dir)
 	update_size()
 	update_input_processing()
 	update_rich_text()
-	#update_keyword_rects()
 
 	queue_redraw()
 	label.queue_redraw()
@@ -291,10 +327,10 @@ func on_label_meta_hover_change(meta, hovered: bool):
 		sub_tooltip.hide()
 
 
-static func add_to_control(target: Control, sub: bool = false) -> Tooltip:
+static func add_to_control(target: Control, is_sub: bool = false) -> Tooltip:
 	var new_tooltip := Tooltip.new()
-	new_tooltip.sub = sub
-	if sub:
+	new_tooltip.sub = is_sub
+	if is_sub:
 		target.add_child(new_tooltip, false, Node.INTERNAL_MODE_FRONT)
 	else:
 		target.add_child(new_tooltip)

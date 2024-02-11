@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://d261xncd2la2h"]
+[gd_scene load_steps=11 format=3 uid="uid://d261xncd2la2h"]
 
 [ext_resource type="Script" path="res://scenes/player/shortcutmenu/ShortcutMenu.gd" id="1_faslu"]
 [ext_resource type="Texture2D" uid="uid://dqw4dsidoi5wf" path="res://assets/images/icons/789_Lorc_RPG_icons/scaled/Icon.5_85.png" id="1_ryg2n"]
 [ext_resource type="Texture2D" uid="uid://cwgm6exidxs08" path="res://assets/images/icons/789_Lorc_RPG_icons/scaled/Icon.3_83.png" id="2_481p7"]
+[ext_resource type="Script" path="res://classes/Tooltip.gd" id="3_01qcm"]
 [ext_resource type="Texture2D" uid="uid://ceoisjqj6obhb" path="res://assets/images/icons/789_Lorc_RPG_icons/scaled/Icon.6_94.png" id="3_upl7j"]
 [ext_resource type="Texture2D" uid="uid://5xbd6go3j1y6" path="res://assets/images/icons/789_Lorc_RPG_icons/scaled/Icon.6_37.png" id="4_pds2v"]
 
@@ -26,11 +27,23 @@ layout_mode = 2
 texture_normal = ExtResource("1_ryg2n")
 texture_pressed = SubResource("CanvasTexture_djxay")
 
+[node name="Tooltip" type="Node2D" parent="HBoxContainer/GameMenuButton"]
+script = ExtResource("3_01qcm")
+auto_choose_direction = false
+popup_dir = 1
+text = "Main menu."
+
 [node name="StatsButton" type="TextureButton" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("2_481p7")
 texture_pressed = SubResource("CanvasTexture_05pst")
+
+[node name="Tooltip" type="Node2D" parent="HBoxContainer/StatsButton"]
+script = ExtResource("3_01qcm")
+auto_choose_direction = false
+popup_dir = 1
+text = "Stats menu."
 
 [node name="EquipmentButton" type="TextureButton" parent="HBoxContainer"]
 unique_name_in_owner = true
@@ -38,8 +51,20 @@ layout_mode = 2
 texture_normal = ExtResource("3_upl7j")
 texture_pressed = SubResource("CanvasTexture_3vu0y")
 
+[node name="Tooltip" type="Node2D" parent="HBoxContainer/EquipmentButton"]
+script = ExtResource("3_01qcm")
+auto_choose_direction = false
+popup_dir = 1
+text = "Equipment menu."
+
 [node name="BagButton" type="TextureButton" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("4_pds2v")
 texture_pressed = SubResource("CanvasTexture_x2us5")
+
+[node name="Tooltip" type="Node2D" parent="HBoxContainer/BagButton"]
+script = ExtResource("3_01qcm")
+auto_choose_direction = false
+popup_dir = 1
+text = "Inventory."

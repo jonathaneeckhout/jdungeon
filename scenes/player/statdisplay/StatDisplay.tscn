@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dirsk8pf0bxh5"]
+[gd_scene load_steps=3 format=3 uid="uid://dirsk8pf0bxh5"]
 
 [ext_resource type="Script" path="res://scenes/player/statdisplay/StatDisplay.gd" id="1_j3bvc"]
+[ext_resource type="Script" path="res://classes/Tooltip.gd" id="2_t5sva"]
 
 [node name="StatDisplay" type="Panel"]
 anchors_preset = -1
@@ -36,6 +37,10 @@ text = "Hit Points:"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Tooltip" type="Node2D" parent="ScrollContainer/StatList/HPSplitContainer"]
+script = ExtResource("2_t5sva")
+text = "If this reaches 0, you die."
+
 [node name="HPMaxSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
 layout_mode = 2
 dragger_visibility = 1
@@ -61,6 +66,10 @@ text = "Energy:"
 [node name="Value" type="Label" parent="ScrollContainer/StatList/EnergySplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Tooltip" type="Node2D" parent="ScrollContainer/StatList/EnergySplitContainer"]
+script = ExtResource("2_t5sva")
+text = "This is used to activate your skills. It recovers over time."
 
 [node name="EnergyMaxSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
 layout_mode = 2
@@ -127,6 +136,10 @@ text = "Needed experience:"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Tooltip" type="Node2D" parent="ScrollContainer/StatList/ExperienceNeededSplitContainer"]
+script = ExtResource("2_t5sva")
+text = "Experience required for reaching the next level."
+
 [node name="AttackPowerMinSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
 layout_mode = 2
 dragger_visibility = 1
@@ -139,6 +152,10 @@ text = "Minimum Attack Power:"
 [node name="Value" type="Label" parent="ScrollContainer/StatList/AttackPowerMinSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Tooltip" type="Node2D" parent="ScrollContainer/StatList/AttackPowerMinSplitContainer"]
+script = ExtResource("2_t5sva")
+text = "The minimum base damage your attacks have."
 
 [node name="AttackPowerMaxSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
 layout_mode = 2
@@ -153,6 +170,10 @@ text = "Maximum Attack Power:"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Tooltip" type="Node2D" parent="ScrollContainer/StatList/AttackPowerMaxSplitContainer"]
+script = ExtResource("2_t5sva")
+text = "The maximum base damage your attacks can have."
+
 [node name="DefenseSplitContainer" type="SplitContainer" parent="ScrollContainer/StatList"]
 layout_mode = 2
 dragger_visibility = 1
@@ -165,3 +186,9 @@ text = "Defense:"
 [node name="Value" type="Label" parent="ScrollContainer/StatList/DefenseSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Tooltip" type="Node2D" parent="ScrollContainer/StatList/DefenseSplitContainer"]
+script = ExtResource("2_t5sva")
+auto_choose_direction = false
+popup_dir = 2
+text = "Reduces incoming damage by this amount."
