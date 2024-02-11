@@ -13,6 +13,7 @@ var _my_plot_out: Graph2D.PlotItem = null
 
 var _in_buffer: Array = []
 var _out_buffer: Array = []
+var _plot_timer: Timer = null
 
 
 # Called when the node enters the scene tree for the first time.
@@ -35,10 +36,15 @@ func _ready():
 
 	assert(_clock_synchronizer != null, "Failed to get ClockSynchronizer component")
 
+	_plot_timer = Timer.new()
+	_plot_timer.name = "PlotTimer"
+	_plot_timer.autostart = true
+	_plot_timer.wait_time = 1.0
+	_plot_timer.timeout.connect(_on_plot_timer_timeout)
+	add_child(_plot_timer)
+
 	_my_plot_in = $Graph2D.add_plot_item("Kbps in", Color.GREEN, 1.0)
 	_my_plot_out = $Graph2D.add_plot_item("Kpbs out", Color.RED, 1.0)
-
-	set_physics_process(visible)
 
 
 func _input(event):
@@ -48,16 +54,11 @@ func _input(event):
 	if event.is_action_pressed("j_toggle_debug_menu"):
 		if visible:
 			hide()
-			set_physics_process(false)
 		else:
 			show()
-			set_physics_process(true)
 
 
 func _physics_process(_delta):
-	if not visible:
-		return
-
 	var time_offset: float = _clock_synchronizer.client_clock - buffer_window
 
 	while _in_buffer.size() > 0 and _in_buffer[0][1] < time_offset:
@@ -72,6 +73,11 @@ func _physics_process(_delta):
 	_out_buffer.append(
 		[_network_message_handler.bytes_per_second_out / 1000, _clock_synchronizer.client_clock]
 	)
+
+
+func _on_plot_timer_timeout():
+	if not visible:
+		return
 
 	_my_plot_in.clear()
 	_my_plot_out.clear()
