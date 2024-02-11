@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://beiq65may6bdw"]
+[gd_scene load_steps=13 format=3 uid="uid://beiq65may6bdw"]
 
 [ext_resource type="Script" path="res://todo/maps/world/World.gd" id="1_fsi10"]
 [ext_resource type="PackedScene" uid="uid://d4b7x1k03s5hr" path="res://todo/enemies/TreeTrunkGuy/TreeTrunkGuy.tscn" id="5_2l8ik"]
@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://cj48j2lhcde1a" path="res://scenes/terrain/portal/Portal.tscn" id="11_nqcmx"]
 [ext_resource type="PackedScene" uid="uid://2j64d7cd4644" path="res://scenes/terrain/areas/basecamp/BaseCamp.tscn" id="11_nyeba"]
 [ext_resource type="PackedScene" uid="uid://bija15ujapx3h" path="res://scenes/terrain/areas/wakingforest/WakingForest.tscn" id="12_e6xjj"]
-[ext_resource type="Script" path="res://scripts/classes/MapArea2D.gd" id="13_4sccl"]
 [ext_resource type="PackedScene" uid="uid://cpw0d00b7prm0" path="res://scenes/terrain/areas/harbor/harbor.tscn" id="13_xrvt2"]
 [ext_resource type="PackedScene" uid="uid://cflqdnl6156j8" path="res://scenes/player/playersrepsawnlocation/PlayerRespawnLocation.tscn" id="14_qs20i"]
 
@@ -160,20 +159,6 @@ destination_portal = "CoastPortal"
 position = Vector2(-5472, 3312)
 destination_server = "World"
 destination_portal = "BaseCampPortal"
-
-[node name="MapAreas" type="Node2D" parent="."]
-
-[node name="BaseCampSafe" type="Area2D" parent="MapAreas"]
-modulate = Color(1, 1, 1, 0.231373)
-position = Vector2(-1, -1)
-collision_layer = 0
-collision_mask = 0
-script = ExtResource("13_4sccl")
-rules = 6
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="MapAreas/BaseCampSafe"]
-position = Vector2(-79, -179)
-polygon = PackedVector2Array(-740, -540, -800, 200, -220, 760, 180, 720, 680, 560, 900, 80, 880, -400, -20, -760)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 visible = false
