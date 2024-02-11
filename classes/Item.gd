@@ -102,13 +102,14 @@ func server_use(player: Player) -> bool:
 				player.stats.heal(self.name, boost.hp)
 
 				if amount <= 1:
-					player.inventory.remove_item(uuid)
+					player.inventory.server_remove_item(uuid)
 				else:
-					player.inventory.set_item_amount(uuid, amount - 1)
+					player.inventory.server_change_item_amount(uuid, amount - 1)
 				return true
 
 		ITEM_TYPE.EQUIPMENT:
 			if player.equipment and player.equipment.server_equip_item(self):
+				player.inventory.server_remove_item(uuid)
 				return true
 
 			else:

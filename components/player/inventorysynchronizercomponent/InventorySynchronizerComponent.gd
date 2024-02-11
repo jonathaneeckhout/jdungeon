@@ -188,7 +188,6 @@ func server_use_item(item_uuid: String):
 
 	var item: Item = get_item(item_uuid)
 	if item and item.server_use(_target_node):
-		server_remove_item(item_uuid)
 		return true
 
 	return false
