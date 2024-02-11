@@ -101,10 +101,10 @@ func _ready() -> void:
 
 	pinned = pinned
 	connect_target_signals(get_target())
-	
-	if get_target().get("theme"):
+
+	if get_target().get("theme") and theme == null:
 		theme = get_target().theme
-	
+
 	visibility_update_required.emit()
 
 
