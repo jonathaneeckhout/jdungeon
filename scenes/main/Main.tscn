@@ -62,13 +62,15 @@ message_identifier = 3
 [node name="ShopSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("15_et847")]
 message_identifier = 4
 
+[node name="StatsSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("7_6biju")]
+message_identifier = 5
+
+[node name="NetworkViewSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("9_3pk1n")]
+message_identifier = 6
+
 [node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
 
-[node name="SSR" parent="Connections/ServerClient" instance=ExtResource("7_6biju")]
-
 [node name="ASR" parent="Connections/ServerClient" instance=ExtResource("8_3q1k4")]
-
-[node name="NWSR" parent="Connections/ServerClient" instance=ExtResource("9_3pk1n")]
 
 [node name="ISR" parent="Connections/ServerClient" instance=ExtResource("13_dprpu")]
 
