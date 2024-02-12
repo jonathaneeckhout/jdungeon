@@ -113,15 +113,11 @@ func _connect_to_gateway() -> bool:
 	if !_client_gateway_client.websocket_client_start(config.client_gateway_client_address):
 		GodotLogger.warn("Could not connect to gateway=[%s]" % config.client_gateway_client_address)
 
-		JUI.alertbox("Error connecting to gateway", login_panel)
-
 		return false
 
 	# Wait until you receive the server_connected signal
 	if !await _client_gateway_client.client_connected:
 		GodotLogger.warn("Could not connect to gateway=[%s]" % config.client_gateway_client_address)
-
-		JUI.alertbox("Error connecting to gateway", login_panel)
 
 		return false
 
@@ -181,9 +177,13 @@ func _handle_login():
 	login_panel.show()
 	login_panel.show_login_container()
 
+	JUI.clear_dialog()
+
 	# Try to connect to the gateway server
 	if !await _connect_to_gateway():
 		GodotLogger.error("Client could not connect to gateway server")
+
+		JUI.alertbox("Error connecting to gateway", login_panel)
 
 		await get_tree().create_timer(RETRY_TIME).timeout
 
