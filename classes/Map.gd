@@ -9,12 +9,14 @@ class_name Map
 @export var npcs_to_sync: Node2D
 @export var player_respawn_locations: Node2D
 @export var portals_to_sync: Node2D
+@export var areas_to_sync: Node2D
 
 var players: Node2D
 var enemies: Node2D
 var npcs: Node2D
 var items: Node2D
 var enemy_respawns: Node2D
+var areas: Node2D
 
 
 # Called when the node enters the scene tree for the first time.
@@ -45,6 +47,10 @@ func _ready():
 	items.name = "Items"
 	items.y_sort_enabled = true
 	synced_entities.add_child(items)
+	
+	areas = Node2D.new()
+	areas.name = "Areas"
+	synced_entities.add_child(areas)
 
 	# Remove map from entities to make sure it takes part of the ysort mechanics
 	map_to_sync.get_parent().remove_child(map_to_sync)
@@ -62,6 +68,7 @@ func _ready():
 
 	_load_enemies()
 	_load_npcs()
+	#load_areas()
 
 
 func _load_enemies():
@@ -84,6 +91,17 @@ func _load_npcs():
 			npcs.add_child(npc)
 
 	npcs_to_sync.queue_free()
+
+
+func load_areas():
+	for area: MapArea2D in areas_to_sync.get_children():
+		area.get_parent().remove_child(area)
+		
+		if multiplayer_connection.is_server():
+			area.name = str(area.get_instance_id())
+			areas.add_child(area)
+		
+	areas_to_sync.queue_free()
 
 
 func get_entity_by_name(entity_name: String) -> Node:
