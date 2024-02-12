@@ -86,7 +86,8 @@ func _handle_peer_output_messages(peer_id: int, messages: Array):
 
 	bytes_per_second_out = output_data.get_size() / 0.05
 
-	_send_message.rpc_id(peer_id, output_data.data_array)
+	if peer_id in multiplayer_connection.multiplayer_api.get_peers():
+		_send_message.rpc_id(peer_id, output_data.data_array)
 
 
 func _map_childs():
