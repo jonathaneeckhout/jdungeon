@@ -4,14 +4,30 @@ class_name StatsSynchronizerRPC
 
 const COMPONENT_NAME = "StatsSynchronizerRPC"
 
+enum TYPE {
+	SYNC_STATS,
+	SYNC_RESPONSE,
+	SYNC_HURT,
+	SYNC_HEAL,
+	SYNC_ENERGY_RECOVERY,
+	SYNC_INT_CHANGE,
+	SYNC_FLOAT_CHANGE
+}
+
 # Reference to the MultiplayerConnection parent node.
 var _multiplayer_connection: MultiplayerConnection = null
+
+@export var message_identifier: int = 0
+
+var _network_message_handler: NetworkMessageHandler = null
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	_network_message_handler = get_parent()
+
 	# Get the MultiplayerConnection parent node.
-	_multiplayer_connection = get_parent()
+	_multiplayer_connection = get_parent().get_parent()
 
 	# Register the component with the parent MultiplayerConnection.
 	_multiplayer_connection.component_list.register_component(COMPONENT_NAME, self)
@@ -20,12 +36,36 @@ func _ready():
 	await _multiplayer_connection.init_done
 
 
+func handle_message(peer_id: int, message: Array):
+	match message[0]:
+		TYPE.SYNC_STATS:
+			_sync_stats(peer_id, message[1])
+		TYPE.SYNC_RESPONSE:
+			_sync_response(peer_id, message[1], message[2])
+		TYPE.SYNC_HURT:
+			_sync_hurt(peer_id, message[1], message[2], message[3], message[4], message[5])
+		TYPE.SYNC_HEAL:
+			_sync_heal(peer_id, message[1], message[2], message[3], message[4], message[5])
+		TYPE.SYNC_ENERGY_RECOVERY:
+			_sync_energy_recovery(peer_id, message[1], message[2], message[3], message[4], message[5])
+		TYPE.SYNC_INT_CHANGE:
+			_sync_int_change(peer_id, message[1], message[2], message[3], message[4])
+		TYPE.SYNC_FLOAT_CHANGE:
+			_sync_float_change(peer_id, message[1], message[2], message[3], message[4])
+
+
 func sync_stats(entity_name: String):
-	_sync_stats.rpc_id(1, entity_name)
+	_network_message_handler.send_message(1, message_identifier, [TYPE.SYNC_STATS, entity_name])
+
+	# _sync_stats.rpc_id(1, entity_name)
 
 
 func sync_response(peer_id: int, entity_name: String, data: Dictionary):
-	_sync_response.rpc_id(peer_id, entity_name, data)
+	_network_message_handler.send_message(
+		peer_id, message_identifier, [TYPE.SYNC_RESPONSE, entity_name, data]
+	)
+
+	# _sync_response.rpc_id(peer_id, entity_name, data)
 
 
 func sync_hurt(
@@ -36,7 +76,13 @@ func sync_hurt(
 	health: int,
 	damage: int
 ):
-	_sync_hurt.rpc_id(peer_id, entity_name, timestamp, attacker_name, health, damage)
+	_network_message_handler.send_message(
+		peer_id,
+		message_identifier,
+		[TYPE.SYNC_HURT, entity_name, timestamp, attacker_name, health, damage]
+	)
+
+	# _sync_hurt.rpc_id(peer_id, entity_name, timestamp, attacker_name, health, damage)
 
 
 func sync_heal(
@@ -47,13 +93,25 @@ func sync_heal(
 	health: int,
 	healing: int
 ):
-	_sync_heal.rpc_id(peer_id, entity_name, timestamp, healer_name, health, healing)
+	_network_message_handler.send_message(
+		peer_id,
+		message_identifier,
+		[TYPE.SYNC_HEAL, entity_name, timestamp, healer_name, health, healing]
+	)
+
+	# _sync_heal.rpc_id(peer_id, entity_name, timestamp, healer_name, health, healing)
 
 
 func sync_energy_recovery(
 	peer_id: int, entity_name: String, timestamp: float, from: String, energy: int, recovered: int
 ):
-	_sync_energy_recovery.rpc_id(peer_id, entity_name, timestamp, from, energy, recovered)
+	_network_message_handler.send_message(
+		peer_id,
+		message_identifier,
+		[TYPE.SYNC_ENERGY_RECOVERY, entity_name, timestamp, from, energy, recovered]
+	)
+
+	# _sync_energy_recovery.rpc_id(peer_id, entity_name, timestamp, from, energy, recovered)
 
 
 func sync_int_change(
@@ -63,7 +121,13 @@ func sync_int_change(
 	stat_type: StatsSynchronizerComponent.TYPE,
 	value: int
 ):
-	_sync_int_change.rpc_id(peer_id, entity_name, timestamp, stat_type, value)
+	_network_message_handler.send_message(
+		peer_id,
+		message_identifier,
+		[TYPE.SYNC_INT_CHANGE, entity_name, timestamp, stat_type, value]
+	)
+
+	# _sync_int_change.rpc_id(peer_id, entity_name, timestamp, stat_type, value)
 
 
 func sync_float_change(
@@ -73,15 +137,18 @@ func sync_float_change(
 	stat_type: StatsSynchronizerComponent.TYPE,
 	value: float
 ):
-	_sync_float_change.rpc_id(peer_id, entity_name, timestamp, stat_type, value)
+	_network_message_handler.send_message(
+		peer_id,
+		message_identifier,
+		[TYPE.SYNC_FLOAT_CHANGE, entity_name, timestamp, stat_type, value]
+	)
+
+	# _sync_float_change.rpc_id(peer_id, entity_name, timestamp, stat_type, value)
 
 
 #Called by client, runs on server
-@rpc("call_remote", "any_peer", "reliable")
-func _sync_stats(n: String):
+func _sync_stats(id: int, n: String):
 	assert(_multiplayer_connection.is_server(), "This call can only run on the server")
-
-	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
 
 	# Only allow logged in players
 	if not _multiplayer_connection.is_user_logged_in(id):
@@ -99,8 +166,10 @@ func _sync_stats(n: String):
 		entity.component_list["stats_synchronizer"].sync_stats(id)
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_response(n: String, d: Dictionary):
+func _sync_response(id: int, n: String, d: Dictionary):
+	if id != 1:
+		return
+
 	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
 
 	if entity == null:
@@ -113,8 +182,10 @@ func _sync_response(n: String, d: Dictionary):
 		entity.component_list["stats_synchronizer"].sync_response(d)
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_hurt(n: String, t: float, f: String, c: int, d: int):
+func _sync_hurt(id: int, n: String, t: float, f: String, c: int, d: int):
+	if id != 1:
+		return
+
 	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
 
 	if entity == null:
@@ -127,8 +198,10 @@ func _sync_hurt(n: String, t: float, f: String, c: int, d: int):
 		entity.component_list["stats_synchronizer"].sync_hurt(t, f, c, d)
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_heal(n: String, t: float, f: String, c: int, h: int):
+func _sync_heal(id: int, n: String, t: float, f: String, c: int, h: int):
+	if id != 1:
+		return
+
 	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
 
 	if entity == null:
@@ -141,8 +214,10 @@ func _sync_heal(n: String, t: float, f: String, c: int, h: int):
 		entity.component_list["stats_synchronizer"].sync_heal(t, f, c, h)
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_energy_recovery(n: String, t: float, f: String, e: int, r: int):
+func _sync_energy_recovery(id: int, n: String, t: float, f: String, e: int, r: int):
+	if id != 1:
+		return
+
 	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
 
 	if entity == null:
@@ -155,8 +230,10 @@ func _sync_energy_recovery(n: String, t: float, f: String, e: int, r: int):
 		entity.component_list["stats_synchronizer"].sync_energy_recovery(t, f, e, r)
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_int_change(n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: int):
+func _sync_int_change(id: int, n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: int):
+	if id != 1:
+		return
+
 	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
 
 	if entity == null:
@@ -169,8 +246,10 @@ func _sync_int_change(n: String, t: float, s: StatsSynchronizerComponent.TYPE, v
 		entity.component_list["stats_synchronizer"].sync_int_change(t, s, v)
 
 
-@rpc("call_remote", "authority", "reliable")
-func _sync_float_change(n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: float):
+func _sync_float_change(id: int, n: String, t: float, s: StatsSynchronizerComponent.TYPE, v: float):
+	if id != 1:
+		return
+
 	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
 
 	if entity == null:
