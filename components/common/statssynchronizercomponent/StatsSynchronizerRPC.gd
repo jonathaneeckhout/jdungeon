@@ -47,7 +47,9 @@ func handle_message(peer_id: int, message: Array):
 		TYPE.SYNC_HEAL:
 			_sync_heal(peer_id, message[1], message[2], message[3], message[4], message[5])
 		TYPE.SYNC_ENERGY_RECOVERY:
-			_sync_energy_recovery(peer_id, message[1], message[2], message[3], message[4], message[5])
+			_sync_energy_recovery(
+				peer_id, message[1], message[2], message[3], message[4], message[5]
+			)
 		TYPE.SYNC_INT_CHANGE:
 			_sync_int_change(peer_id, message[1], message[2], message[3], message[4])
 		TYPE.SYNC_FLOAT_CHANGE:
@@ -57,15 +59,11 @@ func handle_message(peer_id: int, message: Array):
 func sync_stats(entity_name: String):
 	_network_message_handler.send_message(1, message_identifier, [TYPE.SYNC_STATS, entity_name])
 
-	# _sync_stats.rpc_id(1, entity_name)
-
 
 func sync_response(peer_id: int, entity_name: String, data: Dictionary):
 	_network_message_handler.send_message(
 		peer_id, message_identifier, [TYPE.SYNC_RESPONSE, entity_name, data]
 	)
-
-	# _sync_response.rpc_id(peer_id, entity_name, data)
 
 
 func sync_hurt(
@@ -82,8 +80,6 @@ func sync_hurt(
 		[TYPE.SYNC_HURT, entity_name, timestamp, attacker_name, health, damage]
 	)
 
-	# _sync_hurt.rpc_id(peer_id, entity_name, timestamp, attacker_name, health, damage)
-
 
 func sync_heal(
 	peer_id: int,
@@ -99,8 +95,6 @@ func sync_heal(
 		[TYPE.SYNC_HEAL, entity_name, timestamp, healer_name, health, healing]
 	)
 
-	# _sync_heal.rpc_id(peer_id, entity_name, timestamp, healer_name, health, healing)
-
 
 func sync_energy_recovery(
 	peer_id: int, entity_name: String, timestamp: float, from: String, energy: int, recovered: int
@@ -110,8 +104,6 @@ func sync_energy_recovery(
 		message_identifier,
 		[TYPE.SYNC_ENERGY_RECOVERY, entity_name, timestamp, from, energy, recovered]
 	)
-
-	# _sync_energy_recovery.rpc_id(peer_id, entity_name, timestamp, from, energy, recovered)
 
 
 func sync_int_change(
@@ -127,8 +119,6 @@ func sync_int_change(
 		[TYPE.SYNC_INT_CHANGE, entity_name, timestamp, stat_type, value]
 	)
 
-	# _sync_int_change.rpc_id(peer_id, entity_name, timestamp, stat_type, value)
-
 
 func sync_float_change(
 	peer_id: int,
@@ -142,8 +132,6 @@ func sync_float_change(
 		message_identifier,
 		[TYPE.SYNC_FLOAT_CHANGE, entity_name, timestamp, stat_type, value]
 	)
-
-	# _sync_float_change.rpc_id(peer_id, entity_name, timestamp, stat_type, value)
 
 
 #Called by client, runs on server
