@@ -2050,11 +2050,11 @@ inventory = NodePath("../Inventory")
 
 [node name="DebugPanel" parent="Camera2D/UILayer" node_paths=PackedStringArray("player") instance=ExtResource("38_607x8")]
 visible = false
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -32.0
-offset_right = 32.0
-offset_bottom = 104.0
-grow_horizontal = 2
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -512.0
+offset_bottom = 256.0
+grow_horizontal = 0
+mouse_filter = 1
 player = NodePath("../../..")

@@ -43,8 +43,8 @@ func _ready():
 	_plot_timer.timeout.connect(_on_plot_timer_timeout)
 	add_child(_plot_timer)
 
-	_my_plot_in = $Graph2D.add_plot_item("Kbps in", Color.GREEN, 1.0)
-	_my_plot_out = $Graph2D.add_plot_item("Kpbs out", Color.RED, 1.0)
+	_my_plot_in = %Graph2D.add_plot_item("Kbps in", Color.GREEN, 1.0)
+	_my_plot_out = %Graph2D.add_plot_item("Kpbs out", Color.RED, 1.0)
 
 
 func _input(event):
@@ -89,3 +89,5 @@ func _on_plot_timer_timeout():
 	for i in range(_out_buffer.size() - 1, -1, -1):
 		var element: Array = _out_buffer[i]
 		_my_plot_out.add_point(Vector2(_clock_synchronizer.client_clock - element[1], element[0]))
+
+	%Ping.text = "Ping: %.2f" % (_clock_synchronizer.latency * 500)  # 1000/2 = 500
