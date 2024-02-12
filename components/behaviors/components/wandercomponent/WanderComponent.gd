@@ -41,8 +41,8 @@ var _starting_postion: Vector2
 # Check if you're linked with your parent
 var _linked: bool = false
 
+var _path: AStarComponent.AStarPath = null
 
-var _path: Array = []
 
 func _ready():
 	# Get the parent node
@@ -124,11 +124,9 @@ func wander():
 		return
 
 	# If the navigation agent is still going, move towards the next point
-	if _path.size() > 1:
+	if _path != null and not _path.is_navigation_finished():
 		# Get the next path position
-		var next_path_position: Vector2 = _path[0]
-		if _target_node.position.distance_to(next_path_position) < 8:
-			_path.pop_front()
+		var next_path_position: Vector2 = _path.get_next_path_position(_target_node.position)
 
 		# Calculate the velocity towards this next path position
 		_target_node.velocity = (
@@ -169,10 +167,14 @@ static func find_random_spot(origin: Vector2, distance: float) -> Vector2:
 func _on_idle_timer_timeout():
 	# Find a new location to wander to
 	_wander_target = WanderComponent.find_random_spot(_starting_postion, _max_wander_distance)
-	_path = _target_node.multiplayer_connection.map.astar.get_astar_path(_target_node.position, _wander_target, 128)
+	_path = _target_node.multiplayer_connection.map.astar.get_astar_path(
+		_target_node.position, _wander_target
+	)
 
 
 func _on_colliding_timer_timeout():
 	# Find a new location to wander to
 	_wander_target = WanderComponent.find_random_spot(_starting_postion, _max_wander_distance)
-	_path = _target_node.multiplayer_connection.map.astar.get_astar_path(_target_node.position, _wander_target, 128)
+	_path = _target_node.multiplayer_connection.map.astar.get_astar_path(
+		_target_node.position, _wander_target
+	)

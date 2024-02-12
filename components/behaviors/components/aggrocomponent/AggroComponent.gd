@@ -41,7 +41,8 @@ var _attack_timer: Timer = null
 # Raycast used to check if the current target is in line of sight
 var _line_of_sight_raycast: RayCast2D = null
 
-var _path: Array = []
+var _path: AStarComponent.AStarPath = null
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -160,16 +161,19 @@ func aggro():
 			# If the target's position has changed and the search path timer is not running, calculate a new path towards the target
 			if _search_path_timer.is_stopped():
 				# This will trigger a new calculation of the navigation path
-				_path = _target_node.multiplayer_connection.map.astar.get_astar_path(_target_node.position, current_target.position, 128)
+				_path = _target_node.multiplayer_connection.map.astar.get_astar_path(
+					_target_node.position, current_target.position
+				)
 				# Start the search path timer to limit the amount of navigation path searches
 				_search_path_timer.start()
 
 			# Navigate to the next path position
-			if _path.size() > 1:
+			if _path != null and not _path.is_navigation_finished():
 				# Get the next path position
-				var next_path_position: Vector2 = _path[0]
-				if _target_node.position.distance_to(next_path_position) < 8:
-					_path.pop_front()
+				var next_path_position: Vector2 = _path.get_next_path_position(
+					_target_node.position
+				)
+
 				# Calculate the velocity towards this next path position
 				_target_node.velocity = (
 					_target_node.position.direction_to(next_path_position)
@@ -181,7 +185,9 @@ func aggro():
 
 			# Navigation is finish, let's calculate a new path
 			else:
-				_path = _target_node.multiplayer_connection.map.astar.get_astar_path(_target_node.position, current_target.position, 128)
+				_path = _target_node.multiplayer_connection.map.astar.get_astar_path(
+					_target_node.position, current_target.position
+				)
 	return
 
 

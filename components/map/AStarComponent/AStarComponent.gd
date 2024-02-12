@@ -2,6 +2,7 @@ extends Node
 
 class_name AStarComponent
 
+const ARRIVAL_DISTANCE: float = 8.0
 const DIRECTIONS: Array[Vector2] = [Vector2.RIGHT, Vector2.UP, Vector2.LEFT, Vector2.DOWN]
 const DIAGONAL_DIRECTIONS: Array[Vector2] = [
 	Vector2.RIGHT,
@@ -77,16 +78,18 @@ func connect_cardinals(point_position) -> void:
 			_astar.connect_points(center, cardinal_point, true)
 
 
-func get_astar_path(start_position: Vector2, end_position: Vector2, max_distance := -1) -> Array:
+func get_astar_path(
+	start_position: Vector2, end_position: Vector2, max_distance := -1
+) -> AStarPath:
 	var map_start_pos: Vector2 = navigation_tilemap.local_to_map(start_position)
 
 	var map_end_pos: Vector2 = navigation_tilemap.local_to_map(end_position)
 
 	if not has_point(map_start_pos):
-		return []
+		return null
 
 	if not has_point(map_end_pos):
-		return []
+		return null
 
 	var astar_path: PackedVector2Array = _astar.get_point_path(
 		get_point(map_start_pos), get_point(map_end_pos)
@@ -94,10 +97,10 @@ func get_astar_path(start_position: Vector2, end_position: Vector2, max_distance
 
 	astar_path = set_path_length(astar_path, max_distance)
 
-	var out_path: Array = []
+	var out_path: AStarPath = AStarPath.new()
 
 	for step in astar_path:
-		out_path.append(navigation_tilemap.map_to_local(step))
+		out_path.path.append(navigation_tilemap.map_to_local(step))
 
 	return out_path
 
@@ -194,3 +197,22 @@ func szudzik_pair_improved(x: int, y: int) -> int:
 func has_point(point_position: Vector2) -> bool:
 	var point_id: int = get_point(point_position)
 	return _astar.has_point(point_id)
+
+
+class AStarPath:
+	extends RefCounted
+	var path: Array[Vector2] = []
+
+	func is_navigation_finished() -> bool:
+		return path.size() <= 0
+
+	func get_next_path_position(current_position: Vector2) -> Vector2:
+		if is_navigation_finished():
+			return current_position
+
+		var next_path_position = path[0]
+
+		if current_position.distance_to(next_path_position) < AStarComponent.ARRIVAL_DISTANCE:
+			path.pop_front()
+
+		return next_path_position
