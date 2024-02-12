@@ -15,7 +15,7 @@ custom_minimum_size = Vector2(512, 256)
 layout_mode = 2
 script = ExtResource("2_8kj31")
 x_max = 60.0
-y_max = 10.0
+y_max = 25.0
 background_color = Color(0, 0, 0, 0.25098)
 
 [node name="Ping" type="Label" parent="VBoxContainer"]

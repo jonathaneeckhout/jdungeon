@@ -14,10 +14,10 @@ enum TYPE {
 	SYNC_FLOAT_CHANGE
 }
 
+@export var message_identifier: int = 0
+
 # Reference to the MultiplayerConnection parent node.
 var _multiplayer_connection: MultiplayerConnection = null
-
-@export var message_identifier: int = 0
 
 var _network_message_handler: NetworkMessageHandler = null
 
