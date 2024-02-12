@@ -23,9 +23,6 @@ var _action_synchronizer: ActionSynchronizerComponent = null
 # The avoidance ray component is used to detect obstacles ahead
 var _avoidance_rays_component: AvoidanceRaysComponent = null
 
-# The navigation agent used to find a new location
-var _navigation_agent: NavigationAgent2D = null
-
 # This is the area used to detect players
 var _aggro_area: Area2D = null
 
@@ -44,6 +41,7 @@ var _attack_timer: Timer = null
 # Raycast used to check if the current target is in line of sight
 var _line_of_sight_raycast: RayCast2D = null
 
+var _path: Array = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -106,12 +104,6 @@ func _link_parent():
 	_avoidance_rays_component = _parent.avoidance_rays_component
 
 	assert(
-		_parent.get("navigation_agent") != null,
-		"The parent behavior should have the navigation_agent variable"
-	)
-	_navigation_agent = _parent.navigation_agent
-
-	assert(
 		_parent.get("aggro_area") != null, "The parent behavior should have the aggro_area variable"
 	)
 	_aggro_area = _parent.aggro_area
@@ -166,20 +158,18 @@ func aggro():
 			_avoidance_rays_component.move_with_avoidance(_target_node.stats.movement_speed)
 		else:
 			# If the target's position has changed and the search path timer is not running, calculate a new path towards the target
-			if (
-				_navigation_agent.target_position != current_target.position
-				and _search_path_timer.is_stopped()
-			):
+			if _search_path_timer.is_stopped():
 				# This will trigger a new calculation of the navigation path
-				_navigation_agent.target_position = current_target.position
-
+				_path = _target_node.multiplayer_connection.map.astar.get_astar_path(_target_node.position, current_target.position, 128)
 				# Start the search path timer to limit the amount of navigation path searches
 				_search_path_timer.start()
 
 			# Navigate to the next path position
-			if not _navigation_agent.is_navigation_finished():
-				var next_path_position: Vector2 = _navigation_agent.get_next_path_position()
-
+			if _path.size() > 1:
+				# Get the next path position
+				var next_path_position: Vector2 = _path[0]
+				if _target_node.position.distance_to(next_path_position) < 8:
+					_path.pop_front()
 				# Calculate the velocity towards this next path position
 				_target_node.velocity = (
 					_target_node.position.direction_to(next_path_position)
@@ -191,7 +181,7 @@ func aggro():
 
 			# Navigation is finish, let's calculate a new path
 			else:
-				_navigation_agent.target_position = current_target.position
+				_path = _target_node.multiplayer_connection.map.astar.get_astar_path(_target_node.position, current_target.position, 128)
 	return
 
 

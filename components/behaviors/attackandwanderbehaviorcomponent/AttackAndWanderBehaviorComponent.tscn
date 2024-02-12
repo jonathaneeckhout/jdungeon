@@ -10,9 +10,6 @@ script = ExtResource("1_hil3r")
 
 [node name="AvoidanceRaysComponent" parent="." instance=ExtResource("3_pre5k")]
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-path_postprocessing = 1
-
 [node name="WanderComponent" parent="." instance=ExtResource("2_u2qbf")]
 
 [node name="AggroComponent" parent="." instance=ExtResource("4_0w2bs")]

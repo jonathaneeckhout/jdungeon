@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://wvx1u6p3es4m"]
+
+[ext_resource type="Script" path="res://components/map/AStarComponent/AStarComponent.gd" id="1_xptv7"]
+
+[node name="AStarComponent" type="Node"]
+script = ExtResource("1_xptv7")

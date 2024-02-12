@@ -23,9 +23,6 @@ class_name AttackAndWanderBehaviorComponent
 # The parent node
 var _target_node: Node
 
-## The navigation agent used to find a new location
-@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
-
 ## The avoidance ray component is used to detect obstacles ahead
 @onready var avoidance_rays_component: AvoidanceRaysComponent = $AvoidanceRaysComponent
 
