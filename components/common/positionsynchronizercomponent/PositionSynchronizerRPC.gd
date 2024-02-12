@@ -50,22 +50,3 @@ func handle_message(peer_id: int, message: Array):
 
 	if entity.component_list.has("position_synchronizer"):
 		entity.component_list["position_synchronizer"].client_sync_position(t, p)
-
-
-@rpc("call_remote", "authority", "unreliable")
-func _sync_position(d: PackedByteArray):
-	var test: Array = bytes_to_var(d)
-	var n = test[0]
-	var t = test[1]
-	var p = test[2]
-
-	var entity: Node = _multiplayer_connection.map.get_entity_by_name(n)
-
-	if entity == null:
-		return
-
-	if entity.get("component_list") == null:
-		return
-
-	if entity.component_list.has("position_synchronizer"):
-		entity.component_list["position_synchronizer"].client_sync_position(t, p)

@@ -31,16 +31,12 @@ func _ready():
 
 
 func sync_shop(peer_id: int, entity_name: String, shop: Dictionary):
-	# _sync_shop.rpc_id(peer_id, entity_name, shop)
-
 	_network_message_handler.send_message(
 		peer_id, message_identifier, [TYPE.SYNC_SHOP, entity_name, shop]
 	)
 
 
 func buy_item(entity_name: String, item_uuid: String):
-	# _buy_item.rpc_id(1, entity_name, item_uuid)
-
 	_network_message_handler.send_message(
 		1, message_identifier, [TYPE.BUY_ITEM, entity_name, item_uuid]
 	)

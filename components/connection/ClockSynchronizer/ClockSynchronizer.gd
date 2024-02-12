@@ -80,8 +80,6 @@ func handle_message(peer_id: int, message: Array):
 func _start_sync_clock():
 	GodotLogger.info("Starting sync clock")
 
-	# fetch_server_time.rpc_id(1, Time.get_unix_time_from_system())
-
 	_network_message_handler.send_message(
 		1, message_identifier, [TYPE.FETCH_SERVER_TIME, Time.get_unix_time_from_system()]
 	)
@@ -101,8 +99,6 @@ func _on_client_clock_sync_timer_timeout():
 		_multiplayer_connection.multiplayer_api.multiplayer_peer.get_connection_status()
 		== MultiplayerPeer.CONNECTION_CONNECTED
 	):
-		# get_latency.rpc_id(1, Time.get_unix_time_from_system())
-
 		_network_message_handler.send_message(
 			1, message_identifier, [TYPE.GET_LATENCY, Time.get_unix_time_from_system()]
 		)
@@ -118,8 +114,6 @@ func _on_client_connected(connected: bool):
 func _fetch_server_time(id: int, client_time: float):
 	if not _multiplayer_connection.is_server():
 		return
-
-	# return_server_time.rpc_id(id, Time.get_unix_time_from_system(), client_time)
 
 	_network_message_handler.send_message(
 		id,
@@ -139,8 +133,6 @@ func _return_server_time(id: int, server_time: float, client_time: float):
 func _get_latency(id: int, client_time: float):
 	if not _multiplayer_connection.is_server():
 		return
-
-	# return_latency.rpc_id(id, client_time)
 
 	_network_message_handler.send_message(
 		id, message_identifier, [TYPE.RETURN_LATENCY, client_time]
