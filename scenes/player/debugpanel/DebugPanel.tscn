@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://bagivotue0kvw"]
+
+[ext_resource type="Script" path="res://scenes/player/debugpanel/DebugPanel.gd" id="1_0jtlh"]
+[ext_resource type="Script" path="res://addons/graph_2d/graph_2d.gd" id="2_8kj31"]
+
+[node name="DebugPanel" type="PanelContainer"]
+script = ExtResource("1_0jtlh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Graph2D" type="Control" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(512, 256)
+layout_mode = 2
+script = ExtResource("2_8kj31")
+x_max = 60.0
+y_max = 10.0
+background_color = Color(0, 0, 0, 0.25098)
+
+[node name="Ping" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Ping: 0.00 ms"

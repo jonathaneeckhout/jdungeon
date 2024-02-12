@@ -17,9 +17,6 @@ var _stats_component: StatsSynchronizerComponent = null
 # The avoidance ray component is used to detect obstacles ahead
 var _avoidance_rays_component: AvoidanceRaysComponent = null
 
-# The navigation agent used to find a new location
-var _navigation_agent: NavigationAgent2D = null
-
 # The minimum time the parent will stay idle
 var _min_idle_time: int = 0
 
@@ -43,6 +40,8 @@ var _starting_postion: Vector2
 
 # Check if you're linked with your parent
 var _linked: bool = false
+
+var _path: AStarComponent.AStarPath = null
 
 
 func _ready():
@@ -99,12 +98,6 @@ func _link_parent():
 	_avoidance_rays_component = _parent.avoidance_rays_component
 
 	assert(
-		_parent.get("navigation_agent") != null,
-		"The parent behavior should have the navigation_agent variable"
-	)
-	_navigation_agent = _parent.navigation_agent
-
-	assert(
 		_parent.get("min_idle_time") != null,
 		"The parent behavior should have the min_idle_time variable"
 	)
@@ -131,9 +124,9 @@ func wander():
 		return
 
 	# If the navigation agent is still going, move towards the next point
-	if not _navigation_agent.is_navigation_finished():
+	if _path != null and not _path.is_navigation_finished():
 		# Get the next path position
-		var next_path_position: Vector2 = _navigation_agent.get_next_path_position()
+		var next_path_position: Vector2 = _path.get_next_path_position(_target_node.position)
 
 		# Calculate the velocity towards this next path position
 		_target_node.velocity = (
@@ -174,10 +167,14 @@ static func find_random_spot(origin: Vector2, distance: float) -> Vector2:
 func _on_idle_timer_timeout():
 	# Find a new location to wander to
 	_wander_target = WanderComponent.find_random_spot(_starting_postion, _max_wander_distance)
-	_navigation_agent.target_position = _wander_target
+	_path = _target_node.multiplayer_connection.map.astar.get_astar_path(
+		_target_node.position, _wander_target
+	)
 
 
 func _on_colliding_timer_timeout():
 	# Find a new location to wander to
 	_wander_target = WanderComponent.find_random_spot(_starting_postion, _max_wander_distance)
-	_navigation_agent.target_position = _wander_target
+	_path = _target_node.multiplayer_connection.map.astar.get_astar_path(
+		_target_node.position, _wander_target
+	)

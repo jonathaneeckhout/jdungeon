@@ -23,9 +23,6 @@ var _stats_component: StatsSynchronizerComponent = null
 # The avoidance ray component is used to detect obstacles ahead
 var _avoidance_rays_component: AvoidanceRaysComponent = null
 
-# The navigation agent used to find a new location
-var _navigation_agent: NavigationAgent2D = null
-
 # How much the speed of the parent should increase when fleeing
 var _flee_speed_boost: float = 3.0
 
@@ -78,12 +75,6 @@ func _link_parent():
 		"The parent behavior should have the avoidance_rays_component variable"
 	)
 	_avoidance_rays_component = _parent.avoidance_rays_component
-
-	assert(
-		_parent.get("navigation_agent") != null,
-		"The parent behavior should have the navigation_agent variable"
-	)
-	_navigation_agent = _parent.navigation_agent
 
 	assert(
 		_parent.get("flee_speed_boost") != null,

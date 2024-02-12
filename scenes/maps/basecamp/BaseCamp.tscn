@@ -1,6 +1,7 @@
-[gd_scene load_steps=23 format=3 uid="uid://bo5ly7xiyj847"]
+[gd_scene load_steps=24 format=3 uid="uid://bo5ly7xiyj847"]
 
 [ext_resource type="Script" path="res://scenes/maps/basecamp/BaseCamp.gd" id="1_4tpho"]
+[ext_resource type="PackedScene" uid="uid://wvx1u6p3es4m" path="res://components/map/AStarComponent/AStarComponent.tscn" id="2_kkmpe"]
 [ext_resource type="TileSet" uid="uid://pjsyexx3ov10" path="res://data/tileset/atlas.tres" id="2_vpf6b"]
 [ext_resource type="TileSet" uid="uid://d0vhi8a2dswg6" path="res://data/tileset/navcol.tres" id="3_37stb"]
 [ext_resource type="PackedScene" uid="uid://cgxevug65fx3d" path="res://scenes/enemies/BlueMole/BlueMole.tscn" id="5_oe42q"]
@@ -30,6 +31,9 @@ enemies_to_sync = NodePath("Enemies")
 npcs_to_sync = NodePath("NPCs")
 player_respawn_locations = NodePath("PlayerRespawnLocations")
 portals_to_sync = NodePath("Portals")
+
+[node name="AStarComponent" parent="." node_paths=PackedStringArray("navigation_tilemap") instance=ExtResource("2_kkmpe")]
+navigation_tilemap = NodePath("../Map/Navigation")
 
 [node name="Map" type="Node2D" parent="."]
 y_sort_enabled = true
