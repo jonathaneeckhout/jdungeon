@@ -101,7 +101,7 @@ func _get_server():
 	)
 	if server == null:
 		GodotLogger.warn("Could not find server=[%s]" % server_name)
-		_get_server_response.rpc_id(id, true, "World", "", 0, "")
+		_get_server_response.rpc_id(id, true, "World", "", "")
 		return
 
 	# Create an unique cookie

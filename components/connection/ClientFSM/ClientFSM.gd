@@ -209,8 +209,6 @@ func _handle_login():
 
 		JUI.alertbox("Login to gateway server failed", login_panel)
 
-		_fsm.call_deferred(STATES.LOGIN)
-
 		return
 
 	GodotLogger.info("Login to gateway server successful")
@@ -225,13 +223,13 @@ func _handle_login():
 
 		JUI.alertbox("Server error, please try again", login_panel)
 
-		_fsm.call_deferred(STATES.LOGIN)
-
 		return
 
 	# Disconnect the client from the gateway server
 	GodotLogger.info("Disconnect from gateway server")
 	_client_gateway_client.websocket_client_disconnect()
+
+	_connected_to_gateway = false
 
 	GodotLogger.info(
 		(
@@ -240,14 +238,11 @@ func _handle_login():
 		)
 	)
 
-	# Disconnect from previous game server
-	_client_server_client.websocket_client_disconnect()
-
 	# Connect to the gameserver
 	if !await _connect_to_server():
 		GodotLogger.error("Client could not connect to server")
 
-		_fsm.call_deferred(STATES.LOGIN)
+		JUI.alertbox("Could not connect to server", login_panel)
 
 		return
 
@@ -261,6 +256,9 @@ func _handle_login():
 		GodotLogger.warn("Authentication with server failed")
 
 		JUI.alertbox("Authentication with server failed", login_panel)
+
+		# Disconnect from previous game server
+		_client_server_client.websocket_client_disconnect()
 
 		return
 
