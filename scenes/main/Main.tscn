@@ -86,11 +86,12 @@ unique_name_in_owner = true
 _server_gateway_client = NodePath("../Connections/GatewayServer")
 _server_client_server = NodePath("../Connections/ServerClient")
 
-[node name="ClientFsm" parent="." node_paths=PackedStringArray("_client_gateway_client", "_client_server_client", "login_panel") instance=ExtResource("12_7v67k")]
+[node name="ClientFsm" parent="." node_paths=PackedStringArray("_client_gateway_client", "_client_server_client", "login_panel", "create_character_panel") instance=ExtResource("12_7v67k")]
 unique_name_in_owner = true
 _client_gateway_client = NodePath("../Connections/GatewayClient")
 _client_server_client = NodePath("../Connections/ServerClient")
 login_panel = NodePath("../UI/LoginPanel")
+create_character_panel = NodePath("../UI/CreateCharacterPanel")
 
 [node name="Database" parent="." instance=ExtResource("15_byw11")]
 unique_name_in_owner = true
@@ -158,11 +159,6 @@ visible = false
 [node name="CreateCharacterPanel" parent="UI" instance=ExtResource("24_2vqlc")]
 unique_name_in_owner = true
 visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0

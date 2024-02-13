@@ -1,5 +1,6 @@
-[gd_scene load_steps=24 format=3 uid="uid://4is61qacv1a2"]
+[gd_scene load_steps=25 format=3 uid="uid://4is61qacv1a2"]
 
+[ext_resource type="Script" path="res://scenes/ui/CreateCharacterPanel/CreateCharacterPanel.gd" id="1_4omvh"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="1_a6qip"]
 [ext_resource type="Texture2D" uid="uid://n03ctmf2vdq0" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_handback.png" id="1_anmp8"]
 [ext_resource type="Texture2D" uid="uid://cjb24x51lann0" path="res://assets/images/equipment/weapons/club/scaled/club.png" id="2_qmg0f"]
@@ -35,6 +36,7 @@ offset_right = 8.0
 offset_bottom = 6.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_4omvh")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1

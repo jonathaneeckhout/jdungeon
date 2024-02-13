@@ -2,7 +2,7 @@ extends Node
 
 class_name ClientFSM
 
-enum STATES { IDLE, INIT, LOGIN, CREATE_ACCOUNT, LOAD, RUNNING }
+enum STATES { IDLE, INIT, LOGIN, CREATE_ACCOUNT, LOAD, CREATE_CHARACTER, RUNNING }
 
 const RETRY_TIME: float = 5.0
 
@@ -12,7 +12,9 @@ const RETRY_TIME: float = 5.0
 
 @export var config: Resource = null
 
-@export var login_panel: LoginPanel
+@export var login_panel: LoginPanel = null
+
+@export var create_character_panel: CreateCharacterPanel = null
 
 var state: STATES = STATES.IDLE
 
@@ -93,6 +95,8 @@ func _fsm(new_state: STATES):
 			_handle_create_account()
 		STATES.LOAD:
 			_handle_load()
+		STATES.CREATE_CHARACTER:
+			_handle_create_character()
 		STATES.RUNNING:
 			_handle_state_running()
 
@@ -291,6 +295,8 @@ func _handle_login():
 	# Add it to the Root scene (which is the parent of this script)
 	get_parent().add_child(_map)
 
+	_map.hide()
+
 	GodotLogger.info("Login to game server=[%s] successful" % server_info["name"])
 
 	_fsm.call_deferred(STATES.LOAD)
@@ -338,11 +344,22 @@ func _handle_load():
 
 	var player_info: Dictionary = await _client_fsm_server_rpc.player_loaded
 
-	_map.client_add_player(
-		player_info["peer_id"], player_info["username"], player_info["pos"], true
-	)
+	if player_info["player_exists"]:
+		_map.client_add_player(
+			player_info["peer_id"], player_info["username"], player_info["pos"], true
+		)
 
-	_fsm.call_deferred(STATES.RUNNING)
+		_map.show()
+
+		_fsm.call_deferred(STATES.RUNNING)
+	else:
+		_fsm.call_deferred(STATES.CREATE_CHARACTER)
+
+
+func _handle_create_character():
+	login_panel.hide()
+
+	create_character_panel.show()
 
 
 func _handle_state_running():

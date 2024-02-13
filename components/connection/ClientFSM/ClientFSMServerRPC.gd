@@ -132,17 +132,21 @@ func _load_player():
 		return
 
 	if user.player == null:
-		# TODO: fix this spawn location
-		user.player = _multiplayer_connection.map.server_add_player(
-			id, user.username, Vector2(0, 128)
-		)
+		# # TODO: fix this spawn location
+		# user.player = _multiplayer_connection.map.server_add_player(
+		# 	id, user.username, Vector2(0, 128)
+		# )
 
-	_load_player_response.rpc_id(id, id, user.username, user.player.position)
+		_load_player_response.rpc_id(id, id, false, user.username, Vector2.ZERO)
+	else:
+		_load_player_response.rpc_id(id, id, true, user.username, user.player.position)
 
 
 @rpc("call_remote", "authority", "reliable")
-func _load_player_response(peer_id: int, username: String, pos: Vector2):
-	player_loaded.emit({"peer_id": peer_id, "username": username, "pos": pos})
+func _load_player_response(peer_id: int, player_exists: bool, username: String, pos: Vector2):
+	player_loaded.emit(
+		{"peer_id": peer_id, "player_exists": player_exists, "username": username, "pos": pos}
+	)
 
 
 func _on_client_disconnected(username: String):
