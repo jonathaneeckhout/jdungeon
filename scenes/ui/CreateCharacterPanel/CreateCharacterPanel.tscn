@@ -203,6 +203,7 @@ horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger"]
 layout_mode = 2
+disabled = true
 text = "Pick Ranger"
 
 [node name="MarginContainer3" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
@@ -263,4 +264,5 @@ horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard"]
 layout_mode = 2
+disabled = true
 text = "Pick Wizard"

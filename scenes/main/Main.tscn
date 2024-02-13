@@ -99,7 +99,6 @@ unique_name_in_owner = true
 
 [node name="SelectRunMode" type="Control" parent="UI"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -154,6 +153,7 @@ alignment = 0
 
 [node name="LoginPanel" parent="UI" instance=ExtResource("15_7xr38")]
 unique_name_in_owner = true
+visible = false
 
 [node name="CreateCharacterPanel" parent="UI" instance=ExtResource("24_2vqlc")]
 unique_name_in_owner = true
