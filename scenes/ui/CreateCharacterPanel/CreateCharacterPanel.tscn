@@ -1,0 +1,266 @@
+[gd_scene load_steps=24 format=3 uid="uid://4is61qacv1a2"]
+
+[ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="1_a6qip"]
+[ext_resource type="Texture2D" uid="uid://n03ctmf2vdq0" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_handback.png" id="1_anmp8"]
+[ext_resource type="Texture2D" uid="uid://cjb24x51lann0" path="res://assets/images/equipment/weapons/club/scaled/club.png" id="2_qmg0f"]
+[ext_resource type="Texture2D" uid="uid://dosy4itvr7p2t" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_legback.png" id="3_rh1nf"]
+[ext_resource type="Texture2D" uid="uid://5bbme8v64hsc" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_legfront.png" id="4_ro3sp"]
+[ext_resource type="Texture2D" uid="uid://h202s5m6g1w" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_trunk.png" id="5_iaskt"]
+[ext_resource type="Texture2D" uid="uid://c2cxl2aq35y7t" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_head.png" id="6_6wqe1"]
+[ext_resource type="Texture2D" uid="uid://b0jdstcatotn5" path="res://assets/images/equipment/armour/leatherarmor/scaled/leatherarmor_handfront.png" id="7_3164r"]
+[ext_resource type="Texture2D" uid="uid://pk0f78akvjdq" path="res://assets/images/equipment/weapons/shield/scaled/shield2.png" id="8_xu7kt"]
+[ext_resource type="Texture2D" uid="uid://xa6pt4dne35l" path="res://assets/images/equipment/armour/scout/scaled/Scout_Handback.png" id="9_6y44s"]
+[ext_resource type="Texture2D" uid="uid://bw4nylrxax8rh" path="res://assets/images/equipment/armour/mage/scaled/Mage_handback.png" id="9_20yeb"]
+[ext_resource type="Texture2D" uid="uid://d4ahoymhkkvpi" path="res://assets/images/equipment/armour/mage/scaled/Mage_Legback.png" id="10_3mc71"]
+[ext_resource type="Texture2D" uid="uid://b1ydiy6uw0jmo" path="res://assets/images/equipment/weapons/woodenbow/scaled/WoodenBow.png" id="10_gdmxt"]
+[ext_resource type="Texture2D" uid="uid://blcfwkb8b2vav" path="res://assets/images/equipment/armour/scout/scaled/Scout_legback.png" id="10_oxgkg"]
+[ext_resource type="Texture2D" uid="uid://gys530uqlma0" path="res://assets/images/equipment/armour/mage/scaled/Mage_Leg.png" id="11_6mmce"]
+[ext_resource type="Texture2D" uid="uid://c5ymu8fht41ot" path="res://assets/images/equipment/armour/scout/scaled/Scout_legfront.png" id="11_60uk6"]
+[ext_resource type="Texture2D" uid="uid://bglm3jssiuaeg" path="res://assets/images/equipment/armour/mage/scaled/Mage_Trunk.png" id="12_6iig4"]
+[ext_resource type="Texture2D" uid="uid://dqddr8gpusl7t" path="res://assets/images/equipment/armour/scout/scaled/Scout_Trunk.png" id="12_80632"]
+[ext_resource type="Texture2D" uid="uid://benfpvdku337e" path="res://assets/images/equipment/armour/mage/scaled/Mage_head.png" id="13_6a52t"]
+[ext_resource type="Texture2D" uid="uid://blsnuumj6undr" path="res://assets/images/equipment/armour/scout/scaled/Scout_head.png" id="13_hqak6"]
+[ext_resource type="Texture2D" uid="uid://ck4uu78spmqxo" path="res://assets/images/equipment/armour/mage/scaled/Mage_handfront.png" id="14_gvsqs"]
+[ext_resource type="Texture2D" uid="uid://7wot4exdx00u" path="res://assets/images/equipment/armour/scout/scaled/Scout_Handfront.png" id="14_w5ef5"]
+[ext_resource type="Texture2D" uid="uid://c3owjv1m5nd5h" path="res://assets/images/equipment/weapons/stick/scaled/stick.png" id="17_gjb37"]
+
+[node name="CreateCharacterPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 6.0
+offset_right = 8.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_a6qip")
+expand_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -180.0
+offset_right = 260.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Welcome to JDungeon, please select your class"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Warrior" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior"]
+layout_mode = 2
+text = "Warrior"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="Node2D" type="Node2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior/Control"]
+position = Vector2(64, 64)
+
+[node name="RightArm" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior/Control/Node2D"]
+texture = ExtResource("1_anmp8")
+
+[node name="Weapon" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior/Control/Node2D/RightArm"]
+position = Vector2(-61, 13)
+rotation = -1.5708
+texture = ExtResource("2_qmg0f")
+
+[node name="RightLeg" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior/Control/Node2D"]
+texture = ExtResource("3_rh1nf")
+
+[node name="LeftLeg" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior/Control/Node2D"]
+texture = ExtResource("4_ro3sp")
+
+[node name="Body" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior/Control/Node2D"]
+texture = ExtResource("5_iaskt")
+
+[node name="Head" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior/Control/Node2D"]
+texture = ExtResource("6_6wqe1")
+
+[node name="LeftArm" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior/Control/Node2D"]
+texture = ExtResource("7_3164r")
+
+[node name="Shield" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior/Control/Node2D"]
+position = Vector2(45, 9)
+rotation = -1.5708
+texture = ExtResource("8_xu7kt")
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior"]
+layout_mode = 2
+text = "It fights, 
+it hits,
+ it wrecks"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior"]
+layout_mode = 2
+text = "Pick Warrior"
+
+[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+
+[node name="Ranger" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger"]
+layout_mode = 2
+text = "Ranger"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="Node2D" type="Node2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger/Control"]
+position = Vector2(64, 56)
+
+[node name="RightArm" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger/Control/Node2D"]
+position = Vector2(0, -1)
+texture = ExtResource("9_6y44s")
+
+[node name="Weapon" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger/Control/Node2D"]
+position = Vector2(-16, 62)
+rotation = -3.14159
+texture = ExtResource("10_gdmxt")
+
+[node name="RightLeg" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger/Control/Node2D"]
+texture = ExtResource("10_oxgkg")
+
+[node name="LeftLeg" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger/Control/Node2D"]
+texture = ExtResource("11_60uk6")
+
+[node name="Body" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger/Control/Node2D"]
+texture = ExtResource("12_80632")
+
+[node name="Head" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger/Control/Node2D"]
+texture = ExtResource("13_hqak6")
+
+[node name="LeftArm" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger/Control/Node2D"]
+texture = ExtResource("14_w5ef5")
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger"]
+layout_mode = 2
+text = "It aims, 
+it shoots,
+ it dodges"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger"]
+layout_mode = 2
+text = "Pick Ranger"
+
+[node name="MarginContainer3" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3"]
+layout_mode = 2
+
+[node name="Wizard" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard"]
+layout_mode = 2
+text = "Wizard"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="Node2D" type="Node2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard/Control"]
+position = Vector2(64, 64)
+
+[node name="RightArm" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard/Control/Node2D"]
+texture = ExtResource("9_20yeb")
+
+[node name="Weapon" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard/Control/Node2D/RightArm"]
+position = Vector2(151, 63)
+rotation = -1.5708
+scale = Vector2(2, 2)
+texture = ExtResource("17_gjb37")
+
+[node name="RightLeg" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard/Control/Node2D"]
+texture = ExtResource("10_3mc71")
+
+[node name="LeftLeg" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard/Control/Node2D"]
+texture = ExtResource("11_6mmce")
+
+[node name="Body" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard/Control/Node2D"]
+texture = ExtResource("12_6iig4")
+
+[node name="Head" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard/Control/Node2D"]
+texture = ExtResource("13_6a52t")
+
+[node name="LeftArm" type="Sprite2D" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard/Control/Node2D"]
+texture = ExtResource("14_gvsqs")
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard"]
+layout_mode = 2
+text = "It casts, 
+it heals,
+ it curses"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard"]
+layout_mode = 2
+text = "Pick Wizard"
