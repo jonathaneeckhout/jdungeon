@@ -30,6 +30,8 @@ var _create_account_pressed: bool = false
 var _username: String = ""
 var _password: String = ""
 
+var _login_retry_timer: Timer = null
+
 
 func _ready():
 	# Get the ClientFSMRPC component.
@@ -44,6 +46,17 @@ func _ready():
 	_client_fsm_server_rpc = _client_server_client.component_list.get_component(
 		ClientFSMServerRPC.COMPONENT_NAME
 	)
+
+	_login_retry_timer = Timer.new()
+	_login_retry_timer.name = "LoginRetryTimer"
+	_login_retry_timer.autostart = false
+	_login_retry_timer.one_shot = true
+	_login_retry_timer.wait_time = RETRY_TIME
+	_login_retry_timer.timeout.connect(_on_login_retry_timer_timeout)
+	add_child(_login_retry_timer)
+
+	_client_gateway_client.client_connected.connect(_on_gateway_server_disconnected)
+	_client_server_client.client_connected.connect(_on_server_server_disconnected)
 
 	# Ensure the ClientFSMServerRPC component is present
 	assert(_client_fsm_server_rpc != null, "Failed to get ClientFSMServerRPC component")
@@ -113,15 +126,11 @@ func _connect_to_gateway() -> bool:
 	if !_client_gateway_client.websocket_client_start(config.client_gateway_client_address):
 		GodotLogger.warn("Could not connect to gateway=[%s]" % config.client_gateway_client_address)
 
-		JUI.alertbox("Error connecting to gateway", login_panel)
-
 		return false
 
 	# Wait until you receive the server_connected signal
 	if !await _client_gateway_client.client_connected:
 		GodotLogger.warn("Could not connect to gateway=[%s]" % config.client_gateway_client_address)
-
-		JUI.alertbox("Error connecting to gateway", login_panel)
 
 		return false
 
@@ -181,13 +190,22 @@ func _handle_login():
 	login_panel.show()
 	login_panel.show_login_container()
 
+	JUI.clear_dialog()
+
+	if not _login_retry_timer.is_stopped():
+		GodotLogger.error("Wait to handle login again until login timer is done")
+		return
+
 	# Try to connect to the gateway server
 	if !await _connect_to_gateway():
 		GodotLogger.error("Client could not connect to gateway server")
 
-		await get_tree().create_timer(RETRY_TIME).timeout
+		JUI.alertbox(
+			"Error connecting to gateway, retrying in %d seconds" % RETRY_TIME, login_panel
+		)
 
-		_fsm.call_deferred(STATES.LOGIN)
+		if _login_retry_timer.is_stopped():
+			_login_retry_timer.start()
 
 		return
 
@@ -209,8 +227,6 @@ func _handle_login():
 
 		JUI.alertbox("Login to gateway server failed", login_panel)
 
-		_fsm.call_deferred(STATES.LOGIN)
-
 		return
 
 	GodotLogger.info("Login to gateway server successful")
@@ -225,13 +241,13 @@ func _handle_login():
 
 		JUI.alertbox("Server error, please try again", login_panel)
 
-		_fsm.call_deferred(STATES.LOGIN)
-
 		return
 
 	# Disconnect the client from the gateway server
 	GodotLogger.info("Disconnect from gateway server")
 	_client_gateway_client.websocket_client_disconnect()
+
+	_connected_to_gateway = false
 
 	GodotLogger.info(
 		(
@@ -240,14 +256,11 @@ func _handle_login():
 		)
 	)
 
-	# Disconnect from previous game server
-	_client_server_client.websocket_client_disconnect()
-
 	# Connect to the gameserver
 	if !await _connect_to_server():
 		GodotLogger.error("Client could not connect to server")
 
-		_fsm.call_deferred(STATES.LOGIN)
+		JUI.alertbox("Could not connect to server", login_panel)
 
 		return
 
@@ -261,6 +274,9 @@ func _handle_login():
 		GodotLogger.warn("Authentication with server failed")
 
 		JUI.alertbox("Authentication with server failed", login_panel)
+
+		# Disconnect from previous game server
+		_client_server_client.websocket_client_disconnect()
 
 		return
 
@@ -288,9 +304,12 @@ func _handle_create_account():
 	if !await _connect_to_gateway():
 		GodotLogger.error("Client could not connect to gateway server")
 
-		await get_tree().create_timer(RETRY_TIME).timeout
+		JUI.alertbox(
+			"Error connecting to gateway, retrying in %d seconds" % RETRY_TIME, login_panel
+		)
 
-		_fsm.call_deferred(STATES.LOGIN)
+		if _login_retry_timer.is_stopped():
+			_login_retry_timer.start()
 
 		return
 
@@ -356,3 +375,39 @@ func _on_create_account_pressed(username: String, password: String):
 		_password = password
 
 		_fsm.call_deferred(STATES.CREATE_ACCOUNT)
+
+
+func _on_gateway_server_disconnected(connected: bool):
+	if not connected and state == STATES.LOGIN:
+		_connected_to_gateway = false
+
+		JUI.alertbox(
+			"Disconnected from gateway server, retrying in %d seconds" % RETRY_TIME, login_panel
+		)
+
+		if _login_retry_timer.is_stopped():
+			_login_retry_timer.start()
+
+
+func _on_server_server_disconnected(connected: bool):
+	if connected:
+		return
+
+	if state == STATES.LOGIN:
+		JUI.alertbox(
+			"Disconnected from game server, retrying in %d seconds" % RETRY_TIME, login_panel
+		)
+
+		if _login_retry_timer.is_stopped():
+			_login_retry_timer.start()
+
+	if state == STATES.RUNNING:
+		_map.set_physics_process(false)
+		_map.queue_free()
+
+		_fsm.call_deferred(STATES.LOGIN)
+
+
+func _on_login_retry_timer_timeout():
+	if state == STATES.LOGIN:
+		_fsm.call_deferred(STATES.LOGIN)
