@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://4is61qacv1a2"]
+[gd_scene load_steps=26 format=3 uid="uid://4is61qacv1a2"]
 
 [ext_resource type="Script" path="res://scenes/ui/CreateCharacterPanel/CreateCharacterPanel.gd" id="1_4omvh"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="1_a6qip"]
@@ -24,6 +24,9 @@
 [ext_resource type="Texture2D" uid="uid://ck4uu78spmqxo" path="res://assets/images/equipment/armour/mage/scaled/Mage_handfront.png" id="14_gvsqs"]
 [ext_resource type="Texture2D" uid="uid://7wot4exdx00u" path="res://assets/images/equipment/armour/scout/scaled/Scout_Handfront.png" id="14_w5ef5"]
 [ext_resource type="Texture2D" uid="uid://c3owjv1m5nd5h" path="res://assets/images/equipment/weapons/stick/scaled/stick.png" id="17_gjb37"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lheop"]
+bg_color = Color(1, 1, 1, 0)
 
 [node name="CreateCharacterPanel" type="Control"]
 layout_mode = 3
@@ -92,6 +95,7 @@ theme_override_constants/margin_bottom = 16
 
 [node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
+mouse_filter = 1
 
 [node name="Warrior" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer"]
 layout_mode = 2
@@ -143,10 +147,10 @@ it hits,
  it wrecks"
 horizontal_alignment = 1
 
-[node name="SelectWarriorButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior"]
+[node name="SelectWarriorButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Pick Warrior"
+theme_override_styles/normal = SubResource("StyleBoxFlat_lheop")
 
 [node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -157,6 +161,7 @@ theme_override_constants/margin_bottom = 16
 
 [node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2"]
 layout_mode = 2
+mouse_filter = 1
 
 [node name="Ranger" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer"]
 layout_mode = 2
@@ -204,11 +209,11 @@ it shoots,
  it dodges"
 horizontal_alignment = 1
 
-[node name="SelectRangerButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger"]
+[node name="SelectRangerButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_lheop")
 disabled = true
-text = "Pick Ranger"
 
 [node name="MarginContainer3" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -219,6 +224,7 @@ theme_override_constants/margin_bottom = 16
 
 [node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3"]
 layout_mode = 2
+mouse_filter = 1
 
 [node name="Wizard" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer"]
 layout_mode = 2
@@ -266,8 +272,8 @@ it heals,
  it curses"
 horizontal_alignment = 1
 
-[node name="SelectWizardButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard"]
+[node name="SelectWizardButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_lheop")
 disabled = true
-text = "Pick Wizard"

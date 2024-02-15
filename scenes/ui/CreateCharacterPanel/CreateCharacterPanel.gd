@@ -21,7 +21,7 @@ func _on_select_ranger_button():
 
 func _on_select_wizard_button():
 	JUI.confirmationbox(
-		"You want to become a warWizardrior?", self, "Are you sure?", _select_wizard
+		"You want to become a Wizard?", self, "Are you sure?", _select_wizard
 	)
 
 
