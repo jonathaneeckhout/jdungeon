@@ -62,7 +62,6 @@ func register_signals():
 
 	inventory_synchronizer.item_added.connect(_on_item_added)
 	inventory_synchronizer.item_removed.connect(_on_item_removed)
-	inventory_synchronizer.inventory_redraw_required.connect(_on_redraw_required)
 
 
 func get_panel_at_pos(pos: Vector2) -> InventoryPanel:
