@@ -159,7 +159,7 @@ func get_boost() -> Boost:
 	for equipment_slot in items:
 		var item: Item = items[equipment_slot]
 		if item != null:
-			boost.combine_boost(item.boost)
+			boost.add_boost(item.boost)
 
 	return boost
 

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bih70p5d05ob2"]
+
+[ext_resource type="Script" path="res://components/common/healtsynchronizercomponent/HealthSynchronizerComponent.gd" id="1_mlp28"]
+
+[node name="HealthSynchronizerComponent" type="Node"]
+script = ExtResource("1_mlp28")

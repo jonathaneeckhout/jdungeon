@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpprk8npkrjwj"]
+
+[ext_resource type="Script" path="res://components/common/energysynchronizercomponent/EnergySynchronizerComponent.gd" id="1_20mjm"]
+
+[node name="EnergySynchronizerComponent" type="Node"]
+script = ExtResource("1_20mjm")

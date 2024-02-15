@@ -231,7 +231,7 @@ func _ready():
 
 		_stats_synchronizer_rpc.sync_stats(target_node.name)
 
-	boosts_changed.connect(reload_boosts)
+	# boosts_changed.connect(reload_boosts)
 
 	# Make sure this line is called on server and client's side
 	ready_done = true
@@ -405,101 +405,98 @@ func get_attack_damage() -> float:
 	return randi_range(attack_power_min, attack_power_max)
 
 
-## Adds the [Boost] object to be applied on the stats and synchronizes the addition.
-func apply_boost(boost: Boost):
-	# Override any boost with an identical identifier, ignore if this boost doesn't have one.
-	if boost.identifier != Boost.NO_IDENTIFIER:
-		var existing_boost: Boost = get_boost_with_identifier(boost.identifier)
-		if existing_boost is Boost:
-			remove_boost(existing_boost)
+# ## Adds the [Boost] object to be applied on the stats and synchronizes the addition.
+# func apply_boost(boost: Boost):
+# 	# Override any boost with an identical identifier, ignore if this boost doesn't have one.
+# 	if boost.identifier != Boost.NO_IDENTIFIER:
+# 		var existing_boost: Boost = get_boost_with_identifier(boost.identifier)
+# 		if existing_boost is Boost:
+# 			remove_boost(existing_boost)
 
-	# Validate boost
-	for stat_name in boost.stat_boost_dict.keys() + boost.stat_boost_modifier_dict.keys():
-		if not stat_name in StatListAll:
-			GodotLogger.error("The property '{0}' is not a stat.".format([stat_name]))
+# 	# Validate boost
+# 	for stat_name in boost.stat_boost_dict.keys() + boost.stat_boost_modifier_dict.keys():
+# 		if not stat_name in StatListAll:
+# 			GodotLogger.error("The property '{0}' is not a stat.".format([stat_name]))
 
-		if (
-			typeof(boost.get_stat_boost(stat_name)) != TYPE_INT
-			and typeof(boost.get_stat_boost(stat_name)) != TYPE_FLOAT
-		):
-			(
-				GodotLogger
-				. warn(
-					(
-						"The value type of the boost ({0}) must be type 1 or 2. This could cause unexpected behaviour."
-						. format([typeof(boost.get_stat_boost(stat_name)), typeof(get(stat_name))])
-					)
-				)
-			)
+# 		if (
+# 			typeof(boost.get_stat_boost(stat_name)) != TYPE_INT
+# 			and typeof(boost.get_stat_boost(stat_name)) != TYPE_FLOAT
+# 		):
+# 			(
+# 				GodotLogger
+# 				. warn(
+# 					(
+# 						"The value type of the boost ({0}) must be type 1 or 2. This could cause unexpected behaviour."
+# 						. format([typeof(boost.get_stat_boost(stat_name)), typeof(get(stat_name))])
+# 					)
+# 				)
+# 			)
 
-	# Add to list
-	active_boosts.append(boost)
+# 	# Add to list
+# 	active_boosts.append(boost)
 
-	var data: Dictionary = to_json(true)
+# 	var data: Dictionary = to_json(true)
 
-	if peer_id > 0:
-		_stats_synchronizer_rpc.sync_response(peer_id, target_node.name, data)
+# 	if peer_id > 0:
+# 		_stats_synchronizer_rpc.sync_response(peer_id, target_node.name, data)
 
-	for watcher in watcher_synchronizer.watchers:
-		_stats_synchronizer_rpc.sync_response(watcher.peer_id, target_node.name, data)
+# 	for watcher in watcher_synchronizer.watchers:
+# 		_stats_synchronizer_rpc.sync_response(watcher.peer_id, target_node.name, data)
 
-	# This signal calls reload_boosts()
-	boosts_changed.emit()
+# 	# This signal calls reload_boosts()
+# 	boosts_changed.emit()
 
+# ## Attempts to remove a boost per reference.
+# func remove_boost(boost: Boost):
+# 	if not active_boosts.has(boost):
+# 		GodotLogger.warn("This boost does not belong to this component.")
+# 		return
 
-## Attempts to remove a boost per reference.
-func remove_boost(boost: Boost):
-	if not active_boosts.has(boost):
-		GodotLogger.warn("This boost does not belong to this component.")
-		return
+# 	active_boosts.erase(boost)
 
-	active_boosts.erase(boost)
+# 	var data: Dictionary = to_json(true)
 
-	var data: Dictionary = to_json(true)
+# 	if peer_id > 0:
+# 		_stats_synchronizer_rpc.sync_response(peer_id, target_node.name, data)
 
-	if peer_id > 0:
-		_stats_synchronizer_rpc.sync_response(peer_id, target_node.name, data)
+# 	for watcher in watcher_synchronizer.watchers:
+# 		_stats_synchronizer_rpc.sync_response(watcher.peer_id, target_node.name, data)
 
-	for watcher in watcher_synchronizer.watchers:
-		_stats_synchronizer_rpc.sync_response(watcher.peer_id, target_node.name, data)
+# 	boosts_changed.emit()
 
-	boosts_changed.emit()
+# ## Loads the default stats and re-applies every stored [Boost]
+# func reload_boosts():
+# 	load_defaults()
 
+# 	var flat_values: Dictionary = {}
+# 	var modifier_values: Dictionary = {}
 
-## Loads the default stats and re-applies every stored [Boost]
-func reload_boosts():
-	load_defaults()
+# 	# Start iterating trough stats to boost them
+# 	for stat: String in StatListPermanent:
+# 		# Prepare the flat and modifier values that the stat will be set-to and multiplied for.
+# 		# The base value is the current (defaulted) value of the stat
+# 		flat_values[stat] = get(stat)
+# 		# The base for modifiers is 1, since it will be multiplied by other modifiers.
+# 		modifier_values[stat] = 1
 
-	var flat_values: Dictionary = {}
-	var modifier_values: Dictionary = {}
+# 		for boost: Boost in active_boosts:
+# 			# Store the bonuses of the boost added to the flat amount, as well as the modifiers
+# 			flat_values[stat] += boost.get_stat_boost(stat)
 
-	# Start iterating trough stats to boost them
-	for stat: String in StatListPermanent:
-		# Prepare the flat and modifier values that the stat will be set-to and multiplied for.
-		# The base value is the current (defaulted) value of the stat
-		flat_values[stat] = get(stat)
-		# The base for modifiers is 1, since it will be multiplied by other modifiers.
-		modifier_values[stat] = 1
+# 			# Ignore modifiers of 1.
+# 			if boost.get_stat_boost_modifier(stat) != 1:
+# 				modifier_values[stat] *= boost.get_stat_boost_modifier(stat)
 
-		for boost: Boost in active_boosts:
-			# Store the bonuses of the boost added to the flat amount, as well as the modifiers
-			flat_values[stat] += boost.get_stat_boost(stat)
+# 		# Set the stat to the flat value multiplied by the modifier
+# 		set(stat, flat_values[stat] * modifier_values[stat])
 
-			# Ignore modifiers of 1.
-			if boost.get_stat_boost_modifier(stat) != 1:
-				modifier_values[stat] *= boost.get_stat_boost_modifier(stat)
+# ## Attempts to get a reference to a [Boost] with the given identifier, if it exists.
+# func get_boost_with_identifier(identifier: String) -> Boost:
+# 	for boost: Boost in active_boosts:
+# 		if boost.identifier == identifier:
+# 			return boost
 
-		# Set the stat to the flat value multiplied by the modifier
-		set(stat, flat_values[stat] * modifier_values[stat])
-
-
-## Attempts to get a reference to a [Boost] with the given identifier, if it exists.
-func get_boost_with_identifier(identifier: String) -> Boost:
-	for boost: Boost in active_boosts:
-		if boost.identifier == identifier:
-			return boost
-
-	return null
+# 	return null
 
 
 func to_json(full: bool = false) -> Dictionary:
