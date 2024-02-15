@@ -34,6 +34,9 @@ var _password: String = ""
 
 var _login_retry_timer: Timer = null
 
+var _class_selected_pressed: bool = false
+var _class_string: String = ""
+
 
 func _ready():
 	# Get the ClientFSMRPC component.
@@ -67,6 +70,8 @@ func _ready():
 	login_panel.show_create_account_pressed.connect(_on_show_create_account_pressed)
 	login_panel.create_account_pressed.connect(_on_create_account_pressed)
 	login_panel.back_create_account_pressed.connect(_on_back_create_account_pressed)
+
+	create_character_panel.class_selected.connect(_on_class_selected)
 
 	# Trigger the fsm, starting with the INIT state
 	_fsm.call_deferred(STATES.IDLE)
@@ -114,6 +119,8 @@ func _state_to_string(to_string_state: STATES) -> String:
 			return "Create Account"
 		STATES.LOAD:
 			return "Load"
+		STATES.CREATE_CHARACTER:
+			return "Create Character"
 		STATES.RUNNING:
 			return "Running"
 
@@ -361,11 +368,32 @@ func _handle_create_character():
 
 	create_character_panel.show()
 
+	if not _class_selected_pressed:
+		return
+
+	_class_selected_pressed = false
+
+	GodotLogger.info("Creating new character=%s with class=%s" % [_username, _class_string])
+
+	_client_fsm_server_rpc.create_player(_class_string)
+
+	var res: bool = await _client_fsm_server_rpc.player_created
+	if not res:
+		GodotLogger.warn(
+			"Failed to create new character=%s with class=%s" % [_username, _class_string]
+		)
+		return
+
+	GodotLogger.info("Character=%s with class=%s created" % [_username, _class_string])
+
+	_fsm.call_deferred(STATES.LOAD)
+
 
 func _handle_state_running():
 	GodotLogger.info("Client successfully started")
 
 	login_panel.hide()
+	create_character_panel.hide()
 
 
 func _on_login_pressed(username: String, password: String):
@@ -428,3 +456,11 @@ func _on_server_server_disconnected(connected: bool):
 func _on_login_retry_timer_timeout():
 	if state == STATES.LOGIN:
 		_fsm.call_deferred(STATES.LOGIN)
+
+
+func _on_class_selected(class_string: String):
+	if state == STATES.CREATE_CHARACTER:
+		_class_selected_pressed = true
+		_class_string = class_string
+
+		_fsm.call_deferred(STATES.CREATE_CHARACTER)

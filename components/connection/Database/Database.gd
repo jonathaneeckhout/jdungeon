@@ -85,6 +85,22 @@ func authenticate_user(username: String, password: String) -> bool:
 	return _backend.AuthenticateUser(username, password)
 
 
+func create_player(
+	username: String, class_string: String, server: String, position: Vector2
+) -> bool:
+	var data: Dictionary = load_player_data(username)
+
+	if not data.is_empty():
+		GodotLogger.warn("Trying to create player=%s who already exists" % username)
+		return false
+
+	data["class"] = class_string
+	data["server"] = server
+	data["position"] = {"x": position.x, "y": position.y}
+
+	return store_player_data(username, data)
+
+
 func store_player_data(username: String, data: Dictionary) -> bool:
 	return _backend.StorePlayerData(username, data)
 

@@ -9,6 +9,9 @@ const COOKIE_VALID_TIME: float = 60.0
 
 signal authenticated(response: bool)
 signal player_loaded(player_info: Dictionary)
+signal player_created(response: bool)
+
+@export var spawn_location: Vector2 = Vector2(0, 128)
 
 # Reference to the MultiplayerConnection parent node.
 var _multiplayer_connection: MultiplayerConnection = null
@@ -65,6 +68,10 @@ func _authenticate_user(username: String, cookie: String) -> bool:
 		return false
 
 	return user.cookie == cookie
+
+
+func create_player(class_string: String):
+	_create_player.rpc_id(1, class_string)
 
 
 func _get_user_by_username(username: String) -> MultiplayerConnection.User:
@@ -132,14 +139,62 @@ func _load_player():
 		return
 
 	if user.player == null:
-		# # TODO: fix this spawn location
-		# user.player = _multiplayer_connection.map.server_add_player(
-		# 	id, user.username, Vector2(0, 128)
-		# )
+		var player_data: Dictionary = _multiplayer_connection.database.load_player_data(
+			user.username
+		)
 
-		_load_player_response.rpc_id(id, id, false, user.username, Vector2.ZERO)
+		# This means the plauyer has not been created yet
+		if player_data.is_empty():
+			_load_player_response.rpc_id(id, id, false, user.username, Vector2.ZERO)
+		else:
+			# Add the player initially to the spawn location as it will be overwritten by the persistent position
+			user.player = _multiplayer_connection.map.server_add_player(
+				id, user.username, Vector2(0, 128)
+			)
+
+			_load_player_response.rpc_id(id, id, true, user.username, user.player.position)
+
 	else:
 		_load_player_response.rpc_id(id, id, true, user.username, user.player.position)
+
+
+@rpc("call_remote", "any_peer", "reliable")
+func _create_player(class_string: String):
+	if not _multiplayer_connection.multiplayer_api.is_server():
+		return
+
+	var id = _multiplayer_connection.multiplayer_api.get_remote_sender_id()
+
+	# Only allow logged in players
+	if not _multiplayer_connection.is_user_logged_in(id):
+		return
+
+	var user: MultiplayerConnection.User = _multiplayer_connection.get_user_by_id(id)
+	if user == null:
+		GodotLogger.warn("Could not find user with id=%d" % id)
+		return
+
+	if user.player == null:
+		var player_data: Dictionary = _multiplayer_connection.database.load_player_data(
+			user.username
+		)
+
+		# This means the plauyer has not been created yet
+		if player_data.is_empty():
+			var retval: bool = _multiplayer_connection.database.create_player(
+				user.username, class_string, _multiplayer_connection.map.name, spawn_location
+			)
+
+			_create_player_response.rpc_id(id, retval)
+
+	# If the player is already set, which means he/she already exists, the create will fail
+	else:
+		_create_player_response.rpc_id(id, false)
+
+
+@rpc("call_remote", "authority", "reliable")
+func _create_player_response(response: bool):
+	player_created.emit(response)
 
 
 @rpc("call_remote", "authority", "reliable")

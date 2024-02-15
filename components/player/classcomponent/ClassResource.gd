@@ -2,10 +2,6 @@ extends Resource
 
 class_name ClassResource
 
-enum CLASSES { NONE, WARRIOR, RANGER, WIZARD }
-
-@export var character_class: CLASSES = CLASSES.NONE
-
 @export_group("Base Stats")
 @export var base_hp_max: int = 100
 @export var base_energy_max: int = 100

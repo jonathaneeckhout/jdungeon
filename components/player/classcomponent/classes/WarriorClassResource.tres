@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="ClassResource" load_steps=2 format=3 uid="uid://c7oky3c4yx438"]
+
+[ext_resource type="Script" path="res://components/player/classcomponent/ClassResource.gd" id="1_c8oqo"]
+
+[resource]
+script = ExtResource("1_c8oqo")
+base_hp_max = 200
+base_energy_max = 50
+base_energy_regen = 2
+base_attack_power_min = 0
+base_attack_power_max = 10
+base_defense = 5
+base_movement_speed = 300.0
+level_boost_hp_max = 10.0
+level_boost_energy_max = 0.5
+level_boost_energy_regen = 0.5
+level_boost_attack_power_min = 2.0
+level_boost_attack_power_max = 3.0
+level_boost_defense = 2.0
+level_boost_movement_speed = 1.0

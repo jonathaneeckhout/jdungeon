@@ -143,7 +143,8 @@ it hits,
  it wrecks"
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior"]
+[node name="SelectWarriorButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer/PanelContainer/Warrior"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Pick Warrior"
 
@@ -203,7 +204,8 @@ it shoots,
  it dodges"
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger"]
+[node name="SelectRangerButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer2/PanelContainer/Ranger"]
+unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "Pick Ranger"
@@ -264,7 +266,8 @@ it heals,
  it curses"
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard"]
+[node name="SelectWizardButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/MarginContainer3/PanelContainer/Wizard"]
+unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "Pick Wizard"
