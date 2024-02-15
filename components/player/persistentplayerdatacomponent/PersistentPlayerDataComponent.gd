@@ -57,6 +57,10 @@ func load_persistent_data() -> bool:
 		return true
 
 	# This function's minimal requirement is that the world and postion key is available in the data
+	if not "class" in data:
+		GodotLogger.warn('Invalid format of data, missing "class" key')
+		return false
+
 	if not "server" in data:
 		GodotLogger.warn('Invalid format of data, missing "server" key')
 		return false
@@ -72,6 +76,8 @@ func load_persistent_data() -> bool:
 	if not "y" in data["position"]:
 		GodotLogger.warn('Invalid format of data, missing "y" key')
 		return false
+
+	target_node.class_string = data["class"]
 
 	target_node.server = data["server"]
 
@@ -98,6 +104,7 @@ func load_persistent_data() -> bool:
 
 func store_persistent_data() -> bool:
 	var data: Dictionary = {
+		"class": target_node.class_string,
 		"server": target_node.server,
 		"position": {"x": target_node.position.x, "y": target_node.position.y}
 	}

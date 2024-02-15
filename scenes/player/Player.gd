@@ -5,6 +5,7 @@ class_name Player
 var multiplayer_connection: MultiplayerConnection = null
 
 var username: String = ""
+var class_string: String = ""
 var server: String = ""
 var peer_id: int = 0
 var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
