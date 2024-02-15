@@ -94,7 +94,7 @@ func create_player(
 		GodotLogger.warn("Trying to create player=%s who already exists" % username)
 		return false
 
-	data["class"] = class_string
+	data["player_class"] = {"current_class": class_string}
 	data["server"] = server
 	data["position"] = {"x": position.x, "y": position.y}
 

@@ -5,7 +5,7 @@ class_name PersistentPlayerDataComponent
 @export var stats: StatsSynchronizerComponent
 @export var inventory: InventorySynchronizerComponent
 @export var equipment: EquipmentSynchronizerComponent
-# @export var character_class: CharacterClassComponent
+@export var player_class: ClassComponent
 @export var store_interval_time: float = 60.0
 var target_node: Node
 
@@ -57,10 +57,6 @@ func load_persistent_data() -> bool:
 		return true
 
 	# This function's minimal requirement is that the world and postion key is available in the data
-	if not "class" in data:
-		GodotLogger.warn('Invalid format of data, missing "class" key')
-		return false
-
 	if not "server" in data:
 		GodotLogger.warn('Invalid format of data, missing "server" key')
 		return false
@@ -76,8 +72,6 @@ func load_persistent_data() -> bool:
 	if not "y" in data["position"]:
 		GodotLogger.warn('Invalid format of data, missing "y" key')
 		return false
-
-	target_node.class_string = data["class"]
 
 	target_node.server = data["server"]
 
@@ -95,16 +89,15 @@ func load_persistent_data() -> bool:
 		if not equipment.from_json(data["equipment"]):
 			GodotLogger.warn("Failed to load equipment from data")
 
-	# if character_class and "characterClass" in data:
-	# 	if not character_class.from_json(data["characterClass"]):
-	# 		GodotLogger.warn("Failed to load character classes from data")
+	if player_class and "player_class" in data:
+		if not player_class.from_json(data["player_class"]):
+			GodotLogger.warn("Failed to load player class from data")
 
 	return true
 
 
 func store_persistent_data() -> bool:
 	var data: Dictionary = {
-		"class": target_node.class_string,
 		"server": target_node.server,
 		"position": {"x": target_node.position.x, "y": target_node.position.y}
 	}
@@ -118,8 +111,8 @@ func store_persistent_data() -> bool:
 	if equipment:
 		data["equipment"] = equipment.to_json()
 
-	# if character_class:
-	# 	data["characterClass"] = character_class.to_json()
+	if player_class:
+		data["player_class"] = player_class.to_json()
 
 	return target_node.multiplayer_connection.database.store_player_data(target_node.username, data)
 

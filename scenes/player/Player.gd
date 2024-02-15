@@ -15,8 +15,8 @@ var component_list: Dictionary = {}
 @onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
 @onready var inventory: InventorySynchronizerComponent = $InventorySynchronizerComponent
 @onready var equipment: EquipmentSynchronizerComponent = $EquipmentSynchronizerComponent
-
 @onready var shop: Shop = $Camera2D/UILayer/Shop
+@onready var player_class: ClassComponent = $ClassComponent
 
 
 func _init():
