@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://components/common/energysynchronizercomponent/EnergySynchronizerRPC.gd" id="1_bk8sg"]
 
-[node name="EnergySynchronizerRpc" type="Node"]
+[node name="EnergySynchronizerRPC" type="Node"]
 script = ExtResource("1_bk8sg")

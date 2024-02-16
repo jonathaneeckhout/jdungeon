@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dlnldc56ncopd"]
+
+[ext_resource type="Script" path="res://components/common/combatattributesynchronizer/CombatAttributeRPC.gd" id="1_mafui"]
+
+[node name="CombatAttributeRPC" type="Node"]
+script = ExtResource("1_mafui")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddjoxx5s1fosq"]
+
+[ext_resource type="Script" path="res://components/common/combatattributesynchronizer/CombatAttributeSynchronizer.gd" id="1_ek17q"]
+
+[node name="CombatAttributeSynchronizer" type="Node"]
+script = ExtResource("1_ek17q")
