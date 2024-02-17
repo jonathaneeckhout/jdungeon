@@ -51,7 +51,7 @@ func _input(event):
 			hide()
 		else:
 			update_inventory()
-			player.inventory.sync_inventory.rpc_id(1)
+			inventory_synchronizer.sync_invendtory.rpc_id(1)
 			show()
 
 
@@ -113,7 +113,7 @@ func update_inventory():
 	panels_with_invalid_items = panel_item_uuid_dictionary.duplicate()
 
 	#Check every inventory item
-	for inv_item: Item in player.inventory.items:
+	for inv_item: Item in inventory_synchronizer.items:
 		#Unmark as invalid those who have been found in the inventory
 		panels_with_invalid_items.erase(inv_item.uuid)
 
