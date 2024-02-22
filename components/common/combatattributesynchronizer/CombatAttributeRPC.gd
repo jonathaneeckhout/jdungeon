@@ -40,6 +40,12 @@ func request_sync(entity_name: String):
 	_network_message_handler.send_message(1, message_identifier, [TYPE.SYNC, entity_name])
 
 
+func sync_response(peer_id: int, entity_name: String, data: Dictionary):
+	_network_message_handler.send_message(
+		peer_id, message_identifier, [TYPE.SYNC_RESPONSE, entity_name, data]
+	)
+
+
 #Called by client, runs on server
 func _request_sync(id: int, n: String):
 	assert(_multiplayer_connection.is_server(), "This call can only run on the server")
@@ -57,7 +63,7 @@ func _request_sync(id: int, n: String):
 		return
 
 	if entity.component_list.has(CombatAttributeSynchronizerComponent.COMPONENT_NAME):
-		_sync_response.rpc_id(
+		sync_response(
 			id,
 			n,
 			entity.component_list[CombatAttributeSynchronizerComponent.COMPONENT_NAME].to_json()
