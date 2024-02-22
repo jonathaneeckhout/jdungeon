@@ -59,7 +59,18 @@ func _ready():
 		"Failed to get CombatAttributeSynchronizerRPC component"
 	)
 
-	_combat_attribute_synchronizer_rpc.request_sync(_target_node.name)
+	if not _target_node.multiplayer_connection.is_server():
+		if not _target_node.multiplayer_connection.multiplayer_api.has_multiplayer_peer():
+			await _target_node.multiplayer_connection.multiplayer_api.connected_to_server
+
+		#Wait an additional frame so others can get set.
+		await get_tree().process_frame
+
+		#Some entities take a bit to get added to the tree, do not update them until then.
+		if not is_inside_tree():
+			await tree_entered
+
+		_combat_attribute_synchronizer_rpc.request_sync(_target_node.name)
 
 
 func to_json() -> Dictionary:

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwksce78jc7ac"]
+
+[ext_resource type="Script" path="res://components/common/healtsynchronizercomponent/HealthSynchronizerRPC.gd" id="1_8qm6d"]
+
+[node name="HealthSynchronizerRpc" type="Node"]
+script = ExtResource("1_8qm6d")
