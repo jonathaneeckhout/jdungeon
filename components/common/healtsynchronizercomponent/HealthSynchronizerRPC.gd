@@ -95,11 +95,9 @@ func _request_sync(id: int, n: String):
 	if entity.get("component_list") == null:
 		return
 
-	if entity.component_list.has(CombatAttributeSynchronizerComponent.COMPONENT_NAME):
+	if entity.component_list.has(HealthSynchronizerComponent.COMPONENT_NAME):
 		_sync_response.rpc_id(
-			id,
-			n,
-			entity.component_list[CombatAttributeSynchronizerComponent.COMPONENT_NAME].to_json(true)
+			id, n, entity.component_list[HealthSynchronizerComponent.COMPONENT_NAME].to_json(true)
 		)
 
 
@@ -115,8 +113,8 @@ func _sync_response(id: int, n: String, d: Dictionary):
 	if entity.get("component_list") == null:
 		return
 
-	if entity.component_list.has(CombatAttributeSynchronizerComponent.COMPONENT_NAME):
-		entity.component_list[CombatAttributeSynchronizerComponent.COMPONENT_NAME].from_json(d)
+	if entity.component_list.has(HealthSynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[HealthSynchronizerComponent.COMPONENT_NAME].from_json(d)
 
 
 func _sync_hurt(id: int, n: String, t: float, f: String, c: int, d: int):
@@ -131,8 +129,8 @@ func _sync_hurt(id: int, n: String, t: float, f: String, c: int, d: int):
 	if entity.get("component_list") == null:
 		return
 
-	if entity.component_list.has(HealhSynchronizerComponent.COMPONENT_NAME):
-		entity.component_list[HealhSynchronizerComponent.COMPONENT_NAME].sync_hurt(t, f, c, d)
+	if entity.component_list.has(HealthSynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[HealthSynchronizerComponent.COMPONENT_NAME].sync_hurt(t, f, c, d)
 
 
 func _sync_heal(id: int, n: String, t: float, f: String, c: int, h: int):
@@ -147,5 +145,5 @@ func _sync_heal(id: int, n: String, t: float, f: String, c: int, h: int):
 	if entity.get("component_list") == null:
 		return
 
-	if entity.component_list.has(HealhSynchronizerComponent.COMPONENT_NAME):
-		entity.component_list[HealhSynchronizerComponent.COMPONENT_NAME].sync_heal(t, f, c, h)
+	if entity.component_list.has(HealthSynchronizerComponent.COMPONENT_NAME):
+		entity.component_list[HealthSynchronizerComponent.COMPONENT_NAME].sync_heal(t, f, c, h)

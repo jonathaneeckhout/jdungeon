@@ -134,7 +134,7 @@ func from_json(data: Dictionary) -> bool:
 	return true
 
 
-func recover(from: String, amount: int) -> int:
+func server_recover(from: String, amount: int) -> int:
 	energy = min(energy_max, energy + amount)
 
 	var timestamp: float = Time.get_unix_time_from_system()
@@ -152,6 +152,10 @@ func recover(from: String, amount: int) -> int:
 	energy_recovered.emit(from, amount)
 
 	return amount
+
+
+func server_reset_energy():
+	server_recover("", energy_max)
 
 
 func sync_energy_consume(timestamp: float, from: String, current_energy: int, amount: int):
@@ -180,4 +184,4 @@ func sync_energy_recover(timestamp: float, from: String, current_energy: int, am
 
 func _on_energy_regen_timer_timeout():
 	if energy != energy_max:
-		recover(_target_node.get_name(), energy_regen)
+		server_recover(_target_node.get_name(), energy_regen)

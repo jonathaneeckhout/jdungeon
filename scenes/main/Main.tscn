@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=28 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
@@ -17,10 +17,13 @@
 [ext_resource type="PackedScene" uid="uid://d4c6yl66u2fdc" path="res://components/player/playersynchronizer/PlayerSynchronizerRPC.tscn" id="10_ghnhu"]
 [ext_resource type="PackedScene" uid="uid://cyd1haegch4ux" path="res://components/connection/ClientFSM/ClientFSM.tscn" id="12_7v67k"]
 [ext_resource type="PackedScene" uid="uid://c1mvaiehmnyeq" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerRPC.tscn" id="13_dprpu"]
+[ext_resource type="PackedScene" uid="uid://dlnldc56ncopd" path="res://components/common/combatattributesynchronizer/CombatAttributeRPC.tscn" id="13_ydvlm"]
 [ext_resource type="PackedScene" uid="uid://b7cukljxissss" path="res://components/player/equipmentsynchronizercomponent/EquipmentSynchronizerRPC.tscn" id="14_m4jl4"]
+[ext_resource type="PackedScene" uid="uid://dwksce78jc7ac" path="res://components/common/healtsynchronizercomponent/HealthSynchronizerRPC.tscn" id="14_q4pp8"]
 [ext_resource type="PackedScene" uid="uid://bdgegw7cy4d1r" path="res://scenes/ui/loginpanel/LoginPanel.tscn" id="15_7xr38"]
 [ext_resource type="PackedScene" uid="uid://bikd514i5nqux" path="res://components/connection/Database/Database.tscn" id="15_byw11"]
 [ext_resource type="PackedScene" uid="uid://bopl1rpbyww77" path="res://components/npc/shopsynchronizercomponent/ShopSynchronizerRPC.tscn" id="15_et847"]
+[ext_resource type="PackedScene" uid="uid://051qq36kd7qr" path="res://components/common/energysynchronizercomponent/EnergySynchronizerRPC.tscn" id="15_psvu4"]
 [ext_resource type="PackedScene" uid="uid://d26qxk2biwiyb" path="res://components/player/chatcomponent/ChatServerRPC.tscn" id="16_7gwu3"]
 [ext_resource type="PackedScene" uid="uid://bj1l2sxb06c2o" path="res://components/player/playerunstuckcomponent/PlayerUnstuckRPC.tscn" id="17_5u5ls"]
 [ext_resource type="PackedScene" uid="uid://4is61qacv1a2" path="res://scenes/ui/CreateCharacterPanel/CreateCharacterPanel.tscn" id="24_2vqlc"]
@@ -51,13 +54,13 @@ database = NodePath("../../Database")
 
 [node name="NetworkMessageHandler" parent="Connections/ServerClient" instance=ExtResource("6_08ulk")]
 
-[node name="PositionSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("6_1dj18")]
+[node name="ClockSynchronizer" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("5_emdm5")]
 message_identifier = 1
 
-[node name="PlayerSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("10_ghnhu")]
+[node name="PositionSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("6_1dj18")]
 message_identifier = 2
 
-[node name="ClockSynchronizer" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("5_emdm5")]
+[node name="PlayerSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("10_ghnhu")]
 message_identifier = 3
 
 [node name="ShopSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("15_et847")]
@@ -68,6 +71,15 @@ message_identifier = 5
 
 [node name="NetworkViewSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("9_3pk1n")]
 message_identifier = 6
+
+[node name="CombatAttributeRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("13_ydvlm")]
+message_identifier = 7
+
+[node name="HealthSynchronizerRpc" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("14_q4pp8")]
+message_identifier = 8
+
+[node name="EnergySynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("15_psvu4")]
+message_identifier = 9
 
 [node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
 

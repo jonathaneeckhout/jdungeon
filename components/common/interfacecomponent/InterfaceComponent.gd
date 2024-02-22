@@ -2,11 +2,18 @@ extends Control
 
 class_name InterfaceComponent
 
-@export var stats_synchronizer: StatsSynchronizerComponent
+@export var health_synchronizer: HealthSynchronizerComponent
+@export var energy_synchronizer: EnergySynchronizerComponent
 
 
 func _ready():
-	stats_synchronizer.stats_changed.connect(_on_stats_changed)
+	if health_synchronizer:
+		health_synchronizer.got_hurt.connect(_on_got_hurt)
+		health_synchronizer.healed.connect(_on_healed)
+
+	if energy_synchronizer:
+		energy_synchronizer.energy_consumed.connect(_on_energy_consumed)
+		energy_synchronizer.energy_recovered.connect(_on_energy_recovered)
 
 
 var show_energy: bool = false:
@@ -20,27 +27,29 @@ var display_name: String = "":
 		$Name.text = new_name
 
 
-## Deprecated function
-func update_hp_bar(hp: int, hp_max: int):
-	if hp_max > 0:
-		$HPBar.value = float(hp * $HPBar.max_value / hp_max)
+func _update_hp_bar():
+	if health_synchronizer.hp_max > 0:
+		$HPBar.value = float(health_synchronizer.hp * $HPBar.max_value / health_synchronizer.hp_max)
 
 
-func _on_stats_changed(stat_type: StatsSynchronizerComponent.TYPE):
-	if (
-		stat_type == StatsSynchronizerComponent.TYPE.HP_MAX
-		or stat_type == StatsSynchronizerComponent.TYPE.HP
-	):
-		if stats_synchronizer.hp_max > 0:
-			$HPBar.value = float(
-				stats_synchronizer.hp * $HPBar.max_value / stats_synchronizer.hp_max
-			)
+func _update_energy_bar():
+	if energy_synchronizer.energy_max > 0:
+		$EnergyBar.value = float(
+			energy_synchronizer.energy * $EnergyBar.max_value / energy_synchronizer.energy_max
+		)
 
-	elif (
-		stat_type == StatsSynchronizerComponent.TYPE.ENERGY_MAX
-		or stat_type == StatsSynchronizerComponent.TYPE.ENERGY
-	):
-		if stats_synchronizer.energy_max > 0:
-			$EnergyBar.value = float(
-				stats_synchronizer.energy * $HPBar.max_value / stats_synchronizer.energy_max
-			)
+
+func _on_got_hurt(_from: String, _damage: int):
+	_update_hp_bar()
+
+
+func _on_healed(_from: String, _healing: int):
+	_update_hp_bar()
+
+
+func _on_energy_consumed(_from: String, _amount: int):
+	_update_energy_bar()
+
+
+func _on_energy_recovered(_from: String, _amount: int):
+	_update_energy_bar()

@@ -12,7 +12,6 @@ var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
 
 var component_list: Dictionary = {}
 
-@onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
 @onready var inventory: InventorySynchronizerComponent = $InventorySynchronizerComponent
 @onready var equipment: EquipmentSynchronizerComponent = $EquipmentSynchronizerComponent
 @onready var shop: Shop = $Camera2D/UILayer/Shop
@@ -35,8 +34,8 @@ func _ready():
 		$InterfaceComponent.display_name = username
 
 		if multiplayer_connection.is_own_player(self):
-			stats.died.connect(_on_died)
-			stats.respawned.connect(_on_respawned)
+			#stats.died.connect(_on_died)
+			#stats.respawned.connect(_on_respawned)
 
 			focus_camera()
 		else:

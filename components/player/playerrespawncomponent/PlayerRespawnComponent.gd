@@ -2,7 +2,9 @@ extends Node
 
 class_name PlayerRespawnComponent
 
-@export var stats_synchronizer: StatsSynchronizerComponent
+@export var health_synchronizer: HealthSynchronizerComponent
+@export var energy_synchronizer: EnergySynchronizerComponent
+
 @export var respawn_time: float = 10
 
 var _target_node: Node
@@ -23,7 +25,7 @@ func _ready():
 		GodotLogger.error("target_node does not have the position variable")
 		return
 
-	stats_synchronizer.died.connect(_on_died)
+	health_synchronizer.died.connect(_on_died)
 
 	_respawn_timer = Timer.new()
 	_respawn_timer.name = "RespawnTimer"
@@ -36,12 +38,15 @@ func _ready():
 
 func respawn(location: Vector2):
 	GodotLogger.info("Respawning=[%s]" % _target_node.name)
+
 	_target_node.position = location
-	stats_synchronizer.reset_hp()
-	stats_synchronizer.reset_energy()
+
+	health_synchronizer.server_reset_hp()
+
+	energy_synchronizer.server_reset_energy()
 
 
-func _on_died():
+func _on_died(_from: String):
 	GodotLogger.info("%s died, starting respawn timer" % _target_node.name)
 	_respawn_timer.start()
 

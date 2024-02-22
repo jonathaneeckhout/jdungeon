@@ -1,9 +1,10 @@
 extends Node
 
-class_name HealhSynchronizerComponent
+class_name HealthSynchronizerComponent
 
 signal got_hurt(from: String, damage: int)
 signal healed(from: String, healing: int)
+signal died(from: String)
 
 const COMPONENT_NAME: String = "health_synchronizer"
 
@@ -56,6 +57,8 @@ func _ready():
 
 	# Ensure the HealthSynchronizerRPC component is present
 	assert(_health_synchronizer_rpc != null, "Failed to get HealthSynchronizerRPC component")
+
+	got_hurt.connect(_on_got_hurt)
 
 	if not _target_node.multiplayer_connection.is_server():
 		if not _target_node.multiplayer_connection.multiplayer_api.has_multiplayer_peer():
@@ -166,6 +169,10 @@ func server_heal(from: String, healing: int) -> int:
 	return healing
 
 
+func server_reset_hp():
+	server_heal("", hp_max)
+
+
 func sync_hurt(timestamp: float, from: String, current_hp: int, damage: int):
 	_server_buffer.append(
 		{
@@ -188,3 +195,8 @@ func sync_heal(timestamp: float, from: String, current_hp: int, healing: int):
 			"healing": healing
 		}
 	)
+
+
+func _on_got_hurt(from: String, _damage: int):
+	if hp <= 0:
+		died.emit(from)
