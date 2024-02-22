@@ -2,7 +2,7 @@ extends Node
 
 class_name LootComponent
 
-@export var stats: StatsSynchronizerComponent
+@export var health_synchronizer: HealthSynchronizerComponent
 @export var drop_range: int = 64
 
 var target_node: Node
@@ -22,7 +22,7 @@ func _ready():
 	if not target_node.multiplayer_connection.is_server():
 		return
 
-	stats.died.connect(_on_died)
+	health_synchronizer.died.connect(_on_died)
 
 
 func drop_loot():
@@ -47,5 +47,5 @@ func add_item_to_loottable(item_class: String, drop_rate: float, amount: int = 1
 	loot_table.append({"item_class": item_class, "drop_rate": drop_rate, "amount": amount})
 
 
-func _on_died():
+func _on_died(_from: String):
 	drop_loot()

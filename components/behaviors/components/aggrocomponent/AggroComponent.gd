@@ -14,8 +14,8 @@ var _parent: Node = null
 # The actor for this wander component
 var _target_node: Node = null
 
-# The stats sychronizer used to check if the parent node is dead or not
-var _stats_component: StatsSynchronizerComponent = null
+var _health_synchronizer: HealthSynchronizerComponent = null
+var _combat_attribute_synchronizer: CombatAttributeSynchronizerComponent = null
 
 # The action synchronzer used to sync the attack animation to other players
 var _action_synchronizer: ActionSynchronizerComponent = null
@@ -87,10 +87,16 @@ func _ready():
 
 func _link_parent():
 	assert(
-		_parent.get("stats_component") != null,
-		"The parent behavior should have the stats_component variable"
+		_parent.get("health_synchronizer") != null,
+		"The parent behavior should have the health_synchronizer variable"
 	)
-	_stats_component = _parent.stats_component
+	_health_synchronizer = _parent.health_synchronizer
+
+	assert(
+		_parent.get("combat_attribute_synchronizer") != null,
+		"The parent behavior should have the combat_attribute_synchronizer variable"
+	)
+	_combat_attribute_synchronizer = _parent.combat_attribute_synchronizer
 
 	assert(
 		_parent.get("action_synchronizer") != null,
@@ -122,7 +128,10 @@ func aggro():
 		return
 
 	# If the player is close enough, hit him
-	if _target_node.position.distance_to(current_target.position) < _stats_component.attack_range:
+	if (
+		_target_node.position.distance_to(current_target.position)
+		< _combat_attribute_synchronizer.attack_range
+	):
 		# Don't do anything if the attack timer is running, this means your attack is still on timeout
 		if !_attack_timer.is_stopped():
 			return
@@ -133,7 +142,8 @@ func aggro():
 
 		# Generate a random damage between the parents's min and max attack power
 		var damage: int = randi_range(
-			_stats_component.attack_power_min, _stats_component.attack_power_max
+			_combat_attribute_synchronizer.attack_power_min,
+			_combat_attribute_synchronizer.attack_power_max
 		)
 
 		# This is the call that actually hurts the target
@@ -143,7 +153,7 @@ func aggro():
 		_action_synchronizer.attack(_target_node.position.direction_to(current_target.position))
 
 		# Start the timer so that the parent needs to wait for this timer to stop before performing another attack
-		_attack_timer.start(_stats_component.attack_speed)
+		_attack_timer.start(_combat_attribute_synchronizer.attack_speed)
 
 	# If the player is out of range, move towards him
 	else:
@@ -152,7 +162,7 @@ func aggro():
 			# Calculate the velocity towards the current target
 			_target_node.velocity = (
 				_target_node.position.direction_to(current_target.position)
-				* _stats_component.movement_speed
+				* _combat_attribute_synchronizer.movement_speed
 			)
 
 			# Try to move to the next point but avoid any obstacles
@@ -177,7 +187,7 @@ func aggro():
 				# Calculate the velocity towards this next path position
 				_target_node.velocity = (
 					_target_node.position.direction_to(next_path_position)
-					* _stats_component.movement_speed
+					* _combat_attribute_synchronizer.movement_speed
 				)
 
 				# Try to move to the next point but avoid any obstacles

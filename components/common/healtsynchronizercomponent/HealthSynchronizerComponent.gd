@@ -170,6 +170,7 @@ func server_heal(from: String, healing: int) -> int:
 
 
 func server_reset_hp():
+	is_dead = false
 	server_heal("", hp_max)
 
 
@@ -199,4 +200,5 @@ func sync_heal(timestamp: float, from: String, current_hp: int, healing: int):
 
 func _on_got_hurt(from: String, _damage: int):
 	if hp <= 0:
+		is_dead = true
 		died.emit(from)

@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var stats_synchronizer: StatsSynchronizerComponent
+@export var health_synchronizer: HealthSynchronizerComponent
 
 @onready var floating_text_scene = preload("res://scenes/templates/FloatingText/FloatingText.tscn")
 
@@ -16,8 +16,8 @@ func _ready():
 	if _target_node.multiplayer_connection.is_server():
 		return
 
-	stats_synchronizer.healed.connect(_on_healed)
-	stats_synchronizer.got_hurt.connect(_on_got_hurt)
+	health_synchronizer.healed.connect(_on_healed)
+	health_synchronizer.got_hurt.connect(_on_got_hurt)
 
 
 func _on_got_hurt(_from: String, damage: int):

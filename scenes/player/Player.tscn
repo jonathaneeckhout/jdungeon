@@ -1787,8 +1787,7 @@ script = ExtResource("1_yw2vn")
 
 [node name="NetworkViewSynchronizerComponent" parent="." instance=ExtResource("2_gjeic")]
 
-[node name="PersistentPlayerDataComponent" parent="." node_paths=PackedStringArray("stats", "inventory", "equipment", "player_class") instance=ExtResource("3_trlr1")]
-stats = NodePath("")
+[node name="PersistentPlayerDataComponent" parent="." node_paths=PackedStringArray("inventory", "equipment", "player_class") instance=ExtResource("3_trlr1")]
 inventory = NodePath("../InventorySynchronizerComponent")
 equipment = NodePath("../EquipmentSynchronizerComponent")
 player_class = NodePath("../ClassComponent")
@@ -1825,8 +1824,9 @@ player_synchronizer = NodePath("../PlayerSynchronizer")
 
 [node name="VelocitySimulatorComponent" parent="." instance=ExtResource("9_my4dj")]
 
-[node name="PlayerSynchronizer" parent="." node_paths=PackedStringArray("stats_component", "interaction_component", "action_synchronizer", "animation_player", "update_face") instance=ExtResource("3_hfltt")]
-stats_component = NodePath("")
+[node name="PlayerSynchronizer" parent="." node_paths=PackedStringArray("health_synchronizer", "combat_attribute_synchronizer", "interaction_component", "action_synchronizer", "animation_player", "update_face") instance=ExtResource("3_hfltt")]
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
+combat_attribute_synchronizer = NodePath("../CombatAttributeSynchronizer")
 interaction_component = NodePath("../PlayerInteractionComponent")
 action_synchronizer = NodePath("../ActionSynchronizerComponent")
 animation_player = NodePath("../AnimationPlayer")
@@ -1838,12 +1838,12 @@ offset_bottom = -60.0
 health_synchronizer = NodePath("../HealthSynchronizerComponent")
 energy_synchronizer = NodePath("../EnergySynchronizerComponent")
 
-[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("10_68b1w")]
-stats_synchronizer = NodePath("")
+[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("health_synchronizer") instance=ExtResource("10_68b1w")]
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
 
-[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "action_synchronizer", "update_face") instance=ExtResource("12_1yb8r")]
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "health_synchronizer", "action_synchronizer", "update_face") instance=ExtResource("12_1yb8r")]
 animation_player = NodePath("../AnimationPlayer")
-stats = NodePath("")
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
 action_synchronizer = NodePath("../ActionSynchronizerComponent")
 update_face = NodePath("../UpdateFaceComponent")
 
@@ -2014,7 +2014,7 @@ grow_horizontal = 2
 grow_vertical = 2
 player = NodePath("../../..")
 
-[node name="ExpBar" parent="Camera2D/UILayer" node_paths=PackedStringArray("stats") instance=ExtResource("28_c7q8l")]
+[node name="ExpBar" parent="Camera2D/UILayer" instance=ExtResource("28_c7q8l")]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -2026,11 +2026,9 @@ offset_right = 128.0
 offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 0
-stats = NodePath("")
 
-[node name="StatDisplay" parent="Camera2D/UILayer" node_paths=PackedStringArray("stats") instance=ExtResource("29_lciek")]
+[node name="StatDisplay" parent="Camera2D/UILayer" instance=ExtResource("29_lciek")]
 visible = false
-stats = NodePath("")
 
 [node name="DeathPopup" parent="Camera2D/UILayer" node_paths=PackedStringArray("player_respawn") instance=ExtResource("32_nfctc")]
 unique_name_in_owner = true

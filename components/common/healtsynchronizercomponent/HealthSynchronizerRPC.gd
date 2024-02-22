@@ -97,7 +97,7 @@ func _request_sync(id: int, n: String):
 
 	if entity.component_list.has(HealthSynchronizerComponent.COMPONENT_NAME):
 		_sync_response.rpc_id(
-			id, n, entity.component_list[HealthSynchronizerComponent.COMPONENT_NAME].to_json(true)
+			id, n, entity.component_list[HealthSynchronizerComponent.COMPONENT_NAME].to_json()
 		)
 
 

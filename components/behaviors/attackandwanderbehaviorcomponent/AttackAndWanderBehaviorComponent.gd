@@ -2,8 +2,8 @@ extends Node2D
 
 class_name AttackAndWanderBehaviorComponent
 
-## The stats sychronizer used to check if the parent node is dead or not
-@export var stats_component: StatsSynchronizerComponent
+@export var health_synchronizer: HealthSynchronizerComponent
+@export var combat_attribute_synchronizer: CombatAttributeSynchronizerComponent
 
 ## The action synchronzer used to sync the attack animation to other players
 @export var action_synchronizer: ActionSynchronizerComponent
@@ -57,7 +57,7 @@ func _physics_process(_delta: float):
 
 func _behavior():
 	# If the parent node is dead, don't do anything
-	if stats_component.is_dead:
+	if health_synchronizer.is_dead:
 		_target_node.velocity = Vector2.ZERO
 		return
 

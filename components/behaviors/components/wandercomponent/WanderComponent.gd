@@ -11,8 +11,8 @@ var _parent: Node = null
 # The actor for this wander component
 var _target_node: Node = null
 
-# The stats sychronizer used to check if the parent node is dead or not
-var _stats_component: StatsSynchronizerComponent = null
+var _health_synchronizer: HealthSynchronizerComponent = null
+var _combat_attribute_synchronizer: CombatAttributeSynchronizerComponent = null
 
 # The avoidance ray component is used to detect obstacles ahead
 var _avoidance_rays_component: AvoidanceRaysComponent = null
@@ -86,10 +86,16 @@ func _ready():
 
 func _link_parent():
 	assert(
-		_parent.get("stats_component") != null,
-		"The parent behavior should have the stats_component variable"
+		_parent.get("health_synchronizer") != null,
+		"The parent behavior should have the health_synchronizer variable"
 	)
-	_stats_component = _parent.stats_component
+	_health_synchronizer = _parent.health_synchronizer
+
+	assert(
+		_parent.get("combat_attribute_synchronizer") != null,
+		"The parent behavior should have the combat_attribute_synchronizer variable"
+	)
+	_combat_attribute_synchronizer = _parent.combat_attribute_synchronizer
 
 	assert(
 		_parent.get("avoidance_rays_component") != null,
@@ -130,11 +136,12 @@ func wander():
 
 		# Calculate the velocity towards this next path position
 		_target_node.velocity = (
-			_target_node.position.direction_to(next_path_position) * _stats_component.movement_speed
+			_target_node.position.direction_to(next_path_position)
+			* _combat_attribute_synchronizer.movement_speed
 		)
 
 		# Try to move to the next point but avoid any obstacles
-		_avoidance_rays_component.move_with_avoidance(_target_node.stats.movement_speed)
+		_avoidance_rays_component.move_with_avoidance(_combat_attribute_synchronizer.movement_speed)
 
 		# Check if the parent is stuck or not
 		_check_if_stuck()

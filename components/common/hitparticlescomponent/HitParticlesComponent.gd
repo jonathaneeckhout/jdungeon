@@ -5,7 +5,7 @@ extends Node2D
 class_name HitPatriclesComponent
 
 ## This component is needed to know if the target node has been hit
-@export var stats_synchronizer: StatsSynchronizerComponent
+@export var health_synchronizer: HealthSynchronizerComponent
 
 ## The target node to which the component should act upon
 var _target_node: Node = null
@@ -31,7 +31,7 @@ func _ready():
 		return
 
 	# Connect to the hurt signal to know when to emit particles
-	stats_synchronizer.got_hurt.connect(_on_got_hurt)
+	health_synchronizer.got_hurt.connect(_on_got_hurt)
 
 
 func _on_got_hurt(from: String, _damage: int):

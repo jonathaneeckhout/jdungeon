@@ -17,8 +17,8 @@ var _parent: Node = null
 # The actor for this wander component
 var _target_node: Node = null
 
-# The stats sychronizer used to check if the parent node is dead or not
-var _stats_component: StatsSynchronizerComponent = null
+var _health_synchronizer: HealthSynchronizerComponent = null
+var _combat_attribute_synchronizer: CombatAttributeSynchronizerComponent = null
 
 # The avoidance ray component is used to detect obstacles ahead
 var _avoidance_rays_component: AvoidanceRaysComponent = null
@@ -63,12 +63,18 @@ func _ready():
 
 func _link_parent():
 	assert(
-		_parent.get("stats_component") != null,
-		"The parent behavior should have the stats_component variable"
+		_parent.get("health_synchronizer") != null,
+		"The parent behavior should have the health_synchronizer variable"
 	)
-	_stats_component = _parent.stats_component
+	_health_synchronizer = _parent.health_synchronizer
 
-	_stats_component.got_hurt.connect(_on_got_hurt)
+	_health_synchronizer.got_hurt.connect(_on_got_hurt)
+
+	assert(
+		_parent.get("combat_attribute_synchronizer") != null,
+		"The parent behavior should have the combat_attribute_synchronizer variable"
+	)
+	_combat_attribute_synchronizer = _parent.combat_attribute_synchronizer
 
 	assert(
 		_parent.get("avoidance_rays_component") != null,
@@ -100,7 +106,7 @@ func flee():
 		return
 
 	# Calculate the speed while fleeing
-	var flee_speed: float = _stats_component.movement_speed * _flee_speed_boost
+	var flee_speed: float = _combat_attribute_synchronizer.movement_speed * _flee_speed_boost
 
 	# Face the oposite direction of your attacker
 	_target_node.velocity = (_attacker.position.direction_to(_target_node.position) * flee_speed)

@@ -1,6 +1,6 @@
 extends Node
 
-@export var stats: StatsSynchronizerComponent
+@export var health_synchronizer: HealthSynchronizerComponent
 @export var despawn_time: float = 10.0
 @export var respawn_time: float = 10.0
 @export var should_respawn: bool = true
@@ -30,7 +30,7 @@ func _ready():
 
 	spawn_position = target_node.position
 
-	stats.died.connect(_on_died)
+	health_synchronizer.died.connect(_on_died)
 	despawn_timer = Timer.new()
 	despawn_timer.name = "DespawnTimer"
 	despawn_timer.one_shot = true
@@ -39,7 +39,7 @@ func _ready():
 	add_child(despawn_timer)
 
 
-func _on_died():
+func _on_died(_from: String):
 	despawn_timer.start()
 
 	if target_node is CollisionObject2D:

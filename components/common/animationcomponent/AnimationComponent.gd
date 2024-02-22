@@ -3,7 +3,7 @@ extends Node
 class_name AnimationComponent
 
 @export var animation_player: AnimationPlayer
-@export var stats: StatsSynchronizerComponent
+@export var health_synchronizer: HealthSynchronizerComponent
 @export var action_synchronizer: ActionSynchronizerComponent
 @export var update_face: UpdateFaceComponent
 
@@ -21,7 +21,6 @@ var target_node: Node
 
 var loop_animation: String = idle_animation
 var wait_to_finish: bool = false
-var dead: bool = false
 
 var dual_direction_attack: bool = false
 var original_direction: bool = true
@@ -48,9 +47,8 @@ func _ready():
 		GodotLogger.error("target_node does not have the position variable")
 		return
 
-	stats.got_hurt.connect(_on_got_hurt)
-	stats.died.connect(_on_died)
-	stats.respawned.connect(_on_respawned)
+	health_synchronizer.got_hurt.connect(_on_got_hurt)
+	health_synchronizer.died.connect(_on_died)
 
 	if (
 		animation_player.has_animation(attack_right_hand_animation)
@@ -68,7 +66,7 @@ func _ready():
 
 
 func _physics_process(_delta):
-	if wait_to_finish or dead:
+	if wait_to_finish or health_synchronizer.is_dead:
 		return
 
 	if target_node.velocity.is_zero_approx():
@@ -88,7 +86,7 @@ func _physics_process(_delta):
 
 
 func _on_got_hurt(_from: String, _damage: int):
-	if dead:
+	if health_synchronizer.is_dead:
 		return
 
 	if animation_player.has_animation(hurt_animation):
@@ -97,9 +95,7 @@ func _on_got_hurt(_from: String, _damage: int):
 		wait_to_finish = true
 
 
-func _on_died():
-	dead = true
-
+func _on_died(_from: String):
 	if animation_player.has_animation(die_animation):
 		animation_player.stop()
 		animation_player.play(die_animation)
@@ -109,12 +105,8 @@ func _on_died():
 		target_node.collision_mask = 0
 
 
-func _on_respawned():
-	dead = false
-
-
 func _on_attacked(_direction: Vector2):
-	if dead:
+	if health_synchronizer.is_dead:
 		return
 
 	if animation_player.is_playing():

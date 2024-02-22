@@ -60,7 +60,7 @@ func _request_sync(id: int, n: String):
 		_sync_response.rpc_id(
 			id,
 			n,
-			entity.component_list[CombatAttributeSynchronizerComponent.COMPONENT_NAME].to_json(true)
+			entity.component_list[CombatAttributeSynchronizerComponent.COMPONENT_NAME].to_json()
 		)
 
 

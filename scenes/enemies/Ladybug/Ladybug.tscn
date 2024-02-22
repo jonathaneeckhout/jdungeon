@@ -1,11 +1,12 @@
-[gd_scene load_steps=27 format=3 uid="uid://bsauq1smmlnkl"]
+[gd_scene load_steps=29 format=3 uid="uid://bsauq1smmlnkl"]
 
 [ext_resource type="Script" path="res://scenes/enemies/Ladybug/Ladybug.gd" id="1_kxhsd"]
 [ext_resource type="PackedScene" uid="uid://kb8mhtyak1ki" path="res://components/common/watchersynchronizercomponent/WatcherSynchronizerComponent.tscn" id="1_q6d72"]
 [ext_resource type="PackedScene" uid="uid://c5tliladmodux" path="res://components/common/positionsynchronizercomponent/PositionSynchronizerComponent.tscn" id="2_gyryr"]
-[ext_resource type="PackedScene" uid="uid://c8cji8g03ayyx" path="res://components/common/statssynchronizercomponent/StatsSynchronizerComponent.tscn" id="3_hr36v"]
 [ext_resource type="PackedScene" uid="uid://d2ippv4gqf6as" path="res://components/behaviors/fleeandwanderbehaviorcomponent/FleeAndWanderBehaviorCopmonent.tscn" id="4_2pd3h"]
+[ext_resource type="PackedScene" uid="uid://ddjoxx5s1fosq" path="res://components/common/combatattributesynchronizer/CombatAttributeSynchronizer.tscn" id="5_ksd2b"]
 [ext_resource type="PackedScene" uid="uid://pateh36oi60s" path="res://components/enemy/lootcomponent/LootComponent.tscn" id="5_liyjx"]
+[ext_resource type="PackedScene" uid="uid://bih70p5d05ob2" path="res://components/common/healtsynchronizercomponent/HealthSynchronizerComponent.tscn" id="6_hwuw2"]
 [ext_resource type="PackedScene" uid="uid://dikf715gqy3x" path="res://components/enemy/enemyrespawncomponent/EnemyRespawnComponent.tscn" id="6_hxky4"]
 [ext_resource type="PackedScene" uid="uid://dfkcs65b1vpi3" path="res://components/common/updatefacecomponent/UpdateFaceComponent.tscn" id="7_tstyb"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="8_0qsyc"]
@@ -13,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="10_j2kad"]
 [ext_resource type="Texture2D" uid="uid://cqg88k6138b4k" path="res://assets/images/enemies/ladybug/scaled/Back wing cover.png" id="12_7lv0i"]
 [ext_resource type="PackedScene" uid="uid://cy3sl4bl86h6m" path="res://components/common/velocitysimulatorcomponent/VelocitySimulatorComponent.tscn" id="12_ygth8"]
+[ext_resource type="PackedScene" uid="uid://olha5mwr7hcr" path="res://components/common/hitparticlescomponent/HitParticlesComponent.tscn" id="13_s3jhs"]
 [ext_resource type="Texture2D" uid="uid://cmqj7o6ykxgdh" path="res://assets/images/enemies/ladybug/scaled/Back wing.png" id="13_said4"]
 [ext_resource type="Texture2D" uid="uid://dsdssqsqt78k" path="res://assets/images/enemies/ladybug/scaled/Body.png" id="14_rxh3s"]
 [ext_resource type="Texture2D" uid="uid://i4vljsobr55n" path="res://assets/images/enemies/ladybug/scaled/Front wing .png" id="15_c82sp"]
@@ -634,39 +636,43 @@ script = ExtResource("1_kxhsd")
 [node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("2_gyryr")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
-[node name="StatsSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("3_hr36v")]
+[node name="CombatAttributeSynchronizer" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("5_ksd2b")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
-hp_max = 20
-hp = 20
-movement_speed = 128.0
-experience_worth = 10
 
-[node name="FleeAndWanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("stats_component") instance=ExtResource("4_2pd3h")]
-stats_component = NodePath("../StatsSynchronizerComponent")
+[node name="HealthSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "combat_attribute") instance=ExtResource("6_hwuw2")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+combat_attribute = NodePath("../CombatAttributeSynchronizer")
+
+[node name="FleeAndWanderBehaviorCopmonent" parent="." node_paths=PackedStringArray("health_synchronizer", "combat_attribute_synchronizer") instance=ExtResource("4_2pd3h")]
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
+combat_attribute_synchronizer = NodePath("../CombatAttributeSynchronizer")
 max_wander_distance = 512.0
 flee_speed_boost = 1.5
 
-[node name="LootComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("5_liyjx")]
-stats = NodePath("../StatsSynchronizerComponent")
+[node name="LootComponent" parent="." node_paths=PackedStringArray("health_synchronizer") instance=ExtResource("5_liyjx")]
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
 
-[node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("stats") instance=ExtResource("6_hxky4")]
-stats = NodePath("../StatsSynchronizerComponent")
+[node name="EnemyRespawnComponent" parent="." node_paths=PackedStringArray("health_synchronizer") instance=ExtResource("6_hxky4")]
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
 
 [node name="UpdateFaceComponent" parent="." node_paths=PackedStringArray("skeleton") instance=ExtResource("7_tstyb")]
 skeleton = NodePath("../Skeleton")
 
-[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "stats", "update_face") instance=ExtResource("8_0qsyc")]
+[node name="AnimationComponent" parent="." node_paths=PackedStringArray("animation_player", "health_synchronizer", "update_face") instance=ExtResource("8_0qsyc")]
 animation_player = NodePath("../AnimationPlayer")
-stats = NodePath("../StatsSynchronizerComponent")
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
 update_face = NodePath("../UpdateFaceComponent")
 
-[node name="InterfaceComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("9_td36y")]
+[node name="InterfaceComponent" parent="." node_paths=PackedStringArray("health_synchronizer") instance=ExtResource("9_td36y")]
 offset_top = -30.0
 offset_bottom = 10.0
-stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
 
-[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("stats_synchronizer") instance=ExtResource("10_j2kad")]
-stats_synchronizer = NodePath("../StatsSynchronizerComponent")
+[node name="FloatingTextComponent" parent="." node_paths=PackedStringArray("health_synchronizer") instance=ExtResource("10_j2kad")]
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
+
+[node name="HitParticlesComponent" parent="." node_paths=PackedStringArray("health_synchronizer") instance=ExtResource("13_s3jhs")]
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
 
 [node name="VelocitySimulatorComponent" parent="." instance=ExtResource("12_ygth8")]
 

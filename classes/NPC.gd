@@ -8,7 +8,6 @@ var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.NPC
 var npc_class: String = ""
 var component_list: Dictionary = {}
 
-@onready var stats: StatsSynchronizerComponent = $StatsSynchronizerComponent
 @onready var hurtbox: Area2D = $HurtArea
 
 

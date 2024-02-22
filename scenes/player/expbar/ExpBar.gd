@@ -4,9 +4,9 @@ extends ProgressBar
 
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
-	stats.stats_changed.connect(_on_stats_changed)
-	renew_values()
+#func _ready():
+	#stats.stats_changed.connect(_on_stats_changed)
+	#renew_values()
 
 
 func renew_values():

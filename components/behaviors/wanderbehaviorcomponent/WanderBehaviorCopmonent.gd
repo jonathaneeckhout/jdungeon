@@ -2,8 +2,8 @@ extends Node2D
 
 class_name WanderBehaviorComponent
 
-## The stats sychronizer used to check if the parent node is dead or not
-@export var stats_component: StatsSynchronizerComponent
+@export var health_synchronizer: HealthSynchronizerComponent
+@export var combat_attribute_synchronizer: CombatAttributeSynchronizerComponent
 
 ## The minimum time the parent will stay idle
 @export var min_idle_time: int = 3
@@ -51,7 +51,7 @@ func _physics_process(_delta: float):
 
 func _behavior():
 	# If the parent node is dead, don't do anything
-	if stats_component.is_dead:
+	if health_synchronizer.is_dead:
 		_target_node.velocity = Vector2.ZERO
 		return
 

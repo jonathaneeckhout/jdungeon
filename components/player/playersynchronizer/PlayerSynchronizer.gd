@@ -22,7 +22,8 @@ const ATTACK_LEFT_HAND_ANIMATIONS: Array[String] = [
 ## TODO: fetch the interpolation offset from the positionsynchronizer
 const INTERPOLATION_OFFSET: float = 0.1
 
-@export var stats_component: StatsSynchronizerComponent
+@export var health_synchronizer: HealthSynchronizerComponent
+@export var combat_attribute_synchronizer: CombatAttributeSynchronizerComponent
 @export var interaction_component: PlayerInteractionComponent
 @export var action_synchronizer: ActionSynchronizerComponent
 @export var animation_player: AnimationPlayer
@@ -92,7 +93,7 @@ func _ready():
 		update_face.direction_changed.connect(_on_direction_changed)
 
 		# Connect to the died signal to animate the died animation
-		stats_component.died.connect(_on_died)
+		health_synchronizer.died.connect(_on_died)
 
 		# Connect to the interacted signal to handle interactions
 		interacted.connect(_on_client_interacted)
@@ -167,7 +168,7 @@ func _physics_process(delta):
 	# Common-side logic
 
 	# Don't do anything when the player is dead
-	if stats_component.is_dead:
+	if health_synchronizer.is_dead:
 		return
 
 	# Don't do anything if the chat is active
@@ -238,7 +239,7 @@ func _server_handle_inputs(delta: float):
 # This is needed because the client sends inputs at a higher rate than the server physics server frame rate
 func _perform_physics_step(direction: Vector2, fraction: float):
 	# Calculate the fractioned velocity
-	_target_node.velocity = direction * stats_component.movement_speed * fraction
+	_target_node.velocity = direction * combat_attribute_synchronizer.movement_speed * fraction
 
 	# Perform the actual move and collision checking
 	_target_node.move_and_slide()
@@ -246,7 +247,7 @@ func _perform_physics_step(direction: Vector2, fraction: float):
 
 func _client_handle_right_click(click_global_pos: Vector2):
 	# Don't handle inputs when dead
-	if stats_component.is_dead:
+	if health_synchronizer.is_dead:
 		return
 
 	# Fetch targets under the cursor
@@ -394,14 +395,15 @@ func server_handle_attack_request(timestamp: float, direction: Vector2, enemies:
 		):
 			# Generate a random damage between the player's min and max attack power
 			var damage: int = randi_range(
-				stats_component.attack_power_min, stats_component.attack_power_max
+				combat_attribute_synchronizer.attack_power_min,
+				combat_attribute_synchronizer.attack_power_max
 			)
 
 			# This is the call that actually hurts the enemy
 			enemy.stats.hurt(_target_node, damage)
 
 
-func _on_died():
+func _on_died(_from: String):
 	# When died, you play the die animation
 	animation_player.play("Die")
 
@@ -462,7 +464,7 @@ func _on_client_interacted(target: Node2D):
 	attacked.emit(attack_direction)
 
 	# Start the timer so that the player needs to wait for this timer to stop before performing another attack
-	_attack_timer.start(stats_component.attack_speed)
+	_attack_timer.start(combat_attribute_synchronizer.attack_speed)
 
 	var hit_enemies: Array[String] = []
 

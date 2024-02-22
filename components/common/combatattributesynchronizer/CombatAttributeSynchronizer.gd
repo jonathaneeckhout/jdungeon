@@ -70,7 +70,8 @@ func _ready():
 		if not is_inside_tree():
 			await tree_entered
 
-		_combat_attribute_synchronizer_rpc.request_sync(_target_node.name)
+		if sync_to_client:
+			_combat_attribute_synchronizer_rpc.request_sync(_target_node.name)
 
 
 func to_json() -> Dictionary:
