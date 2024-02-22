@@ -137,7 +137,7 @@ func aggro():
 			return
 
 		# We shall leave the dead alone
-		if current_target.stats.is_dead:
+		if current_target.health.is_dead:
 			return
 
 		# Generate a random damage between the parents's min and max attack power
@@ -147,7 +147,7 @@ func aggro():
 		)
 
 		# This is the call that actually hurts the target
-		current_target.stats.hurt(_target_node, damage)
+		current_target.health.server_hurt(_target_node, damage)
 
 		# Synchronize to other players that the parent attacked
 		_action_synchronizer.attack(_target_node.position.direction_to(current_target.position))
@@ -166,7 +166,7 @@ func aggro():
 			)
 
 			# Try to move to the next point but avoid any obstacles
-			_avoidance_rays_component.move_with_avoidance(_target_node.stats.movement_speed)
+			_avoidance_rays_component.move_with_avoidance(_combat_attribute_synchronizer.movement_speed)
 		else:
 			# If the target's position has changed and the search path timer is not running, calculate a new path towards the target
 			if _search_path_timer.is_stopped():
@@ -191,7 +191,7 @@ func aggro():
 				)
 
 				# Try to move to the next point but avoid any obstacles
-				_avoidance_rays_component.move_with_avoidance(_target_node.stats.movement_speed)
+				_avoidance_rays_component.move_with_avoidance(_combat_attribute_synchronizer.movement_speed)
 
 			# Navigation is finish, let's calculate a new path
 			else:
@@ -214,7 +214,7 @@ func select_first_alive_target():
 	current_target = null
 
 	for player: Player in _players_in_aggro_range:
-		if not player.stats.is_dead:
+		if not player.health.is_dead:
 			current_target = player
 
 

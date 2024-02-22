@@ -88,7 +88,7 @@ func server_use(player: Player) -> bool:
 	match item_type:
 		ITEM_TYPE.CONSUMABLE:
 			if boost.hp > 0:
-				player.stats.heal(self.name, boost.hp)
+				player.health.server_heal(self.name, boost.hp)
 				return true
 		ITEM_TYPE.EQUIPMENT:
 			if player.equipment and player.equipment.server_equip_item(self):

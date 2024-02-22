@@ -380,7 +380,7 @@ func server_handle_attack_request(timestamp: float, direction: Vector2, enemies:
 			continue
 
 		# The dead shall not be touched again
-		if enemy.stats.is_dead:
+		if enemy.health.is_dead:
 			continue
 
 		# If the enemy collided with the target_node's attack area deal damage
@@ -400,7 +400,7 @@ func server_handle_attack_request(timestamp: float, direction: Vector2, enemies:
 			)
 
 			# This is the call that actually hurts the enemy
-			enemy.stats.hurt(_target_node, damage)
+			enemy.health.server_hurt(_target_node, damage)
 
 
 func _on_died(_from: String):

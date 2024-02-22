@@ -12,6 +12,7 @@ var entity_type: J.ENTITY_TYPE = J.ENTITY_TYPE.PLAYER
 
 var component_list: Dictionary = {}
 
+@onready var health: HealthSynchronizerComponent = $HealthSynchronizerComponent
 @onready var inventory: InventorySynchronizerComponent = $InventorySynchronizerComponent
 @onready var equipment: EquipmentSynchronizerComponent = $EquipmentSynchronizerComponent
 @onready var shop: Shop = $Camera2D/UILayer/Shop

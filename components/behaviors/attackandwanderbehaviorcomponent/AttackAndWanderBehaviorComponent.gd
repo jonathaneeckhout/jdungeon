@@ -62,7 +62,7 @@ func _behavior():
 		return
 
 	# Don't aggro if the player is dead
-	elif _aggro_component.current_target and _aggro_component.current_target.stats.is_dead:
+	elif _aggro_component.current_target and _aggro_component.current_target.health.is_dead:
 		_aggro_component.select_first_alive_target()
 
 	# If a player is in range, go after him
