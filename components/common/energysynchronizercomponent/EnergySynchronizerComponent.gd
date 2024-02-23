@@ -7,6 +7,7 @@ const ENERGY_INTERVAL_TIME: float = 1
 
 enum TYPE { ENERGY_CONSUME, ENERGY_RECOVER }
 
+signal loaded
 signal energy_consumed(from: String, amount: int)
 signal energy_recovered(from: String, amount: int)
 
@@ -130,6 +131,8 @@ func from_json(data: Dictionary) -> bool:
 	energy_max = data["energy_max"]
 	energy_regen = data["energy_regen"]
 	energy = data["energy"]
+
+	loaded.emit()
 
 	return true
 

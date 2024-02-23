@@ -1787,7 +1787,9 @@ script = ExtResource("1_yw2vn")
 
 [node name="NetworkViewSynchronizerComponent" parent="." instance=ExtResource("2_gjeic")]
 
-[node name="PersistentPlayerDataComponent" parent="." node_paths=PackedStringArray("inventory", "equipment", "player_class") instance=ExtResource("3_trlr1")]
+[node name="PersistentPlayerDataComponent" parent="." node_paths=PackedStringArray("health", "energy", "inventory", "equipment", "player_class") instance=ExtResource("3_trlr1")]
+health = NodePath("../HealthSynchronizerComponent")
+energy = NodePath("../EnergySynchronizerComponent")
 inventory = NodePath("../InventorySynchronizerComponent")
 equipment = NodePath("../EquipmentSynchronizerComponent")
 player_class = NodePath("../ClassComponent")

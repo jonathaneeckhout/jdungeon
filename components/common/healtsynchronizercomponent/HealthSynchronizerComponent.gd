@@ -2,6 +2,7 @@ extends Node
 
 class_name HealthSynchronizerComponent
 
+signal loaded
 signal got_hurt(from: String, damage: int)
 signal healed(from: String, healing: int)
 signal died(from: String)
@@ -113,6 +114,8 @@ func from_json(data: Dictionary) -> bool:
 
 	hp_max = data["hp_max"]
 	hp = data["hp"]
+
+	loaded.emit()
 
 	return true
 

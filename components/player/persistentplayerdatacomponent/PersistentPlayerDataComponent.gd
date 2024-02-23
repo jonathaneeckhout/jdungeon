@@ -2,32 +2,34 @@ extends Node
 
 class_name PersistentPlayerDataComponent
 
-@export var stats: StatsSynchronizerComponent
+@export var health: HealthSynchronizerComponent
+@export var energy: EnergySynchronizerComponent
 @export var inventory: InventorySynchronizerComponent
 @export var equipment: EquipmentSynchronizerComponent
 @export var player_class: ClassComponent
 @export var store_interval_time: float = 60.0
-var target_node: Node
+
+var _target_node: Node = null
 
 
 func _ready():
-	target_node = get_parent()
+	_target_node = get_parent()
 
-	assert(target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
+	assert(_target_node.multiplayer_connection != null, "Target's multiplayer connection is null")
 
-	if not target_node.multiplayer_connection.is_server():
+	if not _target_node.multiplayer_connection.is_server():
 		queue_free()
 		return
 
-	if target_node.get("username") == null:
+	if _target_node.get("username") == null:
 		GodotLogger.error("target_node does not have the position variable")
 		return
 
-	if target_node.get("server") == null:
+	if _target_node.get("server") == null:
 		GodotLogger.error("target_node does not have the server variable")
 		return
 
-	if target_node.get("position") == null:
+	if _target_node.get("position") == null:
 		GodotLogger.error("target_node does not have the position variable")
 		return
 
@@ -48,12 +50,12 @@ func _on_exiting_tree():
 
 
 func load_persistent_data() -> bool:
-	var data: Dictionary = target_node.multiplayer_connection.database.load_player_data(
-		target_node.username
+	var data: Dictionary = _target_node.multiplayer_connection.database.load_player_data(
+		_target_node.username
 	)
 
 	if data.is_empty():
-		GodotLogger.info("Player=[%s] does not have peristent data" % target_node.username)
+		GodotLogger.info("Player=[%s] does not have peristent data" % _target_node.username)
 		return true
 
 	# This function's minimal requirement is that the world and postion key is available in the data
@@ -73,13 +75,17 @@ func load_persistent_data() -> bool:
 		GodotLogger.warn('Invalid format of data, missing "y" key')
 		return false
 
-	target_node.server = data["server"]
+	_target_node.server = data["server"]
 
-	target_node.position = Vector2(data["position"]["x"], data["position"]["y"])
+	_target_node.position = Vector2(data["position"]["x"], data["position"]["y"])
 
-	if stats and "stats" in data:
-		if not stats.from_json(data["stats"]):
-			GodotLogger.warn("Failed to load stats from data")
+	if health and "health" in data:
+		if not health.from_json(data["health"]):
+			GodotLogger.warn("Failed to load health from data")
+
+	if energy and "energy" in data:
+		if not energy.from_json(data["energy"]):
+			GodotLogger.warn("Failed to load energy from data")
 
 	if inventory and "inventory" in data:
 		if not inventory.from_json(data["inventory"]):
@@ -98,12 +104,15 @@ func load_persistent_data() -> bool:
 
 func store_persistent_data() -> bool:
 	var data: Dictionary = {
-		"server": target_node.server,
-		"position": {"x": target_node.position.x, "y": target_node.position.y}
+		"server": _target_node.server,
+		"position": {"x": _target_node.position.x, "y": _target_node.position.y}
 	}
 
-	if stats:
-		data["stats"] = stats.to_json()
+	if health:
+		data["health"] = health.to_json()
+
+	if health:
+		data["energy"] = energy.to_json()
 
 	if inventory:
 		data["inventory"] = inventory.to_json()
@@ -114,7 +123,9 @@ func store_persistent_data() -> bool:
 	if player_class:
 		data["player_class"] = player_class.to_json()
 
-	return target_node.multiplayer_connection.database.store_player_data(target_node.username, data)
+	return _target_node.multiplayer_connection.database.store_player_data(
+		_target_node.username, data
+	)
 
 
 func _on_persistency_timer_timeout():
