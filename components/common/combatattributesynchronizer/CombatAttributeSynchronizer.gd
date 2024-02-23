@@ -66,7 +66,10 @@ func _ready():
 		"Failed to get CombatAttributeSynchronizerRPC component"
 	)
 
-	if not _target_node.multiplayer_connection.is_server():
+	if _target_node.multiplayer_connection.is_server():
+		set_physics_process(false)
+
+	else:
 		if not _target_node.multiplayer_connection.multiplayer_api.has_multiplayer_peer():
 			await _target_node.multiplayer_connection.multiplayer_api.connected_to_server
 

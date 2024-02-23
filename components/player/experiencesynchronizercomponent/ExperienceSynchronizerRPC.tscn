@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://do5aqxbylbwhc"]
+
+[ext_resource type="Script" path="res://components/player/experiencesynchronizercomponent/ExperienceSynchronizerRPC.gd" id="1_w4br2"]
+
+[node name="ExperienceSynchronizerRPC" type="Node"]
+script = ExtResource("1_w4br2")

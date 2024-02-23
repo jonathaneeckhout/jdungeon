@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://dhlwuon2arb14"]
+[gd_scene load_steps=29 format=3 uid="uid://dhlwuon2arb14"]
 
 [ext_resource type="Script" path="res://scenes/main/Main.gd" id="1_et6n2"]
 [ext_resource type="Texture2D" uid="uid://bmd5m8qefqtlc" path="res://assets/images/varia/background/Untitled_Artwork.jpg" id="2_56s56"]
@@ -25,6 +25,7 @@
 [ext_resource type="PackedScene" uid="uid://bopl1rpbyww77" path="res://components/npc/shopsynchronizercomponent/ShopSynchronizerRPC.tscn" id="15_et847"]
 [ext_resource type="PackedScene" uid="uid://051qq36kd7qr" path="res://components/common/energysynchronizercomponent/EnergySynchronizerRPC.tscn" id="15_psvu4"]
 [ext_resource type="PackedScene" uid="uid://d26qxk2biwiyb" path="res://components/player/chatcomponent/ChatServerRPC.tscn" id="16_7gwu3"]
+[ext_resource type="PackedScene" uid="uid://do5aqxbylbwhc" path="res://components/player/experiencesynchronizercomponent/ExperienceSynchronizerRPC.tscn" id="16_ebsua"]
 [ext_resource type="PackedScene" uid="uid://bj1l2sxb06c2o" path="res://components/player/playerunstuckcomponent/PlayerUnstuckRPC.tscn" id="17_5u5ls"]
 [ext_resource type="PackedScene" uid="uid://4is61qacv1a2" path="res://scenes/ui/CreateCharacterPanel/CreateCharacterPanel.tscn" id="24_2vqlc"]
 
@@ -80,6 +81,9 @@ message_identifier = 8
 
 [node name="EnergySynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("15_psvu4")]
 message_identifier = 9
+
+[node name="ExperienceSynchronizerRPC" parent="Connections/ServerClient/NetworkMessageHandler" instance=ExtResource("16_ebsua")]
+message_identifier = 10
 
 [node name="CFSR" parent="Connections/ServerClient" instance=ExtResource("6_5ffrs")]
 

@@ -11,7 +11,7 @@ const COMPONENT_NAME: String = "health_synchronizer"
 
 enum TYPE { HURT, HEAL }
 
-@export var watcher_synchronizer: WatcherSynchronizerComponent
+@export var watcher_synchronizer: WatcherSynchronizerComponent = null
 @export var combat_attribute: CombatAttributeSynchronizerComponent = null
 
 @export var hp_max: int = 100
@@ -63,7 +63,9 @@ func _ready():
 
 	got_hurt.connect(_on_got_hurt)
 
-	if not _target_node.multiplayer_connection.is_server():
+	if _target_node.multiplayer_connection.is_server():
+		set_physics_process(false)
+	else:
 		if not _target_node.multiplayer_connection.multiplayer_api.has_multiplayer_peer():
 			await _target_node.multiplayer_connection.multiplayer_api.connected_to_server
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=55 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="2_1l633"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://cy3sl4bl86h6m" path="res://components/common/velocitysimulatorcomponent/VelocitySimulatorComponent.tscn" id="9_my4dj"]
 [ext_resource type="PackedScene" uid="uid://dcomdkqapr25s" path="res://components/common/floatingtextcomponent/FloatingTextComponent.tscn" id="10_68b1w"]
 [ext_resource type="PackedScene" uid="uid://cpprk8npkrjwj" path="res://components/common/energysynchronizercomponent/EnergySynchronizerComponent.tscn" id="10_b3vlq"]
+[ext_resource type="PackedScene" uid="uid://bdehvcnmwckcl" path="res://components/player/experiencesynchronizercomponent/ExperienceSynchronizerComponent.tscn" id="11_7r81k"]
 [ext_resource type="PackedScene" uid="uid://c0p6pnjudl1v" path="res://components/common/animationcomponent/AnimationComponent.tscn" id="12_1yb8r"]
 [ext_resource type="PackedScene" uid="uid://chhiamhxxhm3v" path="res://components/common/interfacecomponent/InterfaceComponent.tscn" id="16_t3atf"]
 [ext_resource type="PackedScene" uid="uid://6qny4jufpgg3" path="res://components/player/playerrespawncomponent/PlayerRespawnComponent.tscn" id="18_0x11g"]
@@ -1812,6 +1813,9 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 combat_attribute = NodePath("../CombatAttributeSynchronizer")
 
 [node name="EnergySynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("10_b3vlq")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="ExperienceSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("11_7r81k")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
 [node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_w086p")]
