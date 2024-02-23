@@ -51,7 +51,7 @@ func _input(event):
 
 
 func register_signals():
-	equipment_synchronizer.loaded.connect(_on_equipment_loaded)
+	equipment_synchronizer.changed.connect(_on_equipment_changed)
 	equipment_synchronizer.item_added.connect(_on_item_added)
 	equipment_synchronizer.item_removed.connect(_on_item_removed)
 
@@ -94,7 +94,7 @@ func _on_item_removed(item_uuid: String):
 				panel.item = null
 
 
-func _on_equipment_loaded():
+func _on_equipment_changed():
 	clear_all_panels()
 
 	for slot in equipment_synchronizer.items:

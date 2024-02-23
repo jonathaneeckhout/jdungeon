@@ -2,11 +2,14 @@ extends Node
 
 class_name BoostComponent
 
-@export var stats_synchronizer: StatsSynchronizerComponent = null
+@export_group("Input Components")
+@export var class_component: ClassComponent = null
 @export var equipment_synchronizer: EquipmentSynchronizerComponent = null
 
-@export var hp_gain_per_level: int = 8
-@export var attack_power_gain_per_level: float = 0.2
+@export_group("Output Components")
+@export var health_synchronizer: HealthSynchronizerComponent = null
+@export var energy_synchronizer: EnergySynchronizerComponent = null
+@export var combat_attribute_synchronizer: CombatAttributeSynchronizerComponent = null
 
 var _target_node: Node
 
@@ -20,49 +23,18 @@ func _ready():
 		queue_free()
 		return
 
-	stats_synchronizer.stats_changed.connect(_on_stats_changed)
-
-	equipment_synchronizer.loaded.connect(_on_equipment_loaded)
-	equipment_synchronizer.item_added.connect(_on_item_equiped)
-	equipment_synchronizer.item_removed.connect(_on_item_unequiped)
-
-
-func _calculate_level_boost() -> Boost:
-	var boost: Boost = Boost.new()
-	boost.hp_max = int((stats_synchronizer.level - 1) * hp_gain_per_level)
-	boost.attack_power_min = int(stats_synchronizer.level * attack_power_gain_per_level)
-	boost.attack_power_max = boost.attack_power_min
-	return boost
+	equipment_synchronizer.changed.connect(_on_equipment_changed)
 
 
 func _calculate_and_apply_boosts():
-	var boost: Boost = _calculate_level_boost()
-	boost.identifier = "player_level"
-	var equipment_boost: Boost = equipment_synchronizer.get_boost()
-	equipment_boost.identifier = "player_equipment"
+	var boost: Boost = class_component.get_boost()
 
-	stats_synchronizer.apply_boost(equipment_boost)
-	stats_synchronizer.apply_boost(boost)
+	boost.add_boost(equipment_synchronizer.get_boost())
+
+	health_synchronizer.apply_boost(boost)
+	energy_synchronizer.apply_boost(boost)
+	combat_attribute_synchronizer.apply_boost(boost)
 
 
-func _update_boosts():
-	stats_synchronizer.load_defaults()
-
+func _on_equipment_changed():
 	_calculate_and_apply_boosts()
-
-
-func _on_stats_changed(stat_type: StatsSynchronizerComponent.TYPE):
-	if stat_type == StatsSynchronizerComponent.TYPE.LEVEL:
-		_update_boosts()
-
-
-func _on_equipment_loaded():
-	_update_boosts()
-
-
-func _on_item_equiped(_item_uuid: String, _item_class: String):
-	_update_boosts()
-
-
-func _on_item_unequiped(_item_uuid: String):
-	_update_boosts()

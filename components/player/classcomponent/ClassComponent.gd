@@ -38,3 +38,18 @@ func from_json(data: Dictionary) -> bool:
 
 	current_class = data["current_class"]
 	return true
+
+
+func get_boost() -> Boost:
+	var boost: Boost = Boost.new()
+
+	if _class_resource != null:
+		boost.hp_max = _class_resource.base_hp_max
+		boost.energy_max = _class_resource.base_energy_max
+		boost.energy_regen = _class_resource.base_energy_regen
+		boost.attack_power_min = _class_resource.base_attack_power_min
+		boost.attack_power_max = _class_resource.base_attack_power_max
+		boost.defense = _class_resource.base_defense
+		boost.movement_speed = _class_resource.base_movement_speed
+
+	return boost

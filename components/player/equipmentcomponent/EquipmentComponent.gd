@@ -49,9 +49,7 @@ func _ready():
 	if _target_node.get("component_list") != null:
 		_target_node.component_list[COMPONENT_NAME] = self
 
-	equipment.loaded.connect(_on_equipment_loaded)
-	equipment.item_added.connect(_on_item_equiped)
-	equipment.item_removed.connect(_on_item_unequiped)
+	equipment.changed.connect(_on_equipment_changed)
 
 	update_face.direction_changed.connect(_on_direction_changed)
 
@@ -156,15 +154,7 @@ func equipment_changed():
 	load_equipment_weapons()
 
 
-func _on_equipment_loaded():
-	equipment_changed()
-
-
-func _on_item_equiped(_item_uuid: String, _item_class: String):
-	equipment_changed()
-
-
-func _on_item_unequiped(_item_uuid: String):
+func _on_equipment_changed():
 	equipment_changed()
 
 

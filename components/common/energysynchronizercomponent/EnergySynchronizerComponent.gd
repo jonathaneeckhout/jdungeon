@@ -32,6 +32,9 @@ var _energy_regen_timer: Timer = null
 
 var _server_buffer: Array[Dictionary] = []
 
+var _default_energy_max: int = energy_max
+var _default_energy_regen: int = energy_regen
+
 
 func _ready():
 	_target_node = get_parent()
@@ -137,6 +140,11 @@ func from_json(data: Dictionary) -> bool:
 	changed.emit()
 
 	return true
+
+
+func apply_boost(boost: Boost):
+	energy_max = _default_energy_max + boost.energy_max
+	energy_regen = _default_energy_regen + boost.energy_regen
 
 
 func server_recover(from: String, amount: int) -> int:

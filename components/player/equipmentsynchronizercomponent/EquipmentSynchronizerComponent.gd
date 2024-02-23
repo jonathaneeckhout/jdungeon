@@ -2,7 +2,7 @@ extends Node
 
 class_name EquipmentSynchronizerComponent
 
-signal loaded
+signal changed
 signal item_added(item_uuid: String, item_class: String)
 signal item_removed(item_uuid: String)
 
@@ -83,6 +83,7 @@ func server_equip_item(item: Item) -> bool:
 			)
 
 		item_added.emit(item.uuid, item.item_class)
+		changed.emit()
 
 		return true
 
@@ -97,6 +98,7 @@ func client_equip_item(item_uuid: String, item_class: String):
 
 	if _equip_item(item):
 		item_added.emit(item_uuid, item_class)
+		changed.emit()
 
 
 func _equip_item(item: Item) -> bool:
@@ -121,6 +123,7 @@ func server_unequip_item(item_uuid: String) -> Item:
 			_equipment_synchronizer_rpc.unequip_item(watcher.peer_id, _target_node.name, item.uuid)
 
 		item_removed.emit(item_uuid)
+		changed.emit()
 
 	return item
 
@@ -128,6 +131,7 @@ func server_unequip_item(item_uuid: String) -> Item:
 func client_unequip_item(item_uuid: String):
 	if _unequip_item(item_uuid) != null:
 		item_removed.emit(item_uuid)
+		changed.emit()
 
 
 func _unequip_item(item_uuid: String) -> Item:
@@ -154,7 +158,6 @@ func get_item(item_uuid: String) -> Item:
 
 func get_boost() -> Boost:
 	var boost: Boost = Boost.new()
-	boost.identifier = "equipment"
 
 	for equipment_slot in items:
 		var item: Item = items[equipment_slot]
@@ -200,6 +203,6 @@ func from_json(data: Dictionary) -> bool:
 
 		items[slot] = item
 
-	loaded.emit()
+	changed.emit()
 
 	return true

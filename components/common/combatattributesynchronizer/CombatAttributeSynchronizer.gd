@@ -26,6 +26,13 @@ var _clock_synchronizer: ClockSynchronizer = null
 
 var _combat_attribute_synchronizer_rpc: CombatAttributeSynchronizerRPC = null
 
+var _default_attack_power_min: int = attack_power_min
+var _default_attack_power_max: int = attack_power_max
+var _default_attack_speed: float = attack_speed
+var _default_attack_range: float = attack_range
+var _default_defense: int = defense
+var _default_movement_speed: float = movement_speed
+
 
 func _ready():
 	_target_node = get_parent()
@@ -130,3 +137,12 @@ func from_json(data: Dictionary) -> bool:
 	movement_speed = data["movement_speed"]
 
 	return true
+
+
+func apply_boost(boost: Boost):
+	attack_power_min = _default_attack_power_min + boost.attack_power_min
+	attack_power_max = _default_attack_power_max + boost.attack_power_max
+	attack_speed = _default_attack_speed + boost.attack_speed
+	attack_range = _default_attack_range + boost.attack_range
+	defense = _default_defense + boost.defense
+	movement_speed = _default_movement_speed + boost.movement_speed

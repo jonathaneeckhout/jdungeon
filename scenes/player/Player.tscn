@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://cycpseafpexil"]
+[gd_scene load_steps=54 format=3 uid="uid://cycpseafpexil"]
 
 [ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_yw2vn"]
 [ext_resource type="PackedScene" uid="uid://dfwc0qu1hc7xr" path="res://components/player/inventorysynchronizercomponent/InventorySynchronizerComponent.tscn" id="2_1l633"]
@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://c3mr43oedyq38" path="res://components/player/classcomponent/ClassComponent.tscn" id="21_hi33n"]
 [ext_resource type="Texture2D" uid="uid://buuqjbcf13d1a" path="res://assets/images/player/base/scaled/base_leg.png" id="22_s6iqk"]
 [ext_resource type="Texture2D" uid="uid://dmhy5hm831ys4" path="res://assets/images/player/base/scaled/base_trunk.png" id="23_cciaf"]
+[ext_resource type="PackedScene" uid="uid://bbp5hd0go74jt" path="res://components/player/boostcomponent/BoostComponent.tscn" id="23_imnb0"]
 [ext_resource type="PackedScene" uid="uid://uord7b0pb5jt" path="res://scenes/player/inventory/Inventory.tscn" id="24_36s1p"]
 [ext_resource type="PackedScene" uid="uid://meapqmsmgbtv" path="res://components/player/equipmentcomponent/EquipmentComponent.tscn" id="24_dxas2"]
 [ext_resource type="Texture2D" uid="uid://cm1ajifekmihp" path="res://assets/images/player/base/scaled/base_head.png" id="24_self8"]
@@ -1859,6 +1860,13 @@ energy_synchronizer = NodePath("../EnergySynchronizerComponent")
 
 [node name="ClassComponent" parent="." instance=ExtResource("21_hi33n")]
 
+[node name="BoostComponent" parent="." node_paths=PackedStringArray("class_component", "equipment_synchronizer", "health_synchronizer", "energy_synchronizer", "combat_attribute_synchronizer") instance=ExtResource("23_imnb0")]
+class_component = NodePath("../ClassComponent")
+equipment_synchronizer = NodePath("../EquipmentSynchronizerComponent")
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
+energy_synchronizer = NodePath("../EnergySynchronizerComponent")
+combat_attribute_synchronizer = NodePath("../CombatAttributeSynchronizer")
+
 [node name="Sprites" type="Node2D" parent="."]
 position = Vector2(-28, -100)
 
@@ -1978,6 +1986,45 @@ libraries = {
 [node name="UILayer" type="CanvasLayer" parent="Camera2D"]
 layer = 2
 
+[node name="DebugPanel" parent="Camera2D/UILayer" node_paths=PackedStringArray("player") instance=ExtResource("38_607x8")]
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -512.0
+offset_bottom = 256.0
+grow_horizontal = 0
+mouse_filter = 1
+player = NodePath("../../..")
+
+[node name="ChatPanel" parent="Camera2D/UILayer" node_paths=PackedStringArray("chat_component") instance=ExtResource("34_55882")]
+chat_component = NodePath("../../../ChatComponent")
+
+[node name="StatDisplay" parent="Camera2D/UILayer" node_paths=PackedStringArray("health", "energy", "combat") instance=ExtResource("29_lciek")]
+visible = false
+health = NodePath("../../../HealthSynchronizerComponent")
+energy = NodePath("../../../EnergySynchronizerComponent")
+combat = NodePath("../../../CombatAttributeSynchronizer")
+
+[node name="ShortcutMenu" parent="Camera2D/UILayer" node_paths=PackedStringArray("game_menu", "stats_display", "equipment", "inventory") instance=ExtResource("37_7vdqs")]
+game_menu = NodePath("../GameMenu")
+stats_display = NodePath("../StatDisplay")
+equipment = NodePath("../Equipment")
+inventory = NodePath("../Inventory")
+
+[node name="ExpBar" parent="Camera2D/UILayer" instance=ExtResource("28_c7q8l")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -128.0
+offset_top = -32.0
+offset_right = 128.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+
 [node name="Inventory" parent="Camera2D/UILayer" node_paths=PackedStringArray("player", "inventory_synchronizer") instance=ExtResource("24_36s1p")]
 visible = false
 anchors_preset = 3
@@ -2016,32 +2063,10 @@ grow_horizontal = 2
 grow_vertical = 2
 player = NodePath("../../..")
 
-[node name="ExpBar" parent="Camera2D/UILayer" instance=ExtResource("28_c7q8l")]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -128.0
-offset_top = -32.0
-offset_right = 128.0
-offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="StatDisplay" parent="Camera2D/UILayer" node_paths=PackedStringArray("health", "energy", "combat") instance=ExtResource("29_lciek")]
-visible = false
-health = NodePath("../../../HealthSynchronizerComponent")
-energy = NodePath("../../../EnergySynchronizerComponent")
-combat = NodePath("../../../CombatAttributeSynchronizer")
-
 [node name="DeathPopup" parent="Camera2D/UILayer" node_paths=PackedStringArray("player_respawn") instance=ExtResource("32_nfctc")]
 unique_name_in_owner = true
 visible = false
 player_respawn = NodePath("../../../PlayerRespawnComponent")
-
-[node name="ChatPanel" parent="Camera2D/UILayer" node_paths=PackedStringArray("chat_component") instance=ExtResource("34_55882")]
-chat_component = NodePath("../../../ChatComponent")
 
 [node name="GameMenu" parent="Camera2D/UILayer" node_paths=PackedStringArray("player_unstuck") instance=ExtResource("35_aixvg")]
 visible = false
@@ -2055,20 +2080,3 @@ offset_top = -238.0
 offset_right = 239.0
 offset_bottom = 238.0
 player_unstuck = NodePath("../../../PlayerUnstuckComponent")
-
-[node name="ShortcutMenu" parent="Camera2D/UILayer" node_paths=PackedStringArray("game_menu", "stats_display", "equipment", "inventory") instance=ExtResource("37_7vdqs")]
-game_menu = NodePath("../GameMenu")
-stats_display = NodePath("../StatDisplay")
-equipment = NodePath("../Equipment")
-inventory = NodePath("../Inventory")
-
-[node name="DebugPanel" parent="Camera2D/UILayer" node_paths=PackedStringArray("player") instance=ExtResource("38_607x8")]
-visible = false
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -512.0
-offset_bottom = 256.0
-grow_horizontal = 0
-mouse_filter = 1
-player = NodePath("../../..")

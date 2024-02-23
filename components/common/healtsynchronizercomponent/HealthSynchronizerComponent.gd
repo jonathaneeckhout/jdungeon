@@ -32,6 +32,8 @@ var _health_synchronizer_rpc: HealthSynchronizerRPC = null
 
 var _server_buffer: Array[Dictionary] = []
 
+var _default_hp_max: int = hp_max
+
 
 func _ready():
 	_target_node = get_parent()
@@ -120,6 +122,10 @@ func from_json(data: Dictionary) -> bool:
 	changed.emit()
 
 	return true
+
+
+func apply_boost(boost: Boost):
+	hp_max = _default_hp_max + boost.hp_max
 
 
 func server_hurt(from: Node, damage: int) -> int:
