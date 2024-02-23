@@ -7,7 +7,7 @@ const ENERGY_INTERVAL_TIME: float = 1
 
 enum TYPE { ENERGY_CONSUME, ENERGY_RECOVER }
 
-signal loaded
+signal changed
 signal energy_consumed(from: String, amount: int)
 signal energy_recovered(from: String, amount: int)
 
@@ -99,10 +99,12 @@ func check_server_buffer():
 				TYPE.ENERGY_CONSUME:
 					energy = entry["energy"]
 					energy_consumed.emit(entry["from"], entry["amount"])
+					changed.emit()
 
 				TYPE.ENERGY_RECOVER:
 					energy = entry["energy"]
 					energy_recovered.emit(entry["from"], entry["amount"])
+					changed.emit()
 
 			_server_buffer.remove_at(i)
 
@@ -132,7 +134,7 @@ func from_json(data: Dictionary) -> bool:
 	energy_regen = data["energy_regen"]
 	energy = data["energy"]
 
-	loaded.emit()
+	changed.emit()
 
 	return true
 
@@ -153,6 +155,7 @@ func server_recover(from: String, amount: int) -> int:
 		)
 
 	energy_recovered.emit(from, amount)
+	changed.emit()
 
 	return amount
 

@@ -2,7 +2,7 @@ extends Node
 
 class_name HealthSynchronizerComponent
 
-signal loaded
+signal changed
 signal got_hurt(from: String, damage: int)
 signal healed(from: String, healing: int)
 signal died(from: String)
@@ -90,9 +90,11 @@ func check_server_buffer():
 				TYPE.HURT:
 					hp = entry["hp"]
 					got_hurt.emit(entry["from"], entry["damage"])
+					changed.emit()
 				TYPE.HEAL:
 					hp = entry["hp"]
 					healed.emit(entry["from"], entry["healing"])
+					changed.emit()
 
 			_server_buffer.remove_at(i)
 
@@ -115,7 +117,7 @@ func from_json(data: Dictionary) -> bool:
 	hp_max = data["hp_max"]
 	hp = data["hp"]
 
-	loaded.emit()
+	changed.emit()
 
 	return true
 
@@ -148,6 +150,7 @@ func server_hurt(from: Node, damage: int) -> int:
 		)
 
 	got_hurt.emit(from.name, reduced_damage)
+	changed.emit()
 
 	return reduced_damage
 
@@ -168,6 +171,7 @@ func server_heal(from: String, healing: int) -> int:
 		)
 
 	healed.emit(from, healing)
+	changed.emit()
 
 	return healing
 

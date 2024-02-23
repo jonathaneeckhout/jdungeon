@@ -18,14 +18,10 @@ var display_name: String = "":
 
 func _ready():
 	if health_synchronizer:
-		health_synchronizer.loaded.connect(_on_health_loaded)
-		health_synchronizer.got_hurt.connect(_on_got_hurt)
-		health_synchronizer.healed.connect(_on_healed)
+		health_synchronizer.changed.connect(_on_health_changed)
 
 	if energy_synchronizer:
-		energy_synchronizer.loaded.connect(_on_energy_loaded)
-		energy_synchronizer.energy_consumed.connect(_on_energy_consumed)
-		energy_synchronizer.energy_recovered.connect(_on_energy_recovered)
+		energy_synchronizer.changed.connect(_on_energy_changed)
 
 
 func _update_hp_bar():
@@ -40,25 +36,9 @@ func _update_energy_bar():
 		)
 
 
-func _on_health_loaded():
+func _on_health_changed():
 	_update_hp_bar()
 
 
-func _on_got_hurt(_from: String, _damage: int):
-	_update_hp_bar()
-
-
-func _on_healed(_from: String, _healing: int):
-	_update_hp_bar()
-
-
-func _on_energy_loaded():
-	_update_energy_bar()
-
-
-func _on_energy_consumed(_from: String, _amount: int):
-	_update_energy_bar()
-
-
-func _on_energy_recovered(_from: String, _amount: int):
+func _on_energy_changed():
 	_update_energy_bar()

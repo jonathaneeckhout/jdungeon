@@ -27,13 +27,8 @@ var attack_power_max_value_label: Label = $ScrollContainer/StatList/AttackPowerM
 
 
 func _ready():
-	health.loaded.connect(_on_health_loaded)
-	health.got_hurt.connect(_on_got_hurt)
-	health.healed.connect(_on_healed)
-
-	energy.loaded.connect(_on_energy_loaded)
-	energy.energy_consumed.connect(_on_energy_consumed)
-	energy.energy_recovered.connect(_on_energy_recovered)
+	health.changed.connect(_on_health_changed)
+	energy.changed.connect(_on_energy_changed)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -55,25 +50,9 @@ func _renew_values():
 	defense_value_label.text = str(combat.defense)
 
 
-func _on_health_loaded():
+func _on_health_changed():
 	_renew_values()
 
 
-func _on_got_hurt(_from: String, _damage: int):
-	_renew_values()
-
-
-func _on_healed(_from: String, _healing: int):
-	_renew_values()
-
-
-func _on_energy_loaded():
-	_renew_values()
-
-
-func _on_energy_consumed(_from: String, _amount: int):
-	_renew_values()
-
-
-func _on_energy_recovered(_from: String, _amount: int):
+func _on_energy_changed():
 	_renew_values()
