@@ -4,6 +4,8 @@ class_name CombatAttributeSynchronizerComponent
 
 const COMPONENT_NAME: String = "combat_attribute_synchronizer"
 
+signal changed
+
 @export_group("Config")
 @export var watcher_synchronizer: WatcherSynchronizerComponent
 @export var sync_to_client: bool = false
@@ -139,6 +141,8 @@ func from_json(data: Dictionary) -> bool:
 	defense = data["defense"]
 	movement_speed = data["movement_speed"]
 
+	changed.emit()
+
 	return true
 
 
@@ -149,3 +153,8 @@ func apply_boost(boost: Boost):
 	attack_range = _default_attack_range + boost.attack_range
 	defense = _default_defense + boost.defense
 	movement_speed = _default_movement_speed + boost.movement_speed
+
+	changed.emit()
+
+	if sync_to_client:
+		_combat_attribute_synchronizer_rpc.sync_response(_peer_id, _target_node.name, to_json())

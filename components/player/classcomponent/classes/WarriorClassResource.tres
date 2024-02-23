@@ -4,13 +4,13 @@
 
 [resource]
 script = ExtResource("1_c8oqo")
-base_hp_max = 200
-base_energy_max = 50
-base_energy_regen = 2
-base_attack_power_min = 0
-base_attack_power_max = 10
+base_hp_max = 100
+base_energy_max = -5
+base_energy_regen = -2
+base_attack_power_min = 5
+base_attack_power_max = 5
 base_defense = 5
-base_movement_speed = 300.0
+base_movement_speed = 0.0
 level_boost_hp_max = 10.0
 level_boost_energy_max = 0.5
 level_boost_energy_regen = 0.5

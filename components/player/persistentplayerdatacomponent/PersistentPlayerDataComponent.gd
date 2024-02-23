@@ -2,11 +2,12 @@ extends Node
 
 class_name PersistentPlayerDataComponent
 
-@export var health: HealthSynchronizerComponent
-@export var energy: EnergySynchronizerComponent
-@export var inventory: InventorySynchronizerComponent
-@export var equipment: EquipmentSynchronizerComponent
-@export var player_class: ClassComponent
+@export var health: HealthSynchronizerComponent = null
+@export var energy: EnergySynchronizerComponent = null
+@export var experience: ExperienceSynchronizerComponent = null
+@export var inventory: InventorySynchronizerComponent = null
+@export var equipment: EquipmentSynchronizerComponent = null
+@export var player_class: ClassComponent = null
 @export var store_interval_time: float = 60.0
 
 var _target_node: Node = null
@@ -87,6 +88,10 @@ func load_persistent_data() -> bool:
 		if not energy.from_json(data["energy"]):
 			GodotLogger.warn("Failed to load energy from data")
 
+	if experience and "experience" in data:
+		if not experience.from_json(data["experience"]):
+			GodotLogger.warn("Failed to load experience from data")
+
 	if inventory and "inventory" in data:
 		if not inventory.from_json(data["inventory"]):
 			GodotLogger.warn("Failed to load inventory from data")
@@ -111,8 +116,11 @@ func store_persistent_data() -> bool:
 	if health:
 		data["health"] = health.to_json()
 
-	if health:
+	if energy:
 		data["energy"] = energy.to_json()
+
+	if experience:
+		data["experience"] = experience.to_json()
 
 	if inventory:
 		data["inventory"] = inventory.to_json()

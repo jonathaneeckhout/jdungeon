@@ -4,13 +4,13 @@
 
 [resource]
 script = ExtResource("1_vydw5")
-base_hp_max = 100
-base_energy_max = 100
-base_energy_regen = 5
+base_hp_max = 0
+base_energy_max = 0
+base_energy_regen = 0
 base_attack_power_min = 0
-base_attack_power_max = 5
+base_attack_power_max = 0
 base_defense = 0
-base_movement_speed = 300.0
+base_movement_speed = 0.0
 level_boost_hp_max = 1.0
 level_boost_energy_max = 1.0
 level_boost_energy_regen = 1.0

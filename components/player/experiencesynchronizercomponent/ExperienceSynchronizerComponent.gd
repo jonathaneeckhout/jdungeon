@@ -88,10 +88,14 @@ func check_server_buffer():
 			match entry["type"]:
 				TYPE.ADD_EXPERIENCE:
 					experience = entry["experience"]
+
 					experience_gained.emit(entry["from"], entry["amount"])
 					changed.emit()
+
 				TYPE.ADD_LEVEL:
 					level = entry["level"]
+					experience_needed = _calculate_experience_needed(level)
+
 					level_gained.emit(entry["amount"])
 					changed.emit()
 
@@ -115,6 +119,8 @@ func from_json(data: Dictionary) -> bool:
 
 	level = data["level"]
 	experience = data["experience"]
+
+	experience_needed = _calculate_experience_needed(level)
 
 	changed.emit()
 
@@ -146,6 +152,8 @@ func server_add_experience(from: String, amount: int):
 
 func server_add_level(amount: int):
 	level += amount
+
+	experience_needed = _calculate_experience_needed(level)
 
 	var timestamp: float = Time.get_unix_time_from_system()
 
@@ -179,3 +187,8 @@ func sync_add_level(timestamp: float, current_level: int, amount: int):
 	_server_buffer.append(
 		{"type": TYPE.ADD_LEVEL, "timestamp": timestamp, "level": current_level, "amount": amount}
 	)
+
+
+func _calculate_experience_needed(current_level: int):
+	# TODO: Replace placeholder function to calculate experience needed to level up
+	return BASE_EXPERIENCE + (BASE_EXPERIENCE * (pow(current_level, 2) - 1))

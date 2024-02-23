@@ -1789,9 +1789,10 @@ script = ExtResource("1_yw2vn")
 
 [node name="NetworkViewSynchronizerComponent" parent="." instance=ExtResource("2_gjeic")]
 
-[node name="PersistentPlayerDataComponent" parent="." node_paths=PackedStringArray("health", "energy", "inventory", "equipment", "player_class") instance=ExtResource("3_trlr1")]
+[node name="PersistentPlayerDataComponent" parent="." node_paths=PackedStringArray("health", "energy", "experience", "inventory", "equipment", "player_class") instance=ExtResource("3_trlr1")]
 health = NodePath("../HealthSynchronizerComponent")
 energy = NodePath("../EnergySynchronizerComponent")
+experience = NodePath("../ExperienceSynchronizerComponent")
 inventory = NodePath("../InventorySynchronizerComponent")
 equipment = NodePath("../EquipmentSynchronizerComponent")
 player_class = NodePath("../ClassComponent")
@@ -2004,11 +2005,12 @@ player = NodePath("../../..")
 [node name="ChatPanel" parent="Camera2D/UILayer" node_paths=PackedStringArray("chat_component") instance=ExtResource("34_55882")]
 chat_component = NodePath("../../../ChatComponent")
 
-[node name="StatDisplay" parent="Camera2D/UILayer" node_paths=PackedStringArray("health", "energy", "combat") instance=ExtResource("29_lciek")]
+[node name="StatDisplay" parent="Camera2D/UILayer" node_paths=PackedStringArray("health", "energy", "combat", "experience") instance=ExtResource("29_lciek")]
 visible = false
 health = NodePath("../../../HealthSynchronizerComponent")
 energy = NodePath("../../../EnergySynchronizerComponent")
 combat = NodePath("../../../CombatAttributeSynchronizer")
+experience = NodePath("../../../ExperienceSynchronizerComponent")
 
 [node name="ShortcutMenu" parent="Camera2D/UILayer" node_paths=PackedStringArray("game_menu", "stats_display", "equipment", "inventory") instance=ExtResource("37_7vdqs")]
 game_menu = NodePath("../GameMenu")

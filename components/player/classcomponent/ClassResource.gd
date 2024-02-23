@@ -3,13 +3,13 @@ extends Resource
 class_name ClassResource
 
 @export_group("Base Stats")
-@export var base_hp_max: int = 100
-@export var base_energy_max: int = 100
-@export var base_energy_regen: int = 5
+@export var base_hp_max: int = 0
+@export var base_energy_max: int = 0
+@export var base_energy_regen: int = 0
 @export var base_attack_power_min: int = 0
-@export var base_attack_power_max: int = 5
+@export var base_attack_power_max: int = 0
 @export var base_defense: int = 0
-@export var base_movement_speed: float = 300
+@export var base_movement_speed: float = 0
 
 @export_group("Level Boost Stats")
 @export var level_boost_hp_max: float = 1.0
