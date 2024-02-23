@@ -3,27 +3,9 @@ extends Control
 
 class_name StatsDisplay
 
-## Set by export
-@export var stats: StatsSynchronizerComponent:
-	set(value):
-		#If this was unset, disconnect any previously connected stats.
-		#If the instance is no longer valid, don't bother.
-		if (
-			value == null
-			and is_instance_valid(stats)
-			and stats.stats_changed.is_connected(_on_stats_changed)
-		):
-			stats.stats_changed.disconnect(_on_stats_changed)
-
-		stats = value
-
-		if stats:
-			#If set and not yet connected, perform the connection
-			if not stats.stats_changed.is_connected(_on_stats_changed):
-				stats.stats_changed.connect(_on_stats_changed)
-
-			await ready
-			renew_values()
+@export var health: HealthSynchronizerComponent = null
+@export var energy: EnergySynchronizerComponent = null
+@export var combat: CombatAttributeSynchronizerComponent = null
 
 @export var accept_input: bool = true
 
@@ -44,55 +26,54 @@ var attack_power_max_value_label: Label = $ScrollContainer/StatList/AttackPowerM
 @onready var defense_value_label: Label = $ScrollContainer/StatList/DefenseSplitContainer/Value
 
 
+func _ready():
+	health.loaded.connect(_on_health_loaded)
+	health.got_hurt.connect(_on_got_hurt)
+	health.healed.connect(_on_healed)
+
+	energy.loaded.connect(_on_energy_loaded)
+	energy.energy_consumed.connect(_on_energy_consumed)
+	energy.energy_recovered.connect(_on_energy_recovered)
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if accept_input and event.is_action_pressed("j_toggle_stats"):
 		visible = !visible
 
 
-func renew_values():
-	hp_value_label.text = str(stats.hp)
-	hp_max_value_label.text = str(stats.hp_max)
-	energy_value_label.text = str(stats.energy)
-	energy_max_value_label.text = str(stats.energy_max)
-	energy_regeneration_value_label.text = str(stats.energy_regen)
-	level_value_label.text = str(stats.level)
-	experience_value_label.text = str(stats.experience)
-	experience_needed_value_label.text = str(stats.experience_needed)
-	attack_power_min_value_label.text = str(stats.attack_power_min)
-	attack_power_max_value_label.text = str(stats.attack_power_max)
-	defense_value_label.text = str(stats.defense)
+func _renew_values():
+	hp_value_label.text = str(health.hp)
+	hp_max_value_label.text = str(health.hp_max)
+	energy_value_label.text = str(energy.energy)
+	energy_max_value_label.text = str(energy.energy_max)
+	energy_regeneration_value_label.text = str(energy.energy_regen)
+	# level_value_label.text = str(stats.level)
+	# experience_value_label.text = str(stats.experience)
+	# experience_needed_value_label.text = str(stats.experience_needed)
+	attack_power_min_value_label.text = str(combat.attack_power_min)
+	attack_power_max_value_label.text = str(combat.attack_power_max)
+	defense_value_label.text = str(combat.defense)
 
 
-func _on_stats_changed(type: StatsSynchronizerComponent.TYPE):
-	match type:
-		StatsSynchronizerComponent.TYPE.HP_MAX:
-			hp_max_value_label.text = str(stats.hp_max)
-		StatsSynchronizerComponent.TYPE.HP:
-			hp_value_label.text = str(stats.hp)
-		StatsSynchronizerComponent.TYPE.ENERGY:
-			energy_value_label.text = str(stats.energy)
-		StatsSynchronizerComponent.TYPE.ENERGY_MAX:
-			energy_max_value_label.text = str(stats.energy_max)
-		StatsSynchronizerComponent.TYPE.ENERGY_REGEN:
-			energy_regeneration_value_label.text = str(stats.energy_regen)
-		StatsSynchronizerComponent.TYPE.ATTACK_POWER_MIN:
-			attack_power_min_value_label.text = str(stats.attack_power_min)
-		StatsSynchronizerComponent.TYPE.ATTACK_POWER_MAX:
-			attack_power_max_value_label.text = str(stats.attack_power_max)
-		StatsSynchronizerComponent.TYPE.ATTACK_SPEED:
-			# TODO: not added yet
-			pass
-		StatsSynchronizerComponent.TYPE.ATTACK_RANGE:
-			# TODO: not added yet
-			pass
-		StatsSynchronizerComponent.TYPE.DEFENSE:
-			defense_value_label.text = str(stats.defense)
-		StatsSynchronizerComponent.TYPE.MOVEMENT_SPEED:
-			# TODO: not added yet
-			pass
-		StatsSynchronizerComponent.TYPE.LEVEL:
-			level_value_label.text = str(stats.level)
-		StatsSynchronizerComponent.TYPE.EXPERIENCE:
-			experience_value_label.text = str(stats.experience)
-		StatsSynchronizerComponent.TYPE.EXPERIENCE_NEEDED:
-			experience_needed_value_label.text = str(stats.experience_needed)
+func _on_health_loaded():
+	_renew_values()
+
+
+func _on_got_hurt(_from: String, _damage: int):
+	_renew_values()
+
+
+func _on_healed(_from: String, _healing: int):
+	_renew_values()
+
+
+func _on_energy_loaded():
+	_renew_values()
+
+
+func _on_energy_consumed(_from: String, _amount: int):
+	_renew_values()
+
+
+func _on_energy_recovered(_from: String, _amount: int):
+	_renew_values()

@@ -2029,8 +2029,11 @@ offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="StatDisplay" parent="Camera2D/UILayer" instance=ExtResource("29_lciek")]
+[node name="StatDisplay" parent="Camera2D/UILayer" node_paths=PackedStringArray("health", "energy", "combat") instance=ExtResource("29_lciek")]
 visible = false
+health = NodePath("../../../HealthSynchronizerComponent")
+energy = NodePath("../../../EnergySynchronizerComponent")
+combat = NodePath("../../../CombatAttributeSynchronizer")
 
 [node name="DeathPopup" parent="Camera2D/UILayer" node_paths=PackedStringArray("player_respawn") instance=ExtResource("32_nfctc")]
 unique_name_in_owner = true
