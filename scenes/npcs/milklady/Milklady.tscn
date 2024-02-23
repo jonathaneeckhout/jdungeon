@@ -464,6 +464,7 @@ watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
 [node name="CombatAttributeSynchronizer" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_0yvu5")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+movement_speed = 125.0
 
 [node name="HealthSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer", "combat_attribute") instance=ExtResource("5_nj18m")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
