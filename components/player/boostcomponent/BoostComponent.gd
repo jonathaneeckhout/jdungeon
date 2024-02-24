@@ -24,6 +24,8 @@ func _ready():
 		return
 
 	equipment_synchronizer.changed.connect(_on_equipment_changed)
+	
+	_calculate_and_apply_boosts()
 
 
 func _calculate_and_apply_boosts():

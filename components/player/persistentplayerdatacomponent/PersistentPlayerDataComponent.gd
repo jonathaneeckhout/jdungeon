@@ -41,7 +41,7 @@ func _ready():
 	persistency_timer.timeout.connect(_on_persistency_timer_timeout)
 	add_child(persistency_timer)
 
-	load_persistent_data.call_deferred()
+	load_persistent_data()
 
 	tree_exiting.connect(_on_exiting_tree)
 

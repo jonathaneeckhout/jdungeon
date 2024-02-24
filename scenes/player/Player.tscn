@@ -1785,10 +1785,6 @@ collision_layer = 3
 collision_mask = 5
 script = ExtResource("1_yw2vn")
 
-[node name="InventorySynchronizerComponent" parent="." instance=ExtResource("2_1l633")]
-
-[node name="NetworkViewSynchronizerComponent" parent="." instance=ExtResource("2_gjeic")]
-
 [node name="PersistentPlayerDataComponent" parent="." node_paths=PackedStringArray("health", "energy", "experience", "inventory", "equipment", "player_class") instance=ExtResource("3_trlr1")]
 health = NodePath("../HealthSynchronizerComponent")
 energy = NodePath("../EnergySynchronizerComponent")
@@ -1796,14 +1792,6 @@ experience = NodePath("../ExperienceSynchronizerComponent")
 inventory = NodePath("../InventorySynchronizerComponent")
 equipment = NodePath("../EquipmentSynchronizerComponent")
 player_class = NodePath("../ClassComponent")
-
-[node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("2_3edxt")]
-
-[node name="EquipmentSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("6_rcnqx")]
-watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
-
-[node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_2vbfi")]
-watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
 [node name="CombatAttributeSynchronizer" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("8_85ba6")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
@@ -1817,6 +1805,27 @@ combat_attribute = NodePath("../CombatAttributeSynchronizer")
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
 [node name="ExperienceSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("11_7r81k")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="ClassComponent" parent="." instance=ExtResource("21_hi33n")]
+
+[node name="InventorySynchronizerComponent" parent="." instance=ExtResource("2_1l633")]
+
+[node name="EquipmentSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("6_rcnqx")]
+watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
+
+[node name="BoostComponent" parent="." node_paths=PackedStringArray("class_component", "equipment_synchronizer", "health_synchronizer", "energy_synchronizer", "combat_attribute_synchronizer") instance=ExtResource("23_imnb0")]
+class_component = NodePath("../ClassComponent")
+equipment_synchronizer = NodePath("../EquipmentSynchronizerComponent")
+health_synchronizer = NodePath("../HealthSynchronizerComponent")
+energy_synchronizer = NodePath("../EnergySynchronizerComponent")
+combat_attribute_synchronizer = NodePath("../CombatAttributeSynchronizer")
+
+[node name="NetworkViewSynchronizerComponent" parent="." instance=ExtResource("2_gjeic")]
+
+[node name="WatcherSynchronizerComponent" parent="." instance=ExtResource("2_3edxt")]
+
+[node name="PositionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_2vbfi")]
 watcher_synchronizer = NodePath("../WatcherSynchronizerComponent")
 
 [node name="ActionSynchronizerComponent" parent="." node_paths=PackedStringArray("watcher_synchronizer") instance=ExtResource("4_w086p")]
@@ -1862,15 +1871,6 @@ energy_synchronizer = NodePath("../EnergySynchronizerComponent")
 [node name="ChatComponent" parent="." instance=ExtResource("19_mqgdc")]
 
 [node name="PlayerUnstuckComponent" parent="." instance=ExtResource("20_wfyag")]
-
-[node name="ClassComponent" parent="." instance=ExtResource("21_hi33n")]
-
-[node name="BoostComponent" parent="." node_paths=PackedStringArray("class_component", "equipment_synchronizer", "health_synchronizer", "energy_synchronizer", "combat_attribute_synchronizer") instance=ExtResource("23_imnb0")]
-class_component = NodePath("../ClassComponent")
-equipment_synchronizer = NodePath("../EquipmentSynchronizerComponent")
-health_synchronizer = NodePath("../HealthSynchronizerComponent")
-energy_synchronizer = NodePath("../EnergySynchronizerComponent")
-combat_attribute_synchronizer = NodePath("../CombatAttributeSynchronizer")
 
 [node name="Sprites" type="Node2D" parent="."]
 position = Vector2(-28, -100)
