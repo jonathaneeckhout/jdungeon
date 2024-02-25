@@ -51,7 +51,6 @@ func _input(event):
 			hide()
 		else:
 			update_inventory()
-			inventory_synchronizer.sync_invendtory.rpc_id(1)
 			show()
 
 

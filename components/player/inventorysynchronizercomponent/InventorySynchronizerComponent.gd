@@ -83,20 +83,29 @@ func server_add_item(item: Item) -> bool:
 		return false
 	
 	#Try to stack
-	var existing_item: Item = get_item_by_class(item.item_class)
-	if existing_item is Item and existing_item.amount < existing_item.amount_max:
+	var existing_item: Item = null
+	
+	#Look for an item that has available space.
+	for i_item in get_items_by_class(item.item_class):
+		if i_item.amount < i_item.amount_max:
+			existing_item = i_item
+			break
+	
+	#If found, start the stacking.
+	if existing_item is Item:
 		var remaining_space: int = existing_item.amount_max - existing_item.amount
 		var amount_to_add: int = min(item.amount, remaining_space)
+		var surplus: int = max(0, item.amount - remaining_space)
 		
-		#If there's space remaining, add some of this item's to the stack.
-		#This is delegated to the server_change_item_amount() function which synchronizes amounts by itself.
+		#If there's space remaining, add some of this item's amount to the existing one.
+		#And remove it from the former.
+		#This is delegated to the server_set_item_amount() function which synchronizes amounts by itself.
 		if remaining_space > 0:	
-			server_change_item_amount(existing_item.uuid, existing_item.amount + amount_to_add)
-			
-		server_change_item_amount(item.uuid, item.amount - amount_to_add)
+			server_set_item_amount(item.uuid, item.amount - amount_to_add)
+			server_set_item_amount(existing_item.uuid, existing_item.amount + amount_to_add)
 		
 		#Any remaining amount is added as a separate item
-		if item.amount > 0:
+		if surplus > 0:
 			server_add_item(item)
 			_inventory_synchronizer_rpc.add_item(
 				_target_node.peer_id, item.name, item.item_class, item.amount
@@ -146,7 +155,7 @@ func client_remove_item(item_uuid: String):
 		item_removed.emit(item_uuid)
 
 
-func server_change_item_amount(item_uuid: String, amount: int):
+func server_set_item_amount(item_uuid: String, amount: int):
 	if not _target_node.multiplayer_connection.is_server():
 		return false
 	
@@ -154,6 +163,8 @@ func server_change_item_amount(item_uuid: String, amount: int):
 	if item != null:
 		item.amount = amount
 		_inventory_synchronizer_rpc.change_item_amount(_target_node.peer_id, item_uuid, amount)
+	else:
+		GodotLogger.error("This item does not exist!?")
 
 
 func client_change_item_amount(item_uuid: String, amount: int):
@@ -173,13 +184,12 @@ func get_item(item_uuid: String) -> Item:
 
 
 ## Returns the first instance of an item of this class
-func get_item_by_class(item_class: String) -> Item:
+func get_items_by_class(item_class: String) -> Array[Item]:
+	var output: Array[Item] = []
 	for item: Item in items:
 		if item.item_class == item_class:
-			return item
-
-	GodotLogger.warn("Could not find item of class '{0}'.".format([item_class]))
-	return null
+			output.append(item)
+	return output
 
 
 func server_use_item(item_uuid: String):

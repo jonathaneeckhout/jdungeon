@@ -104,7 +104,7 @@ func server_use(player: Player) -> bool:
 				if amount <= 1:
 					player.inventory.server_remove_item(uuid)
 				else:
-					player.inventory.server_change_item_amount(uuid, amount - 1)
+					player.inventory.server_set_item_amount(uuid, amount - 1)
 				return true
 
 		ITEM_TYPE.EQUIPMENT:
