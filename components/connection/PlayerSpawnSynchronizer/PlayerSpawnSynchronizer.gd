@@ -35,7 +35,9 @@ func _ready():
 		user_authenticator.server_player_logged_in.connect(_on_server_player_logged_in)
 
 		# Connect to the disconnect signal, this is the trigger to emit the signal to remove the player from the server instance
-		_multiplayer_connection.multiplayer_api.peer_disconnected.connect(_on_server_peer_disconnected)
+		_multiplayer_connection.multiplayer_api.peer_disconnected.connect(
+			_on_server_peer_disconnected
+		)
 	else:
 		pass
 
