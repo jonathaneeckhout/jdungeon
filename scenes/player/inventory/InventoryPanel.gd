@@ -2,13 +2,23 @@ extends Panel
 
 class_name InventoryPanel
 
+const DEFAULT_FONT: Font = preload("res://addons/gut/fonts/LobsterTwo-Regular.ttf")
+
 @export var item: Item:
 	set(new_item):
+		if item is Item and item.amount_changed.is_connected(on_item_amount_changed):
+			item.amount_changed.disconnect(on_item_amount_changed)
+
 		item = new_item
-		if item:
+
+		if item is Item:
+			if not item.amount_changed.is_connected(on_item_amount_changed):
+				item.amount_changed.connect(on_item_amount_changed)
 			$TextureRect.texture = item.get_node("Icon").texture
 		else:
 			$TextureRect.texture = null
+
+		queue_redraw()
 
 @onready var inventory: Inventory = $"../.."
 @onready var drag_panel = $"../../DragPanel"
@@ -41,6 +51,19 @@ func _ready():
 	mouse_exited.connect(_on_mouse_exited)
 
 
+func _draw():
+	if item is Item and item.amount != 1:
+		var font_height: int = 14
+		draw_string(
+			DEFAULT_FONT,
+			Vector2(0, size.y - font_height),
+			str(item.amount),
+			HORIZONTAL_ALIGNMENT_CENTER,
+			-1,
+			font_height
+		)
+
+
 func _gui_input(event: InputEvent):
 	if event.is_action_pressed("j_left_click"):
 		if item:
@@ -67,7 +90,7 @@ func _gui_input(event: InputEvent):
 			drag_panel.hide()
 
 
-func _physics_process(_delta):
+func _physics_process(_delta: float):
 	if selected:
 		drag_panel.position = get_local_mouse_position() + drag_panel_offset
 
@@ -78,3 +101,7 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	inventory.mouse_above_this_panel = null
+
+
+func on_item_amount_changed(_amount: int):
+	queue_redraw()

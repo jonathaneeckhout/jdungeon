@@ -2,6 +2,8 @@ extends StaticBody2D
 
 class_name Item
 
+signal amount_changed(new_amount: int)
+
 enum MODE { LOOT, ITEMSLOT }
 
 enum ITEM_TYPE { EQUIPMENT, CONSUMABLE, CURRENCY }
@@ -24,7 +26,12 @@ var expire_timer: Timer
 
 var drop_rate: float = 0.0
 
-var amount: int = 1
+var amount_max: int = 1
+var amount: int = 1:
+	set(val):
+		amount = val
+		amount_changed.emit(amount)
+
 var price: int = 0
 var value: int = 0
 
@@ -66,6 +73,10 @@ func _ready():
 		add_child(expire_timer)
 
 
+func get_icon() -> Texture:
+	return $Icon.texture
+
+
 func start_expire_timer():
 	expire_timer.start(expire_time)
 
@@ -89,10 +100,18 @@ func server_use(player: Player) -> bool:
 		ITEM_TYPE.CONSUMABLE:
 			if boost.hp > 0:
 				player.stats.heal(self.name, boost.hp)
+
+				if amount <= 1:
+					player.inventory.server_remove_item(uuid)
+				else:
+					player.inventory.server_set_item_amount(uuid, amount - 1)
 				return true
+
 		ITEM_TYPE.EQUIPMENT:
 			if player.equipment and player.equipment.server_equip_item(self):
+				player.inventory.server_remove_item(uuid)
 				return true
+
 			else:
 				GodotLogger.info("%s could not equip item %s" % [player.name, item_class])
 				return false
@@ -113,6 +132,12 @@ func from_json(data: Dictionary) -> bool:
 	amount = data["amount"]
 
 	return true
+
+
+static func instance_from_json(data: Dictionary) -> Item:
+	var new_item := Item.new()
+	new_item.from_json(data)
+	return new_item
 
 
 func _on_expire_timer_timeout():

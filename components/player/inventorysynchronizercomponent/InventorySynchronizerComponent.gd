@@ -5,6 +5,7 @@ class_name InventorySynchronizerComponent
 signal loaded
 signal item_added(item_uuid: String, item_class: String)
 signal item_removed(item_uuid: String)
+signal item_amount_changed(item_uuid: String)
 
 signal gold_added(total: int, amount: int)
 signal gold_removed(total: int, amount: int)
@@ -65,26 +66,62 @@ func server_sync_inventory(peer_id: int):
 	_inventory_synchronizer_rpc.sync_response(peer_id, to_json())
 
 
+## Attempts to stack items or add them if there's nowhere else to stack them. Stacking is purely server sided.
 func server_add_item(item: Item) -> bool:
 	if not _target_node.multiplayer_connection.is_server():
 		return false
 
+	#Currency is directly added to gold
 	if item.item_type == Item.ITEM_TYPE.CURRENCY:
 		server_add_gold(item.amount)
 		return true
 
 	item.collision_layer = 0
 
+	#Inventory full
 	if items.size() >= size:
 		return false
 
-	items.append(item)
+	#Try to stack
+	var existing_item: Item = null
 
-	_inventory_synchronizer_rpc.add_item(
-		_target_node.peer_id, item.name, item.item_class, item.amount
-	)
+	#Look for an item that has available space.
+	for i_item in get_items_by_class(item.item_class):
+		if i_item.amount < i_item.amount_max:
+			existing_item = i_item
+			break
 
-	return true
+	#If found, start the stacking.
+	if existing_item is Item:
+		var remaining_space: int = existing_item.amount_max - existing_item.amount
+		var amount_to_add: int = min(item.amount, remaining_space)
+		var surplus: int = max(0, item.amount - remaining_space)
+
+		#If there's space remaining, add some of this item's amount to the existing one.
+		#And remove it from the former.
+		#This is delegated to the server_set_item_amount() function which synchronizes amounts by itself.
+		if remaining_space > 0:
+			server_set_item_amount(item.uuid, item.amount - amount_to_add)
+			server_set_item_amount(existing_item.uuid, existing_item.amount + amount_to_add)
+
+		#Any remaining amount is added as a separate item
+		if surplus > 0:
+			server_add_item(item)
+			_inventory_synchronizer_rpc.add_item(
+				_target_node.peer_id, item.name, item.item_class, item.amount
+			)
+
+		return true
+
+	#Adding the item from scratch
+	else:
+		items.append(item)
+
+		_inventory_synchronizer_rpc.add_item(
+			_target_node.peer_id, item.name, item.item_class, item.amount
+		)
+
+		return true
 
 
 func client_add_item(item_uuid: String, item_class: String, amount: int):
@@ -118,6 +155,24 @@ func client_remove_item(item_uuid: String):
 		item_removed.emit(item_uuid)
 
 
+func server_set_item_amount(item_uuid: String, amount: int):
+	if not _target_node.multiplayer_connection.is_server():
+		return false
+
+	var item: Item = get_item(item_uuid)
+	if item != null:
+		item.amount = amount
+		_inventory_synchronizer_rpc.change_item_amount(_target_node.peer_id, item_uuid, amount)
+
+
+func client_change_item_amount(item_uuid: String, amount: int):
+	var item: Item = get_item(item_uuid)
+	if item != null:
+		item.amount = amount
+
+		item_amount_changed.emit(item_uuid)
+
+
 func get_item(item_uuid: String) -> Item:
 	for item in items:
 		if item.uuid == item_uuid:
@@ -126,13 +181,21 @@ func get_item(item_uuid: String) -> Item:
 	return null
 
 
+## Returns the first instance of an item of this class
+func get_items_by_class(item_class: String) -> Array[Item]:
+	var output: Array[Item] = []
+	for item: Item in items:
+		if item.item_class == item_class:
+			output.append(item)
+	return output
+
+
 func server_use_item(item_uuid: String):
 	if not _target_node.multiplayer_connection.is_server():
 		return false
 
 	var item: Item = get_item(item_uuid)
 	if item and item.server_use(_target_node):
-		server_remove_item(item_uuid)
 		return true
 
 	return false
