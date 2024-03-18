@@ -7,7 +7,8 @@ signal quit_pressed
 
 
 func _ready() -> void:
-	_quit_button.pressed.connect(emit_signal.bind("quit_pressed"))
+	#_quit_button.pressed.connect(emit_signal.bind("quit_pressed"))
+	_quit_button.pressed.connect(func(): quit_pressed.emit())
 	_link_button.pressed.connect(_on_link_button_pressed)
 
 

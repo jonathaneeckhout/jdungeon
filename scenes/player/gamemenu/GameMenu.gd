@@ -41,16 +41,29 @@ func _input(event):
 	if self.visible:
 		#If the input happens outside the menu while it is open, hide it
 		if (event is InputEventMouseButton) and event.pressed:
-			var is_inside_menu: bool = (
-				Rect2(Vector2(position.x, position.y), Vector2(size.x, size.y))
-				. has_point(event.position)
-			)
+			var is_inside_menu: bool
+			if not is_instance_valid(sub_menu_reference):
+			#if is_instance_valid(sub_menu_reference):
+				#is_inside_menu = (
+					#Rect2(Vector2(sub_menu_reference.position.x,
+							#sub_menu_reference.position.y),
+						#Vector2(sub_menu_reference.size.x,
+							#sub_menu_reference.size.y))
+					#. has_point(event.position)
+				#)
+				#sub_menu_reference.queue_free()
+				#printt([sub_menu_reference.position, sub_menu_reference.size])
+			#else:
+				is_inside_menu = (
+					Rect2(Vector2(position.x, position.y), Vector2(size.x, size.y))
+					. has_point(event.position)
+				)
 
-			if not is_inside_menu:
-				self.hide()
-				JUI.above_ui = false
+				if not is_inside_menu:
+					self.hide()
+					JUI.above_ui = false
 
-				get_viewport().set_input_as_handled()
+					get_viewport().set_input_as_handled()
 
 
 #Also saves changes to disk.
